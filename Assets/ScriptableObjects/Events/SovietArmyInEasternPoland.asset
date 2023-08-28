@@ -44,7 +44,6 @@ MonoBehaviour:
   _checked: 1
   silentEvent: 0
   conditions:
-  - country_exist;20
   - country_exist;37
   buttons:
   - name: "\u0414\u043E\u0433\u043E\u0432\u043E\u0440 \u043F\u0440\u0438\u0448\u0435\u043B
