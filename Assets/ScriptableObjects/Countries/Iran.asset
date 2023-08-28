@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Iran
+  m_EditorClassIdentifier: 
+  _id: 44
+  _name: "\u0418\u0440\u0430\u043D"
+  _nameEN: Iran
+  _uiName: "\u0418\u0440\u0430\u043D"
+  _tag: IRN
+  countryType: 2
+  countryFlag: {fileID: 21300000, guid: c74b11553fc57f545b160d5be2fbd795, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.21568628, g: 0.57254905, b: 0.2627451, a: 0.5}
+  countryIdeologyColors:
+  - {r: 0.62352943, g: 0.9529412, b: 0.6825828, a: 0.5019608}
+  - {r: 0.21568628, g: 0.57254905, b: 0.2627451, a: 0.5019608}
+  - {r: 0.21568628, g: 0.57254905, b: 0.2627451, a: 0.5019608}
+  - {r: 0.1764706, g: 0.23529412, b: 0.1834298, a: 0.5019608}
+  - {r: 0.078431375, g: 0.12156863, b: 0.0849493, a: 0.5019608}
+  - {r: 0.21568628, g: 0.57254905, b: 0.2627451, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: 28582d7ae75db244cb5b6e9a4e0bc0a1, type: 3}
+  - {fileID: 21300000, guid: 28582d7ae75db244cb5b6e9a4e0bc0a1, type: 3}
+  - {fileID: 21300000, guid: c74b11553fc57f545b160d5be2fbd795, type: 3}
+  - {fileID: 21300000, guid: da96c27076d5f1b4e8762cb18cac0561, type: 3}
+  - {fileID: 21300000, guid: da96c27076d5f1b4e8762cb18cac0561, type: 3}
+  - {fileID: 21300000, guid: 757b3f14a72440d49a6c80df9ee9af2c, type: 3}

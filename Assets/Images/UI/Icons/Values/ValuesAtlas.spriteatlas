@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ValuesAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 3
+      m_CompressionQuality: 100
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 5ccab600c46f50e4d8941497b7758418, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - 33c5c25008f1cd44d805916abd5351b7: 21300000
+    - 836c82f036900d244b29f4632d48e6a6: 21300000
+    - bc4d1b417e93c58439675b987a9fbe31: 21300000
+    - 9b68f1e2e6f941e40a39c3a0c6855b7e: 21300000
+    - 7af8360403bd5de478287ef8a3f3b6ae: 21300000
+    - 5b5b95c474376354d875a44a26072894: 21300000
+    - 004259c427bef27489df16d3e75286fb: 21300000
+    - ba200f6618837f14ebfd88b3a5829c05: 21300000
+    - 5936d086b4bdc6243a68fc1c88c2527f: 21300000
+    - be332538dd5918946ae681f79beab7d4: 21300000
+    - 37d9cd38bc4693c4e8b318534886a786: 21300000
+    - b48a18982cdd1054fba2b05e7567fc9c: 21300000
+    - 414ab449c49b4074ba95f5498b4e58a1: 21300000
+    - db670fcb19dbf1c4bb7eef56d7283d03: 21300000
+    - 9c9e582cc36d2f64680ca4c9f9e56e1d: 21300000
+    - 16b3640fc5c521648a5f401cc8727ff0: 21300000
+    - c5a7851f89beebe4a8098bad64b41c22: 21300000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 33c5c25008f1cd44d805916abd5351b7, type: 3}
+  - {fileID: 21300000, guid: 836c82f036900d244b29f4632d48e6a6, type: 3}
+  - {fileID: 21300000, guid: bc4d1b417e93c58439675b987a9fbe31, type: 3}
+  - {fileID: 21300000, guid: 9b68f1e2e6f941e40a39c3a0c6855b7e, type: 3}
+  - {fileID: 21300000, guid: 7af8360403bd5de478287ef8a3f3b6ae, type: 3}
+  - {fileID: 21300000, guid: 5b5b95c474376354d875a44a26072894, type: 3}
+  - {fileID: 21300000, guid: 004259c427bef27489df16d3e75286fb, type: 3}
+  - {fileID: 21300000, guid: ba200f6618837f14ebfd88b3a5829c05, type: 3}
+  - {fileID: 21300000, guid: 5936d086b4bdc6243a68fc1c88c2527f, type: 3}
+  - {fileID: 21300000, guid: be332538dd5918946ae681f79beab7d4, type: 3}
+  - {fileID: 21300000, guid: 37d9cd38bc4693c4e8b318534886a786, type: 3}
+  - {fileID: 21300000, guid: b48a18982cdd1054fba2b05e7567fc9c, type: 3}
+  - {fileID: 21300000, guid: 414ab449c49b4074ba95f5498b4e58a1, type: 3}
+  - {fileID: 21300000, guid: db670fcb19dbf1c4bb7eef56d7283d03, type: 3}
+  - {fileID: 21300000, guid: 9c9e582cc36d2f64680ca4c9f9e56e1d, type: 3}
+  - {fileID: 21300000, guid: 16b3640fc5c521648a5f401cc8727ff0, type: 3}
+  - {fileID: 21300000, guid: c5a7851f89beebe4a8098bad64b41c22, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - videoIconWhite
+  - shieldIconWhite256PNG
+  - vassalIconBorders256PNG
+  - warIconWhite256PNG
+  - recrootsIconWhite256PNG
+  - warIconBorders256PNG
+  - stability_transparent
+  - population
+  - vassalIcon256PNG
+  - recrootsIcon256PNG
+  - shieldIcon256PNG
+  - warIcon256PNG
+  - war_support_transparent
+  - regionIconWhite256PNG
+  - population_growth
+  - shieldIconBorders256PNG
+  - vassalIconWhite256PNG
+  m_RenderDataMap: {}
+  m_Tag: ValuesAtlas
+  m_IsVariant: 0

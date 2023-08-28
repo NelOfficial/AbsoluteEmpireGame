@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Luxembourg
+  m_EditorClassIdentifier: 
+  _id: 21
+  _name: "\u041B\u044E\u043A\u0441\u0435\u043C\u0431\u0443\u0440\u0433"
+  _nameEN: Luxembourg
+  _uiName: "\u041B\u044E\u043A\u0441\u0435\u043C\u0431\u0443\u0440\u0433"
+  _tag: LUX
+  countryType: 0
+  countryFlag: {fileID: 21300000, guid: 9d8abf499591d7e4995bef0ab82e791e, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.0627451, g: 0.5568628, b: 0.7372549, a: 0.5}
+  countryIdeologyColors:
+  - {r: 0.62352943, g: 0.8699074, b: 0.9529412, a: 0.5019608}
+  - {r: 0.0627451, g: 0.5568628, b: 0.7372549, a: 0.5019608}
+  - {r: 0.0627451, g: 0.5568628, b: 0.7372549, a: 0.5019608}
+  - {r: 0.1764706, g: 0.21943101, b: 0.23529412, a: 0.5019608}
+  - {r: 0.078431375, g: 0.10892548, b: 0.12156863, a: 0.5019608}
+  - {r: 0.0627451, g: 0.5568628, b: 0.7372549, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: 9d8abf499591d7e4995bef0ab82e791e, type: 3}
+  - {fileID: 21300000, guid: 9d8abf499591d7e4995bef0ab82e791e, type: 3}
+  - {fileID: 21300000, guid: 545c871774df5974db4219490b114978, type: 3}
+  - {fileID: 21300000, guid: e05666ccc6fc84c4baf9cfc651898113, type: 3}
+  - {fileID: 21300000, guid: e05666ccc6fc84c4baf9cfc651898113, type: 3}
+  - {fileID: 21300000, guid: a017bad8b3847ce4b8eb977150283880, type: 3}

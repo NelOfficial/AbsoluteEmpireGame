@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Denmark
+  m_EditorClassIdentifier: 
+  _id: 8
+  _name: "\u0414\u0430\u043D\u0438\u044F"
+  _nameEN: Denmark
+  _uiName: "\u0414\u0430\u043D\u0438\u044F"
+  _tag: DNM
+  countryType: 1
+  countryFlag: {fileID: 21300000, guid: 249e35f2df0b8d8459b0e6b57426c413, type: 3}
+  ally: 
+  capitulateLimit: 80
+  countryColor: {r: 0.6666667, g: 0.101960786, b: 0.2, a: 0.5}
+  countryIdeologyColors:
+  - {r: 0.9529412, g: 0.62352943, b: 0.6821317, a: 0.5019608}
+  - {r: 0.6666667, g: 0.101960786, b: 0.2, a: 0.5019608}
+  - {r: 0.6666667, g: 0.101960786, b: 0.2, a: 0.5019608}
+  - {r: 0.23529412, g: 0.1764706, b: 0.18636623, a: 0.5019608}
+  - {r: 0.12156863, g: 0.078431375, b: 0.086521216, a: 0.5019608}
+  - {r: 0.6666667, g: 0.101960786, b: 0.2, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: 249e35f2df0b8d8459b0e6b57426c413, type: 3}
+  - {fileID: 21300000, guid: 249e35f2df0b8d8459b0e6b57426c413, type: 3}
+  - {fileID: 21300000, guid: 64fdc72f0fbc2874f8b93b6095efa423, type: 3}
+  - {fileID: 21300000, guid: c514f872cfbfad149b13e61615007a0f, type: 3}
+  - {fileID: 21300000, guid: c514f872cfbfad149b13e61615007a0f, type: 3}
+  - {fileID: 21300000, guid: a24118399eb17e44cb35ae95640893be, type: 3}

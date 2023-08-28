@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f3758f8f58fdef43803eb9be1df0608, type: 3}
+  m_Name: PhotonServerSettings
+  m_EditorClassIdentifier: 
+  AppSettings:
+    AppIdRealtime: a354d97e-da11-4ff5-8522-a4d0e3861fbf
+    AppIdFusion: 
+    AppIdChat: be7d685b-e0ae-4f7b-af1f-3ee5992fb8a3
+    AppIdVoice: 
+    AppVersion: 
+    UseNameServer: 1
+    FixedRegion: 
+    Server: 
+    Port: 0
+    ProxyServer: 
+    Protocol: 0
+    EnableProtocolFallback: 1
+    AuthMode: 0
+    EnableLobbyStatistics: 0
+    NetworkLogging: 1
+  DevRegion: 
+  PunLogging: 0
+  EnableSupportLogger: 0
+  RunInBackground: 1
+  StartInOfflineMode: 0
+  RpcList:
+  - ClickRpc
+  - DestroyRpc
+  - DestroySpaceship
+  - Fire
+  - RespawnSpaceship
+  - Select_Region
+  - SendOffersToOnlinePLayer
+  - SendOffersToOnlinePlayer
+  - AcceptOffers
+  - OnlineAcceptOffers
+  - RPC_OnlineAcceptOffers
+  - RPC_SendOffer
+  - RPC_SendTestOffer
+  - RPC_SendOnlineOffer
+  - RPC_AcceptOnline
+  - RPC_AcceptOnlineOffer
+  - RPC_OnlineOpenMessage
+  - RPC_DeclineOnlineOffer
+  - RPC_AcceptOffer
+  - RPC_AddTechnology
+  - RPC_AddUnitToArmy
+  - RPC_AnnexRegion
+  - RPC_CreateUnit
+  - RPC_MoveUnit
+  - RPC_NextMove
+  - RPC_RemoveUnitFromArmy
+  - RPC_SetCountryIncomeValues
+  - RPC_SetCountryNaturalIncomeValues
+  - RPC_SetCountryValues
+  - RPC_SetReady
+  - RPC_SetRegionValues
+  - RPC_UpdateCountryGraphics
+  DisableAutoOpenWizard: 1
+  ShowSettings: 1
+  DevRegionSetOnce: 1

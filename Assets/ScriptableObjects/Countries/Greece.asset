@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Greece
+  m_EditorClassIdentifier: 
+  _id: 13
+  _name: "\u0413\u0440\u0435\u0446\u0438\u044F"
+  _nameEN: Greece
+  _uiName: "\u0413\u0440\u0435\u0446\u0438\u044F"
+  _tag: ELL
+  countryType: 1
+  countryFlag: {fileID: 21300000, guid: af891e45219966b46bde084126c875c0, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.52156866, g: 0.627451, b: 0.7137255, a: 0.5}
+  countryIdeologyColors:
+  - {r: 0.62352943, g: 0.79607844, b: 0.9529412, a: 0.5019608}
+  - {r: 0.52156866, g: 0.627451, b: 0.7137255, a: 0.5019608}
+  - {r: 0.24029905, g: 0.48216736, b: 0.6792453, a: 0.5019608}
+  - {r: 0.1764706, g: 0.20859683, b: 0.23529412, a: 0.5019608}
+  - {r: 0.078431375, g: 0.1016115, b: 0.12156863, a: 0.5019608}
+  - {r: 0.52156866, g: 0.627451, b: 0.7137255, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: 209c779b66dfdee4cbf37f033fb2fd5c, type: 3}
+  - {fileID: 21300000, guid: 209c779b66dfdee4cbf37f033fb2fd5c, type: 3}
+  - {fileID: 21300000, guid: af891e45219966b46bde084126c875c0, type: 3}
+  - {fileID: 21300000, guid: 0778ed1c15024024fabc7529b3c5945f, type: 3}
+  - {fileID: 21300000, guid: 0778ed1c15024024fabc7529b3c5945f, type: 3}
+  - {fileID: 21300000, guid: 82f633c3a1dff3c44992e714ae231180, type: 3}

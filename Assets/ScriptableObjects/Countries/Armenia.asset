@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Armenia
+  m_EditorClassIdentifier: 
+  _id: 51
+  _name: "\u0410\u0440\u043C\u0435\u043D\u0438\u044F"
+  _nameEN: Armenia
+  _uiName: "\u0410\u0440\u043C\u0435\u043D\u0438\u044F"
+  _tag: ARM
+  countryType: 0
+  countryFlag: {fileID: 21300000, guid: ae0cf00c923e3c44ba4a885aaa09ac52, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.8113208, g: 0.54966974, b: 0.22579211, a: 0.5019608}
+  countryIdeologyColors:
+  - {r: 0.8117647, g: 0.5529412, b: 0.22745098, a: 0.5019608}
+  - {r: 0.8396226, g: 0.62735134, b: 0.36040404, a: 0.5019608}
+  - {r: 0.5660378, g: 0.24747017, b: 0.16286935, a: 0.5019608}
+  - {r: 0.23529412, g: 0.20917678, b: 0.1764706, a: 0.5019608}
+  - {r: 0.12156863, g: 0.10087598, b: 0.078431375, a: 0.5019608}
+  - {r: 0.6226415, g: 0.17328231, b: 0.20435506, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: ae0cf00c923e3c44ba4a885aaa09ac52, type: 3}
+  - {fileID: 21300000, guid: ae0cf00c923e3c44ba4a885aaa09ac52, type: 3}
+  - {fileID: 21300000, guid: c6426710512fc2748857ea4f2d11c1e1, type: 3}
+  - {fileID: 21300000, guid: c54c421fd7ed99b4f88342e06b7aec32, type: 3}
+  - {fileID: 21300000, guid: c54c421fd7ed99b4f88342e06b7aec32, type: 3}
+  - {fileID: 21300000, guid: dd9c23e8a176217439031acd7c5700eb, type: 3}

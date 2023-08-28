@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: PanSlavianUnion
+  m_EditorClassIdentifier: 
+  _id: 1037
+  _name: "\u041F\u0430\u043D-\u0441\u043B\u0430\u0432\u044F\u043D\u0441\u043A\u0438\u0439
+    \u0441\u043E\u044E\u0437"
+  _nameEN: Pan-slavic union
+  _uiName: "\u041F\u0430\u043D\u0441\u043B\u0430\u0432\u044F\u043D\u0441\u043A\u0438\u0439
+    \u0441\u043E\u044E\u0437"
+  _tag: BEM
+  countryType: 5
+  countryFlag: {fileID: 21300000, guid: 7f16fd7e2bad5f4478ce78c2f24369f4, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.15312126, g: 0.3018868, b: 0.14382343, a: 0.5019608}
+  countryIdeologyColors:
+  - {r: 0.15294118, g: 0.3019608, b: 0.14509805, a: 0.5019608}
+  - {r: 0.15294118, g: 0.3019608, b: 0.14509805, a: 0.5019608}
+  - {r: 0.18289427, g: 0.3773585, b: 0.17265932, a: 0.5019608}
+  - {r: 0.182419, g: 0.23529412, b: 0.1764706, a: 0.5019608}
+  - {r: 0.078691356, g: 0.12156863, b: 0.078431375, a: 0.5019608}
+  - {r: 0.754717, g: 0.15307939, b: 0.1637655, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: 7f16fd7e2bad5f4478ce78c2f24369f4, type: 3}
+  - {fileID: 21300000, guid: 7f16fd7e2bad5f4478ce78c2f24369f4, type: 3}
+  - {fileID: 21300000, guid: 7f16fd7e2bad5f4478ce78c2f24369f4, type: 3}
+  - {fileID: 21300000, guid: 6dcbb4569ee385f4d85a3c9220c4bfb7, type: 3}
+  - {fileID: 21300000, guid: 6dcbb4569ee385f4d85a3c9220c4bfb7, type: 3}
+  - {fileID: 21300000, guid: 861b619a75d596b4f8621c1c141d5638, type: 3}

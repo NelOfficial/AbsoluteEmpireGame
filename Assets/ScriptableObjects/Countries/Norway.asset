@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Norway
+  m_EditorClassIdentifier: 
+  _id: 26
+  _name: "\u041D\u043E\u0440\u0432\u0435\u0433\u0438\u044F"
+  _nameEN: Norway
+  _uiName: "\u041D\u043E\u0440\u0432\u0435\u0433\u0438\u044F"
+  _tag: NOR
+  countryType: 2
+  countryFlag: {fileID: 21300000, guid: c6b08c25f8c6e2244be92f6fc9fbbf6b, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.69411767, g: 0.0627451, b: 0.1254902, a: 0.5}
+  countryIdeologyColors:
+  - {r: 0.9529412, g: 0.62352943, b: 0.656011, a: 0.5019608}
+  - {r: 0.69411767, g: 0.0627451, b: 0.1254902, a: 0.5019608}
+  - {r: 0.69411767, g: 0.0627451, b: 0.1254902, a: 0.5019608}
+  - {r: 0.23529412, g: 0.1764706, b: 0.1764706, a: 0.5019608}
+  - {r: 0.12156863, g: 0.078431375, b: 0.078431375, a: 0.5019608}
+  - {r: 0.69411767, g: 0.0627451, b: 0.1254902, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: c6b08c25f8c6e2244be92f6fc9fbbf6b, type: 3}
+  - {fileID: 21300000, guid: c6b08c25f8c6e2244be92f6fc9fbbf6b, type: 3}
+  - {fileID: 21300000, guid: b4d75ebf6afe3f8408b7180265eb1b07, type: 3}
+  - {fileID: 21300000, guid: 00d1aaf4efb7c524eaeaa5bf4ca50cca, type: 3}
+  - {fileID: 21300000, guid: 00d1aaf4efb7c524eaeaa5bf4ca50cca, type: 3}
+  - {fileID: 21300000, guid: 8462d5fd57eb97046a7776bdac0695d5, type: 3}
