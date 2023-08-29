@@ -1,59 +1,68 @@
 using UnityEngine;
-using UnityEngine.Advertisements;
+using YandexMobileAds;
+using YandexMobileAds.Base;
+using TMPro;
+using System;
 
-public class InterstitialAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
+public class InterstitialAds : MonoBehaviour
 {
-    private string androidAdID = "Interstitial_Android";
-    private string iOSAdID = "Interstitial_iOS";
+    private string message = "";
 
-    private string adID;
+    private Interstitial interstitial;
 
-    private void Awake()
+    public TMP_Text textToTest;
+
+    private void Start()
     {
-        adID = (Application.platform == RuntimePlatform.IPhonePlayer) ? iOSAdID : androidAdID;
-        LoadAd();
+        RequestInterstitial();
     }
 
-    public void LoadAd()
+    private void RequestInterstitial()
     {
-        Debug.Log($"Loading ad: {adID}");
-        Advertisement.Load(adID, this);
+        //Sets COPPA restriction for user age under 13 demo-interstitial-yandex
+        MobileAds.SetAgeRestrictedUser(true);
+
+        // Replace demo Unit ID 'demo-interstitial-yandex' with actual Ad Unit ID
+        string adUnitId = "R-M-2659272-2"; //R-M-2515342-1 demo-interstitial-yandex
+
+        if (this.interstitial != null)
+        {
+            this.interstitial.Destroy();
+        }
+
+        this.interstitial = new Interstitial(adUnitId);
+
+        this.interstitial.LoadAd(this.CreateAdRequest());
+        interstitial.OnInterstitialLoaded += HandleInterstitialLoaded;
+        interstitial.OnInterstitialShown += HandleInterstitialShown;
+        this.DisplayMessage("Interstitial is requested");
+        textToTest.text = "Interstitial is requested";
     }
 
-    public void ShowAd()
+    public void ShowInterstitial()
     {
-        Debug.Log($"Showing ad: {adID}");
-        Advertisement.Show(adID, this);
+        textToTest.text = "loading";
+
+        this.interstitial.Show();
+
+        textToTest.text = "showing";
+    }
+    public void HandleInterstitialLoaded(object sender, EventArgs args)
+    {
+        ShowInterstitial();
+    }
+    public void HandleInterstitialShown(object sender, EventArgs args)
+    {
+        RequestInterstitial();
+    }
+    private AdRequest CreateAdRequest()
+    {
+        return new AdRequest.Builder().Build();
     }
 
-    public void OnUnityAdsAdLoaded(string placementId)
+    private void DisplayMessage(string message)
     {
-        
-    }
-
-    public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
-    {
-        Debug.LogError($"Unity Ads failed to load advertisement: {error} ({message})");
-    }
-
-    public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
-    {
-        Debug.LogError($"Unity Ads failed to show advertisement: {error} ({message})");
-    }
-
-    public void OnUnityAdsShowStart(string placementId)
-    {
-        // Start showing an advertisement
-    }
-
-    public void OnUnityAdsShowClick(string placementId)
-    {
-        // Clicked on showing advertisement
-    }
-
-    public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
-    {
-        // Completed
-        LoadAd();
+        this.message = message + (this.message.Length == 0 ? "" : "\n--------\n" + this.message);
+        MonoBehaviour.print(message);
     }
 }
