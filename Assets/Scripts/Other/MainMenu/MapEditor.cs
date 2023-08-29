@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System.IO;
 
 public class MapEditor : MonoBehaviour
 {
@@ -227,6 +228,8 @@ public class MapEditor : MonoBehaviour
         CompileCountries();
         CompileRegions();
         CheckPublish();
+
+        CheckModFolder();
     }
 
     public void Publish()
@@ -341,5 +344,23 @@ public class MapEditor : MonoBehaviour
         string value = part.Remove(part.Length - 1);
 
         return value;
+    }
+
+    private void CheckModFolder()
+    {
+        string path = Path.Combine(Application.persistentDataPath, $"localmods", $"{nameInputField.text}");
+        CreateFolder("", "localmods");
+        CreateFolder("localmods", nameInputField.text);
+    }
+
+    private void CreateFolder(string _path, string folderName)
+    {
+        string path = Path.Combine(Application.persistentDataPath, $"{_path}");
+
+        path = Path.Combine(path, $"{folderName}");
+
+        Directory.CreateDirectory(path);
+
+        Debug.Log($"Создал папку {folderName} по пути {path}");
     }
 }
