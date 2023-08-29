@@ -350,7 +350,8 @@ public class MapEditor : MonoBehaviour
     {
         string path = Path.Combine(Application.persistentDataPath, $"localmods", $"{nameInputField.text}");
         CreateFolder("", "localmods");
-        CreateFolder("localmods", nameInputField.text);
+
+        CreateFolder("localmods", nameInputField.text); 
     }
 
     private void CreateFolder(string _path, string folderName)
