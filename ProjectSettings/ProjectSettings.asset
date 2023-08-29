@@ -253,7 +253,7 @@ PlayerSettings:
   AndroidTargetDevices: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: D:/ForUnity/Projects/AbsoluteEmpire/absolutempire.keystore
+  AndroidKeystoreName: '{inproject}: absolutempire.keystore'
   AndroidKeyaliasName: syntaxerror
   AndroidEnableArmv9SecurityFeatures: 0
   AndroidBuildApkPerCpuArchitecture: 0
