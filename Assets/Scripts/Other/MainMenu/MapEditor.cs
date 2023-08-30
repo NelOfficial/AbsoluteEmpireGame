@@ -91,97 +91,92 @@ public class MapEditor : MonoBehaviour
     private void LoadMod()
     {
         modID = PlayerPrefs.GetInt("CURRENT_EDITING_MODIFICATION");
-        modData = PlayerPrefs.GetString($"MODIFICATION_{modID}");
+        string loadedModName = PlayerPrefs.GetString($"MODIFICATION_{modID}");
 
-        string[] lines = modData.Split(';');
+        string loadedModPath = Path.Combine(Application.persistentDataPath, "savedMods", $"{loadedModName}");
 
-        try
+        if (Directory.Exists(loadedModPath))
         {
-            string _line = lines[0];
-            parts = _line.Split('[');
+            string[] dataParts = modData.Split("##########");
+            string[] mainModDataLines = dataParts[0].Split(';');
+            string[] regionsDataLines = dataParts[1].Split(';');
 
-            secondPart = parts[1];
-
-            value = secondPart.Remove(secondPart.Length - 1);
-        }
-        catch (System.Exception)
-        {
-            if (ReferencesManager.Instance.gameSettings.developerMode)
-            {
-                Debug.LogError($"ERROR: Mod loader error in value parser (MapEditor.cs)");
-            }
-        }
-
-        nameInputField.interactable = false;
-        descInputField.interactable = false;
-        nameInputField.text = $"{value}";
-
-
-        int regionsLineIndex = 0;
-
-        for (int i = 0; i < lines.Length; i++)
-        {
-            if (lines[i] == "##########")
-            {
-                regionsLineIndex = i + 1;
-            }
-        }
-
-        List<int> countriesInRegionsIDs = new List<int>();
-
-        for (int r = regionsLineIndex; r < lines.Length; r++)
-        {
             try
             {
-                string _line = lines[r];
+                string _line = mainModDataLines[0];
                 parts = _line.Split('[');
 
                 secondPart = parts[1];
 
                 value = secondPart.Remove(secondPart.Length - 1);
-
-                countriesInRegionsIDs.Add(int.Parse(value));
             }
-            catch
+            catch (System.Exception)
             {
                 if (ReferencesManager.Instance.gameSettings.developerMode)
                 {
                     Debug.LogError($"ERROR: Mod loader error in value parser (MapEditor.cs)");
                 }
             }
-        }
 
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Length; i++)
-        {
-            try
+            nameInputField.interactable = false;
+            descInputField.interactable = false;
+            nameInputField.text = $"{value}";
+
+            List<int> countriesInRegionsIDs = new List<int>();
+
+            for (int r = 0; r < regionsDataLines.Length; r++)
             {
-                string _line = lines[i + regionsLineIndex];
-                if (_line != "##########")
+                try
                 {
-                    string[] regionIdParts = _line.Split(' ');
-                    regionValue = regionIdParts[0].Remove(0, 7);
+                    string _line = regionsDataLines[r];
+                    parts = _line.Split('[');
+
+                    secondPart = parts[1];
+
+                    value = secondPart.Remove(secondPart.Length - 1);
+
+                    countriesInRegionsIDs.Add(int.Parse(value));
                 }
-
-                //Debug.Log($"{regions[i]._id} ({regions[i].currentCountry.country._nameEN}) | {regionValue}");
-
-                if ((ReferencesManager.Instance.countryManager.regions[i]._id) == int.Parse(regionValue)) // - 1
+                catch
                 {
-                    for (int c = 0; c < globalCountries.Length; c++)
+                    if (ReferencesManager.Instance.gameSettings.developerMode)
                     {
-                        if (globalCountries[c].country._id == countriesInRegionsIDs[i])
-                        {
-                            ReferencesManager.Instance.PaintRegion(ReferencesManager.Instance.countryManager.regions[i], globalCountries[c]);
-                        }
+                        Debug.LogError($"ERROR: Mod loader error in value parser (MapEditor.cs)");
                     }
                 }
             }
-            catch (System.Exception)
+
+            for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Length; i++)
             {
-                if (ReferencesManager.Instance.gameSettings.developerMode)
+                try
                 {
-                    Debug.LogError($"ERROR: Mod loader error in regionValue parser (MapEditor.cs)");
+                    string _line = regionsDataLines[i];
+                    if (_line != "##########")
+                    {
+                        string[] regionIdParts = _line.Split(' ');
+                        regionValue = regionIdParts[0].Remove(0, 7);
+                    }
+
+                    if ((ReferencesManager.Instance.countryManager.regions[i]._id) == int.Parse(regionValue)) // - 1
+                    {
+                        for (int c = 0; c < globalCountries.Length; c++)
+                        {
+                            if (globalCountries[c].country._id == countriesInRegionsIDs[i])
+                            {
+                                ReferencesManager.Instance.PaintRegion(ReferencesManager.Instance.countryManager.regions[i], globalCountries[c]);
+                            }
+                        }
+                    }
+                }
+                catch (System.Exception)
+                {
+                    if (ReferencesManager.Instance.gameSettings.developerMode)
+                    {
+                        Debug.LogError($"ERROR: Mod loader error in regionValue parser (MapEditor.cs)");
+                    }
                 }
             }
+
         }
     }
 
@@ -348,20 +343,29 @@ public class MapEditor : MonoBehaviour
 
     private void CheckModFolder()
     {
-        string path = Path.Combine(Application.persistentDataPath, $"localmods", $"{nameInputField.text}");
-        CreateFolder("", "localmods");
+        string localModsPath = Path.Combine(Application.persistentDataPath, $"localmods");
+        string modPath = Path.Combine(localModsPath, $"{nameInputField.text}");
 
-        CreateFolder("localmods", nameInputField.text); 
+        string modDataFilePath = Path.Combine(modPath, $"{nameInputField.text}_modData.AEMod");
+
+        if (!Directory.Exists(modPath))
+        {
+            CreateFolder("", "localmods");
+            CreateFolder("localmods", nameInputField.text);
+        }
+
+        StreamWriter streamWriter;
+        FileInfo file = new FileInfo(modDataFilePath);
+        streamWriter = file.CreateText();
+
+        streamWriter.Write(currentModText);
     }
 
     private void CreateFolder(string _path, string folderName)
     {
         string path = Path.Combine(Application.persistentDataPath, $"{_path}");
-
         path = Path.Combine(path, $"{folderName}");
 
         Directory.CreateDirectory(path);
-
-        Debug.Log($"Создал папку {folderName} по пути {path}");
     }
 }
