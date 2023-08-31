@@ -94,8 +94,12 @@ public class MapEditor : MonoBehaviour
     {
         modID = PlayerPrefs.GetInt("CURRENT_EDITING_MODIFICATION");
         string loadedModName = PlayerPrefs.GetString($"MODIFICATION_{modID}");
-
         string loadedModPath = Path.Combine(Application.persistentDataPath, "savedMods", $"{loadedModName}");
+
+        StreamReader reader = new StreamReader(Path.Combine(loadedModPath, $"{loadedModName}.AEMod"));
+        modData = reader.ReadToEnd();
+
+        reader.Close();
 
         if (Directory.Exists(loadedModPath))
         {

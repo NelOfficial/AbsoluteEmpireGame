@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine.Networking;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class LocalModButton : MonoBehaviour
 {
@@ -17,7 +18,10 @@ public class LocalModButton : MonoBehaviour
 
     [SerializeField] Image currentCountryFlag;
 
-    public string modString;
+    public string modName;
+
+    private string modPath;
+    private string modData;
 
     private void Awake()
     {
@@ -26,18 +30,15 @@ public class LocalModButton : MonoBehaviour
 
     public void SetUp()
     {
-        modString = PlayerPrefs.GetString($"MODIFICATION_{id}");
+        modName = PlayerPrefs.GetString($"MODIFICATION_{id}");
+        modPath = Path.Combine(Application.persistentDataPath, "savedMods", modName, $"{modName}.AEMod");
 
-        string[] lines = modString.Split(';');
+        StreamReader reader = new StreamReader(modPath);
+        modData = reader.ReadToEnd();
 
-        try
-        {
-            string _name = GetValue(lines, 0);
-            modNameText.text = _name;
-        }
-        catch (System.Exception)
-        {
-        }
+        reader.Close();
+
+        modNameText.text = modName;
     }
 
     private string GetValue(string[] _lines, int line)
@@ -71,7 +72,7 @@ public class LocalModButton : MonoBehaviour
     public void Play()
     {
         modificationPanel.currentLoadedModification.id = id;
-        modificationPanel.currentLoadedModification.currentScenarioData = PlayerPrefs.GetString($"MODIFICATION_{id}");
+        modificationPanel.currentLoadedModification.currentScenarioData = modData;
         modificationPanel.countriesListPanel.SetActive(true);
 
         modificationPanel.UpdateCountriesList();
@@ -149,7 +150,7 @@ public class LocalModButton : MonoBehaviour
             }
             else if (PlayerPrefs.GetInt("languageId") == 1)
             {
-                modNameText.text = "�� ������� ������� ��� �����������";
+                modNameText.text = "Вы удалили этот мод";
             }
 
             yield return new WaitForSeconds(1.5f);

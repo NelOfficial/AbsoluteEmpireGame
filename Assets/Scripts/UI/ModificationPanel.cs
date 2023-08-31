@@ -72,11 +72,16 @@ public class ModificationPanel : MonoBehaviour
 
             for (int i = 0; i < loadedModsIds.Length; i++)
             {
-                ModListValue.LocalSavedModification mod = new ModListValue.LocalSavedModification();
-                mod.id = int.Parse(loadedModsIds[i].Split('_')[0]);
-                mod.version = int.Parse(loadedModsIds[i].Split('_')[1]);
+                string modName = PlayerPrefs.GetString($"MODIFICATION_{int.Parse(loadedModsIds[i].Split('_')[0])}");
 
-                downloadedModsIds.list.Add(mod);
+                if (Directory.Exists(Path.Combine(Application.persistentDataPath, "savedMods", $"{modName}")))
+                {
+                    ModListValue.LocalSavedModification mod = new ModListValue.LocalSavedModification();
+                    mod.id = int.Parse(loadedModsIds[i].Split('_')[0]);
+                    mod.version = int.Parse(loadedModsIds[i].Split('_')[1]);
+
+                    downloadedModsIds.list.Add(mod);
+                }
             }
         }
     }
@@ -319,48 +324,45 @@ public class ModificationPanel : MonoBehaviour
     {
         mainMenu.ScrollEffect(countriesListContainer.GetComponent<RectTransform>());
 
-        string[] lines = currentLoadedModification.currentScenarioData.Split(';');
+        string[] dataParts = currentLoadedModification.currentScenarioData.Split("##########");
+        string[] mainModDataLines = dataParts[0].Split(';');
+        string[] regionsDataLines = dataParts[1].Split(';');
 
         // Get countries in list from mod data
 
         currentModCountries.Clear();
 
-        for (int i = 2; i < lines.Length; i++)
+        for (int i = 2; i < mainModDataLines.Length; i++)
         {
-            string _line = lines[i];
+            string _line = mainModDataLines[i];
             string value = "";
-            if (_line != "##########")
+
+            try
             {
-                try
-                {
-                    string part = _line.Split('[')[1];
-                    value = part.Remove(part.Length - 1);
-                }
-                catch (System.Exception)
-                {
-                    //Debug.Log($"line error: {_line}");
-                }
+                string part = _line.Split('[')[1];
+                value = part.Remove(part.Length - 1);
+            }
+            catch (Exception)
+            {
+                //Debug.Log($"line error: {_line}");
             }
 
-            if (lines[i] != "##########")
+            for (int c = 0; c < ReferencesManager.Instance.globalCountries.Length; c++)
             {
-                for (int c = 0; c < ReferencesManager.Instance.globalCountries.Length; c++)
+                CountryScriptableObject country = ReferencesManager.Instance.globalCountries[c];
+
+                bool hasCountryInList = currentModCountries.Any(item => item._id == country._id);
+
+                try
                 {
-                    CountryScriptableObject country = ReferencesManager.Instance.globalCountries[c];
-
-                    bool hasCountryInList = currentModCountries.Any(item => item._id == country._id);
-
-                    try
+                    if (country._id == int.Parse(value) && !hasCountryInList)
                     {
-                        if (country._id == int.Parse(value) && !hasCountryInList)
-                        {
-                            currentModCountries.Add(country);
-                        }
+                        currentModCountries.Add(country);
                     }
-                    catch (System.Exception)
-                    {
-                        //Debug.Log($"parse error: {value}");
-                    }
+                }
+                catch (Exception)
+                {
+                    //Debug.Log($"parse error: {value}");
                 }
             }
         }
@@ -392,23 +394,19 @@ public class ModificationPanel : MonoBehaviour
 
         string modData = reader.ReadToEnd();
 
-        string savedModPath = Path.Combine($"{Application.persistentDataPath}", "savedMods", $"{currentLoadedModification.currentScenarioName}");
-        string savedModsPath = Path.Combine($"{Application.persistentDataPath}", "savedMods");
+        string ModPath = Path.Combine($"{Application.persistentDataPath}", "savedMods", $"{currentLoadedModification.currentScenarioName}");
+        string ModsPath = Path.Combine($"{Application.persistentDataPath}", "savedMods");
 
-        if (!Directory.Exists(savedModsPath))
+        if (!Directory.Exists(ModsPath))
         {
             CreateFolder("", "savedMods");
         }
 
-        CreateFolder(savedModPath, $"{currentLoadedModification.currentScenarioName}");
+        CreateFolder(ModsPath, $"{currentLoadedModification.currentScenarioName}");
+        CreateFolder(ModPath, $"events");
+        CreateFolder(ModPath, $"countries");
 
-        StreamWriter streamWriter;
-        FileInfo file = new FileInfo(savedModPath);
-        streamWriter = file.CreateText();
-
-        streamWriter.Write(modData);
-
-        //CreateFile(modData, Path.Combine(savedModPath, $"{currentLoadedModification.currentScenarioName}.AEMod"));
+        CreateFile(modData, Path.Combine(ModPath, $"{currentLoadedModification.currentScenarioName}.AEMod"));
 
         data.Close();
         reader.Close();
@@ -545,6 +543,7 @@ public class ModificationPanel : MonoBehaviour
         path = Path.Combine(path, $"{folderName}");
 
         Directory.CreateDirectory(path);
+        Debug.Log($"Created folder in {path} with name: {folderName}");
     }
 
     private void CreateFile(string fileText, string path)
@@ -554,6 +553,9 @@ public class ModificationPanel : MonoBehaviour
         streamWriter = file.CreateText();
 
         streamWriter.Write(fileText);
+        streamWriter.Close();
+
+        Debug.Log($"Created file in {path} with text: {fileText}");
     }
 
     [System.Serializable]

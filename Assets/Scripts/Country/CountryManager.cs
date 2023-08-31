@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System.IO;
 
 public class CountryManager : MonoBehaviour
 {
@@ -23,6 +24,8 @@ public class CountryManager : MonoBehaviour
     public string secondPart;
     public string value;
     public string regionValue;
+
+    public List<int> countriesInRegionsIDs = new List<int>();
 
     private void Start()
     {
@@ -302,14 +305,21 @@ public class CountryManager : MonoBehaviour
     {
         int currentModID = PlayerPrefs.GetInt("CURRENT_MOD_PLAYING");
 
-        string modData = PlayerPrefs.GetString($"MODIFICATION_{currentModID}");
+        string modName = PlayerPrefs.GetString($"MODIFICATION_{currentModID}");
+        string modData = "";
 
+        StreamReader reader = new StreamReader(Path.Combine(Application.persistentDataPath, "savedMods", $"{modName}", $"{modName}.AEMod"));
+        modData = reader.ReadToEnd();
 
-        string[] lines = modData.Split(';');
+        reader.Close();
+
+        string[] dataParts = modData.Split("##########");
+        string[] mainModDataLines = dataParts[0].Split(';');
+        string[] regionsDataLines = dataParts[1].Split(';');
 
         try
         {
-            string _line = lines[1];
+            string _line = mainModDataLines[1];
             parts = _line.Split('[');
 
             secondPart = parts[1];
@@ -335,54 +345,39 @@ public class CountryManager : MonoBehaviour
             ReferencesManager.Instance.gameSettings.allowGameEvents = true;
         }
 
-        int regionsLineIndex = 0;
-
-        for (int i = 0; i < lines.Length; i++)
+        for (int i = 2; i < mainModDataLines.Length; i++)
         {
-            if (lines[i] == "##########")
+            string _line = mainModDataLines[i];
+            try
             {
-                regionsLineIndex = i + 1;
+                parts = _line.Split('[');
+                secondPart = parts[1];
+                value = secondPart.Remove(secondPart.Length - 1);
             }
-        }
-
-        for (int i = 2; i < lines.Length; i++)
-        {
-            string _line = lines[i];
-            if (_line != "##########")
+            catch (System.Exception)
             {
-                try
-                {
-                    parts = _line.Split('[');
-                    secondPart = parts[1];
-                    value = secondPart.Remove(secondPart.Length - 1);
-                }
-                catch (System.Exception)
-                {
 
-                }
+            }
 
-                bool _hasCountry = countries.Any(item => item.country._id == int.Parse(value));
+            bool _hasCountry = countries.Any(item => item.country._id == int.Parse(value));
 
-                if (!_hasCountry)
+            if (!_hasCountry)
+            {
+                foreach (CountryScriptableObject countryScriptableObject in ReferencesManager.Instance.globalCountries)
                 {
-                    foreach (CountryScriptableObject countryScriptableObject in ReferencesManager.Instance.globalCountries)
+                    if (countryScriptableObject._id == int.Parse(value))
                     {
-                        if (countryScriptableObject._id == int.Parse(value))
-                        {
-                            ReferencesManager.Instance.CreateCountry(countryScriptableObject, "Неопределено");
-                        }
+                        ReferencesManager.Instance.CreateCountry(countryScriptableObject, "Неопределено");
                     }
                 }
             }
         }
 
-        List<int> countriesInRegionsIDs = new List<int>();
-
-        for (int r = regionsLineIndex; r < lines.Length; r++)
+        for (int r = 0; r < regionsDataLines.Length; r++)
         {
             try
             {
-                string _line = lines[r];
+                string _line = regionsDataLines[r];
                 parts = _line.Split('[');
 
                 secondPart = parts[1];
@@ -404,25 +399,41 @@ public class CountryManager : MonoBehaviour
         {
             try
             {
-                string _line = lines[i + regionsLineIndex];
-                if (_line != "##########")
-                {
-                    string[] regionIdParts = _line.Split(' ');
-                    regionValue = regionIdParts[0].Remove(0, 7);
-                }
+                string _line = regionsDataLines[i];
+                string[] regionIdParts = _line.Split(' ');
+                regionValue = regionIdParts[0].Remove(0, 7);
+                int regValue = int.Parse(regionValue);
 
-                //Debug.Log($"{regions[i]._id} ({regions[i].currentCountry.country._nameEN}) | {regionValue}");
-
-                if ((regions[i]._id) == int.Parse(regionValue)) // - 1
+                for (int c = 0; c < countries.Count; c++)
                 {
-                    for (int c = 0; c < countries.Count; c++)
+                    if (countries[c].country._id == countriesInRegionsIDs[0])
                     {
-                        if (countries[c].country._id == countriesInRegionsIDs[i])
-                        {
-                            ReferencesManager.Instance.AnnexRegion(regions[i], countries[c]);
-                        }
+                        ReferencesManager.Instance.AnnexRegion(regions[0], countries[c]);
                     }
                 }
+                for (int c = 0; c < countries.Count; c++)
+                {
+                    if (countries[c].country._id == countriesInRegionsIDs[i])
+                    {
+                        ReferencesManager.Instance.AnnexRegion(regions[i], countries[c]);
+                    }
+                }
+
+                //for (int r = 0; r < modRegionsIds.Count; r++)
+                //{
+                //    //Debug.Log($"Real {regions[i]._id} ({regions[i].currentCountry.country._nameEN}) | {regValue}");
+
+                //    if (regions[i]._id == modRegionsIds[r])
+                //    {
+                //        for (int c = 0; c < countries.Count; c++)
+                //        {
+                //            if (countries[c].country._id == countriesInRegionsIDs[i])
+                //            {
+                //                ReferencesManager.Instance.AnnexRegion(regions[i], countries[c]);
+                //            }
+                //        }
+                //    }
+                //}
             }
             catch (System.Exception)
             {
