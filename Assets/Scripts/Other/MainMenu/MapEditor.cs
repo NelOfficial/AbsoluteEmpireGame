@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System.IO;
+using System.Xml.Serialization;
 
 public class MapEditor : MonoBehaviour
 {
@@ -45,6 +46,7 @@ public class MapEditor : MonoBehaviour
 
     private string value;
     private string regionValue;
+
 
     private void Start()
     {
@@ -354,11 +356,16 @@ public class MapEditor : MonoBehaviour
             CreateFolder("localmods", nameInputField.text);
         }
 
+        CreateFile(modData, modDataFilePath);
+    }
+
+    private void CreateFile(string fileText, string path)
+    {
         StreamWriter streamWriter;
-        FileInfo file = new FileInfo(modDataFilePath);
+        FileInfo file = new FileInfo(path);
         streamWriter = file.CreateText();
 
-        streamWriter.Write(currentModText);
+        streamWriter.Write(fileText);
     }
 
     private void CreateFolder(string _path, string folderName)

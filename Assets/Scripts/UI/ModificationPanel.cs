@@ -4,6 +4,9 @@ using UnityEngine.UI;
 using UnityEngine;
 using System.Linq;
 using TMPro;
+using System.IO;
+using System.Net;
+using System;
 
 public class ModificationPanel : MonoBehaviour
 {
@@ -382,6 +385,34 @@ public class ModificationPanel : MonoBehaviour
     {
         bool alreadyDownloaded = downloadedModsIds.list.Any(item => item.id == currentLoadedModification.id);
 
+        WebClient client = new WebClient();
+
+        Stream data = client.OpenRead(@$"http://absolute-empire.7m.pl/media/uploads/mods/{currentLoadedModification.currentScenarioName}/{currentLoadedModification.currentScenarioName}.AEMod");
+        StreamReader reader = new StreamReader(data);
+
+        string modData = reader.ReadToEnd();
+
+        string savedModPath = Path.Combine($"{Application.persistentDataPath}", "savedMods", $"{currentLoadedModification.currentScenarioName}");
+        string savedModsPath = Path.Combine($"{Application.persistentDataPath}", "savedMods");
+
+        if (!Directory.Exists(savedModsPath))
+        {
+            CreateFolder("", "savedMods");
+        }
+
+        CreateFolder(savedModPath, $"{currentLoadedModification.currentScenarioName}");
+
+        StreamWriter streamWriter;
+        FileInfo file = new FileInfo(savedModPath);
+        streamWriter = file.CreateText();
+
+        streamWriter.Write(modData);
+
+        //CreateFile(modData, Path.Combine(savedModPath, $"{currentLoadedModification.currentScenarioName}.AEMod"));
+
+        data.Close();
+        reader.Close();
+
         if (alreadyDownloaded)
         {
             foreach (ModListValue.LocalSavedModification localMod in downloadedModsIds.list)
@@ -401,7 +432,7 @@ public class ModificationPanel : MonoBehaviour
             downloadedModsIds.list.Add(mod);
         }
 
-        PlayerPrefs.SetString($"MODIFICATION_{currentLoadedModification.id}", $"{currentLoadedModification.currentScenarioData}");
+        PlayerPrefs.SetString($"MODIFICATION_{currentLoadedModification.id}", $"{currentLoadedModification.currentScenarioName}");
 
         UpdateSavedIds();
 
@@ -506,6 +537,23 @@ public class ModificationPanel : MonoBehaviour
         PlayerPrefs.SetInt("CURRENT_MOD_PLAYING", currentLoadedModification.id);
 
         mainMenu.LoadScene("EuropeSceneOffline");
+    }
+
+    private void CreateFolder(string _path, string folderName)
+    {
+        string path = Path.Combine(Application.persistentDataPath, $"{_path}");
+        path = Path.Combine(path, $"{folderName}");
+
+        Directory.CreateDirectory(path);
+    }
+
+    private void CreateFile(string fileText, string path)
+    {
+        StreamWriter streamWriter;
+        FileInfo file = new FileInfo(path);
+        streamWriter = file.CreateText();
+
+        streamWriter.Write(fileText);
     }
 
     [System.Serializable]
