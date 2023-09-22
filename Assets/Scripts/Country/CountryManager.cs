@@ -134,6 +134,11 @@ public class CountryManager : MonoBehaviour
             {
                 LoadMod();
             }
+            else if (ReferencesManager.Instance.gameSettings.playTestingMod)
+            {
+                PlayTestMod(PlayerPrefs.GetString("CURRENT_MOD_PLAYTESTING"));
+                ReferencesManager.Instance.gameSettings.developerCheats = true;
+            }
         }
 
 
@@ -453,6 +458,147 @@ public class CountryManager : MonoBehaviour
                 if (countries[i].country._id == PlayerPrefs.GetInt("currentCountryIndex"))
                 {
                     currentCountry = countries[i];
+                    currentCountry.isPlayer = true;
+                }
+            }
+        }
+    }
+
+    private void PlayTestMod(string _name)
+    {
+        string modName = _name;
+        string modData = "";
+
+        StreamReader reader = new StreamReader(Path.Combine(Application.persistentDataPath, "localMods", $"{modName}", $"{modName}_modData.AEMod"));
+        modData = reader.ReadToEnd();
+
+        reader.Close();
+
+        string[] dataParts = modData.Split("##########");
+        string[] mainModDataLines = dataParts[0].Split(';');
+        string[] regionsDataLines = dataParts[1].Split(';');
+
+        try
+        {
+            string _line = mainModDataLines[1];
+            parts = _line.Split('[');
+
+            secondPart = parts[1];
+
+            value = secondPart.Remove(secondPart.Length - 1);
+        }
+        catch (System.Exception)
+        {
+            if (ReferencesManager.Instance.gameSettings.developerMode)
+            {
+                Debug.LogError($"ERROR: Mod loader error in value parser (CountryManager.cs)");
+            }
+        }
+
+        int isModAllowsGameEvents = int.Parse(value);
+
+        if (isModAllowsGameEvents == 0)
+        {
+            ReferencesManager.Instance.gameSettings.allowGameEvents = false;
+        }
+        else if (isModAllowsGameEvents == 1)
+        {
+            ReferencesManager.Instance.gameSettings.allowGameEvents = true;
+        }
+
+        for (int i = 2; i < mainModDataLines.Length; i++)
+        {
+            string _line = mainModDataLines[i];
+            try
+            {
+                parts = _line.Split('[');
+                secondPart = parts[1];
+                value = secondPart.Remove(secondPart.Length - 1);
+            }
+            catch (System.Exception)
+            {
+
+            }
+
+            bool _hasCountry = countries.Any(item => item.country._id == int.Parse(value));
+
+            if (!_hasCountry)
+            {
+                foreach (CountryScriptableObject countryScriptableObject in ReferencesManager.Instance.globalCountries)
+                {
+                    if (countryScriptableObject._id == int.Parse(value))
+                    {
+                        ReferencesManager.Instance.CreateCountry(countryScriptableObject, "Неопределено");
+                    }
+                }
+            }
+        }
+
+        for (int r = 0; r < regionsDataLines.Length; r++)
+        {
+            try
+            {
+                string _line = regionsDataLines[r];
+                parts = _line.Split('[');
+
+                secondPart = parts[1];
+
+                value = secondPart.Remove(secondPart.Length - 1);
+
+                countriesInRegionsIDs.Add(int.Parse(value));
+            }
+            catch
+            {
+                if (ReferencesManager.Instance.gameSettings.developerMode)
+                {
+                    Debug.LogError($"ERROR: Mod loader error in value parser (CountryManager.cs)");
+                }
+            }
+        }
+
+        for (int i = 0; i < regions.Length; i++)
+        {
+            try
+            {
+                string _line = regionsDataLines[i];
+                string[] regionIdParts = _line.Split(' ');
+                regionValue = regionIdParts[0].Remove(0, 7);
+                int regValue = int.Parse(regionValue);
+
+                for (int c = 0; c < countries.Count; c++)
+                {
+                    if (countries[c].country._id == countriesInRegionsIDs[0])
+                    {
+                        ReferencesManager.Instance.AnnexRegion(regions[0], countries[c]);
+                    }
+                }
+                for (int c = 0; c < countries.Count; c++)
+                {
+                    if (countries[c].country._id == countriesInRegionsIDs[i])
+                    {
+                        ReferencesManager.Instance.AnnexRegion(regions[i], countries[c]);
+                    }
+                }
+            }
+            catch (System.Exception)
+            {
+                if (ReferencesManager.Instance.gameSettings.developerMode)
+                {
+                    Debug.LogError($"ERROR: Mod loader error in regionValue parser (CountryManager.cs)");
+                }
+            }
+        }
+
+        bool hasCountry = countries.Any(item => item.country._id == PlayerPrefs.GetInt("currentCountryIndex"));
+
+        for (int i = 0; i < countries.Count; i++)
+        {
+            if (hasCountry)
+            {
+                if (countries[i].country._id == PlayerPrefs.GetInt("currentCountryIndex"))
+                {
+                    currentCountry = countries[i];
+                    currentCountry.isPlayer = true;
                 }
             }
         }

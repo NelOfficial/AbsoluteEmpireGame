@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.devmastery.nativegallery": {
+      "version": "https://github.com/devmastery0319/loadpicturefromGallery.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "64601b222d532adba3b67601ec9f01cc594cfbe6"
+    },
     "com.unity.2d.animation": {
       "version": "9.0.3",
       "depth": 1,
@@ -264,6 +271,13 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
+    },
+    "com.yasirkula.nativegallery": {
+      "version": "https://github.com/yasirkula/UnityNativeGallery.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "c777ed2b916eed860bbab7dc9baf2bc422ec42ce"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

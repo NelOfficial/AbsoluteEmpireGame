@@ -62,6 +62,7 @@ public class UnitMovement : MonoBehaviour
             if (countryManager.currentCountry == point.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>().currentCountry)
             {
                 point.gameObject.GetComponent<SpriteRenderer>().sprite = army.pointSprite;
+
                 point.GetComponent<MovePoint>().regionTo.GetComponent<SpriteRenderer>().color =
                     new Color(
                     ReferencesManager.Instance.gameSettings.greenColor.r,
@@ -109,6 +110,7 @@ public class UnitMovement : MonoBehaviour
             }
 
             point.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 99;
+            point.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = "RegionInfo";
         }
     }
 

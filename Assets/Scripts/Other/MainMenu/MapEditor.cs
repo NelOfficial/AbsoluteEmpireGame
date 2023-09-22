@@ -6,7 +6,13 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System.IO;
-using System.Xml.Serialization;
+using UnityEditor;
+using Unity.VisualScripting;
+using UnityEditor.PackageManager;
+using UnityEditor.VersionControl;
+using System.Net;
+using System;
+using UnityEngine.Networking;
 
 public class MapEditor : MonoBehaviour
 {
@@ -25,7 +31,7 @@ public class MapEditor : MonoBehaviour
     private bool isOpen;
 
     [SerializeField] Button publishButton;
-    [SerializeField] TMP_InputField nameInputField;
+    public TMP_InputField nameInputField;
     [SerializeField] TMP_InputField descInputField;
     [SerializeField] Toggle allowEventsToggle;
 
@@ -47,6 +53,8 @@ public class MapEditor : MonoBehaviour
     private string value;
     private string regionValue;
 
+    [SerializeField] EventCreatorManager _eventCreatorManager;
+
 
     private void Start()
     {
@@ -61,6 +69,8 @@ public class MapEditor : MonoBehaviour
         {
             LoadMod();
         }
+
+        _eventCreatorManager = FindObjectOfType<EventCreatorManager>();
     }
 
     public void OpenUI()
@@ -228,6 +238,7 @@ public class MapEditor : MonoBehaviour
         currentModText = $"NAME = [{nameInputField.text}];ALLOW_EVENTS = [{eventsState}];";
         CompileCountries();
         CompileRegions();
+        CompileEvents();
         CheckPublish();
 
         CheckModFolder();
@@ -289,6 +300,79 @@ public class MapEditor : MonoBehaviour
         }
     }
 
+    public void PlayTestMod()
+    {
+        if (string.IsNullOrEmpty(nameInputField.text))
+        {
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                WarningManager.Instance.Warn("Enter mod name.");
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                WarningManager.Instance.Warn("¬ведите им€ мода.");
+            }
+        }
+        else
+        {
+            modData = currentModText;
+            CompileMod();
+
+            if (!string.IsNullOrEmpty(modData))
+            {
+                ReferencesManager.Instance.gameSettings.jsonTest = true;
+
+                PlayerPrefs.SetString("CURRENT_MOD_PLAYTESTING", nameInputField.text);
+
+                SceneManager.LoadScene(1);
+            }
+        }
+    }
+
+    public void CreateEventAsset(int eventId)
+    {
+        EventScriptableObject asset = ScriptableObject.CreateInstance<EventScriptableObject>();
+
+        CreateFolder(Path.Combine(Application.persistentDataPath), "localMods");
+        CreateFolder(Path.Combine(Application.persistentDataPath, "localMods"), nameInputField.text);
+        CreateFolder(Path.Combine(Application.persistentDataPath, "localMods",  nameInputField.text), "events");
+
+        for (int i = 0; i < _eventCreatorManager.modEvents.Count; i++)
+        {
+            if (_eventCreatorManager.modEvents[i].id == eventId)
+            {
+                EventCreatorManager.ModEvent modEvent = _eventCreatorManager.modEvents[i];
+
+                CreateFolder(Path.Combine(Application.persistentDataPath, "localMods", nameInputField.text, "events"), $"{modEvent.id}");
+
+                asset.id = modEvent.id;
+                asset._name = modEvent._name;
+                asset.description = modEvent.description;
+
+                for (int b = 0; b < modEvent.buttons.Count; b++)
+                {
+                    asset.buttons.Add(modEvent.buttons[b]);
+                }
+
+                for (int b = 0; b < modEvent.conditions.Count; b++)
+                {
+                    asset.conditions.Add(modEvent.conditions[b]);
+                }
+            }
+        }
+
+        string path = Path.Combine(Application.persistentDataPath, "localMods", $"{nameInputField.text}", "events", $"{eventId}");
+        string assetsPath = Path.Combine("Assets", "localEvents");
+
+        AssetDatabase.CreateAsset(asset, Path.Combine(assetsPath, $"{eventId}.asset"));
+        AssetDatabase.SaveAssets();
+
+        if (File.Exists(Path.Combine(assetsPath, $"{eventId}.asset")))
+        {
+            File.Move(Path.Combine(assetsPath, $"{eventId}.asset"), Path.Combine(path, $"{eventId}.asset"));
+        }
+    }
+
     public void CheckPublish()
     {
         if (!PlayerPrefs.HasKey("CURRENT_EDITING_MODIFICATION"))
@@ -327,6 +411,107 @@ public class MapEditor : MonoBehaviour
             currentModText += $"REGION_{region._id} = [{region.currentCountry.country._id}];";
         }
     }
+
+    private void CompileEvents()
+    {
+        for (int i = 0; i < _eventCreatorManager.modEvents.Count; i++)
+        {
+            CreateEventAsset(_eventCreatorManager.modEvents[i].id);
+        }
+
+        UploadEventFiles();
+        UploadPictures();
+    }
+
+    private void UploadPictures()
+    {
+        for (int i = 0; i < _eventCreatorManager.modEvents.Count; i++)
+        {
+            EventCreatorManager.ModEvent modEvent = _eventCreatorManager.modEvents[i];
+
+            string path = Path.Combine(Application.persistentDataPath, "localMods", $"{nameInputField.text}", "events", $"{modEvent.id}");
+            string filePath = $"{Path.Combine(path, $"{modEvent.id}.jpg")}";
+
+            string destinationPath = $"http://absolute-empire.7m.pl/media/uploads/mods/{nameInputField.text}/events/{modEvent.id}";
+
+            StartCoroutine(UploadImage($"{modEvent.id}", modEvent.texture, nameInputField.text, modEvent.id));
+        }
+    }
+
+    private IEnumerator UploadImage(string fileName, Texture2D source, string modName, int eventID)
+    {
+        WWWForm form = new WWWForm();
+        Texture2D imageTexture_copy = GetTextureCopy(source);
+
+        byte[] fileBytes = imageTexture_copy.EncodeToPNG();
+
+        form.AddBinaryData("file", fileBytes, $"{fileName}.jpg", $"image/jpg");
+        form.AddField("modname", modName);
+        form.AddField("eventID", eventID);
+
+        WWW w = new WWW("http://absolute-empire.7m.pl/uploadImage.php", form);
+
+        yield return w;
+
+        if (w.error != null)
+        {
+            //error : 
+            Debug.Log(w.error);
+        }
+        else
+        {
+            //success
+            Debug.Log(w.text);
+        }
+
+        w.Dispose();
+    }
+
+    private void UploadEventFiles()
+    {
+        for (int i = 0; i < _eventCreatorManager.modEvents.Count; i++)
+        {
+            EventCreatorManager.ModEvent modEvent = _eventCreatorManager.modEvents[i];
+
+            string path = Path.Combine(Application.persistentDataPath, "localMods", $"{nameInputField.text}", "events", $"{modEvent.id}");
+            string filePath = $"{Path.Combine(path, $"{modEvent.id}.asset")}";
+
+            string destinationPath = $"http://absolute-empire.7m.pl/media/uploads/mods/{nameInputField.text}/events/{modEvent.id}";
+
+            //StartCoroutine(UploadFile(filePath, $"{modEvent.id}.asset", destinationPath));
+        }
+    }
+
+    private Texture2D GetTextureCopy(Texture2D source)
+    {
+        //Create a RenderTexture
+        RenderTexture rt = RenderTexture.GetTemporary(
+                               source.width,
+                               source.height,
+                               0,
+                               RenderTextureFormat.Default,
+                               RenderTextureReadWrite.Linear
+                           );
+
+        //Copy source texture to the new render (RenderTexture) 
+        Graphics.Blit(source, rt);
+
+        //Store the active RenderTexture & activate new created one (rt)
+        RenderTexture previous = RenderTexture.active;
+        RenderTexture.active = rt;
+
+        //Create new Texture2D and fill its pixels from rt and apply changes.
+        Texture2D readableTexture = new Texture2D(source.width, source.height);
+        readableTexture.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+        readableTexture.Apply();
+
+        //activate the (previous) RenderTexture and release texture created with (GetTemporary( ) ..)
+        RenderTexture.active = previous;
+        RenderTexture.ReleaseTemporary(rt);
+
+        return readableTexture;
+    }
+
     private void CompileCountries()
     {
         for (int i = 0; i < globalCountries.Length; i++)
@@ -372,7 +557,7 @@ public class MapEditor : MonoBehaviour
         streamWriter.Write(fileText);
     }
 
-    private void CreateFolder(string _path, string folderName)
+    public void CreateFolder(string _path, string folderName)
     {
         string path = Path.Combine(Application.persistentDataPath, $"{_path}");
         path = Path.Combine(path, $"{folderName}");

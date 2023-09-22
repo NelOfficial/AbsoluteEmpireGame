@@ -79,7 +79,7 @@ MonoBehaviour:
     \u041C\u0438\u0441\u0442\u0435\u043A."
   date: 15-3-1939
   image: {fileID: 21300000, guid: d5481914485ff6d4ebc2a42420ae1468, type: 3}
-  _checked: 1
+  _checked: 0
   silentEvent: 0
   conditions:
   - country_exist;12

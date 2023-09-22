@@ -55,9 +55,9 @@ public class GameEventUI : MonoBehaviour
             List<CountrySettings> countriesInActions = new List<CountrySettings>();
             bool ultimatum = false;
 
-            for (int i = 0; i < currentGameEvent.buttons.Length; i++)
+            for (int i = 0; i < currentGameEvent.buttons.Count; i++)
             {
-                for (int a = 0; a < currentGameEvent.buttons[i].actions.Length; a++)
+                for (int a = 0; a < currentGameEvent.buttons[i].actions.Count; a++)
                 {
                     string[] act = currentGameEvent.buttons[i].actions[a].Split(';');
                     if (act[0] == "annex")
@@ -101,11 +101,7 @@ public class GameEventUI : MonoBehaviour
     {
         UISoundEffect.Instance.PlayAudio(gameSettings.m_paper_01);
 
-        if (currentGameEvent != null)
-        {
-            imageView.sprite = currentGameEvent.image;
-        }
-
+        imageView.sprite = currentGameEvent.image;
 
         if (isEnabled) // Включено, значит выключаем
         {
@@ -124,14 +120,14 @@ public class GameEventUI : MonoBehaviour
     {
         bool allowEvent = false;
 
-        for (int a = 0; a < currentGameEvent.buttons[b].actions.Length; a++)
+        for (int a = 0; a < currentGameEvent.buttons[b].actions.Count; a++)
         {
             if (!string.IsNullOrEmpty(currentGameEvent.buttons[b].actions[a]) ||
             !string.IsNullOrWhiteSpace(currentGameEvent.buttons[b].actions[a]))
             {
 
                 string[] act = currentGameEvent.buttons[b].actions[a].Split(';');
-                for (int c = 0; c < currentGameEvent.conditions.Length; c++)
+                for (int c = 0; c < currentGameEvent.conditions.Count; c++)
                 {
                     string[] condition = currentGameEvent.conditions[c].Split(';');
 

@@ -208,7 +208,10 @@ public class DiplomatyUI : MonoBehaviour
 
     public void ClsoeUI()
     {
-        diplomatyContainer.SetActive(false);
+        if (diplomatyContainer.activeSelf)
+        {
+            diplomatyContainer.GetComponent<UI_Panel>().ClosePanel();
+        }
         BackgroundUI_Overlay.Instance.CloseOverlay();
     }
 

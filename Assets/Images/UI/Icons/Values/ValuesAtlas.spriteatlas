@@ -31,6 +31,7 @@ SpriteAtlas:
       m_CrunchedCompression: 1
       m_AllowsAlphaSplitting: 0
       m_Overridden: 0
+      m_IgnorePlatformSupport: 0
       m_AndroidETC2FallbackOverride: 0
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
@@ -52,6 +53,8 @@ SpriteAtlas:
     - 33c5c25008f1cd44d805916abd5351b7: 21300000
     - 836c82f036900d244b29f4632d48e6a6: 21300000
     - bc4d1b417e93c58439675b987a9fbe31: 21300000
+    - a8958e6109241ec44ae2326a1dac1a11: 21300000
+    - 0269d6b2555098144972fcafbeba2f77: 21300000
     - 9b68f1e2e6f941e40a39c3a0c6855b7e: 21300000
     - 7af8360403bd5de478287ef8a3f3b6ae: 21300000
     - 5b5b95c474376354d875a44a26072894: 21300000
@@ -64,6 +67,7 @@ SpriteAtlas:
     - 414ab449c49b4074ba95f5498b4e58a1: 21300000
     - db670fcb19dbf1c4bb7eef56d7283d03: 21300000
     - 9c9e582cc36d2f64680ca4c9f9e56e1d: 21300000
+    - d2b7621e83290b84ab556ae740af2a3c: 21300000
     - 16b3640fc5c521648a5f401cc8727ff0: 21300000
     - c5a7851f89beebe4a8098bad64b41c22: 21300000
   m_MasterAtlas: {fileID: 0}
@@ -71,6 +75,8 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 33c5c25008f1cd44d805916abd5351b7, type: 3}
   - {fileID: 21300000, guid: 836c82f036900d244b29f4632d48e6a6, type: 3}
   - {fileID: 21300000, guid: bc4d1b417e93c58439675b987a9fbe31, type: 3}
+  - {fileID: 21300000, guid: a8958e6109241ec44ae2326a1dac1a11, type: 3}
+  - {fileID: 21300000, guid: 0269d6b2555098144972fcafbeba2f77, type: 3}
   - {fileID: 21300000, guid: 9b68f1e2e6f941e40a39c3a0c6855b7e, type: 3}
   - {fileID: 21300000, guid: 7af8360403bd5de478287ef8a3f3b6ae, type: 3}
   - {fileID: 21300000, guid: 5b5b95c474376354d875a44a26072894, type: 3}
@@ -83,12 +89,15 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 414ab449c49b4074ba95f5498b4e58a1, type: 3}
   - {fileID: 21300000, guid: db670fcb19dbf1c4bb7eef56d7283d03, type: 3}
   - {fileID: 21300000, guid: 9c9e582cc36d2f64680ca4c9f9e56e1d, type: 3}
+  - {fileID: 21300000, guid: d2b7621e83290b84ab556ae740af2a3c, type: 3}
   - {fileID: 21300000, guid: 16b3640fc5c521648a5f401cc8727ff0, type: 3}
   - {fileID: 21300000, guid: c5a7851f89beebe4a8098bad64b41c22, type: 3}
   m_PackedSpriteNamesToIndex:
   - videoIconWhite
   - shieldIconWhite256PNG
   - vassalIconBorders256PNG
+  - attackIcon256PNG
+  - regionIconWhiteOutline256PNG
   - warIconWhite256PNG
   - recrootsIconWhite256PNG
   - warIconBorders256PNG
@@ -101,6 +110,7 @@ SpriteAtlas:
   - war_support_transparent
   - regionIconWhite256PNG
   - population_growth
+  - regionIconWhiteNoOutline256PNG
   - shieldIconBorders256PNG
   - vassalIconWhite256PNG
   m_RenderDataMap: {}

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewEvent", menuName = "Events/Event")]
@@ -15,15 +16,15 @@ public class EventScriptableObject : ScriptableObject
     public bool _checked;
     public bool silentEvent;
 
-    public string[] conditions;
+    public List<string> conditions = new List<string>();
 
-    public EventButton[] buttons;
+    public List<EventButton> buttons = new List<EventButton>();
 
     [System.Serializable]
     public class EventButton
     {
         public string name;
-        public string[] actions;
+        public List<string> actions = new List<string>();
         public bool rejectUltimatum;
     }
 }

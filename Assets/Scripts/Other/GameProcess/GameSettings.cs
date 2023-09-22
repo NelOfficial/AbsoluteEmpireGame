@@ -94,12 +94,12 @@ public class GameSettings : MonoBehaviour
 	private BoolValue isOnlineGame;
 	[SerializeField]
 	private BoolValue jsonTestFile;
-	[SerializeField]
+    public BoolValue playTestingMod;
+    [SerializeField]
 	private string jsonURL;
 
 	[HideInInspector]
 	public Multiplayer multiplayer;
-
 
 	[SerializeField] BoolValue devMode;
 	//[SerializeField] RewardedAds rewardedAds;

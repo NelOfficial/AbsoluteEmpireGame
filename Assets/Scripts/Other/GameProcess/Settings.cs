@@ -33,6 +33,11 @@ public class Settings : MonoBehaviour
     public GameObject settingsContainer;
     public bool paused;
 
+    [SerializeField] GameObject borderMap;
+
+    public Material defaultMaterial;
+    public Material outlineMaterial;
+
     private void Start()
     {
         songNameText.text = musicSource.clip.name;
@@ -52,7 +57,10 @@ public class Settings : MonoBehaviour
 
     public void CloseUI()
     {
-        settingsContainer.SetActive(false);
+        if (settingsContainer.activeSelf)
+        {
+            settingsContainer.GetComponent<UI_Panel>().ClosePanel();
+        }
         BackgroundUI_Overlay.Instance.CloseOverlay();
     }
 
@@ -88,6 +96,23 @@ public class Settings : MonoBehaviour
     public void ChangeMoveSpeed(float speed)
     {
         mainCamera.GetComponent<CameraMovement>().CameraSpeed = speed;
+    }
+
+    public void ChangeOutlineState(bool borders)
+    {
+        foreach (RegionManager province in ReferencesManager.Instance.countryManager.regions)
+        {
+            if (!borders)
+            {
+                province.GetComponent<SpriteRenderer>().material = outlineMaterial;
+                borderMap.SetActive(false);
+            }
+            else
+            {
+                province.GetComponent<SpriteRenderer>().material = outlineMaterial;
+                borderMap.SetActive(true);
+            }
+        }
     }
 
     public void CameraRestart()
