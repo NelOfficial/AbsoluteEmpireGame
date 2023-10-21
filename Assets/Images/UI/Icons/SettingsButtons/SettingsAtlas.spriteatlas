@@ -60,6 +60,7 @@ SpriteAtlas:
     - 7c50ed0cd7c85d94fabd86f5fbe8e948: 21300000
     - 34ba8f1e520b4db4f9c2fe14e77f0643: 21300000
     - 46dc3bce9c80bad4a9ccae81d4abaab1: 21300000
+    - 91aa6f5fdf3f37d4398da97d2ff67de2: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 65e94ae1f3648cc48a7e239cf2188965, type: 3}
@@ -73,6 +74,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 7c50ed0cd7c85d94fabd86f5fbe8e948, type: 3}
   - {fileID: 21300000, guid: 34ba8f1e520b4db4f9c2fe14e77f0643, type: 3}
   - {fileID: 21300000, guid: 46dc3bce9c80bad4a9ccae81d4abaab1, type: 3}
+  - {fileID: 21300000, guid: 91aa6f5fdf3f37d4398da97d2ff67de2, type: 3}
   m_PackedSpriteNamesToIndex:
   - playIcon
   - scenarioIconWhite256PNG
@@ -85,6 +87,7 @@ SpriteAtlas:
   - crosshairIconWhite
   - saveIconWhite
   - quitIconWhite
+  - editIconWhite
   m_RenderDataMap: {}
   m_Tag: SettingsAtlas
   m_IsVariant: 0

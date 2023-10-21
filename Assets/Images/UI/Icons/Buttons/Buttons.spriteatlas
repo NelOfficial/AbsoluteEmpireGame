@@ -50,18 +50,21 @@ SpriteAtlas:
     cachedData: {fileID: 0}
     packedSpriteRenderDataKeys:
     - 87a09271d047f464db3291b5e99c5d1c: 21300000
+    - 9ac895327d93b4541a196771c9f6380e: 21300000
     - 5198ec325c33f164aadcbbc3c92dc1da: 21300000
     - 2f2afdf2dac87ce4a97194814cfde1ae: 21300000
     - a44b0433d587b2b4db91eca670a1aa0f: 21300000
     - f8b42384a8508f744b3c7f48b01c114d: 21300000
     - 4ed2e3d4eff98084b8161d6fa1edfeae: 21300000
     - b8919406f39a0f34d8a2412c3135620d: 21300000
+    - 4db13946d1be8794e909fea6e4378485: 21300000
     - 62775f764bf604342a5689d4960a77d8: 21300000
     - ae26d3d658e3b084da421178cce8b485: 21300000
     - 544adf57f8056b6419d60296548daabe: 21300000
     - 50326db7ca4cba24bb7c0d1ee12e7e25: 21300000
     - 3e6010c7cd7acfa4b9cd5b036ad81674: 21300000
     - 1152fad8cfff6d7479728a177075bdb2: 21300000
+    - 347c17e8debbf414a9f902a30dbb6e4d: 21300000
     - 571c75f84cac04249ae1e1346b875828: 21300000
     - 773f6c390afcc5445848e9a55434f1c1: 21300000
     - 5a6df81a131d3754d8aff0e7e9162533: 21300000
@@ -74,18 +77,21 @@ SpriteAtlas:
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 87a09271d047f464db3291b5e99c5d1c, type: 3}
+  - {fileID: 21300000, guid: 9ac895327d93b4541a196771c9f6380e, type: 3}
   - {fileID: 21300000, guid: 5198ec325c33f164aadcbbc3c92dc1da, type: 3}
   - {fileID: 21300000, guid: 2f2afdf2dac87ce4a97194814cfde1ae, type: 3}
   - {fileID: 21300000, guid: a44b0433d587b2b4db91eca670a1aa0f, type: 3}
   - {fileID: 21300000, guid: f8b42384a8508f744b3c7f48b01c114d, type: 3}
   - {fileID: 21300000, guid: 4ed2e3d4eff98084b8161d6fa1edfeae, type: 3}
   - {fileID: 21300000, guid: b8919406f39a0f34d8a2412c3135620d, type: 3}
+  - {fileID: 21300000, guid: 4db13946d1be8794e909fea6e4378485, type: 3}
   - {fileID: 21300000, guid: 62775f764bf604342a5689d4960a77d8, type: 3}
   - {fileID: 21300000, guid: ae26d3d658e3b084da421178cce8b485, type: 3}
   - {fileID: 21300000, guid: 544adf57f8056b6419d60296548daabe, type: 3}
   - {fileID: 21300000, guid: 50326db7ca4cba24bb7c0d1ee12e7e25, type: 3}
   - {fileID: 21300000, guid: 3e6010c7cd7acfa4b9cd5b036ad81674, type: 3}
   - {fileID: 21300000, guid: 1152fad8cfff6d7479728a177075bdb2, type: 3}
+  - {fileID: 21300000, guid: 347c17e8debbf414a9f902a30dbb6e4d, type: 3}
   - {fileID: 21300000, guid: 571c75f84cac04249ae1e1346b875828, type: 3}
   - {fileID: 21300000, guid: 773f6c390afcc5445848e9a55434f1c1, type: 3}
   - {fileID: 21300000, guid: 5a6df81a131d3754d8aff0e7e9162533, type: 3}
@@ -97,18 +103,21 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 9a9bb03f18c7ffb47bdfa2796ce5db24, type: 3}
   m_PackedSpriteNamesToIndex:
   - pauseIcon256PNG
+  - eventsButtonHover
   - technologyButtonPressed256PNG
   - nextIcon256PNG
   - playerListIcon256PNG
   - nextIconPressed256PNG
   - armyIconWhite
   - armyIcon256PNG
+  - eventsButton
   - technologyButton
   - armyIcon
   - terrainIcon256PNG
   - pauseIconPressed256PNG
   - buildsIcon256PNG
   - moveIcon256PNG
+  - eventsButtonPressed
   - pauseIconHover256PNG
   - technologyButtonHover256PNG
   - countriesButtonHover

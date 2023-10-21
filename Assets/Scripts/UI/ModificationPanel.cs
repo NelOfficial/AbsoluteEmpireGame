@@ -7,6 +7,7 @@ using TMPro;
 using System.IO;
 using System.Net;
 using System;
+using UnityEngine.Networking;
 
 public class ModificationPanel : MonoBehaviour
 {
@@ -53,11 +54,23 @@ public class ModificationPanel : MonoBehaviour
     [SerializeField] TMP_Text pageText;
     public List<CountryScriptableObject> currentModCountries = new List<CountryScriptableObject>();
 
+    // coroutine values
+    [SerializeField] string c_text;
+    [SerializeField] byte[] c_bytes;
+
     private void Start()
     {
         SetPage(0);
 
         UpdateDownloadedMods();
+    }
+
+    public void test()
+    {
+        string url = @$"http://absolute-empire.7m.pl/media/uploads/mods/Endsieg/events/436131/";
+        Debug.Log(url);
+
+        GetTextByURL_Co(url);
     }
 
     public void UpdateDownloadedMods()
@@ -406,6 +419,39 @@ public class ModificationPanel : MonoBehaviour
         CreateFolder(ModPath, $"events");
         CreateFolder(ModPath, $"countries");
 
+        try
+        {
+            string[] modCategories = modData.Split("##########");
+            string[] eventsData = modCategories[3].Split(';');
+
+            List<int> eventsIDS = new List<int>();
+
+            foreach (string eventData in eventsData)
+            {
+                if (!string.IsNullOrEmpty(eventData) && !string.IsNullOrWhiteSpace(eventData))
+                {
+                    eventsIDS.Add(int.Parse(eventData));
+                    Debug.Log(eventData);
+                }
+            }
+
+            for (int i = 0; i < eventsIDS.Count; i++)
+            {
+                string url = @$"http://absolute-empire.7m.pl/media/uploads/mods/{currentLoadedModification.currentScenarioName}/events/{eventsIDS[i]}";
+
+                GetTextByURL_Co(url);
+
+                string eventDataString = c_text;
+
+                CreateFolder(Path.Combine(ModPath, "events"), $"{eventsIDS[i]}");
+                CreateFile($"{eventDataString}", Path.Combine(ModPath, "events", $"{eventsIDS[i]}", $"{eventsIDS[i]}.asset"));
+            }
+        }
+        catch (Exception)
+        {
+            Debug.Log("No events found");
+        }
+
         CreateFile(modData, Path.Combine(ModPath, $"{currentLoadedModification.currentScenarioName}.AEMod"));
 
         data.Close();
@@ -556,6 +602,27 @@ public class ModificationPanel : MonoBehaviour
         streamWriter.Close();
 
         Debug.Log($"Created file in {path} with text: {fileText}");
+    }
+
+    private IEnumerator GetTextByURL_Co(string url)
+    {
+        UnityWebRequest www = UnityWebRequest.Get(url);
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            // Show results as text
+            c_text = www.downloadHandler.text;
+
+            // Or retrieve results as binary data
+            c_bytes = www.downloadHandler.data;
+        }
+
+        Debug.Log(www.isDone);
     }
 
     [System.Serializable]

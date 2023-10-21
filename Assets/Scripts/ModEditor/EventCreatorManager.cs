@@ -1,8 +1,8 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 public class EventCreatorManager : MonoBehaviour
 {
@@ -14,7 +14,10 @@ public class EventCreatorManager : MonoBehaviour
     [SerializeField] GameObject _eventPanel;
     [SerializeField] TMP_InputField _eventNameInputfield;
     [SerializeField] TMP_InputField _eventDescriptionInputfield;
+    [SerializeField] TMP_InputField _eventConditionsInputfield;
+    public TMP_InputField dateInputfield;
     [SerializeField] ModEventImage _eventImage;
+    [SerializeField] Toggle _eventSilentToggle;
 
     [Header("#--CONTAINERS--#")]
     public Transform _buttonsContainer;
@@ -144,9 +147,12 @@ public class EventCreatorManager : MonoBehaviour
                 {
                     EventButtonUI newButton_wc = newButton.GetComponent<EventButtonUI>();
 
-                    if (!string.IsNullOrEmpty(newButton_wc._text))
+                    if (!string.IsNullOrEmpty(modEvents[currentModEventIndex].buttons[i].name))
                     {
-                        newButton_wc._text = modEvents[currentModEventIndex].buttons[i].name;
+                        newButton_wc._buttonName = modEvents[currentModEventIndex].buttons[i].name;
+                        modEvents[currentModEventIndex].buttons[i].actions = newButton_wc.buttonActions.text.Split('\n').ToListPooled();
+                        newButton_wc._buttonActions = modEvents[currentModEventIndex].buttons[i].actions.ToArrayPooled();
+
                         newButton_wc.SetUp();
                     }
                 }
@@ -177,8 +183,18 @@ public class EventCreatorManager : MonoBehaviour
     {
         modEvents[currentModEventIndex]._name = _eventNameInputfield.text;
         modEvents[currentModEventIndex].description = _eventDescriptionInputfield.text;
-
         
+        modEvents[currentModEventIndex].conditions = _eventConditionsInputfield.text.Split('\n').ToListPooled();
+
+        modEvents[currentModEventIndex].silentEvent = _eventSilentToggle.isOn;
+
+        for (int i = 0; i < modEvents[currentModEventIndex].buttons.Count; i++)
+        {
+            EventScriptableObject.EventButton eventButton = modEvents[currentModEventIndex].buttons[i];
+
+            eventButton.actions = _buttonsContainer.GetChild(i).GetComponent<EventButtonUI>().buttonActions.text.Split('\n').ToListPooled();
+            eventButton.name = _buttonsContainer.GetChild(i).GetComponent<EventButtonUI>().buttonName.text;
+        }
 
         UpdateEventsUI();
     }

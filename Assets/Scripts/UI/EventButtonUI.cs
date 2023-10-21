@@ -1,26 +1,57 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class EventButtonUI : MonoBehaviour
 {
     public int buttonIndex;
-    public string _text;
+    public string _buttonName;
+    public string[] _buttonActions;
+    public bool _buttonRejectUltimatum;
 
-    [SerializeField] TMP_Text buttonText;
+    public TMP_InputField buttonName;
+    public TMP_InputField buttonActions;
+    public Toggle buttonRejectUltimatumToggle;
+
+    public TMP_Text _buttonNameText;
 
     private GameEventUI gameEventUI;
 
     public void SetUp()
     {
-        buttonText.text = _text;
+        if (SceneManager.GetActiveScene().buildIndex == 2)
+        {
+            buttonName.text = _buttonName;
+            buttonActions.text = "";
+
+            for (int i = 0; i < _buttonActions.Length; i++)
+            {
+                buttonActions.text += _buttonActions[i];
+            }
+
+            buttonRejectUltimatumToggle.isOn = _buttonRejectUltimatum;
+        }
+        else
+        {
+            _buttonNameText.text = _buttonName;
+        }
+
         gameEventUI = FindObjectOfType<GameEventUI>();
     }
 
     public void OnClick()
     {
+        gameEventUI = FindObjectOfType<GameEventUI>();
+
         gameEventUI.ProceedEvent(buttonIndex);
         gameEventUI.gameObject.SetActive(false);
         UISoundEffect.Instance.PlayAudio(ReferencesManager.Instance.regionUI.click_01);
+    }
+
+    public void SetRejectUltimatumValue(bool value)
+    {
+        _buttonRejectUltimatum = value;
     }
 
     public void RemoveButton()

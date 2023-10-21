@@ -136,8 +136,14 @@ public class CountryManager : MonoBehaviour
             }
             else if (ReferencesManager.Instance.gameSettings.playTestingMod)
             {
-                PlayTestMod(PlayerPrefs.GetString("CURRENT_MOD_PLAYTESTING"));
-                ReferencesManager.Instance.gameSettings.developerCheats = true;
+                if (!string.IsNullOrEmpty(PlayerPrefs.GetString("CURRENT_MOD_PLAYTESTING")))
+                {
+                    PlayTestMod(PlayerPrefs.GetString("CURRENT_MOD_PLAYTESTING"));
+                }
+                else
+                {
+                    ReferencesManager.Instance.gameSettings.playTestingMod.value = false;
+                }
             }
         }
 

@@ -39,10 +39,79 @@ public class CountryInfo : MonoBehaviour
 
     private void UpdateUI()
     {
+        if (PlayerPrefs.GetInt("languageId") == 0)
+        {
+            countryNameText.text = country.country._nameEN;
+        }
+        else if (PlayerPrefs.GetInt("languageId") == 1)
+        {
+            countryNameText.text = country.country._name;
+        }
+
+        if (country.ideology == "Неопределено" || country.ideology == "Неопределённый")
+        {
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                countryIdeologyText.text = "Neutral";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                countryIdeologyText.text = country.ideology;
+            }
+        }
+
+        if (country.ideology == "Коммунизм")
+        {
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                countryIdeologyText.text = "Communism";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                countryIdeologyText.text = country.ideology;
+            }
+        }
+
+        if (country.ideology == "Демократия")
+        {
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                countryIdeologyText.text = "Democracy";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                countryIdeologyText.text = country.ideology;
+            }
+        }
+
+        if (country.ideology == "Фашизм")
+        {
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                countryIdeologyText.text = "Fascism";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                countryIdeologyText.text = country.ideology;
+            }
+        }
+
+        if (country.ideology == "Монархия")
+        {
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                countryIdeologyText.text = "Monarchy";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                countryIdeologyText.text = country.ideology;
+            }
+        }
+
         countryFlagImage.sprite = country.country.countryFlag;
-        countryNameText.text = country.country._name;
-        countryIdeologyText.text = country.ideology;
+
         regionsCountText.text = country.myRegions.Count.ToString();
+
         populationCountText.text = ReferencesManager.Instance.GoodNumberString(country.population);
     }
 }

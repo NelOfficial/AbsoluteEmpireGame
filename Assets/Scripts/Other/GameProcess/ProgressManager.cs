@@ -118,20 +118,18 @@ public class ProgressManager : MonoBehaviour
 
             for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
             {
-                ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = (int)(ReferencesManager.Instance.countryManager.countries[i].inflation * ReferencesManager.Instance.countryManager.countries[i].money / 100);
+                ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI / 100 * (int)ReferencesManager.Instance.countryManager.countries[i].inflation;
 
-                if (ReferencesManager.Instance.countryManager.countries[i].inflationDebuff < 0)
+                if (ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI > 0)
                 {
-                    try
+                    if (ReferencesManager.Instance.countryManager.countries[i].money / ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI >= 20)
                     {
-                        ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = Mathf.CeilToInt(ReferencesManager.Instance.countryManager.countries[i].inflationDebuff);
-                        ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = Mathf.Abs(ReferencesManager.Instance.countryManager.countries[i].inflationDebuff);
+                        ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI / 25 * (int)ReferencesManager.Instance.countryManager.countries[i].inflation;
                     }
-                    catch (System.Exception)
-                    {
-
-                    }
-
+                }
+                else
+                {
+                    ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI / 100 * (int)ReferencesManager.Instance.countryManager.countries[i].inflation;
                 }
 
                 //if (ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI <= 0 &&
@@ -327,16 +325,20 @@ public class ProgressManager : MonoBehaviour
         for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
         {
             ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI / 100 * (int)ReferencesManager.Instance.countryManager.countries[i].inflation;
-            ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = Mathf.Abs(ReferencesManager.Instance.countryManager.countries[i].inflationDebuff);
 
-            if (ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI != 0)
+            if (ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI > 0)
             {
                 if (ReferencesManager.Instance.countryManager.countries[i].money / ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI >= 20)
                 {
-                    ReferencesManager.Instance.countryManager.countries[i].inflationDebuff *= 50;
-                    ReferencesManager.Instance.countryManager.countries[i].inflation *= 50;
+                    ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI / 25 * (int)ReferencesManager.Instance.countryManager.countries[i].inflation;
                 }
             }
+            else
+            {
+                ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI / 100 * (int)ReferencesManager.Instance.countryManager.countries[i].inflation;
+            }
+
+            ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = Mathf.Abs(ReferencesManager.Instance.countryManager.countries[i].inflationDebuff);
 
             Multiplayer.Instance.SetCountryValues(
                 ReferencesManager.Instance.countryManager.countries[i].country._id,

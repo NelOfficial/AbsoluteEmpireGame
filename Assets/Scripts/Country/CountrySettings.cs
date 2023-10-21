@@ -83,6 +83,10 @@ public class CountrySettings : MonoBehaviour
             inflation = money / moneyIncomeUI;
             inflation = Mathf.Abs(inflation);
         }
+        else
+        {
+            inflation = 0;
+        }
 
         if (exist)
         {

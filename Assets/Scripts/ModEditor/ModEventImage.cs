@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using NativeGalleryNamespace;
 using System.IO;
 
 public class ModEventImage : MonoBehaviour

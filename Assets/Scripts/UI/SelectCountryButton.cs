@@ -42,6 +42,18 @@ public class SelectCountryButton : MonoBehaviour
         }
     }
 
+    public void EditCountry()
+    {
+        if (m_Editor == null)
+        {
+            m_Editor = FindObjectOfType<MapEditor>();
+        }
+
+        m_Editor.editingCountry = country;
+
+        m_Editor.OpenCountryEditPanel();
+    }
+
     public void OnClick()
     {
         if (!map_editor)

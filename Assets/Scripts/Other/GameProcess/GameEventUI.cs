@@ -91,7 +91,7 @@ public class GameEventUI : MonoBehaviour
                 GameObject spawnedButton = Instantiate(eventButton, buttonsContainer.transform);
 
                 spawnedButton.GetComponent<EventButtonUI>().buttonIndex = i;
-                spawnedButton.GetComponent<EventButtonUI>()._text = currentGameEvent.buttons[i].name;
+                spawnedButton.GetComponent<EventButtonUI>()._buttonName = currentGameEvent.buttons[i].name;
                 spawnedButton.GetComponent<EventButtonUI>().SetUp();
             }
         }
@@ -248,36 +248,34 @@ public class GameEventUI : MonoBehaviour
                     }
                     else if (condition[0] == "date_before")
                     {
-                        string[] date = condition[1].Split('-');
-                        string[] dateSecond = condition[2].Split('-');
+                        string[] dateSecond = condition[1].Split('-');
 
-                        if (int.Parse(date[0]) < int.Parse(dateSecond[0]))
+                        if (ReferencesManager.Instance.dateManager.currentDate[0] < int.Parse(dateSecond[0]))
                         {
                             allowEvent = true;
                         }
-                        if (int.Parse(date[1]) < int.Parse(dateSecond[1]))
+                        if (ReferencesManager.Instance.dateManager.currentDate[1] < int.Parse(dateSecond[1]))
                         {
                             allowEvent = true;
                         }
-                        if (int.Parse(date[2]) < int.Parse(dateSecond[2]))
+                        if (ReferencesManager.Instance.dateManager.currentDate[2] < int.Parse(dateSecond[2]))
                         {
                             allowEvent = true;
                         }
                     }
                     else if (condition[0] == "date_after")
                     {
-                        string[] date = condition[1].Split('-');
-                        string[] dateSecond = condition[2].Split('-');
+                        string[] dateSecond = condition[1].Split('-');
 
-                        if (int.Parse(date[0]) > int.Parse(dateSecond[0]))
+                        if (ReferencesManager.Instance.dateManager.currentDate[0] > int.Parse(dateSecond[0]))
                         {
                             allowEvent = true;
                         }
-                        if (int.Parse(date[1]) > int.Parse(dateSecond[1]))
+                        if (ReferencesManager.Instance.dateManager.currentDate[1] > int.Parse(dateSecond[1]))
                         {
                             allowEvent = true;
                         }
-                        if (int.Parse(date[2]) > int.Parse(dateSecond[2]))
+                        if (ReferencesManager.Instance.dateManager.currentDate[2] > int.Parse(dateSecond[2]))
                         {
                             allowEvent = true;
                         }
@@ -372,52 +370,6 @@ public class GameEventUI : MonoBehaviour
                         else
                         {
                             allowEvent = false;
-                        }
-                    }
-                    else if (condition[0] == "add_res")
-                    {
-                        for (int i = 0; i < countryManager.countries.Count; i++)
-                        {
-                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                            {
-                                attacker = countryManager.countries[i];
-                            }
-
-                            if (act[2] == "money")
-                            {
-                                attacker.money += int.Parse(act[3]);
-                            }
-                            else if (act[2] == "food")
-                            {
-                                attacker.food += int.Parse(act[3]);
-                            }
-                            else if (act[2] == "recroots")
-                            {
-                                attacker.recroots += int.Parse(act[3]);
-                            }
-                        }
-                    }
-                    else if (condition[0] == "set_res")
-                    {
-                        for (int i = 0; i < countryManager.countries.Count; i++)
-                        {
-                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                            {
-                                attacker = countryManager.countries[i];
-                            }
-
-                            if (act[2] == "money")
-                            {
-                                attacker.money = int.Parse(act[3]);
-                            }
-                            else if (act[2] == "food")
-                            {
-                                attacker.food = int.Parse(act[3]);
-                            }
-                            else if (act[2] == "recroots")
-                            {
-                                attacker.recroots = int.Parse(act[3]);
-                            }
                         }
                     }
                     else if (condition[0] == "is_country_player")
@@ -728,6 +680,52 @@ public class GameEventUI : MonoBehaviour
                             foreach (CountrySettings country in countriesInActions)
                             {
                                 DiplomatySend("war", attacker, country);
+                            }
+                        }
+                        else if (act[0] == "add_res")
+                        {
+                            for (int i = 0; i < countryManager.countries.Count; i++)
+                            {
+                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                                {
+                                    attacker = countryManager.countries[i];
+                                }
+
+                                if (act[2] == "money")
+                                {
+                                    attacker.money += int.Parse(act[3]);
+                                }
+                                else if (act[2] == "food")
+                                {
+                                    attacker.food += int.Parse(act[3]);
+                                }
+                                else if (act[2] == "recroots")
+                                {
+                                    attacker.recroots += int.Parse(act[3]);
+                                }
+                            }
+                        }
+                        else if (act[0] == "set_res")
+                        {
+                            for (int i = 0; i < countryManager.countries.Count; i++)
+                            {
+                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                                {
+                                    attacker = countryManager.countries[i];
+                                }
+
+                                if (act[2] == "money")
+                                {
+                                    attacker.money = int.Parse(act[3]);
+                                }
+                                else if (act[2] == "food")
+                                {
+                                    attacker.food = int.Parse(act[3]);
+                                }
+                                else if (act[2] == "recroots")
+                                {
+                                    attacker.recroots = int.Parse(act[3]);
+                                }
                             }
                         }
                     }

@@ -641,8 +641,6 @@ public class RegionManager : MonoBehaviour
             region.GetComponent<SpriteRenderer>().color = region.currentCountry.country.countryColor;
             region.currentRegionManager = null;
         }
-        ReferencesManager.Instance.regionUI.regionBarContainer.SetActive(false);
-        ReferencesManager.Instance.regionUI.regionUIContainer.SetActive(false);
         ReferencesManager.Instance.regionUI.createArmyTab.SetActive(false);
 
         Animator regionUIContainerAnimator = ReferencesManager.Instance.regionUI.regionUIContainer.GetComponent<Animator>();

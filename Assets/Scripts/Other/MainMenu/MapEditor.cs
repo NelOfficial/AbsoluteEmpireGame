@@ -6,23 +6,20 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System.IO;
-using UnityEditor;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager;
-using UnityEditor.VersionControl;
-using System.Net;
 using System;
-using UnityEngine.Networking;
+using System.Text;
 
 public class MapEditor : MonoBehaviour
 {
     [SerializeField] GameObject countrySelectionPrefab;
+    [SerializeField] GameObject countryInModSelectionPrefab;
     [SerializeField] GameObject countrySelectionPanelGrid;
     [SerializeField] GameObject container;
 
     public bool paintMapMode;
 
     public CountrySettings selectedCountry;
+    public CountrySettings editingCountry;
 
     [SerializeField] CountrySettings[] globalCountries;
 
@@ -35,8 +32,18 @@ public class MapEditor : MonoBehaviour
     [SerializeField] TMP_InputField descInputField;
     [SerializeField] Toggle allowEventsToggle;
 
+    [SerializeField] TMP_InputField countryMoneyInputfield;
+    [SerializeField] TMP_InputField countryFoodInputfield;
+    [SerializeField] TMP_InputField countryRecrootsInputfield;
+    [SerializeField] TMP_Dropdown countryIdeologyDropdown;
+
+    [SerializeField] TMP_Text countryNameText;
+    [SerializeField] Image countryFlagImage;
+
     [SerializeField] GameObject successPanel;
     [SerializeField] GameObject errorPanel;
+
+    [SerializeField] GameObject countryInfoPanel;
 
     [SerializeField] List<int> modCountriesList = new List<int>();
 
@@ -54,6 +61,13 @@ public class MapEditor : MonoBehaviour
     private string regionValue;
 
     [SerializeField] EventCreatorManager _eventCreatorManager;
+
+    private List<CountryInfoData> localCountryInfoDataList = new List<CountryInfoData>();
+
+    string silentEvent = "";
+    string rejectUltimatum = "";
+
+    public string assetData;
 
 
     private void Start()
@@ -80,6 +94,156 @@ public class MapEditor : MonoBehaviour
         container.SetActive(true);
 
         isOpen = true;
+    }
+
+    public void OpenCountryEditPanel()
+    {
+        if (PlayerPrefs.GetInt("languageId") == 0)
+        {
+            countryNameText.text = editingCountry.country._nameEN;
+        }
+        else if (PlayerPrefs.GetInt("languageId") == 1)
+        {
+            countryNameText.text = editingCountry.country._name;
+        }
+
+        bool alreadyContainsCountryData = localCountryInfoDataList.Any(item => item.countryID == editingCountry.country._id);
+
+        if (alreadyContainsCountryData)
+        {
+            foreach (CountryInfoData countryInfoData in localCountryInfoDataList)
+            {
+                if (countryInfoData.countryID == editingCountry.country._id)
+                {
+                    countryFlagImage.sprite = editingCountry.country.countryFlag;
+
+                    countryMoneyInputfield.text = countryInfoData.newMoney.ToString();
+                    countryFoodInputfield.text = countryInfoData.newFood.ToString();
+                    countryRecrootsInputfield.text = countryInfoData.newRecroots.ToString();
+
+                    if (countryInfoData.newIdeology == "Неопределено" || countryInfoData.newIdeology == "Неопределённый")
+                    {
+                        countryIdeologyDropdown.value = 0;
+                    }
+
+                    if (countryInfoData.newIdeology == "Демократия")
+                    {
+                        countryIdeologyDropdown.value = 1;
+                    }
+
+                    if (countryInfoData.newIdeology == "Монархия")
+                    {
+                        countryIdeologyDropdown.value = 2;
+                    }
+
+                    if (countryInfoData.newIdeology == "Фашизм")
+                    {
+                        countryIdeologyDropdown.value = 3;
+                    }
+
+                    if (countryInfoData.newIdeology == "Коммунизм")
+                    {
+                        countryIdeologyDropdown.value = 4;
+                    }
+                }
+            }
+        }
+        else
+        {
+            countryFlagImage.sprite = editingCountry.country.countryFlag;
+
+            countryMoneyInputfield.text = editingCountry.money.ToString();
+            countryFoodInputfield.text = editingCountry.food.ToString();
+            countryRecrootsInputfield.text = editingCountry.recroots.ToString();
+
+            if (editingCountry.ideology == "Неопределено" || editingCountry.ideology == "Неопределённый")
+            {
+                countryIdeologyDropdown.value = 0;
+            }
+
+            if (editingCountry.ideology == "Демократия")
+            {
+                countryIdeologyDropdown.value = 1;
+            }
+
+            if (editingCountry.ideology == "Монархия")
+            {
+                countryIdeologyDropdown.value = 2;
+            }
+
+            if (editingCountry.ideology == "Фашизм")
+            {
+                countryIdeologyDropdown.value = 3;
+            }
+
+            if (editingCountry.ideology == "Коммунизм")
+            {
+                countryIdeologyDropdown.value = 4;
+            }
+        }
+
+        OpenTab(countryInfoPanel);
+    }
+
+    public void SaveCountryInfoChanges()
+    {
+        bool alreadyContainsCountryData = localCountryInfoDataList.Any(item => item.countryID == editingCountry.country._id);
+
+        if (alreadyContainsCountryData)
+        {
+            foreach (CountryInfoData countryInfoData in localCountryInfoDataList)
+            {
+                if (countryInfoData.countryID == editingCountry.country._id)
+                {
+                    countryInfoData.newMoney = int.Parse(countryMoneyInputfield.text);
+                    countryInfoData.newFood = int.Parse(countryFoodInputfield.text);
+                    countryInfoData.newRecroots = int.Parse(countryRecrootsInputfield.text);
+
+                    if (countryIdeologyDropdown.value == 0) countryInfoData.newIdeology = "Неопределено";
+
+                    if (countryIdeologyDropdown.value == 1) countryInfoData.newIdeology = "Демократия";
+
+                    if (countryIdeologyDropdown.value == 2) countryInfoData.newIdeology = "Монархия";
+
+                    if (countryIdeologyDropdown.value == 3) countryInfoData.newIdeology = "Фашизм";
+
+                    if (countryIdeologyDropdown.value == 4) countryInfoData.newIdeology = "Коммунизм";
+                }
+            }
+        }
+        else
+        {
+            CountryInfoData countryInfoData = new CountryInfoData();
+
+            countryInfoData.countryID = editingCountry.country._id;
+
+            countryInfoData.newMoney = int.Parse(countryMoneyInputfield.text);
+            countryInfoData.newFood = int.Parse(countryFoodInputfield.text);
+            countryInfoData.newRecroots = int.Parse(countryRecrootsInputfield.text);
+
+            if (countryIdeologyDropdown.value == 0) countryInfoData.newIdeology = "Неопределено";
+
+            if (countryIdeologyDropdown.value == 1) countryInfoData.newIdeology = "Демократия";
+
+            if (countryIdeologyDropdown.value == 2) countryInfoData.newIdeology = "Монархия";
+
+            if (countryIdeologyDropdown.value == 3) countryInfoData.newIdeology = "Фашизм";
+
+            if (countryIdeologyDropdown.value == 4) countryInfoData.newIdeology = "Коммунизм";
+
+            localCountryInfoDataList.Add(countryInfoData);
+        }
+    }
+
+    private class CountryInfoData
+    {
+        public int countryID;
+
+        public int newMoney;
+        public int newFood;
+        public int newRecroots;
+
+        public string newIdeology;
     }
 
     public void CloseUI()
@@ -173,7 +337,7 @@ public class MapEditor : MonoBehaviour
                         regionValue = regionIdParts[0].Remove(0, 7);
                     }
 
-                    if ((ReferencesManager.Instance.countryManager.regions[i]._id) == int.Parse(regionValue)) // - 1
+                    if (ReferencesManager.Instance.countryManager.regions[i]._id == int.Parse(regionValue)) // - 1
                     {
                         for (int c = 0; c < globalCountries.Length; c++)
                         {
@@ -184,7 +348,7 @@ public class MapEditor : MonoBehaviour
                         }
                     }
                 }
-                catch (System.Exception)
+                catch (Exception)
                 {
                     if (ReferencesManager.Instance.gameSettings.developerMode)
                     {
@@ -222,6 +386,35 @@ public class MapEditor : MonoBehaviour
         }
     }
 
+    public void UpdateCountriesInModList()
+    {
+        List<CountrySettings> countriesInMod = new List<CountrySettings>();
+
+        foreach (RegionManager province in ReferencesManager.Instance.countryManager.regions)
+        {
+            if (!countriesInMod.Contains(province.currentCountry))
+            {
+                countriesInMod.Add(province.currentCountry);
+            }
+        }
+
+        countriesInMod.Distinct();
+
+        foreach (Transform child in countrySelectionPanelGrid.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < countriesInMod.Count; i++)
+        {
+            GameObject spawnedPrefab = Instantiate(countryInModSelectionPrefab, countrySelectionPanelGrid.transform);
+
+            spawnedPrefab.GetComponent<SelectCountryButton>().country = countriesInMod[i];
+            spawnedPrefab.GetComponent<SelectCountryButton>().map_editor = true;
+            spawnedPrefab.GetComponent<SelectCountryButton>().UpdateUI();
+        }
+    }
+
     public void CompileMod()
     {
         int eventsState;
@@ -238,6 +431,7 @@ public class MapEditor : MonoBehaviour
         currentModText = $"NAME = [{nameInputField.text}];ALLOW_EVENTS = [{eventsState}];";
         CompileCountries();
         CompileRegions();
+        CompileCountriesData();
         CompileEvents();
         CheckPublish();
 
@@ -264,6 +458,9 @@ public class MapEditor : MonoBehaviour
 
             yield return publishRequiest;
 
+            UploadEventFiles();
+            UploadPictures();
+
             if (publishRequiest.isDone)
             {
                 successPanel.SetActive(true);
@@ -286,6 +483,9 @@ public class MapEditor : MonoBehaviour
             WWW uploadRequiest = new WWW("http://our-empire.7m.pl/core/updateMod.php", updateRequiestForm);
 
             yield return uploadRequiest;
+
+            UploadEventFiles();
+            UploadPictures();
 
             if (uploadRequiest.isDone)
             {
@@ -358,18 +558,106 @@ public class MapEditor : MonoBehaviour
                 {
                     asset.conditions.Add(modEvent.conditions[b]);
                 }
+
+                string path = Path.Combine(Application.persistentDataPath, "localMods", $"{nameInputField.text}", "events", $"{eventId}");
+
+                if (!File.Exists(Path.Combine(path, $"{eventId}.asset")))
+                {
+                    string fileName = $"{eventId}";
+
+                    if (modEvent.silentEvent) silentEvent = "1";
+                    else silentEvent = "0";
+
+                    string buttons_data = "";
+
+                    string conditions_data = "";
+
+                    for (int b = 0; b < modEvent.buttons.Count; b++)
+                    {
+                        string actions_data = "";
+
+                        if (modEvent.buttons[b].rejectUltimatum)
+                        {
+                            rejectUltimatum = "1";
+                        }
+                        else
+                        {
+                            rejectUltimatum = "0";
+                        }
+
+                        if (modEvent.buttons[b].actions.Count > 0)
+                        {
+                            actions_data = "\n";
+                            for (int a = 0; a < modEvent.buttons[b].actions.Count; a++)
+                            {
+                                string action = modEvent.buttons[b].actions[a];
+
+                                if (!string.IsNullOrEmpty(action))
+                                {
+                                    actions_data += $"    - {action}\n";
+                                }
+                            }
+                        }
+                        else if (modEvent.buttons[b].actions.Any() || modEvent.buttons[b].actions.Count <= 0)
+                        {
+                            actions_data = "[]\n";
+                        }
+
+                        buttons_data +=
+                            $"- name: {modEvent.buttons[b].name}\n" +
+                                "    actions: " +
+                                    $"{actions_data}" +
+                                    $"    rejectUltimatum: {rejectUltimatum}\n";
+                    }
+
+                    if (modEvent.conditions.Count > 0 || !modEvent.conditions.Any())
+                    {
+                        conditions_data = "\n";
+
+                        for (int c = 0; c < modEvent.conditions.Count; c++)
+                        {
+                            string condition = modEvent.conditions[c];
+
+                            if (!string.IsNullOrEmpty(condition))
+                            {
+                                conditions_data += $"  - {condition}\n";
+                            }
+                        }
+                    }
+                    else if (modEvent.conditions.Any() || modEvent.conditions.Count <= 0)
+                    {
+                        conditions_data = "[]\n";
+                    }
+
+                    assetData = "%YAML 1.1\n" +
+                                        "%TAG !u! tag:unity3d.com,2011:\n" +
+                                        "--- !u!114 &11400000\n" +
+                                        "MonoBehaviour:\n" +
+                                          "  m_ObjectHideFlags: 0\n" +
+                                          "  m_CorrespondingSourceObject: {fileID: 0}\n"+
+                                                "  m_PrefabInstance: {fileID: 0}\n"+
+                                                "  m_PrefabAsset: {fileID: 0}\n"+
+                                                "  m_GameObject: {fileID: 0}" + "\n" +
+                                                "  m_Enabled: 1\n" +
+                                          "  m_EditorHideFlags: 0\n" +
+                                          "  m_Script: {fileID: 11500000, guid: b827dd8bde9b9c6438e425c7948232f1, type: 3}\n"+
+                                                "  m_Name: " + $"{fileName}\n" +
+                                          "  m_EditorClassIdentifier: \n" +
+                                                "  id: " + $"{modEvent.id}\n" +
+                                          "  _name: " + $"{modEvent._name}\n" +
+                                          "  description: " + $"{modEvent.description}\n" +
+                                          $"  date: {_eventCreatorManager.dateInputfield.text}\n" +
+                                                "  image: " + "{fileID: 0}\n" +
+                                                "  _checked: 0\n" +
+                                          "  silentEvent: " + $"{silentEvent}\n" +
+                                          "  conditions:" +
+                                                    $"  {conditions_data}" +
+                                          "  buttons:\n" +
+                                            $"  {buttons_data}";
+
+                    CreateFile(assetData, Path.Combine(path, $"{eventId}.asset"));
+                }
             }
-        }
-
-        string path = Path.Combine(Application.persistentDataPath, "localMods", $"{nameInputField.text}", "events", $"{eventId}");
-        string assetsPath = Path.Combine("Assets", "localEvents");
-
-        AssetDatabase.CreateAsset(asset, Path.Combine(assetsPath, $"{eventId}.asset"));
-        AssetDatabase.SaveAssets();
-
-        if (File.Exists(Path.Combine(assetsPath, $"{eventId}.asset")))
-        {
-            File.Move(Path.Combine(assetsPath, $"{eventId}.asset"), Path.Combine(path, $"{eventId}.asset"));
         }
     }
 
@@ -414,13 +702,52 @@ public class MapEditor : MonoBehaviour
 
     private void CompileEvents()
     {
+        currentModText += $"##########";
+
         for (int i = 0; i < _eventCreatorManager.modEvents.Count; i++)
         {
             CreateEventAsset(_eventCreatorManager.modEvents[i].id);
+
+            currentModText += $"{_eventCreatorManager.modEvents[i].id};";
+        }
+    }
+
+    public void UploadFile(string filepath, string filename, string fileextension, string modName, int eventID)
+    {
+        StartCoroutine(Upload(filepath, filename, fileextension, modName, eventID));
+    }
+
+    private IEnumerator Upload(string filepath, string filename, string fileextension, string modName, int eventID)
+    {
+        string fileBytes = File.ReadAllText(filepath);
+
+        byte[] myData = Encoding.UTF8.GetBytes(fileBytes);
+
+        if (fileextension == "jpg")
+        {
+            myData = GetTextureCopy(NativeGallery.LoadImageAtPath(filepath)).EncodeToJPG();
         }
 
-        UploadEventFiles();
-        UploadPictures();
+        WWWForm form = new WWWForm();
+
+        form.AddField("modName", modName);
+        form.AddField("eventID", eventID);
+        form.AddBinaryData("file", myData);
+        form.AddField("filename", filename);
+        form.AddField("fileextension", fileextension);
+
+        WWW www = new WWW("http://absolute-empire.7m.pl/uploadFile.php", form);
+
+        yield return www;
+
+        if (!www.isDone)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            Debug.Log($"Upload complete! {www.text}");
+        }
     }
 
     private void UploadPictures()
@@ -429,42 +756,9 @@ public class MapEditor : MonoBehaviour
         {
             EventCreatorManager.ModEvent modEvent = _eventCreatorManager.modEvents[i];
 
-            string path = Path.Combine(Application.persistentDataPath, "localMods", $"{nameInputField.text}", "events", $"{modEvent.id}");
-            string filePath = $"{Path.Combine(path, $"{modEvent.id}.jpg")}";
-
-            string destinationPath = $"http://absolute-empire.7m.pl/media/uploads/mods/{nameInputField.text}/events/{modEvent.id}";
-
-            StartCoroutine(UploadImage($"{modEvent.id}", modEvent.texture, nameInputField.text, modEvent.id));
+            string path = Path.Combine(Application.persistentDataPath, "localMods", $"{nameInputField.text}", "events", $"{modEvent.id}", $"{modEvent.id}.jpg");
+            UploadFile(path, $"{modEvent.id}", "jpg", nameInputField.text, modEvent.id);
         }
-    }
-
-    private IEnumerator UploadImage(string fileName, Texture2D source, string modName, int eventID)
-    {
-        WWWForm form = new WWWForm();
-        Texture2D imageTexture_copy = GetTextureCopy(source);
-
-        byte[] fileBytes = imageTexture_copy.EncodeToPNG();
-
-        form.AddBinaryData("file", fileBytes, $"{fileName}.jpg", $"image/jpg");
-        form.AddField("modname", modName);
-        form.AddField("eventID", eventID);
-
-        WWW w = new WWW("http://absolute-empire.7m.pl/uploadImage.php", form);
-
-        yield return w;
-
-        if (w.error != null)
-        {
-            //error : 
-            Debug.Log(w.error);
-        }
-        else
-        {
-            //success
-            Debug.Log(w.text);
-        }
-
-        w.Dispose();
     }
 
     private void UploadEventFiles()
@@ -473,12 +767,9 @@ public class MapEditor : MonoBehaviour
         {
             EventCreatorManager.ModEvent modEvent = _eventCreatorManager.modEvents[i];
 
-            string path = Path.Combine(Application.persistentDataPath, "localMods", $"{nameInputField.text}", "events", $"{modEvent.id}");
-            string filePath = $"{Path.Combine(path, $"{modEvent.id}.asset")}";
+            string path = Path.Combine(Application.persistentDataPath, "localMods", $"{nameInputField.text}", "events", $"{modEvent.id}", $"{modEvent.id}.asset");
 
-            string destinationPath = $"http://absolute-empire.7m.pl/media/uploads/mods/{nameInputField.text}/events/{modEvent.id}";
-
-            //StartCoroutine(UploadFile(filePath, $"{modEvent.id}.asset", destinationPath));
+            UploadFile(path, $"{modEvent.id}", "asset", nameInputField.text, modEvent.id);
         }
     }
 
@@ -523,6 +814,16 @@ public class MapEditor : MonoBehaviour
         }
     }
 
+    private void CompileCountriesData()
+    {
+        currentModText += "##########;";
+
+        foreach (CountryInfoData countryInfoData in localCountryInfoDataList)
+        {
+            currentModText += $"COUNTRY_DATA = [{countryInfoData.countryID}|{countryInfoData.newMoney}|{countryInfoData.newFood}|{countryInfoData.newRecroots}|{countryInfoData.newIdeology}];";
+        }
+    }
+
     private string GetValue(string[] _lines, int line)
     {
         string _line = _lines[line];
@@ -555,6 +856,7 @@ public class MapEditor : MonoBehaviour
         streamWriter = file.CreateText();
 
         streamWriter.Write(fileText);
+        streamWriter.Close();
     }
 
     public void CreateFolder(string _path, string folderName)

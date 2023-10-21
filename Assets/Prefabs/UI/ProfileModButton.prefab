@@ -476,7 +476,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: eb81c5f176e01b746be35f0aa3603593, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 91aa6f5fdf3f37d4398da97d2ff67de2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -732,6 +732,7 @@ MonoBehaviour:
   modNameText: {fileID: 4855209630058601719}
   modDescText: {fileID: 3987946007178912313}
   currentCountryFlag: {fileID: 0}
+  modName: 
 --- !u!95 &8997304637688872467
 Animator:
   serializedVersion: 5

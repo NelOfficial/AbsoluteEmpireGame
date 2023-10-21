@@ -555,7 +555,7 @@ RectTransform:
   - {fileID: 9031172313162533167}
   - {fileID: 4406102062966546824}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -706,5 +706,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonIndex: 0
-  _text: 
-  buttonText: {fileID: 548852576400760565}
+  _buttonName: 
+  _buttonActions: []
+  _buttonRejectUltimatum: 0
+  buttonName: {fileID: 0}
+  buttonActions: {fileID: 0}
+  buttonRejectUltimatumToggle: {fileID: 0}
+  _buttonNameText: {fileID: 548852576400760565}
