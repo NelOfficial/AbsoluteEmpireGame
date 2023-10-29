@@ -52,7 +52,7 @@ public class SaveManager : MonoBehaviour
 
         #region RegionSave
 
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Length; i++)
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
         {
             RegionManager region = ReferencesManager.Instance.countryManager.regions[i];
 
@@ -66,7 +66,7 @@ public class SaveManager : MonoBehaviour
 
         #region Army
 
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Length; i++)
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
         {
             RegionManager region = ReferencesManager.Instance.countryManager.regions[i];
 
@@ -198,7 +198,7 @@ public class SaveManager : MonoBehaviour
         PlayerPrefs.SetInt($"{saveId}_DATE_1", ReferencesManager.Instance.dateManager.currentDate[1]);
         PlayerPrefs.SetInt($"{saveId}_DATE_2", ReferencesManager.Instance.dateManager.currentDate[2]);
 
-        for (int i = 0; i < ReferencesManager.Instance.gameSettings.gameEvents.Length; i++)
+        for (int i = 0; i < ReferencesManager.Instance.gameSettings.gameEvents.Count; i++)
         {
             if (ReferencesManager.Instance.gameSettings.gameEvents[i]._checked)
             {

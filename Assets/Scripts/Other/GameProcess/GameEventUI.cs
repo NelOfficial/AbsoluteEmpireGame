@@ -537,7 +537,7 @@ public class GameEventUI : MonoBehaviour
                         }
                         else if (act[0] == "add_claim")
                         {
-                            for (int i = 0; i < countryManager.regions.Length; i++)
+                            for (int i = 0; i < countryManager.regions.Count; i++)
                             {
                                 if (countryManager.regions[i]._id == int.Parse(act[1]))
                                 {
@@ -557,7 +557,7 @@ public class GameEventUI : MonoBehaviour
                         }
                         else if (act[0] == "remove_claim")
                         {
-                            for (int i = 0; i < countryManager.regions.Length; i++)
+                            for (int i = 0; i < countryManager.regions.Count; i++)
                             {
                                 if (countryManager.regions[i]._id == int.Parse(act[1]))
                                 {
@@ -594,7 +594,7 @@ public class GameEventUI : MonoBehaviour
                         }
                         else if (act[0] == "create_army")
                         {
-                            for (int i = 0; i < countryManager.regions.Length; i++)
+                            for (int i = 0; i < countryManager.regions.Count; i++)
                             {
                                 if (countryManager.regions[i]._id == int.Parse(act[1]))
                                 {

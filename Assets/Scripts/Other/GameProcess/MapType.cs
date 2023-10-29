@@ -21,7 +21,7 @@ public class MapType : MonoBehaviour
 
     public void DefaultMap()
     {
-        for (int i = 0; i < countryManager.regions.Length; i++)
+        for (int i = 0; i < countryManager.regions.Count; i++)
         {
             RegionManager region = countryManager.regions[i];
 
@@ -40,7 +40,7 @@ public class MapType : MonoBehaviour
         ///curr - x
 
         populationList.Clear();
-        for (int i = 0; i < countryManager.regions.Length; i++)
+        for (int i = 0; i < countryManager.regions.Count; i++)
         {
             RegionManager region = countryManager.regions[i];
 
@@ -68,7 +68,7 @@ public class MapType : MonoBehaviour
     {
         viewMap = true;
 
-        for (int i = 0; i < countryManager.regions.Length; i++)
+        for (int i = 0; i < countryManager.regions.Count; i++)
         {
             RegionManager region = countryManager.regions[i];
 

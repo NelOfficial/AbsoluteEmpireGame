@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System.IO;
+using System;
 
 public class CountryManager : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class CountryManager : MonoBehaviour
     [SerializeField] TMP_Text[] countryNameTexts;
 
     public List<CountrySettings> countries = new List<CountrySettings>();
-    public RegionManager[] regions;
+    public List<RegionManager> regions = new List<RegionManager>();
 
     [HideInInspector] public CountrySettings currentCountry;
     [HideInInspector] public PlayerData currentPlayerData;
@@ -31,7 +32,17 @@ public class CountryManager : MonoBehaviour
     {
         ReferencesManager.Instance.gameSettings.allowGameEvents = true;
 
-        for (int i = 0; i < regions.Length; i++)
+        regions.Clear();
+
+        for (int i = 0; i < countries.Count; i++)
+        {
+            for (int r = 0; r < countries[i].myRegions.Count; r++)
+            {
+                regions.Add(countries[i].myRegions[r]);
+            }
+        }
+
+        for (int i = 0; i < regions.Count; i++)
         {
             regions[i]._id = i;
         }
@@ -101,7 +112,7 @@ public class CountryManager : MonoBehaviour
                     }
                     else
                     {
-                        PlayerPrefs.SetInt("currentCountryIndex", Random.Range(0, countries.Count));
+                        PlayerPrefs.SetInt("currentCountryIndex", UnityEngine.Random.Range(0, countries.Count));
 
                         for (int i = 0; i < countries.Count; i++)
                         {
@@ -187,6 +198,16 @@ public class CountryManager : MonoBehaviour
             region.hoverColor.g = region.currentCountry.country.countryColor.g + 0.3f;
             region.hoverColor.b = region.currentCountry.country.countryColor.b + 0.3f;
             region.hoverColor.a = 0.5f;
+
+            if (ReferencesManager.Instance.gameSettings._DEBUG_REGIONS_IDS)
+            {
+                GameObject regionID_text = Instantiate(ReferencesManager.Instance.gameSettings.debugText, region.transform);
+                regionID_text.GetComponentInChildren<TMP_Text>().text = $"{region._id}";
+                if (!region.currentCountry.myRegions.Contains(region))
+                {
+                    regionID_text.GetComponentInChildren<TMP_Text>().color = ReferencesManager.Instance.gameSettings.redColor;
+                }
+            }
         }
     }
 
@@ -217,7 +238,7 @@ public class CountryManager : MonoBehaviour
             countries[i].milFactories = PlayerPrefs.GetInt($"1_COUNTRY_{i}_milFactories");
         }
 
-        for (int i = 0; i < regions.Length; i++)
+        for (int i = 0; i < regions.Count; i++)
         {
             RegionManager region = regions[i];
 
@@ -299,7 +320,7 @@ public class CountryManager : MonoBehaviour
         ReferencesManager.Instance.dateManager.currentDate[2] = PlayerPrefs.GetInt($"1_DATE_2");
         ReferencesManager.Instance.dateManager.UpdateUI();
 
-        for (int i = 0; i < ReferencesManager.Instance.gameSettings.gameEvents.Length; i++)
+        for (int i = 0; i < ReferencesManager.Instance.gameSettings.gameEvents.Count; i++)
         {
             if (PlayerPrefs.GetString($"1_EVENT_{i}") == "TRUE")
             {
@@ -324,9 +345,10 @@ public class CountryManager : MonoBehaviour
 
         reader.Close();
 
-        string[] dataParts = modData.Split("##########");
-        string[] mainModDataLines = dataParts[0].Split(';');
-        string[] regionsDataLines = dataParts[1].Split(';');
+        string[] mainModDataLines = modData.Split("#REGIONS#")[0].Split(';');
+        string[] regionsDataLines = modData.Split("#REGIONS#")[1].Split(';');
+        string[] countriesDataLines = modData.Split("#COUNTRIES_SETTINGS#")[1].Split(';');
+        string[] eventsIDsDataLines = modData.Split("#EVENTS#")[1].Split(';');
 
         try
         {
@@ -365,9 +387,9 @@ public class CountryManager : MonoBehaviour
                 secondPart = parts[1];
                 value = secondPart.Remove(secondPart.Length - 1);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-
+                Debug.LogError(ex);
             }
 
             bool _hasCountry = countries.Any(item => item.country._id == int.Parse(value));
@@ -397,16 +419,13 @@ public class CountryManager : MonoBehaviour
 
                 countriesInRegionsIDs.Add(int.Parse(value));
             }
-            catch
+            catch(Exception ex)
             {
-                if (ReferencesManager.Instance.gameSettings.developerMode)
-                {
-                    Debug.LogError($"ERROR: Mod loader error in value parser (CountryManager.cs)");
-                }
+                Debug.LogError(ex);
             }
         }
 
-        for (int i = 0; i < regions.Length; i++)
+        for (int i = 0; i < regions.Count; i++)
         {
             try
             {
@@ -446,11 +465,11 @@ public class CountryManager : MonoBehaviour
                 //    }
                 //}
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
                 if (ReferencesManager.Instance.gameSettings.developerMode)
                 {
-                    Debug.LogError($"ERROR: Mod loader error in regionValue parser (CountryManager.cs)");
+                    Debug.LogError(ex);
                 }
             }
         }
@@ -468,6 +487,92 @@ public class CountryManager : MonoBehaviour
                 }
             }
         }
+
+        #region countriesSettings
+
+        if (!IsNullOrEmpty(countriesDataLines))
+        {
+            for (int i = 0; i < countriesDataLines.Length; i++)
+            {
+                if (!string.IsNullOrEmpty(countriesDataLines[i]))
+                {
+                    try
+                    {
+                        string pre_lineData = countriesDataLines[i].Remove(countriesDataLines[i].Length - 1);
+                        string[] new_lineData = pre_lineData.Split('[');
+                        string lineData = new_lineData[1];
+
+                        if (!string.IsNullOrEmpty(lineData))
+                        {
+                            string[] values = lineData.Split('|');
+
+                            int countryID = int.Parse(values[0]);
+                            int money = int.Parse(values[1]);
+                            int food = int.Parse(values[2]);
+                            int recroots = int.Parse(values[3]);
+
+                            string ideology = values[4];
+
+                            foreach (CountrySettings country in countries)
+                            {
+                                if (country.country._id == countryID)
+                                {
+                                    country.money = money;
+                                    country.food = food;
+                                    country.recroots = recroots;
+
+                                    country.ideology = ideology;
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception except)
+                    {
+                        Debug.LogError(except);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region events
+
+        List<int> eventsIDs = new List<int>();
+
+        if (!IsNullOrEmpty(eventsIDsDataLines))
+        {
+            foreach (string eventData in eventsIDsDataLines)
+            {
+                if (!string.IsNullOrEmpty(eventData) && !string.IsNullOrWhiteSpace(eventData))
+                {
+                    eventsIDs.Add(int.Parse(eventData));
+                }
+            }
+        }
+
+        foreach (int eventId in eventsIDs)
+        {
+            string eventPath = Path.Combine(Application.persistentDataPath, "savedMods", $"{modName}", "events", $"{eventId}", $"{eventId}.AEEvent");
+            string eventData = "";
+
+            EventScriptableObject _event = new EventScriptableObject();
+
+            StreamReader _reader = new StreamReader(eventPath);
+            eventData = _reader.ReadToEnd();
+
+            reader.Close();
+
+
+            ReferencesManager.Instance.gameSettings.gameEvents.Add(_event);
+        }
+
+        #endregion
+    }
+
+    public bool IsNullOrEmpty(Array array)
+    {
+        return (array == null || array.Length == 0);
     }
 
     private void PlayTestMod(string _name)
@@ -562,7 +667,7 @@ public class CountryManager : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < regions.Length; i++)
+        for (int i = 0; i < regions.Count; i++)
         {
             try
             {

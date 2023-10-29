@@ -356,7 +356,7 @@ public class Multiplayer : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_RemoveUnitFromArmy(int unitId, int regionId)
     {
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Length; i++)
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
         {
             if (ReferencesManager.Instance.countryManager.regions[i]._id == regionId)
             {
@@ -455,7 +455,7 @@ public class Multiplayer : MonoBehaviourPunCallbacks
         }
 
 
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Length; i++)
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
         {
             if (ReferencesManager.Instance.countryManager.regions[i]._id == regionId)
             {
@@ -515,7 +515,7 @@ public class Multiplayer : MonoBehaviourPunCallbacks
     {
         UnitScriptableObject unit = ReferencesManager.Instance.gameSettings.soldierLVL1;
 
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Length; i++)
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
         {
             if (ReferencesManager.Instance.countryManager.regions[i]._id == regionId)
             {
@@ -553,7 +553,7 @@ public class Multiplayer : MonoBehaviourPunCallbacks
     [PunRPC]
     private void RPC_MoveUnit(int fromRegionId, int toRegionId)
     {
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Length; i++)
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
         {
             if (ReferencesManager.Instance.countryManager.regions[i]._id == fromRegionId)
             {

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using System.Linq;
 
 public class GameSettings : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class GameSettings : MonoBehaviour
 	public bool diplomatyCheats;
 	public bool onlineGame;
 	public bool jsonTest;
+
+	[Header("DEBUG")]
+	public bool _DEBUG_REGIONS_IDS;
+	public GameObject debugText;
 
 	public Color greenColor;
 	public Color blueColor;
@@ -81,7 +86,7 @@ public class GameSettings : MonoBehaviour
 
 	[Header("Game Events")]
 	public bool allowGameEvents;
-	public EventScriptableObject[] gameEvents;
+	public List<EventScriptableObject> gameEvents = new List<EventScriptableObject>();
 
 	[Header("Technologies")]
 	public TechnologyScriptableObject[] technologies;

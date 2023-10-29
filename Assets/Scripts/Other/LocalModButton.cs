@@ -61,6 +61,16 @@ public class LocalModButton : MonoBehaviour
                 modificationPanel.downloadedModsIds.list.Remove(modificationPanel.downloadedModsIds.list[i]);
             }
         }
+
+        try
+        {
+            File.Delete(Path.Combine(Application.persistentDataPath, "savedMods", modName));
+        }
+        catch (System.Exception exception)
+        {
+            Debug.Log(exception);
+        }
+
         modificationPanel.countriesListPanel.SetActive(false);
 
         modificationPanel.UpdateSavedIds();
@@ -116,13 +126,9 @@ public class LocalModButton : MonoBehaviour
 
             if (mod.id == id)
             {
-                PlayerPrefs.SetString($"MODIFICATION_{id}", $"{mod.currentScenarioData}");
+                PlayerPrefs.SetString($"MODIFICATION_{id}", $"{mod.currentScenarioName}");
 
-                ModListValue.LocalSavedModification localMod = new ModListValue.LocalSavedModification();
-                localMod.id = id;
-                localMod.version = mod.version;
-
-                modificationPanel.downloadedModsIds.list.Add(localMod);
+                
             }
         }
 

@@ -247,7 +247,7 @@ public class RegionUI : MonoBehaviour
 
     public void ToggleColliders(bool state)
     {
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Length; i++)
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
         {
             ReferencesManager.Instance.countryManager.regions[i].GetComponent<PolygonCollider2D>().enabled = state;
         }

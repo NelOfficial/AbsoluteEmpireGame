@@ -18,7 +18,7 @@ public class DateManager : MonoBehaviour
 		this.gameSettings = Object.FindObjectOfType<GameSettings>();
 		this.UpdateUI();
 		this.CheckGameEvents();
-		for (int i = 0; i < this.gameSettings.gameEvents.Length; i++)
+		for (int i = 0; i < this.gameSettings.gameEvents.Count; i++)
 		{
 			this.gameSettings.gameEvents[i]._checked = false;
 		}
@@ -143,7 +143,7 @@ public class DateManager : MonoBehaviour
 	{
 		if (ReferencesManager.Instance.gameSettings.allowGameEvents)
 		{
-			for (int i = 0; i < this.gameSettings.gameEvents.Length; i++)
+			for (int i = 0; i < this.gameSettings.gameEvents.Count; i++)
 			{
 				EventScriptableObject eventScriptableObject = this.gameSettings.gameEvents[i];
 				string[] array = eventScriptableObject.date.Split(new char[] { '-' });

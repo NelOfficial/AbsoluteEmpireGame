@@ -58,6 +58,23 @@ public class ModificationPanel : MonoBehaviour
     [SerializeField] string c_text;
     [SerializeField] byte[] c_bytes;
 
+    [SerializeField] bool isTextNotEmpty = false;
+    [SerializeField] bool isBytesNotEmpty = false;
+    [SerializeField] bool modHaveDownloaded = false;
+
+    private string mainInfo;
+    private string regionsInfo;
+    private string countriesInfo;
+    private string eventsInfo;
+
+    private string[] mainInfoLines;
+    private string[] regionsInfoLines;
+    private string[] countriesInfoLines;
+    private string[] eventsInfoLines;
+
+    private string loadedModsIds_data;
+    private string[] loadedModsIds;
+
     private void Start()
     {
         SetPage(0);
@@ -65,23 +82,15 @@ public class ModificationPanel : MonoBehaviour
         UpdateDownloadedMods();
     }
 
-    public void test()
-    {
-        string url = @$"http://absolute-empire.7m.pl/media/uploads/mods/Endsieg/events/436131/";
-        Debug.Log(url);
-
-        GetTextByURL_Co(url);
-    }
-
     public void UpdateDownloadedMods()
     {
-        string loadedModsIds_data = PlayerPrefs.GetString("MODS_IDS");
+        loadedModsIds_data = PlayerPrefs.GetString("MODS_IDS");
 
         downloadedModsIds.list.Clear();
 
         if (!string.IsNullOrEmpty(loadedModsIds_data))
         {
-            string[] loadedModsIds = loadedModsIds_data.Split(';');
+            loadedModsIds = loadedModsIds_data.Split(';');
 
             for (int i = 0; i < loadedModsIds.Length; i++)
             {
@@ -337,17 +346,15 @@ public class ModificationPanel : MonoBehaviour
     {
         mainMenu.ScrollEffect(countriesListContainer.GetComponent<RectTransform>());
 
-        string[] dataParts = currentLoadedModification.currentScenarioData.Split("##########");
-        string[] mainModDataLines = dataParts[0].Split(';');
-        string[] regionsDataLines = dataParts[1].Split(';');
-
         // Get countries in list from mod data
+        mainInfo = currentLoadedModification.currentScenarioData.Split("#REGIONS#")[0];
+        mainInfoLines = mainInfo.Split(';');
 
         currentModCountries.Clear();
 
-        for (int i = 2; i < mainModDataLines.Length; i++)
+        for (int i = 2; i < mainInfoLines.Length; i++)
         {
-            string _line = mainModDataLines[i];
+            string _line = mainInfoLines[i];
             string value = "";
 
             try
@@ -419,32 +426,34 @@ public class ModificationPanel : MonoBehaviour
         CreateFolder(ModPath, $"events");
         CreateFolder(ModPath, $"countries");
 
+        mainInfo = modData.Split("#REGIONS#")[0];
+        regionsInfo = modData.Split("#REGIONS#")[1];
+        countriesInfo = modData.Split("#COUNTRIES_SETTINGS#")[1];
+        eventsInfo = modData.Split("#EVENTS#")[1];
+
+        mainInfoLines = mainInfo.Split(';');
+        regionsInfoLines = regionsInfo.Split(';');
+        countriesInfoLines = countriesInfo.Split(';');
+        eventsInfoLines = eventsInfo.Split(';');
+
         try
         {
-            string[] modCategories = modData.Split("##########");
-            string[] eventsData = modCategories[3].Split(';');
-
             List<int> eventsIDS = new List<int>();
 
-            foreach (string eventData in eventsData)
+            foreach (string eventData in eventsInfoLines)
             {
                 if (!string.IsNullOrEmpty(eventData) && !string.IsNullOrWhiteSpace(eventData))
                 {
                     eventsIDS.Add(int.Parse(eventData));
-                    Debug.Log(eventData);
                 }
             }
 
             for (int i = 0; i < eventsIDS.Count; i++)
             {
-                string url = @$"http://absolute-empire.7m.pl/media/uploads/mods/{currentLoadedModification.currentScenarioName}/events/{eventsIDS[i]}";
+                string imageUrl = @$"http://absolute-empire.7m.pl/media/uploads/mods/{currentLoadedModification.currentScenarioName}/events/{eventsIDS[i]}/{eventsIDS[i]}.jpg";
+                string textUrl = @$"http://absolute-empire.7m.pl/media/uploads/mods/{currentLoadedModification.currentScenarioName}/events/{eventsIDS[i]}/{eventsIDS[i]}.AEEvent";
 
-                GetTextByURL_Co(url);
-
-                string eventDataString = c_text;
-
-                CreateFolder(Path.Combine(ModPath, "events"), $"{eventsIDS[i]}");
-                CreateFile($"{eventDataString}", Path.Combine(ModPath, "events", $"{eventsIDS[i]}", $"{eventsIDS[i]}.asset"));
+                StartCoroutine(CreateEventData_Co(ModPath, eventsIDS[i], imageUrl, textUrl));
             }
         }
         catch (Exception)
@@ -477,6 +486,8 @@ public class ModificationPanel : MonoBehaviour
         }
 
         PlayerPrefs.SetString($"MODIFICATION_{currentLoadedModification.id}", $"{currentLoadedModification.currentScenarioName}");
+
+        modHaveDownloaded = true;
 
         UpdateSavedIds();
 
@@ -604,6 +615,29 @@ public class ModificationPanel : MonoBehaviour
         Debug.Log($"Created file in {path} with text: {fileText}");
     }
 
+    private IEnumerator GetImageByURL_Co(string url)
+    {
+        UnityWebRequest www = UnityWebRequest.Get(url);
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            // Or retrieve results as binary data
+            c_bytes = www.downloadHandler.data;
+        }
+
+        isBytesNotEmpty = !IsNullOrEmpty(c_bytes);
+    }
+
+    public bool IsNullOrEmpty(Array array)
+    {
+        return (array == null || array.Length == 0);
+    }
+
     private IEnumerator GetTextByURL_Co(string url)
     {
         UnityWebRequest www = UnityWebRequest.Get(url);
@@ -615,17 +649,29 @@ public class ModificationPanel : MonoBehaviour
         }
         else
         {
-            // Show results as text
-            c_text = www.downloadHandler.text;
-
             // Or retrieve results as binary data
-            c_bytes = www.downloadHandler.data;
+            c_text = www.downloadHandler.text;
         }
 
-        Debug.Log(www.isDone);
+        isTextNotEmpty = !string.IsNullOrEmpty(c_text);
     }
 
-    [System.Serializable]
+    private IEnumerator CreateEventData_Co(string ModPath, int eventID, string imageUrl, string textUrl)
+    {
+        StartCoroutine(GetImageByURL_Co(imageUrl));
+        StartCoroutine(GetTextByURL_Co(textUrl));
+
+        yield return new WaitUntil(() => isTextNotEmpty == true);
+
+        CreateFolder(Path.Combine(ModPath, "events"), $"{eventID}");
+        CreateFile($"{c_text}", Path.Combine(ModPath, "events", $"{eventID}", $"{eventID}.AEEvent"));
+
+        yield return new WaitUntil(() => isBytesNotEmpty == true);
+
+        File.WriteAllBytes(Path.Combine(ModPath, "events", $"{eventID}", $"{eventID}.jpg"), c_bytes);
+    }
+
+    [Serializable]
     public class Modification
     {
         public int id;

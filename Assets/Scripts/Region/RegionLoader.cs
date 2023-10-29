@@ -13,7 +13,7 @@ public class RegionLoader : MonoBehaviour
     void Start()
     {
 
-        regionsMax = ReferencesManager.Instance.countryManager.regions.Length;
+        regionsMax = ReferencesManager.Instance.countryManager.regions.Count;
 
         foreach (RegionManager region in ReferencesManager.Instance.countryManager.regions)
         {
@@ -25,7 +25,7 @@ public class RegionLoader : MonoBehaviour
 
         //StartCoroutine(LoadRegions_Co());
 
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Length; i++)
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
         {
             RegionManager region = ReferencesManager.Instance.countryManager.regions[i];
             region.GetComponent<SpriteRenderer>().color = region.currentCountry.country.countryColor;

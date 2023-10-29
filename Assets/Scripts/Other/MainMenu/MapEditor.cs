@@ -69,14 +69,30 @@ public class MapEditor : MonoBehaviour
 
     public string assetData;
 
+    [SerializeField] IntListValue regionList;
+
 
     private void Start()
     {
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Length; i++)
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
+        {
+            for (int r = 0; r < ReferencesManager.Instance.countryManager.countries[i].myRegions.Count; r++)
+            {
+                ReferencesManager.Instance.countryManager.regions.Add(ReferencesManager.Instance.countryManager.countries[i].myRegions[r]);
+            }
+        }
+
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
+        {
+            ReferencesManager.Instance.countryManager.regions[i]._id = i;
+        }
+
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
         {
             RegionManager region = ReferencesManager.Instance.countryManager.regions[i];
             region._id = i;
         }
+
         ReferencesManager.Instance.regionManager.UpdateRegions();
 
         if (PlayerPrefs.HasKey("CURRENT_EDITING_MODIFICATION"))
@@ -277,9 +293,10 @@ public class MapEditor : MonoBehaviour
 
         if (Directory.Exists(loadedModPath))
         {
-            string[] dataParts = modData.Split("##########");
-            string[] mainModDataLines = dataParts[0].Split(';');
-            string[] regionsDataLines = dataParts[1].Split(';');
+            string[] mainModDataLines = modData.Split("#REGIONS#")[0].Split(';');
+            string[] regionsDataLines = modData.Split("#REGIONS#")[1].Split(';');
+            string[] countriesDataLines = modData.Split("#COUNTRIES_SETTINGS#")[0].Split(';');
+            string[] eventsIDsDataLines = modData.Split("#EVENTS#")[0].Split(';');
 
             try
             {
@@ -326,12 +343,12 @@ public class MapEditor : MonoBehaviour
                 }
             }
 
-            for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Length; i++)
+            for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
             {
                 try
                 {
                     string _line = regionsDataLines[i];
-                    if (_line != "##########")
+                    if (_line != "#REGIONS#")
                     {
                         string[] regionIdParts = _line.Split(' ');
                         regionValue = regionIdParts[0].Remove(0, 7);
@@ -561,15 +578,12 @@ public class MapEditor : MonoBehaviour
 
                 string path = Path.Combine(Application.persistentDataPath, "localMods", $"{nameInputField.text}", "events", $"{eventId}");
 
-                if (!File.Exists(Path.Combine(path, $"{eventId}.asset")))
+                if (!File.Exists(Path.Combine(path, $"{eventId}.AEEvent")))
                 {
-                    string fileName = $"{eventId}";
-
                     if (modEvent.silentEvent) silentEvent = "1";
                     else silentEvent = "0";
 
                     string buttons_data = "";
-
                     string conditions_data = "";
 
                     for (int b = 0; b < modEvent.buttons.Count; b++)
@@ -587,32 +601,37 @@ public class MapEditor : MonoBehaviour
 
                         if (modEvent.buttons[b].actions.Count > 0)
                         {
-                            actions_data = "\n";
+                            actions_data = "";
+
+                            actions_data += "[\n";
+
                             for (int a = 0; a < modEvent.buttons[b].actions.Count; a++)
                             {
                                 string action = modEvent.buttons[b].actions[a];
 
                                 if (!string.IsNullOrEmpty(action))
                                 {
-                                    actions_data += $"    - {action}\n";
+                                    actions_data += $"act = {action};\n";
                                 }
                             }
+
+                            actions_data += "];";
                         }
                         else if (modEvent.buttons[b].actions.Any() || modEvent.buttons[b].actions.Count <= 0)
                         {
-                            actions_data = "[]\n";
+                            actions_data = "0;\n";
                         }
 
                         buttons_data +=
-                            $"- name: {modEvent.buttons[b].name}\n" +
-                                "    actions: " +
-                                    $"{actions_data}" +
-                                    $"    rejectUltimatum: {rejectUltimatum}\n";
+                                $"{b}[\nname = {modEvent.buttons[b].name};\n" +
+                                $"actions = {actions_data}\n" +
+                                $"rejectUltimatum = {rejectUltimatum};\n];\n";
                     }
 
                     if (modEvent.conditions.Count > 0 || !modEvent.conditions.Any())
                     {
-                        conditions_data = "\n";
+                        conditions_data = "";
+                        conditions_data += "[\n";
 
                         for (int c = 0; c < modEvent.conditions.Count; c++)
                         {
@@ -620,42 +639,27 @@ public class MapEditor : MonoBehaviour
 
                             if (!string.IsNullOrEmpty(condition))
                             {
-                                conditions_data += $"  - {condition}\n";
+                                conditions_data += $"cond = {condition};\n";
                             }
                         }
+
+                        conditions_data += "]";
                     }
                     else if (modEvent.conditions.Any() || modEvent.conditions.Count <= 0)
                     {
-                        conditions_data = "[]\n";
+                        conditions_data = "0;\n";
                     }
 
-                    assetData = "%YAML 1.1\n" +
-                                        "%TAG !u! tag:unity3d.com,2011:\n" +
-                                        "--- !u!114 &11400000\n" +
-                                        "MonoBehaviour:\n" +
-                                          "  m_ObjectHideFlags: 0\n" +
-                                          "  m_CorrespondingSourceObject: {fileID: 0}\n"+
-                                                "  m_PrefabInstance: {fileID: 0}\n"+
-                                                "  m_PrefabAsset: {fileID: 0}\n"+
-                                                "  m_GameObject: {fileID: 0}" + "\n" +
-                                                "  m_Enabled: 1\n" +
-                                          "  m_EditorHideFlags: 0\n" +
-                                          "  m_Script: {fileID: 11500000, guid: b827dd8bde9b9c6438e425c7948232f1, type: 3}\n"+
-                                                "  m_Name: " + $"{fileName}\n" +
-                                          "  m_EditorClassIdentifier: \n" +
-                                                "  id: " + $"{modEvent.id}\n" +
-                                          "  _name: " + $"{modEvent._name}\n" +
-                                          "  description: " + $"{modEvent.description}\n" +
-                                          $"  date: {_eventCreatorManager.dateInputfield.text}\n" +
-                                                "  image: " + "{fileID: 0}\n" +
-                                                "  _checked: 0\n" +
-                                          "  silentEvent: " + $"{silentEvent}\n" +
-                                          "  conditions:" +
-                                                    $"  {conditions_data}" +
-                                          "  buttons:\n" +
-                                            $"  {buttons_data}";
+                    assetData =
+                        $"eventID = {modEvent.id};\n" +
+                        $"name = {modEvent._name};\n" +
+                        $"description = {modEvent.description};\n" +
+                        $"date = {modEvent.date};\n" +
+                        $"silentEvent = {silentEvent};\n" +
+                        $"conditions = {conditions_data};\n" +
+                        $"buttons = {buttons_data};\n";
 
-                    CreateFile(assetData, Path.Combine(path, $"{eventId}.asset"));
+                    CreateFile(assetData, Path.Combine(path, $"{eventId}.AEEvent"));
                 }
             }
         }
@@ -691,9 +695,9 @@ public class MapEditor : MonoBehaviour
 
     private void CompileRegions()
     {
-        currentModText += "##########;";
+        currentModText += "#REGIONS#;";
 
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Length; i++)
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
         {
             RegionManager region = ReferencesManager.Instance.countryManager.regions[i];
             currentModText += $"REGION_{region._id} = [{region.currentCountry.country._id}];";
@@ -702,7 +706,7 @@ public class MapEditor : MonoBehaviour
 
     private void CompileEvents()
     {
-        currentModText += $"##########";
+        currentModText += $"#EVENTS#;";
 
         for (int i = 0; i < _eventCreatorManager.modEvents.Count; i++)
         {
@@ -767,7 +771,7 @@ public class MapEditor : MonoBehaviour
         {
             EventCreatorManager.ModEvent modEvent = _eventCreatorManager.modEvents[i];
 
-            string path = Path.Combine(Application.persistentDataPath, "localMods", $"{nameInputField.text}", "events", $"{modEvent.id}", $"{modEvent.id}.asset");
+            string path = Path.Combine(Application.persistentDataPath, "localMods", $"{nameInputField.text}", "events", $"{modEvent.id}", $"{modEvent.id}.AEEvent");
 
             UploadFile(path, $"{modEvent.id}", "asset", nameInputField.text, modEvent.id);
         }
@@ -816,7 +820,7 @@ public class MapEditor : MonoBehaviour
 
     private void CompileCountriesData()
     {
-        currentModText += "##########;";
+        currentModText += "#COUNTRIES_SETTINGS#;";
 
         foreach (CountryInfoData countryInfoData in localCountryInfoDataList)
         {
@@ -824,10 +828,11 @@ public class MapEditor : MonoBehaviour
         }
     }
 
-    private string GetValue(string[] _lines, int line)
+    private string GetValue(string line)
     {
-        string _line = _lines[line];
-        string part = _line.Split('[')[1];
+        string[] parts = line.Split('[');
+
+        string part = parts[1];
         string value = part.Remove(part.Length - 1);
 
         return value;
