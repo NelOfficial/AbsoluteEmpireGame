@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using TMPro;
 
 public class OfflineGameSettings : MonoBehaviour
 {
@@ -46,7 +47,7 @@ public class OfflineGameSettings : MonoBehaviour
 
     public void RemoveEditorKey()
     {
-        PlayerPrefs.DeleteKey("CURRENT_EDITING_MODIFICATION");
+        ReferencesManager.Instance.gameSettings.editingModString.value = "";
     }
 
     private Scenario GetScenario(int id)
@@ -62,6 +63,40 @@ public class OfflineGameSettings : MonoBehaviour
         }
 
         return result;
+    }
+
+    public void DropdownLocalisation(TMP_Dropdown dropdown)
+    {
+        //string captionText = dropdown.captionText.text;
+        //string finalCaptionText = "";
+
+        //if (PlayerPrefs.GetInt("languageId") == 0)
+        //{
+        //    finalCaptionText = captionText.Split(';')[0];
+        //}
+        //else if (PlayerPrefs.GetInt("languageId") == 1)
+        //{
+        //    finalCaptionText = captionText.Split(';')[1];
+        //}
+
+        //dropdown.captionText.text = finalCaptionText;
+
+        //for (int i = 0; i < dropdown.options.Count; i++)
+        //{
+        //    string optionText = dropdown.options[i].text;
+        //    string finalOptionText = "";
+
+        //    if (PlayerPrefs.GetInt("languageId") == 0)
+        //    {
+        //        finalOptionText = optionText.Split(';')[0];
+        //    }
+        //    else if (PlayerPrefs.GetInt("languageId") == 1)
+        //    {
+        //        finalOptionText = optionText.Split(';')[1];
+        //    }
+
+        //    dropdown.options[i].text = finalOptionText;
+        //}
     }
 
     public void SelectScenario(int id)

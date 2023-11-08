@@ -20,6 +20,8 @@ public class EventScriptableObject : ScriptableObject
 
     public List<EventButton> buttons = new List<EventButton>();
 
+    public bool IS_GAME_MAIN_EVENT;
+
     [System.Serializable]
     public class EventButton
     {

@@ -141,29 +141,42 @@ public class DateManager : MonoBehaviour
 
 	public void CheckGameEvents()
 	{
-		if (ReferencesManager.Instance.gameSettings.allowGameEvents)
+		for (int i = 0; i < this.gameSettings.gameEvents.Count; i++)
 		{
-			for (int i = 0; i < this.gameSettings.gameEvents.Count; i++)
-			{
-				EventScriptableObject eventScriptableObject = this.gameSettings.gameEvents[i];
-				string[] array = eventScriptableObject.date.Split(new char[] { '-' });
-				int num = int.Parse(array[2]);
-				int num2 = int.Parse(array[1]);
-				int num3 = int.Parse(array[0]);
+			EventScriptableObject eventScriptableObject = this.gameSettings.gameEvents[i];
 
-				if (currentDate[0] >= num3 && num2 == this.currentDate[1] && this.currentDate[2] >= num && !eventScriptableObject._checked)
-				{
-					if (!eventScriptableObject.silentEvent)
-					{
-						gameEventUI.gameObject.SetActive(true);
-						UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
-						UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
-					}
-					gameEventUI.currentGameEvent = eventScriptableObject;
-					eventScriptableObject._checked = true;
-					gameEventUI.UpdateUI();
-				}
+            if (!ReferencesManager.Instance.gameSettings.allowGameEvents)
+            {
+				if (eventScriptableObject.IS_GAME_MAIN_EVENT == false)
+                {
+					StartEvent(eventScriptableObject);
+                }
+            }
+            else
+            {
+				StartEvent(eventScriptableObject);
+            }
+		}
+	}
+
+	private void StartEvent(EventScriptableObject eventScriptableObject)
+    {
+		string[] array = eventScriptableObject.date.Split(new char[] { '-' });
+		int num = int.Parse(array[2]);
+		int num2 = int.Parse(array[1]);
+		int num3 = int.Parse(array[0]);
+
+		if (currentDate[0] >= num3 && num2 == this.currentDate[1] && this.currentDate[2] >= num && !eventScriptableObject._checked)
+		{
+			if (!eventScriptableObject.silentEvent)
+			{
+				gameEventUI.gameObject.SetActive(true);
+				UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
+				UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
 			}
+			gameEventUI.currentGameEvent = eventScriptableObject;
+			eventScriptableObject._checked = true;
+			gameEventUI.UpdateUI();
 		}
 	}
 }

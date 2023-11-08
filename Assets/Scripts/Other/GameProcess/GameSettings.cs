@@ -97,9 +97,14 @@ public class GameSettings : MonoBehaviour
 	[Header("Multiplayer")]
 	[SerializeField]
 	private BoolValue isOnlineGame;
-	[SerializeField]
-	private BoolValue jsonTestFile;
-    public BoolValue playTestingMod;
+
+	public BoolValue playTestingMod;
+    public BoolValue playMod;
+    public BoolValue loadGame;
+
+	public StringValue editingModString;
+	public StringValue difficultyValue;
+
     [SerializeField]
 	private string jsonURL;
 
@@ -114,9 +119,8 @@ public class GameSettings : MonoBehaviour
 	{
 		Application.targetFrameRate = 120;
 		onlineGame = isOnlineGame.value;
-		jsonTest = jsonTestFile.value;
 
-		diplomatyUI = FindObjectOfType<DiplomatyUI>();
+        diplomatyUI = FindObjectOfType<DiplomatyUI>();
 		multiplayer = FindObjectOfType<Multiplayer>();
 		countryManager = FindObjectOfType<CountryManager>();
 
@@ -140,8 +144,8 @@ public class GameSettings : MonoBehaviour
 		}
 		playerListButton.SetActive(false);
 
-		//GetJsonFromURL();
-	}
+		//rewardedAds.RequestRewarded();
+    }
 
     public void TogglePlayerList()
 	{
@@ -165,4 +169,14 @@ public class GameSettings : MonoBehaviour
 		BackgroundUI_Overlay.Instance.CloseOverlay();
 		playersListsPanel.SetActive(false);
 	}
+
+    private void OnApplicationQuit()
+    {
+        ReferencesManager.Instance.gameSettings.playTestingMod.value = false;
+        ReferencesManager.Instance.gameSettings.playMod.value = false;
+        ReferencesManager.Instance.gameSettings.loadGame.value = false;
+        ReferencesManager.Instance.gameSettings.difficultyValue.value = "EASY";
+
+        PlayerPrefs.DeleteKey("currentCountryIndex");
+    }
 }

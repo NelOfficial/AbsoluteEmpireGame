@@ -73,11 +73,11 @@ MonoBehaviour:
       \u0440\u0435\u0441\u043F\u0443\u0431\u043B\u0438\u043A\u0438"
     actions:
     - annex;37;43;44;45;46
-    - annex;37;222;223;224;225
-    - annex;37;227;228;250
-    - annex;12;226
+    - annex;37;231;232;233;234
+    - annex;37;236;237
     rejectUltimatum: 0
   - name: "\u041D\u0435\u0442!"
     actions:
-    - war_to_countries_in_regs;37;43;44;45;46;222;223;224;225;227;228;250
+    - war_to_countries_in_regs;37;43;44;45;46;231;232;233;234;236;237
     rejectUltimatum: 1
+  IS_GAME_MAIN_EVENT: 1

@@ -85,6 +85,7 @@ public class EventCreatorManager : MonoBehaviour
 
         _eventNameInputfield.text = modEvents[currentModEventIndex]._name;
         _eventDescriptionInputfield.text = modEvents[currentModEventIndex].description;
+        dateInputfield.text = modEvents[currentModEventIndex].date;
 
         _eventImage.SetUp();
         UpdateButtonsUI();
@@ -119,6 +120,7 @@ public class EventCreatorManager : MonoBehaviour
             newEvent.id = newEventID;
             newEvent._name = "[New event]";
             newEvent.description = "[New event description]";
+            newEvent.date = "1-1-1936";
 
             modEvents.Add(newEvent);
 
@@ -150,8 +152,8 @@ public class EventCreatorManager : MonoBehaviour
                     if (!string.IsNullOrEmpty(modEvents[currentModEventIndex].buttons[i].name))
                     {
                         newButton_wc._buttonName = modEvents[currentModEventIndex].buttons[i].name;
-                        modEvents[currentModEventIndex].buttons[i].actions = newButton_wc.buttonActions.text.Split('\n').ToListPooled();
                         newButton_wc._buttonActions = modEvents[currentModEventIndex].buttons[i].actions.ToArrayPooled();
+                        newButton_wc._buttonRejectUltimatum = modEvents[currentModEventIndex].buttons[i].rejectUltimatum;
 
                         newButton_wc.SetUp();
                     }
@@ -183,6 +185,7 @@ public class EventCreatorManager : MonoBehaviour
     {
         modEvents[currentModEventIndex]._name = _eventNameInputfield.text;
         modEvents[currentModEventIndex].description = _eventDescriptionInputfield.text;
+        modEvents[currentModEventIndex].date = dateInputfield.text;
         
         modEvents[currentModEventIndex].conditions = _eventConditionsInputfield.text.Split('\n').ToListPooled();
 

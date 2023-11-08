@@ -25,6 +25,7 @@ public class MainMenu : MonoBehaviour
     public Sprite[] buttonDesigns;
 
     public BoolValue devMode;
+    public StringValue difficultyValue;
 
     public CountryScriptableObject[] globalCountries;
 
@@ -37,6 +38,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] string[] quotes;
 
     private AsyncOperation loading;
+
+    [SerializeField] TMP_Dropdown difficultyDropdown;
     
     private void Awake()
     {
@@ -72,14 +75,34 @@ public class MainMenu : MonoBehaviour
         devMode.value = state;
     }
 
+    public void SetDifficulty(int difficulty)
+    {
+        // 0 - easy 1 - normal 2 - hard 3 - insane 4 - hardcore
+
+        if (difficulty == 0) difficultyValue.value = "EASY";
+        else if (difficulty == 1) difficultyValue.value = "NORMAL";
+        else if (difficulty == 2) difficultyValue.value = "HARD";
+        else if (difficulty == 3) difficultyValue.value = "INSANE";
+        else if (difficulty == 4) difficultyValue.value = "HARDCORE";
+    }
+
     public void LoadThroughMenu()
     {
-        PlayerPrefs.SetString("LOAD_GAME_THROUGH_MENU", "TRUE");
+        ReferencesManager.Instance.gameSettings.playTestingMod.value = false;
+        ReferencesManager.Instance.gameSettings.playMod.value = false;
+        ReferencesManager.Instance.gameSettings.loadGame.value = true;
+
+        PlayerPrefs.DeleteKey("CURRENT_EDITING_MODIFICATION");
     }
 
     public void PlayGame()
     {
-        PlayerPrefs.SetString("LOAD_GAME_THROUGH_MENU", "FALSE");
+        ReferencesManager.Instance.gameSettings.playTestingMod.value = false;
+        ReferencesManager.Instance.gameSettings.playMod.value = false;
+        ReferencesManager.Instance.gameSettings.loadGame.value = false;
+
+        PlayerPrefs.DeleteKey("CURRENT_EDITING_MODIFICATION");
+
         PlayerPrefs.SetString("FIRST_LOAD", "TRUE");
 
         quoteText.text = quotes[Random.Range(0, quotes.Length)];
@@ -118,11 +141,19 @@ public class MainMenu : MonoBehaviour
 
     private void OnApplicationQuit()
     {
+        ReferencesManager.Instance.gameSettings.playTestingMod.value = false;
+        ReferencesManager.Instance.gameSettings.playMod.value = false;
+        ReferencesManager.Instance.gameSettings.loadGame.value = false;
+
         PlayerPrefs.DeleteKey("currentCountryIndex");
     }
 
     public void QuitGame()
     {
+        ReferencesManager.Instance.gameSettings.playTestingMod.value = false;
+        ReferencesManager.Instance.gameSettings.playMod.value = false;
+        ReferencesManager.Instance.gameSettings.loadGame.value = false;
+
         Application.Quit();
     }
 

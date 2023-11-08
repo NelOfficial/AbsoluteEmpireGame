@@ -16,6 +16,33 @@ public class ProgressManager : MonoBehaviour
 
     [HideInInspector] public int progressIndex = 0;
 
+    int difficulty_AI_BUFF = 0;
+    int difficulty_PLAYER_BUFF = 0;
+
+    private void Start()
+    {
+        if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "EASY")
+        {
+            difficulty_AI_BUFF = -15;
+            difficulty_PLAYER_BUFF = 15;
+        }
+        else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "HARD")
+        {
+            difficulty_AI_BUFF = 20;
+            difficulty_PLAYER_BUFF = -20;
+        }
+        else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "INSANE")
+        {
+            difficulty_AI_BUFF = 40;
+            difficulty_PLAYER_BUFF = -40;
+        }
+        else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "HARDCORE")
+        {
+            difficulty_AI_BUFF = 75;
+            difficulty_PLAYER_BUFF = -75;
+        }
+    }
+
     public void NextProgress()
     {
         if (ReferencesManager.Instance.gameSettings.onlineGame)
@@ -58,10 +85,7 @@ public class ProgressManager : MonoBehaviour
                     }
                 }
             }
-            catch (System.Exception)
-            {
-
-            }
+            catch (System.Exception) { }
 
             for (int i = 0; i < units.Count; i++)
             {
@@ -145,6 +169,7 @@ public class ProgressManager : MonoBehaviour
 
             ReferencesManager.Instance.countryInfo.currentCreditMoves--;
             ReferencesManager.Instance.countryInfo.CheckCredit();
+            ReferencesManager.Instance.countryManager.currentCountry.money -= ReferencesManager.Instance.countryInfo.currentCreditIncome;
 
             foreach (RegionManager region in ReferencesManager.Instance.countryManager.regions)
             {
@@ -158,6 +183,9 @@ public class ProgressManager : MonoBehaviour
                     else if (region.infrastructure_Amount == 6) buildSpeed = 3;
                     else if (region.infrastructure_Amount == 8) buildSpeed = 4;
                     else if (region.infrastructure_Amount == 10) buildSpeed = 5;
+
+                    if (region.currentCountry.isPlayer) buildSpeed += buildSpeed / 100 * difficulty_PLAYER_BUFF;
+                    else buildSpeed += buildSpeed / 100 * difficulty_AI_BUFF;
 
                     region.buildingsQueue[_i].movesLasts -= buildSpeed;
                 }
@@ -208,10 +236,23 @@ public class ProgressManager : MonoBehaviour
 
                 country.inflationDebuff = Mathf.Abs(country.inflationDebuff);
 
-                country.moneyNaturalIncome = country.civFactories * ReferencesManager.Instance.gameSettings.fabric.goldIncome + country.farms * ReferencesManager.Instance.gameSettings.farm.goldIncome + country.chemicalFarms * ReferencesManager.Instance.gameSettings.chefarm.goldIncome;
-                country.moneyIncomeUI = country.moneyNaturalIncome + country.moneyTradeIncome - Mathf.FloorToInt(country.inflationDebuff) - country.regionCosts;
+                int goldIncome = country.civFactories * ReferencesManager.Instance.gameSettings.fabric.goldIncome + country.farms * ReferencesManager.Instance.gameSettings.farm.goldIncome + country.chemicalFarms * ReferencesManager.Instance.gameSettings.chefarm.goldIncome;
+                int foodIncome = country.farms * ReferencesManager.Instance.gameSettings.farm.foodIncome + country.chemicalFarms * ReferencesManager.Instance.gameSettings.chefarm.foodIncome;
 
-                country.foodNaturalIncome = country.farms * ReferencesManager.Instance.gameSettings.farm.foodIncome + country.chemicalFarms * ReferencesManager.Instance.gameSettings.chefarm.foodIncome;
+                country.moneyNaturalIncome = goldIncome;
+
+                if (country.isPlayer)
+                {
+                    country.moneyIncomeUI = country.moneyNaturalIncome + country.moneyTradeIncome - Mathf.FloorToInt(country.inflationDebuff) - country.regionCosts;
+                    country.moneyIncomeUI += country.moneyIncomeUI / 100 * difficulty_PLAYER_BUFF;
+                }
+                else
+                {
+                    country.moneyIncomeUI = country.moneyNaturalIncome + country.moneyTradeIncome - Mathf.FloorToInt(country.inflationDebuff) - country.regionCosts;
+                    country.moneyIncomeUI += country.moneyIncomeUI / 100 * difficulty_AI_BUFF;
+                }
+
+                country.foodNaturalIncome = foodIncome;
                 country.foodIncomeUI = country.foodNaturalIncome + country.foodTradeIncome;
 
                 country.money += country.moneyIncomeUI;

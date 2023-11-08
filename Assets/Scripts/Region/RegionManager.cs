@@ -693,12 +693,19 @@ public class RegionManager : MonoBehaviour
             {
                 BuildingQueueItem buildingQueueItem = new BuildingQueueItem();
                 buildingQueueItem.building = building;
-
                 buildingQueueItem.movesLasts = building.moves;
-
                 buildingQueueItem.region = currentRegionManager;
-                currentRegionManager.buildingsQueue.Add(buildingQueueItem);
+
                 ReferencesManager.Instance.countryManager.currentCountry.money -= building.goldCost;
+
+                if ((buildingQueueItem.movesLasts - buildSpeed) <= 0)
+                {
+                    BuildBuilding(buildingQueueItem.building, buildingQueueItem.region, true);
+                }
+                else
+                {
+                    currentRegionManager.buildingsQueue.Add(buildingQueueItem);
+                }
 
                 Multiplayer.Instance.SetCountryValues(
                     currentRegionManager.currentCountry.country._id,
@@ -706,10 +713,6 @@ public class RegionManager : MonoBehaviour
                     currentRegionManager.currentCountry.food,
                     currentRegionManager.currentCountry.recroots);
 
-                if ((buildingQueueItem.movesLasts - buildSpeed) <= 0)
-                {
-                    BuildBuilding(buildingQueueItem.building, buildingQueueItem.region, true);
-                }
             }
         }
         ReferencesManager.Instance.regionUI.UpdateBuildingUI();

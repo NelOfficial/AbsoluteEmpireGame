@@ -18,10 +18,10 @@ MonoBehaviour:
   _uiName: "\u0414\u0430\u043D\u0438\u044F"
   _tag: DNM
   countryType: 1
-  countryFlag: {fileID: 21300000, guid: 249e35f2df0b8d8459b0e6b57426c413, type: 3}
+  countryFlag: {fileID: 21300000, guid: 64fdc72f0fbc2874f8b93b6095efa423, type: 3}
   ally: 
-  capitulateLimit: 80
-  countryColor: {r: 0.6666667, g: 0.101960786, b: 0.2, a: 0.5}
+  capitulateLimit: 20
+  countryColor: {r: 0.6666667, g: 0.101960786, b: 0.2, a: 0.5019608}
   countryIdeologyColors:
   - {r: 0.9529412, g: 0.62352943, b: 0.6821317, a: 0.5019608}
   - {r: 0.6666667, g: 0.101960786, b: 0.2, a: 0.5019608}

@@ -78,16 +78,16 @@ MonoBehaviour:
     \u0446\u0435\u043D\u0442\u0440\u043E\u0432.\n"
   date: 17-7-1936
   image: {fileID: 21300000, guid: 753144ea33fbf3b4e9d9d0c2a30f5e48, type: 3}
-  _checked: 0
-  actionOnButton: 0
+  _checked: 1
   silentEvent: 0
   conditions:
   - country_exist;33
-  actions: []
   buttons:
   - name: "\u0418\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E..."
     actions:
     - "create_country;5533;\u0424\u0430\u0448\u0438\u0437\u043C"
     - remove_army;33
-    - annex;5533;306;307;314;315;316;317;311;322;325;328;329;330;334;333
+    - annex;5533;328;329;336;337;338;339;333;344;347;350;351;352;355;356;357
     - war;5533;33
+    rejectUltimatum: 0
+  IS_GAME_MAIN_EVENT: 1

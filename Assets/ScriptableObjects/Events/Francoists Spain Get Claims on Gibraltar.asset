@@ -23,8 +23,10 @@ MonoBehaviour:
   silentEvent: 1
   conditions:
   - country_exist;5533
+  - not_in_war_with;5533;33
   buttons:
-  - name: "\u0421\u0438\u043B\u044C\u043D\u043E\u0435 \u0437\u0430\u044F\u0432\u043B\u0435\u043D\u0438\u0435"
+  - name: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
     actions:
-    - add_claim;401;5533
+    - add_claim;460;5533
     rejectUltimatum: 0
+  IS_GAME_MAIN_EVENT: 1

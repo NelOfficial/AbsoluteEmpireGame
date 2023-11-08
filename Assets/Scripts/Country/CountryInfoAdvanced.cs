@@ -26,10 +26,10 @@ public class CountryInfoAdvanced : MonoBehaviour
     [SerializeField] GameObject itemPrefab;
     [SerializeField] GameObject formableNationsGrid;
 
-    [HideInInspector] public int currentCredit;
-    [HideInInspector] public int currentCreditIncome;
-    [HideInInspector] public int currentCreditMoves;
-    [HideInInspector] public int l;
+    public int currentCredit;
+    public int currentCreditIncome;
+    public int currentCreditMoves;
+    public int l;
 
     [SerializeField] Image[] pieCharts;
 
@@ -116,7 +116,7 @@ public class CountryInfoAdvanced : MonoBehaviour
         currentCreditIncome = currentCredit / currentCreditMoves;
 
         countryManager.currentCountry.money += 1000;
-        countryManager.currentCountry.moneyNaturalIncome -= 100;
+        countryManager.currentCountry.moneyIncomeUI -= 100;
 
         WarningManager.Instance.Warn("Вы взяли в долг 1000 золота на 10 ходов.");
 
@@ -136,7 +136,7 @@ public class CountryInfoAdvanced : MonoBehaviour
         {
             currentCredit = 0;
             currentCreditMoves = 0;
-            if (!ReferencesManager.Instance.gameSettings.spectatorMode) countryManager.currentCountry.moneyNaturalIncome += currentCreditIncome;
+            countryManager.currentCountry.moneyIncomeUI += currentCreditIncome;
             currentCreditIncome = 0;
         }
         currentCredit -= currentCreditIncome;
@@ -317,8 +317,32 @@ public class CountryInfoAdvanced : MonoBehaviour
         int reservedManPower = country.population / 100 * ReferencesManager.Instance.gameSettings.mobilizationPercent[id];
 
         country.population -= reservedManPower;
-        country.recroots = reservedManPower;
 
+        int difficulty_AI_BUFF = 0;
+        int difficulty_PLAYER_BUFF = 0;
+
+        if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "EASY")
+        {
+            difficulty_AI_BUFF = -15;
+            difficulty_PLAYER_BUFF = 15;
+        }
+        else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "HARD")
+        {
+            difficulty_AI_BUFF = 20;
+            difficulty_PLAYER_BUFF = -40;
+        }
+        else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "INSANE")
+        {
+            difficulty_AI_BUFF = 40;
+            difficulty_PLAYER_BUFF = -80;
+        }
+        else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "HARDCORE")
+        {
+            difficulty_AI_BUFF = 75;
+            difficulty_PLAYER_BUFF = -90;
+        }
+
+        country.recroots = reservedManPower + (reservedManPower / 100 * difficulty_PLAYER_BUFF);
 
         countryManager.UpdateCountryInfo();
         countryManager.UpdateValuesUI();

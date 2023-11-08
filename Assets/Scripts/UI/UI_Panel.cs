@@ -19,9 +19,12 @@ public class UI_Panel : MonoBehaviour
 
     public void ClosePanel()
     {
-        Close();
+        if (this.gameObject.activeSelf == true)
+        {
+            Close();
 
-        StartCoroutine(ClosePanel_Co());
+            StartCoroutine(ClosePanel_Co());
+        }
     }
 
     public void PlayAnimation()

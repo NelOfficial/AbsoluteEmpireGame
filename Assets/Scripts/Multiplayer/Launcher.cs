@@ -25,7 +25,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     public CountryScriptableObject[] countriesList;
 
     [SerializeField] BoolValue onlineGameValue;
-    [SerializeField] BoolValue jsonRead;
 
 
     private void Awake()
@@ -64,11 +63,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void SetOnlineValue(bool value)
     {
         onlineGameValue.value = value;
-    }
-
-    public void SetModValue(bool value)
-    {
-        jsonRead.value = value;
     }
 
     public void CreateRoom()

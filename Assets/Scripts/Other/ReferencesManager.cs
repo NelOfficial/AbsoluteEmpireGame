@@ -72,6 +72,7 @@ public class ReferencesManager : MonoBehaviour
         aiManager.AICountries.Add(createdCountry.GetComponent<CountrySettings>());
 
         createdCountry.GetComponent<CountrySettings>().ideology = ideology;
+        createdCountry.GetComponent<CountrySettings>().UpdateCountryGraphics(ideology);
 
         countryManager.UpdateRegionsColor();
     }

@@ -45,7 +45,7 @@ public class ModificationPanel : MonoBehaviour
     public GameObject countriesListPanel;
     [SerializeField] GameObject selectCountryButtonPrefab;
 
-    private int maxPage = 1;
+    private int maxPage = 0;
     private int selectedPage = 0;
 
     public int postsPerPage = 10;
@@ -110,28 +110,25 @@ public class ModificationPanel : MonoBehaviour
 
     public void UpdateScenariosList()
     {
-        StartCoroutine(GetIds(true));
+        StartCoroutine(GetIds());
         StartCoroutine(WallUpdate());
         lastScenarios = loadedModificationsIds.Count;
         refreshButton.image.color = Color.white;
     }
 
     [System.Obsolete]
-    private IEnumerator GetIds(bool useUI)
+    private IEnumerator GetIds()
     {
-        if (useUI)
-        {
-            wallAnimationUI.SetActive(true);
-            refreshButton.interactable = false;
+        wallAnimationUI.SetActive(true);
+        refreshButton.interactable = false;
 
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                refreshButtonText.text = "Loading IDs...";
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                refreshButtonText.text = "Загрузка id сценариев...";
-            }
+        if (PlayerPrefs.GetInt("languageId") == 0)
+        {
+            refreshButtonText.text = "Loading IDs...";
+        }
+        else if (PlayerPrefs.GetInt("languageId") == 1)
+        {
+            refreshButtonText.text = "Загрузка id сценариев...";
         }
 
         WWWForm form = new WWWForm();
@@ -158,10 +155,7 @@ public class ModificationPanel : MonoBehaviour
             {
                 loadedModificationsIds.Add(int.Parse(request[i]));
             }
-            catch (System.Exception)
-            {
-                Debug.Log(getPostRequest.text);
-            }
+            catch (Exception) { }
         }
 
         if (loadedModificationsIds.Count > lastScenarios)
@@ -177,8 +171,7 @@ public class ModificationPanel : MonoBehaviour
             }
         }
 
-        //yield return new WaitForSeconds(5f);
-        //StartCoroutine(GetIds(false));
+        StartCoroutine(WallUpdate());
     }
 
     private IEnumerator WallUpdate()
@@ -342,6 +335,24 @@ public class ModificationPanel : MonoBehaviour
         }
     }
 
+    private string GetValue(string line)
+    {
+        string value = "";
+
+        try
+        {
+            string[] parts = line.Split('=');
+
+            string part = parts[1];
+            value = part;
+        }
+        catch (Exception)
+        {
+        }
+
+        return value;
+    }
+
     public void UpdateCountriesList()
     {
         mainMenu.ScrollEffect(countriesListContainer.GetComponent<RectTransform>());
@@ -359,8 +370,7 @@ public class ModificationPanel : MonoBehaviour
 
             try
             {
-                string part = _line.Split('[')[1];
-                value = part.Remove(part.Length - 1);
+                value = GetValue(_line);
             }
             catch (Exception)
             {
@@ -575,13 +585,25 @@ public class ModificationPanel : MonoBehaviour
             }
         }
 
+        int _maxPage = maxPage + 1;
+        int _selectedPage = selectedPage + 1;
+
         if (PlayerPrefs.GetInt("languageId") == 0)
         {
-            pageText.text = $"Page {selectedPage + 1} of {maxPage + 1}";
+            pageText.text = $"Page {_selectedPage} of {_maxPage}";
         }
         else if (PlayerPrefs.GetInt("languageId") == 1)
         {
-            pageText.text = $"Страница {selectedPage + 1} из {maxPage + 1}";
+            pageText.text = $"Страница {_selectedPage} из {_maxPage}";
+        }
+
+        if (selectedPage < maxPage)
+        {
+            refreshButton.interactable = false;
+        }
+        else
+        {
+            refreshButton.interactable = true;
         }
     }
 
@@ -589,12 +611,17 @@ public class ModificationPanel : MonoBehaviour
     {
         isPlayModObject.value = true;
 
+        ReferencesManager.Instance.gameSettings.playTestingMod.value = false;
+        ReferencesManager.Instance.gameSettings.playMod.value = true;
+        ReferencesManager.Instance.gameSettings.loadGame.value = false;
+
         PlayerPrefs.SetInt("CURRENT_MOD_PLAYING", currentLoadedModification.id);
+        PlayerPrefs.DeleteKey("CURRENT_EDITING_MODIFICATION");
 
         mainMenu.LoadScene("EuropeSceneOffline");
     }
 
-    private void CreateFolder(string _path, string folderName)
+    public void CreateFolder(string _path, string folderName)
     {
         string path = Path.Combine(Application.persistentDataPath, $"{_path}");
         path = Path.Combine(path, $"{folderName}");
@@ -603,7 +630,7 @@ public class ModificationPanel : MonoBehaviour
         Debug.Log($"Created folder in {path} with name: {folderName}");
     }
 
-    private void CreateFile(string fileText, string path)
+    public void CreateFile(string fileText, string path)
     {
         StreamWriter streamWriter;
         FileInfo file = new FileInfo(path);
@@ -615,7 +642,12 @@ public class ModificationPanel : MonoBehaviour
         Debug.Log($"Created file in {path} with text: {fileText}");
     }
 
-    private IEnumerator GetImageByURL_Co(string url)
+    public bool IsNullOrEmpty(Array array)
+    {
+        return (array == null || array.Length == 0);
+    }
+
+    public IEnumerator GetImageByURL_Co(string url)
     {
         UnityWebRequest www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
@@ -631,11 +663,6 @@ public class ModificationPanel : MonoBehaviour
         }
 
         isBytesNotEmpty = !IsNullOrEmpty(c_bytes);
-    }
-
-    public bool IsNullOrEmpty(Array array)
-    {
-        return (array == null || array.Length == 0);
     }
 
     private IEnumerator GetTextByURL_Co(string url)
@@ -656,7 +683,7 @@ public class ModificationPanel : MonoBehaviour
         isTextNotEmpty = !string.IsNullOrEmpty(c_text);
     }
 
-    private IEnumerator CreateEventData_Co(string ModPath, int eventID, string imageUrl, string textUrl)
+    public IEnumerator CreateEventData_Co(string ModPath, int eventID, string imageUrl, string textUrl)
     {
         StartCoroutine(GetImageByURL_Co(imageUrl));
         StartCoroutine(GetTextByURL_Co(textUrl));

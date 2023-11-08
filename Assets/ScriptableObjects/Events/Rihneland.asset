@@ -87,3 +87,5 @@ MonoBehaviour:
   - name: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
     actions:
     - 
+    rejectUltimatum: 0
+  IS_GAME_MAIN_EVENT: 1

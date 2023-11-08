@@ -130,6 +130,10 @@ public class Settings : MonoBehaviour
     {
         PlayerPrefs.DeleteKey("currentCountryIndex");
 
+        ReferencesManager.Instance.gameSettings.loadGame.value = false;
+        ReferencesManager.Instance.gameSettings.playMod.value = false;
+        ReferencesManager.Instance.gameSettings.playTestingMod.value = false;
+
         if (gameSettings.onlineGame)
         {
             PhotonNetwork.LeaveRoom();

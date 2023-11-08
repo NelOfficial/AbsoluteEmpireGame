@@ -195,7 +195,7 @@ public class CountrySettings : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerPrefs.GetString("LOAD_GAME_THROUGH_MENU") == "FALSE" || !PlayerPrefs.HasKey("LOAD_GAME_THROUGH_MENU"))
+        if (ReferencesManager.Instance.gameSettings.loadGame == false)
         {
             if (country.countryType == CountryScriptableObject.CountryType.Poor)
             {
@@ -237,6 +237,55 @@ public class CountrySettings : MonoBehaviour
 
         startFoodIncome = foodNaturalIncome;
         startMoneyIncome = moneyIncomeUI;
+
+        int difficulty_AI_BUFF = 0;
+        int difficulty_PLAYER_BUFF = 0;
+        float _aiAccuracy_increment = 0;
+
+        if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "EASY")
+        {
+            difficulty_AI_BUFF = -15;
+            difficulty_PLAYER_BUFF = 15;
+            _aiAccuracy_increment = 0;
+        }
+        else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "HARD")
+        {
+            difficulty_AI_BUFF = 20;
+            difficulty_PLAYER_BUFF = -20;
+
+            _aiAccuracy_increment = 1.5f;
+        }
+        else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "INSANE")
+        {
+            difficulty_AI_BUFF = 40;
+            difficulty_PLAYER_BUFF = -40;
+
+            _aiAccuracy_increment = 2f;
+        }
+        else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "HARDCORE")
+        {
+            difficulty_AI_BUFF = 75;
+            difficulty_PLAYER_BUFF = -75;
+
+            _aiAccuracy_increment = 3f;
+        }
+
+        aiAccuracy *= _aiAccuracy_increment;
+
+        if (aiAccuracy > 1) aiAccuracy = 1;
+
+        if (isPlayer)
+        {
+            money += money / 100 * difficulty_PLAYER_BUFF;
+            food += money / 100 * difficulty_PLAYER_BUFF;
+            recroots += money / 100 * difficulty_PLAYER_BUFF;
+        }
+        else
+        {
+            money += money / 100 * difficulty_AI_BUFF;
+            food += money / 100 * difficulty_AI_BUFF;
+            recroots += money / 100 * difficulty_AI_BUFF;
+        }
     }
 
     private IEnumerator Capitulation_Co()
@@ -298,5 +347,51 @@ public class CountrySettings : MonoBehaviour
             annexedRegion.SelectRegionNoHit(annexedRegion);
         }
         ReferencesManager.Instance.ChangeMobilizationLaw(newCountry.mobilizationLaw, newCountry);
+    }
+
+    public void UpdateCountryGraphics(string ideology)
+    {
+        if (ReferencesManager.Instance.gameSettings.onlineGame)
+        {
+            Multiplayer.Instance.M_UpdateCountryGraphics(country._id, ideology);
+        }
+        else
+        {
+            if (ideology == "Неопределённый")
+            {
+                country.countryColor = country.countryIdeologyColors[1];
+                country.countryFlag = country.countryIdeologyFlags[1];
+            }
+            else if (ideology == "Демократия")
+            {
+                country.countryColor = country.countryIdeologyColors[1];
+                country.countryFlag = country.countryIdeologyFlags[1];
+            }
+            else if (ideology == "Монархия")
+            {
+                country.countryColor = country.countryIdeologyColors[2];
+                country.countryFlag = country.countryIdeologyFlags[2];
+            }
+            else if (ideology == "Фашизм")
+            {
+                country.countryColor = country.countryIdeologyColors[4];
+                country.countryFlag = country.countryIdeologyFlags[4];
+            }
+            else if (ideology == "Коммунизм")
+            {
+                country.countryColor = country.countryIdeologyColors[5];
+                country.countryFlag = country.countryIdeologyFlags[5];
+            }
+
+            // Новый цвет
+            foreach (RegionManager region in ReferencesManager.Instance.countryManager.regions)
+            {
+                region.selectedColor.r = region.currentCountry.country.countryColor.r + 0.1f;
+                region.selectedColor.g = region.currentCountry.country.countryColor.g + 0.1f;
+                region.selectedColor.b = region.currentCountry.country.countryColor.b + 0.1f;
+            }
+
+            ReferencesManager.Instance.countryManager.UpdateRegionsColor();
+        }
     }
 }

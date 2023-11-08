@@ -893,7 +893,12 @@ public class MovePoint : MonoBehaviour
         }
         else
         {
+            
+            
             attackerUnit.transform.position = hit.collider.transform.position;
+
+            //attackerUnit.transform.position = Vector3.Lerp(attackerUnit.transform.position, hit.collider.transform.position, Time.deltaTime * 5f);
+
             attackerUnit.currentProvince.hasArmy = false; // old region are not having army now
             if (!forceParent) attackerUnit.transform.SetParent(regionTo);
             else attackerUnit.transform.SetParent(parent);

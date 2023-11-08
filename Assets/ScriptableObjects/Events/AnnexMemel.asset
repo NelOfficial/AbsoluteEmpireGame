@@ -64,9 +64,10 @@ MonoBehaviour:
   - name: "\u0423 \u041B\u0438\u0442\u0432\u044B \u043D\u0435 \u0431\u044B\u043B\u043E
       \u0432\u044B\u0431\u043E\u0440\u0430"
     actions:
-    - annex;12;226
+    - annex;12;235
     rejectUltimatum: 0
   - name: "\u041C\u044B \u043D\u0435 \u043E\u0442\u0441\u0442\u0443\u043F\u0438\u043C!"
     actions:
-    - war_to_countries_in_regs;12;226
+    - war_to_countries_in_regs;12;235
     rejectUltimatum: 1
+  IS_GAME_MAIN_EVENT: 1

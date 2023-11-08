@@ -14,7 +14,7 @@ public class GameEventUI : MonoBehaviour
     [SerializeField] TMP_Text descriptionText;
     [SerializeField] TMP_Text titleText;
 
-    [HideInInspector] public EventScriptableObject currentGameEvent;
+    public EventScriptableObject currentGameEvent;
 
     private bool isEnabled = false;
 
@@ -396,6 +396,10 @@ public class GameEventUI : MonoBehaviour
                             allowEvent = !attacker.isPlayer;
                         }
                     }
+                    else if (condition[0] == "")
+                    {
+                        allowEvent = true;
+                    }
 
                     if (allowEvent)
                     {
@@ -524,6 +528,38 @@ public class GameEventUI : MonoBehaviour
                             } // Asign countries
 
                             DiplomatySend("unpact", attacker, defender);
+                        }
+                        else if (act[0] == "union")
+                        {
+                            for (int i = 0; i < countryManager.countries.Count; i++)
+                            {
+                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                                {
+                                    attacker = countryManager.countries[i];
+                                }
+                                if (countryManager.countries[i].country._id == int.Parse(act[2]))
+                                {
+                                    defender = countryManager.countries[i];
+                                }
+                            } // Asign countries
+
+                            DiplomatySend("union", attacker, defender);
+                        }
+                        else if (act[0] == "deunion")
+                        {
+                            for (int i = 0; i < countryManager.countries.Count; i++)
+                            {
+                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                                {
+                                    attacker = countryManager.countries[i];
+                                }
+                                if (countryManager.countries[i].country._id == int.Parse(act[2]))
+                                {
+                                    defender = countryManager.countries[i];
+                                }
+                            } // Asign countries
+
+                            DiplomatySend("deunion", attacker, defender);
                         }
                         else if (act[0] == "create_country")
                         {
@@ -873,7 +909,7 @@ public class GameEventUI : MonoBehaviour
             SmallNewsManager.Instance.UpdateUI();
         }
 
-        if (offer == "disunion")
+        if (offer == "deunion")
         {
             Relationships.Relation senderToReceiver = diplomatyUI.FindCountriesRelation(sender, receiver);
             Relationships.Relation receiverToSender = diplomatyUI.FindCountriesRelation(receiver, sender);

@@ -275,6 +275,7 @@ MonoBehaviour:
   silentEvent: 0
   conditions:
   - country_exist;37
+  - country_exist;10
   buttons:
   - name: "\u0422\u0435\u0440\u043F\u0435\u043D\u0438\u0435 \u0441\u043E\u0432\u0435\u0442\u043E\u0432
       \u0438\u0441\u0441\u044F\u043A\u043B\u043E"
@@ -285,3 +286,4 @@ MonoBehaviour:
     actions:
     - war_to_countries_in_regs;37;57;51
     rejectUltimatum: 1
+  IS_GAME_MAIN_EVENT: 1

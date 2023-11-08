@@ -76,7 +76,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4287214280
-  m_fontColor: {r: 0.78431374, g: 0.69803923, b: 0.5372549, a: 1}
+  m_fontColor: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -729,6 +729,7 @@ MonoBehaviour:
   id: 0
   currentCountryID: 0
   description: 
+  version: 0
   modNameText: {fileID: 4855209630058601719}
   modDescText: {fileID: 3987946007178912313}
   currentCountryFlag: {fileID: 0}

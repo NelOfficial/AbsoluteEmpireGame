@@ -201,6 +201,8 @@ public class ProfileManager : MonoBehaviour
 
                     _spawnedWall.GetComponent<LocalModButton>().modNameText.text = loadedModifications[i].currentScenarioName;
                     _spawnedWall.GetComponent<LocalModButton>().id = loadedModifications[i].id;
+                    _spawnedWall.GetComponent<LocalModButton>().version = loadedModifications[i].version;
+                    _spawnedWall.GetComponent<LocalModButton>().modName = loadedModifications[i].currentScenarioName;
                     _spawnedWall.GetComponent<LocalModButton>().description = loadedModifications[i].currentScenarioDescription;
                 }
                 else
@@ -210,6 +212,8 @@ public class ProfileManager : MonoBehaviour
 
                     spawnedWall.GetComponent<LocalModButton>().modNameText.text = loadedModifications[i].currentScenarioName;
                     spawnedWall.GetComponent<LocalModButton>().id = loadedModifications[i].id;
+                    spawnedWall.GetComponent<LocalModButton>().version = loadedModifications[i].version;
+                    spawnedWall.GetComponent<LocalModButton>().modName = loadedModifications[i].currentScenarioName;
                     spawnedWall.GetComponent<LocalModButton>().description = loadedModifications[i].currentScenarioDescription;
                 }
             }

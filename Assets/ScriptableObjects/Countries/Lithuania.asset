@@ -20,7 +20,7 @@ MonoBehaviour:
   countryType: 0
   countryFlag: {fileID: 21300000, guid: 98b38147e38f74d42abb859a69c40125, type: 3}
   ally: 
-  capitulateLimit: 60
+  capitulateLimit: 20
   countryColor: {r: 0.8156863, g: 0.62352943, b: 0.10980392, a: 0.5}
   countryIdeologyColors:
   - {r: 0.9529412, g: 0.8627451, b: 0.62352943, a: 0.5019608}

@@ -46,13 +46,13 @@ MonoBehaviour:
   date: 9-8-1939
   image: {fileID: 21300000, guid: 6a1dbf68ae1713445a89375f3a60b8fc, type: 3}
   _checked: 0
-  actionOnButton: 0
   silentEvent: 0
   conditions:
   - country_exist;12
   - country_exist;37
-  actions: []
   buttons:
   - name: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
     actions:
     - trade;12;37
+    rejectUltimatum: 0
+  IS_GAME_MAIN_EVENT: 1

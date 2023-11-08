@@ -34,7 +34,7 @@ RectTransform:
   - {fileID: 4241386236229942968}
   - {fileID: 4249414100164672073}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -301,7 +301,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7ee48c5fba4919649a8a6094cbead669, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3b3bd335b9435434e81bf1ad083bdd3f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
