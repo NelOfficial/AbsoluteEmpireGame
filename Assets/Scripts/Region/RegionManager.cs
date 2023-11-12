@@ -328,6 +328,37 @@ public class RegionManager : MonoBehaviour
         }
     }
 
+    public void UpgradeInfrastructureForce(RegionManager region)
+    {
+        int check = region.infrastructure_Amount + 1;
+
+        if (region.currentCountry.money >= 800)
+        {
+            if (check <= 10)
+            {
+                region.infrastructure_Amount++;
+                region.currentCountry.money -= 800;
+                region.currentCountry.moneyNaturalIncome += 8;
+            }
+        }
+
+        ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
+        ReferencesManager.Instance.countryManager.UpdateValuesUI();
+        region.UpdateRegionUI();
+
+        if (ReferencesManager.Instance.gameSettings.onlineGame)
+        {
+            Multiplayer.Instance.SetRegionValues(_id, population, hasArmy, goldIncome, foodIncome, civFactory_Amount,
+            infrastructure_Amount, farms_Amount, cheFarms, regionScore);
+
+            Multiplayer.Instance.SetCountryValues(
+                region.currentCountry.country._id,
+                region.currentCountry.money,
+                region.currentCountry.food,
+                region.currentCountry.recroots);
+        }
+    }
+
     public void SelectRegion()
     {
         if (canSelect)
