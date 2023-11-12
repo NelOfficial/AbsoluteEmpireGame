@@ -200,11 +200,10 @@ public class UnitMovement : MonoBehaviour
         List<UnitHealth> enemyUnits = new List<UnitHealth>();
         List<UnitHealth> myUnits = new List<UnitHealth>();
 
+        BattleInfo battle = new BattleInfo();
+
         int defenderForts = 0;
         float attackerFortsDebuff = 0;
-
-        float enemyDamage = 0;
-        float myDamage = 0;
 
         int myInfantry = 0;
         int enemyInfantry = 0;
@@ -221,7 +220,6 @@ public class UnitMovement : MonoBehaviour
         winChance = 0;
 
         defenderForts = fightRegion.fortifications_Amount * 5 / 100;
-        attackerFortsDebuff = myDamage * defenderForts;
 
         if (fightRegion.hasArmy)
         {
@@ -883,5 +881,18 @@ public class UnitMovement : MonoBehaviour
         public int _id;
         public float health;
         public UnitScriptableObject unit;
+    }
+
+    [System.Serializable]
+    public class BattleInfo
+    {
+        public int _id;
+        public float attackerSoftAttack;
+        public float attackerHardAttack;
+        public float attackerDefense;
+
+        public float defenderSoftAttack;
+        public float defenderHardAttack;
+        public float defenderDefense;
     }
 }
