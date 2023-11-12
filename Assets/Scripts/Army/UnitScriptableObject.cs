@@ -15,18 +15,30 @@ public class UnitScriptableObject : ScriptableObject
 
     public Sprite icon;
 
+    [Header("Cost")]
     public int moneyCost;
     public int moneyIncomeCost;
     public int foodIncomeCost;
     public int recrootsCost;
 
+    [Header("Info")]
     public int level;
     public int unlockLevel;
     public int rank;
 
-    public float damage;
-    public float defense;
+    [Header("Battle parameters")]
     public float health;
+
+    public float softAttack;
+    public float hardAttack;
+
+    public float defense;
+    public float maxEntrenchment;
+
+    public float armor;
+    public float armorPiercing;
+
+    public float hardness;
 
     public string unitName;
 }

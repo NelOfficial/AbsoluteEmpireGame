@@ -112,7 +112,7 @@ public class GameSettings : MonoBehaviour
 	public Multiplayer multiplayer;
 
 	[SerializeField] BoolValue devMode;
-	//[SerializeField] RewardedAds rewardedAds;
+	[SerializeField] RewardedAds rewardedAds;
 
 
 	private void Awake()
@@ -144,7 +144,7 @@ public class GameSettings : MonoBehaviour
 		}
 		playerListButton.SetActive(false);
 
-		//rewardedAds.RequestRewarded();
+		rewardedAds.RequestRewarded();
     }
 
     public void TogglePlayerList()
