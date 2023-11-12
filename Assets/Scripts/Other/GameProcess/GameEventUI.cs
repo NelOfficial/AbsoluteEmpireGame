@@ -103,12 +103,12 @@ public class GameEventUI : MonoBehaviour
 
         imageView.sprite = currentGameEvent.image;
 
-        if (isEnabled) // Включено, значит выключаем
+        if (isEnabled) // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         {
             isEnabled = false;
             StartCoroutine(ClosePanel_Co());
         }
-        else if (!isEnabled) // Выключено, значит включаем
+        else if (!isEnabled) // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         {
             isEnabled = true;
             imageViewPanel.SetActive(true);
@@ -424,7 +424,7 @@ public class GameEventUI : MonoBehaviour
                                 }
 
                                 SmallNewsManager.Instance.countrySender = attacker.country;
-                                SmallNewsManager.Instance.message = $"Государство {attacker.country._name} присоединило {act.Length - 2} регионов государства {countryManager.regions[int.Parse(act[2])].currentCountry.country._name}";
+                                SmallNewsManager.Instance.message = $"Р“РѕСЃСѓРґР°СЂСЃС‚РІРѕ {attacker.country._name} РїСЂРёСЃРѕРµРґРёРЅРёР»Рѕ {act.Length - 2} РїСЂРѕРІРёРЅС†РёР№ РіРѕСЃСѓРґР°СЂСЃС‚РІР° {countryManager.regions[int.Parse(act[2])].currentCountry.country._name}";
                                 SmallNewsManager.Instance.UpdateUI();
 
                                 foreach (RegionManager region in regionsToAnnex)
@@ -584,7 +584,7 @@ public class GameEventUI : MonoBehaviour
                                             countryManager.regions[i].regionClaims.Add(country);
 
                                             SmallNewsManager.Instance.countrySender = attacker.country;
-                                            SmallNewsManager.Instance.message = $"Государство {country._name} выдвинуло претензии на регион государства {countryManager.regions[i].currentCountry.country._name}";
+                                            SmallNewsManager.Instance.message = $"Р“РѕСЃСѓРґР°СЂСЃС‚РІРѕ {country._name} Р·Р°СЏРІРёР»Рѕ РїСЂРµС‚РµРЅР·РёРё РЅР° РїСЂРѕРІРёРЅС†РёРё РіРѕСЃСѓРґР°СЂСЃС‚РІР° {countryManager.regions[i].currentCountry.country._name}";
                                             SmallNewsManager.Instance.UpdateUI();
                                         }
                                     }
@@ -604,7 +604,7 @@ public class GameEventUI : MonoBehaviour
                                             countryManager.regions[i].regionClaims.Remove(country);
 
                                             SmallNewsManager.Instance.countrySender = attacker.country;
-                                            SmallNewsManager.Instance.message = $"Государство {country._name} отозвало претензии на регион государства {countryManager.regions[i].currentCountry.country._name}";
+                                            SmallNewsManager.Instance.message = $"Р“РѕСЃСѓРґР°СЂСЃС‚РІРѕ {country._name} РѕС‚РѕР·РІР°Р»Рѕ РїСЂРµС‚РµРЅР·РёРё РЅР° РїСЂРѕРІРёРЅС†РёРё РіРѕСЃСѓРґР°СЂСЃС‚РІР° {countryManager.regions[i].currentCountry.country._name}";
                                             SmallNewsManager.Instance.UpdateUI();
                                         }
                                     }
@@ -764,6 +764,83 @@ public class GameEventUI : MonoBehaviour
                                 }
                             }
                         }
+                        else if (act[0] == "set_ideology")
+                        {
+                            for (int i = 0; i < countryManager.countries.Count; i++)
+                            {
+                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                                {
+                                    attacker = countryManager.countries[i];
+                                }
+                            }
+
+                            attacker.ideology = act[2];
+                            attacker.UpdateCountryGraphics(attacker.ideology);
+                        }
+                        else if (act[0] == "build")
+                        {
+                            for (int i = 0; i < countryManager.regions.Count; i++)
+                            {
+                                if (countryManager.regions[i]._id == int.Parse(act[1]))
+                                {
+                                    region = countryManager.regions[i];
+                                }
+                            }
+
+                            BuildingScriptableObject building = new BuildingScriptableObject();
+
+                            if (act[2] == "FCT") building = ReferencesManager.Instance.gameSettings.fabric;
+                            else if (act[2] == "FRM") building = ReferencesManager.Instance.gameSettings.farm;
+                            else if (act[2] == "CFR") building = ReferencesManager.Instance.gameSettings.chefarm;
+                            else if (act[2] == "INF")
+                            {
+                                region.UpgradeInfrastructureForce(region);
+                            }
+
+                            region.BuildBuilding(building, region, false);
+                        }
+                        else if (act[0] == "build_queue")
+                        {
+                            for (int i = 0; i < countryManager.regions.Count; i++)
+                            {
+                                if (countryManager.regions[i]._id == int.Parse(act[1]))
+                                {
+                                    region = countryManager.regions[i];
+                                }
+                            }
+
+                            BuildingScriptableObject building = new BuildingScriptableObject();
+
+                            if (act[2] == "FCT") building = ReferencesManager.Instance.gameSettings.fabric;
+                            if (act[2] == "FRM") building = ReferencesManager.Instance.gameSettings.farm;
+                            if (act[2] == "CFR") building = ReferencesManager.Instance.gameSettings.chefarm;
+
+                            region.AddBuildingToQueueForce(building, region);
+                        }
+                        else if (act[0] == "add_population")
+                        {
+                            for (int i = 0; i < countryManager.regions.Count; i++)
+                            {
+                                if (countryManager.regions[i]._id == int.Parse(act[1]))
+                                {
+                                    region = countryManager.regions[i];
+                                }
+                            }
+
+                            region.population += int.Parse(act[2]);
+                        }
+                        else if (act[0] == "set_population")
+                        {
+                            for (int i = 0; i < countryManager.regions.Count; i++)
+                            {
+                                if (countryManager.regions[i]._id == int.Parse(act[1]))
+                                {
+                                    region = countryManager.regions[i];
+                                }
+                            }
+
+                            region.population = int.Parse(act[2]);
+                        }
                     }
                 }
             }
@@ -799,7 +876,7 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship -= 100;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} объявило войну государству {receiver.country._name}";
+            SmallNewsManager.Instance.message = $"Р“РѕСЃСѓРґР°СЂСЃС‚РІРѕ {sender.country._name} РѕР±СЉСЏРІРёР»Рѕ РІРѕР№РЅСѓ РіРѕСЃСѓРґР°СЂСЃС‚РІСѓ {receiver.country._name}";
             SmallNewsManager.Instance.UpdateUI();
         }
 
@@ -822,7 +899,7 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship += 60;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} заключило мир с государством {receiver.country._name}";
+            SmallNewsManager.Instance.message = $"Р“РѕСЃСѓРґР°СЂСЃС‚РІРѕ {sender.country._name} Р·Р°РєР»СЋС‡РёР»Рѕ РјРёСЂ СЃ РіРѕСЃСѓРґР°СЂСЃС‚РІРѕРј {receiver.country._name}";
             SmallNewsManager.Instance.UpdateUI();
         }
 
@@ -839,7 +916,7 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship += 18;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} заключило торговлю с государством {receiver.country._name}";
+            SmallNewsManager.Instance.message = $"Р“РѕСЃСѓРґР°СЂСЃС‚РІРѕ {sender.country._name} Р·Р°РєР»СЋС‡РёР»Рѕ С‚РѕСЂРіРѕРІР»СЋ СЃ РіРѕСЃСѓРґР°СЂСЃС‚РІРѕРј {receiver.country._name}";
             SmallNewsManager.Instance.UpdateUI();
         }
 
@@ -855,7 +932,7 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship -= 9;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} расторгнуло торговлю с государством {receiver.country._name}";
+            SmallNewsManager.Instance.message = $"Р“РѕСЃСѓРґР°СЂСЃС‚РІРѕ {sender.country._name} СЂР°СЃС‚РѕСЂРіР»Рѕ С‚РѕСЂРіРѕРІР»СЋ СЃ РіРѕСЃСѓРґР°СЂСЃС‚РІРѕРј {receiver.country._name}";
             SmallNewsManager.Instance.UpdateUI();
         }
 
@@ -872,7 +949,7 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship += 18;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} заключило пакт о ненападении с государством {receiver.country._name}";
+            SmallNewsManager.Instance.message = $"Р“РѕСЃСѓРґР°СЂСЃС‚РІРѕ {sender.country._name} РїРѕРґРїРёСЃР°Р»Рѕ РїР°РєС‚ Рѕ РЅРµРЅР°РїР°РґРµРЅРёРё СЃ РіРѕСЃСѓРґР°СЂСЃС‚РІРѕРј {receiver.country._name}";
             SmallNewsManager.Instance.UpdateUI();
         }
 
@@ -888,7 +965,7 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship -= 18;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} расторгнуло пакт о ненападении с государством {receiver.country._name}";
+            SmallNewsManager.Instance.message = $"Р“РѕСЃСѓРґР°СЂСЃС‚РІРѕ {sender.country._name} СЂР°СЃС‚РѕСЂРіР»Рѕ РїР°РєС‚ Рѕ РЅРµРЅР°РїР°РґРµРЅРёРё СЃ РіРѕСЃСѓРґР°СЂСЃС‚РІРѕРј {receiver.country._name}";
             SmallNewsManager.Instance.UpdateUI();
         }
 
@@ -905,7 +982,7 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship += 75;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} заключило союз с государством {receiver.country._name}";
+            SmallNewsManager.Instance.message = $"Р“РѕСЃСѓРґР°СЂСЃС‚РІРѕ {sender.country._name} Р·Р°РєР»СЋС‡РёР»Рѕ СЃРѕСЋР· СЃ РіРѕСЃСѓРґР°СЂСЃС‚РІРѕРј {receiver.country._name}";
             SmallNewsManager.Instance.UpdateUI();
         }
 
@@ -921,7 +998,7 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship -= 75;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} расторгнуло союз с государством {receiver.country._name}";
+            SmallNewsManager.Instance.message = $"Р“РѕСЃСѓРґР°СЂСЃС‚РІРѕ {sender.country._name} СЂР°СЃС‚РѕСЂРіР»Рѕ СЃРѕСЋР· СЃ РіРѕСЃСѓРґР°СЂСЃС‚РІРѕРј {receiver.country._name}";
             SmallNewsManager.Instance.UpdateUI();
         }
     }
