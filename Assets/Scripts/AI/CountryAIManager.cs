@@ -648,33 +648,35 @@ public class CountryAIManager : MonoBehaviour
             {
                 if (child.GetComponent<UnitMovement>())
                 {
-                    UnitMovement division = child.GetComponent<UnitMovement>();
-                    foreach (UnitMovement.UnitHealth unit in division.unitsHealth)
-                    {
-                        enemyDamage += unit.unit.damage;
-                    }
+                    // TODO[1]: AI Count win chance
+
+                    //UnitMovement division = child.GetComponent<UnitMovement>();
+                    //foreach (UnitMovement.UnitHealth unit in division.unitsHealth)
+                    //{
+                    //    enemyDamage += unit.unit.damage;
+                    //}
                 }
             }
         }
         else // Garrison fighting
         {
-            foreach (UnitScriptableObject unit in fightRegion.currentDefenseUnits)
-            {
-                enemyDamage += unit.damage;
-            }
+            //foreach (UnitScriptableObject unit in fightRegion.currentDefenseUnits)
+            //{
+            //    enemyDamage += unit.damage;
+            //}
         }
 
-        foreach (Transform child in attackFrom.transform)
-        {
-            if (child.GetComponent<UnitMovement>())
-            {
-                UnitMovement division = child.GetComponent<UnitMovement>();
-                foreach (UnitMovement.UnitHealth unit in division.unitsHealth)
-                {
-                    myDamage += unit.unit.damage;
-                }
-            }
-        }
+        //foreach (Transform child in attackFrom.transform)
+        //{
+        //    if (child.GetComponent<UnitMovement>())
+        //    {
+        //        UnitMovement division = child.GetComponent<UnitMovement>();
+        //        foreach (UnitMovement.UnitHealth unit in division.unitsHealth)
+        //        {
+        //            myDamage += unit.unit.damage;
+        //        }
+        //    }
+        //}
 
         myDamage = myDamage - attackerFortsDebuff;
         myDamage = Mathf.Abs(myDamage);

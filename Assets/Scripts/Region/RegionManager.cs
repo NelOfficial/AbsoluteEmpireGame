@@ -32,7 +32,7 @@ public class RegionManager : MonoBehaviour
     [Space(10f)]
     [Header("RegionArmy")]
     //[HideInInspector] public List<UnitScriptableObject> regionUnits = new List<UnitScriptableObject>();
-    [HideInInspector] public List<UnitScriptableObject> currentDefenseUnits = new List<UnitScriptableObject>();
+    [HideInInspector] public List<UnitMovement.UnitHealth> currentDefenseUnits = new List<UnitMovement.UnitHealth>();
     public List<Transform> movePoints = new List<Transform>();
     [HideInInspector] public bool moveMode = false;
     [HideInInspector] public bool hasArmy;
@@ -469,11 +469,14 @@ public class RegionManager : MonoBehaviour
 
                 for (int i = 0; i < regionClaims.Count; i++)
                 {
-                    GameObject spawnedCountryFlag = Instantiate(ReferencesManager.Instance.regionUI.countryFlagPrefab, ReferencesManager.Instance.regionUI.regionClaimsContainer.transform);
-                    spawnedCountryFlag.GetComponent<FillCountryFlag>().country = regionClaims[i];
-                    spawnedCountryFlag.GetComponent<FillCountryFlag>().FillInfo();
+                    if (currentRegionManager.currentCountry != regionClaims[i])
+                    {
+                        GameObject spawnedCountryFlag = Instantiate(ReferencesManager.Instance.regionUI.countryFlagPrefab, ReferencesManager.Instance.regionUI.regionClaimsContainer.transform);
+                        spawnedCountryFlag.GetComponent<FillCountryFlag>().country = regionClaims[i];
+                        spawnedCountryFlag.GetComponent<FillCountryFlag>().FillInfo();
 
-                    ReferencesManager.Instance.regionUI.regionClaimsContainer.GetComponent<RectTransform>().sizeDelta = new Vector2(ReferencesManager.Instance.regionUI.countryFlagPrefab.GetComponent<RectTransform>().sizeDelta.x * ReferencesManager.Instance.regionUI.regionClaimsContainer.transform.childCount, ReferencesManager.Instance.regionUI.countryFlagPrefab.GetComponent<RectTransform>().sizeDelta.y);
+                        ReferencesManager.Instance.regionUI.regionClaimsContainer.GetComponent<RectTransform>().sizeDelta = new Vector2(ReferencesManager.Instance.regionUI.countryFlagPrefab.GetComponent<RectTransform>().sizeDelta.x * ReferencesManager.Instance.regionUI.regionClaimsContainer.transform.childCount, ReferencesManager.Instance.regionUI.countryFlagPrefab.GetComponent<RectTransform>().sizeDelta.y);
+                    }
                 }
 
                 ReferencesManager.Instance.regionUI.UpdateGarrisonUI();

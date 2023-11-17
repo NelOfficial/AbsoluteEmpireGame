@@ -269,13 +269,11 @@ MonoBehaviour:
     \u0421\u043E\u0432\u0435\u0442\u0441\u043A\u0438\u0439 \u0421\u043E\u044E\u0437
     \u043A\u0430\u043A \u0443\u0433\u0440\u043E\u0437\u0443, \u043A\u043E\u0442\u043E\u0440\u0443\u044E
     \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u043E \u0443\u043D\u0438\u0447\u0442\u043E\u0436\u0438\u0442\u044C."
-  date: 30-11-1939
+  date: 1-12-1939
   image: {fileID: 21300000, guid: 4c759cf3e9190ed4a8a27e318f1d1418, type: 3}
-  _checked: 0
+  _checked: 1
   silentEvent: 0
-  conditions:
-  - country_exist;37
-  - country_exist;10
+  conditions: []
   buttons:
   - name: "\u0422\u0435\u0440\u043F\u0435\u043D\u0438\u0435 \u0441\u043E\u0432\u0435\u0442\u043E\u0432
       \u0438\u0441\u0441\u044F\u043A\u043B\u043E"

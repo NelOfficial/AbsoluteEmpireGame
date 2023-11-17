@@ -45,9 +45,9 @@ public class GameSettings : MonoBehaviour
 	public BuildingScriptableObject farm;
 	public BuildingScriptableObject chefarm;
 
-	public List<UnitScriptableObject> currentDefenseUnits_FirstLevel = new List<UnitScriptableObject>();
-	public List<UnitScriptableObject> currentDefenseUnits_SecondLevel = new List<UnitScriptableObject>();
-	public List<UnitScriptableObject> currentDefenseUnits_ThirdLevel = new List<UnitScriptableObject>();
+	public List<UnitMovement.UnitHealth> currentDefenseUnits_FirstLevel = new List<UnitMovement.UnitHealth>();
+	public List<UnitMovement.UnitHealth> currentDefenseUnits_SecondLevel = new List<UnitMovement.UnitHealth>();
+	public List<UnitMovement.UnitHealth> currentDefenseUnits_ThirdLevel = new List<UnitMovement.UnitHealth>();
 
 	private string buttonDesingType;
 
@@ -113,6 +113,9 @@ public class GameSettings : MonoBehaviour
 
 	[SerializeField] BoolValue devMode;
 	[SerializeField] RewardedAds rewardedAds;
+
+	[Header("Fight settings")]
+	public float fortDebuff = 5;
 
 
 	private void Awake()

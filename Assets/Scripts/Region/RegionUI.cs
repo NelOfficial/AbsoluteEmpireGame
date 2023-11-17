@@ -686,18 +686,18 @@ public class RegionUI : MonoBehaviour
 
             for (int i = 0; i < ReferencesManager.Instance.regionManager.currentRegionManager.currentDefenseUnits.Count; i++)
             {
-                UnitScriptableObject unit = ReferencesManager.Instance.regionManager.currentRegionManager.currentDefenseUnits[i];
+                UnitMovement.UnitHealth unit = ReferencesManager.Instance.regionManager.currentRegionManager.currentDefenseUnits[i];
 
                 GameObject spawnedUIButton = Instantiate(ReferencesManager.Instance.army.unitUnclikableUIPrefab, ReferencesManager.Instance.army.garrisonHorizontalGroup.transform);
 
-                spawnedUIButton.GetComponent<UnitUI>().unitIcon.sprite = unit.icon;
-                spawnedUIButton.GetComponent<UnitUI>().currentUnit = unit;
+                spawnedUIButton.GetComponent<UnitUI>().unitIcon.sprite = unit.unit.icon;
+                spawnedUIButton.GetComponent<UnitUI>().currentUnit = unit.unit;
 
-                if (unit.type == UnitScriptableObject.Type.SOLDIER)
+                if (unit.unit.type == UnitScriptableObject.Type.SOLDIER)
                 {
                     spawnedUIButton.transform.SetAsFirstSibling();
                 }
-                else if (unit.type == UnitScriptableObject.Type.ARTILERY)
+                else if (unit.unit.type == UnitScriptableObject.Type.ARTILERY)
                 {
                     spawnedUIButton.transform.SetAsLastSibling();
                 }

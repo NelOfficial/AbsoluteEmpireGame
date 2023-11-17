@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using System.Linq;
+using static UnityEngine.UI.CanvasScaler;
 
 public class MovePoint : MonoBehaviour
 {
@@ -22,11 +25,6 @@ public class MovePoint : MonoBehaviour
 
     private bool attackerWon;
     private int offset;
-
-    [HideInInspector] public int motoInfantry;
-    [HideInInspector] public int myInfantry;
-    [HideInInspector] public int myArtilery;
-    [HideInInspector] public int myHeavy;
 
     [SerializeField] bool noAutoCollider;
 
@@ -185,91 +183,48 @@ public class MovePoint : MonoBehaviour
                 {
                     unitMovement._movePoints++;
                 }
-                else
-                {
-                    Debug.Log($"{unitMovement.currentProvince.name} ({unitMovement.currentCountry.country._nameEN}) {unitMovement.firstMove} {unitMovement._movePoints}");
-                }
             }
         }
     }
 
     private void Fight(RegionManager fightRegion, RaycastHit2D hit)
     {
-        List<UnitScriptableObject> enemyUnits = new List<UnitScriptableObject>();
-        List<UnitMovement.UnitHealth> myUnits = new List<UnitMovement.UnitHealth>();
-
-        float defenderForts = 0;
-        float attackerFortsDebuff = 0;
-
-        float defenderGlobalBonus_DEFENCE = 0;
-        float defenderGlobalBonus_ATTACK = 0;
-        float attackerGlobalBonus_DEFENCE = 0;
-        float attackerGlobalBonus_ATTACK = 0;
-
-        float enemyDamage = 0;
-        float myDamage = 0;
-
-        myInfantry = 0;
-        int enemyInfantry = 0;
-
-        motoInfantry = 0;
-        int enemyMotoInfantry = 0;
-
-        myArtilery = 0;
-        int enemyArtilery = 0;
-
-        myHeavy = 0;
-        int enemyHeavy = 0;
+        UnitMovement.BattleInfo battle = new UnitMovement.BattleInfo();
 
         winChance = 0;
 
-        defenderForts = newRegion.fortifications_Amount * 5 / 100;
+        battle.defenderForts = newRegion.fortifications_Amount;
+
+        #region Defender info
 
         if (fightRegion.hasArmy)
         {
             try
             {
+                List<float> _armors = new List<float>();
                 UnitMovement fightRegionUnitMovement = fightRegion.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
 
-                foreach (UnitMovement.UnitHealth unit in fightRegionUnitMovement.unitsHealth)
+                battle.defenderDivision = fightRegionUnitMovement;
+                battle.enemyUnits = battle.defenderDivision.unitsHealth;
+                battle.fightRegion = fightRegion;
+
+                foreach (UnitMovement.UnitHealth unit in battle.defenderDivision.unitsHealth)
                 {
-                    enemyUnits.Add(unit.unit);
-                    enemyDamage += unit.unit.damage;
-                    //if (unit.unit.type == UnitScriptableObject.Type.SOLDIER)
-                    //{
-                    //    if (fightRegion.regionTerrain.INF_attackBonus < 0)
-                    //    {
-                    //        enemyDamage -= unit.unit.damage * (1.0f + ((float)fightRegion.regionTerrain.INF_attackBonus / 100));
-                    //    }
-                    //    if (fightRegion.regionTerrain.INF_attackBonus > 0)
-                    //    {
-                    //        enemyDamage += unit.unit.damage * (1.0f + ((float)fightRegion.regionTerrain.INF_attackBonus / 100));
-                    //    }
-                    //}
-                    //else if (unit.unit.type == UnitScriptableObject.Type.ARTILERY)
-                    //{
-                    //    if (fightRegion.regionTerrain.ART_attackBonus < 0)
-                    //    {
-                    //        enemyDamage -= unit.unit.damage * (1.0f + ((float)fightRegion.regionTerrain.ART_attackBonus / 100));
-                    //    }
-                    //    if (fightRegion.regionTerrain.ART_attackBonus > 0)
-                    //    {
-                    //        enemyDamage += unit.unit.damage * (1.0f + ((float)fightRegion.regionTerrain.ART_attackBonus / 100));
-                    //    }
-                    //}
-                    //else if (unit.unit.type == UnitScriptableObject.Type.TANK)
-                    //{
-                    //    if (fightRegion.regionTerrain.HEA_attackBonus < 0)
-                    //    {
-                    //        enemyDamage -= unit.unit.damage * (1.0f + ((float)fightRegion.regionTerrain.HEA_attackBonus / 100));
-                    //    }
-                    //    if (fightRegion.regionTerrain.HEA_attackBonus > 0)
-                    //    {
-                    //        enemyDamage += unit.unit.damage * (1.0f + ((float)fightRegion.regionTerrain.HEA_attackBonus / 100));
-                    //    }
-                    //}
+                    _armors.Add(unit.unit.armor);
+
+                    battle.defenderSoftAttack += unit.unit.softAttack;
+                    battle.defenderHardAttack += unit.unit.hardAttack;
+                    battle.defenderDefense += unit.unit.defense;
+                    battle.defenderArmor += unit.unit.armor;
+                    battle.defenderArmorPiercing += unit.unit.armorPiercing;
+                    battle.defenderHardness += unit.unit.hardness;
                 }
 
+                float _maxArmor = _armors.Max();
+                float _midArmor = battle.defenderArmor / battle.defenderDivision.unitsHealth.Count;
+
+                battle.defenderHardness = battle.defenderHardness / battle.defenderDivision.unitsHealth.Count;
+                battle.defenderArmor = 0.4f * _maxArmor + 0.6f * _midArmor;
             }
             catch (System.NullReferenceException)
             {
@@ -278,107 +233,82 @@ public class MovePoint : MonoBehaviour
         }
         else if (!fightRegion.hasArmy)
         {
-            foreach (UnitScriptableObject unit in fightRegion.currentDefenseUnits)
+            List<float> defenderArmors = new List<float>();
+
+            battle.defenderDivision = null;
+            battle.enemyUnits = battle.defenderDivision.unitsHealth;
+            battle.fightRegion = fightRegion;
+
+            foreach (UnitMovement.UnitHealth unit in fightRegion.currentDefenseUnits)
             {
-                enemyUnits.Add(unit);
-                enemyDamage += unit.damage;
-                //if (unit.type == UnitScriptableObject.Type.SOLDIER)
-                //{
-                //    if (fightRegion.regionTerrain.INF_attackBonus < 0)
-                //    {
-                //        enemyDamage -= unit.damage * (1.0f + ((float)fightRegion.regionTerrain.INF_attackBonus / 100));
-                //    }
-                //    if (fightRegion.regionTerrain.INF_attackBonus > 0)
-                //    {
-                //        enemyDamage += unit.damage * (1.0f + ((float)fightRegion.regionTerrain.INF_attackBonus / 100));
-                //    }
-                //}
-                //else if (unit.type == UnitScriptableObject.Type.ARTILERY)
-                //{
-                //    if (fightRegion.regionTerrain.ART_attackBonus < 0)
-                //    {
-                //        enemyDamage -= unit.damage * (1.0f + ((float)fightRegion.regionTerrain.ART_attackBonus / 100));
-                //    }
-                //    if (fightRegion.regionTerrain.ART_attackBonus > 0)
-                //    {
-                //        enemyDamage += unit.damage * (1.0f + ((float)fightRegion.regionTerrain.ART_attackBonus / 100));
-                //    }
-                //}
-                //else if (unit.type == UnitScriptableObject.Type.TANK)
-                //{
-                //    if (fightRegion.regionTerrain.HEA_attackBonus < 0)
-                //    {
-                //        enemyDamage -= unit.damage * (1.0f + ((float)fightRegion.regionTerrain.HEA_attackBonus / 100));
-                //    }
-                //    if (fightRegion.regionTerrain.HEA_attackBonus > 0)
-                //    {
-                //        enemyDamage += unit.damage * (1.0f + ((float)fightRegion.regionTerrain.HEA_attackBonus / 100));
-                //    }
-                //}
+                defenderArmors.Add(unit.unit.armor);
+
+                battle.defenderSoftAttack += unit.unit.softAttack;
+                battle.defenderHardAttack += unit.unit.hardAttack;
+                battle.defenderDefense += unit.unit.defense;
+                battle.defenderArmor += unit.unit.armor;
+                battle.defenderArmorPiercing += unit.unit.armorPiercing;
+                battle.defenderHardness += unit.unit.hardness;
             }
+
+            float maxArmor = defenderArmors.Max();
+            float midArmor = battle.defenderArmor / battle.defenderDivision.unitsHealth.Count;
+
+            battle.defenderHardness = battle.defenderHardness / battle.defenderDivision.unitsHealth.Count;
+            battle.defenderArmor = 0.4f * maxArmor + 0.6f * midArmor;
         }
+
+        #endregion
+
+        #region Attacker info
+
+        List<float> attackerArmors = new List<float>();
+
+        battle.attackerDivision = attackerUnit;
+        battle.myUnits = battle.attackerDivision.unitsHealth;
+        battle.fightRegion = fightRegion;
 
         foreach (UnitMovement.UnitHealth unit in attackerUnit.unitsHealth)
         {
-            myUnits.Add(unit);
-            myDamage += unit.unit.damage;
+            attackerArmors.Add(unit.unit.armor);
 
-            //if (unit.unit.type == UnitScriptableObject.Type.SOLDIER)
-            //{
-            //    if (fightRegion.regionTerrain.INF_attackBonus < 0)
-            //    {
-            //        myDamage -= unit.unit.damage * (1 - (fightRegion.regionTerrain.INF_attackBonus / 100));
-            //    }
-            //    if (fightRegion.regionTerrain.INF_attackBonus > 0)
-            //    {
-            //        myDamage += unit.unit.damage * (1 + (fightRegion.regionTerrain.INF_attackBonus / 100));
-            //    }
-            //}
-            //else if (unit.unit.type == UnitScriptableObject.Type.ARTILERY)
-            //{
-            //    if (fightRegion.regionTerrain.ART_attackBonus < 0)
-            //    {
-            //        myDamage -= unit.unit.damage * (1 - (fightRegion.regionTerrain.ART_attackBonus / 100));
-            //    }
-            //    if (fightRegion.regionTerrain.ART_attackBonus > 0)
-            //    {
-            //        myDamage += unit.unit.damage * (1 + (fightRegion.regionTerrain.ART_attackBonus / 100));
-            //    }
-            //}
-            //else if (unit.unit.type == UnitScriptableObject.Type.TANK)
-            //{
-            //    if (fightRegion.regionTerrain.HEA_attackBonus < 0)
-            //    {
-            //        myDamage -= unit.unit.damage * (1 - (fightRegion.regionTerrain.HEA_attackBonus / 100));
-            //    }
-            //    if (fightRegion.regionTerrain.HEA_attackBonus > 0)
-            //    {
-            //        myDamage += unit.unit.damage * (1 + (fightRegion.regionTerrain.HEA_attackBonus / 100));
-            //    }
-            //}
+            battle.attackerSoftAttack += unit.unit.softAttack;
+            battle.attackerHardAttack += unit.unit.hardAttack;
+            battle.attackerDefense += unit.unit.defense;
+            battle.attackerArmor += unit.unit.armor;
+            battle.attackerArmorPiercing += unit.unit.armorPiercing;
+            battle.attackerHardness += unit.unit.hardness;
         }
 
-        myDamage = Mathf.Abs(myDamage);
+        float attackerMaxArmor = attackerArmors.Max();
+        float attackerMidArmor = battle.attackerArmor / battle.attackerDivision.unitsHealth.Count;
 
-        if (defenderForts > 0)
+        battle.attackerHardness = battle.attackerHardness / battle.attackerDivision.unitsHealth.Count;
+        battle.attackerArmor = 0.4f * attackerMaxArmor + 0.6f * attackerMidArmor;
+
+        #endregion
+
+        if (battle.defenderForts > 0)
         {
-            attackerFortsDebuff = defenderForts * 7.5f;
-            defenderGlobalBonus_DEFENCE += myDamage * (attackerFortsDebuff / 100);
-            myDamage = myDamage - (myDamage * (attackerFortsDebuff / 100));
+            float fortsDebuff = battle.defenderForts * ReferencesManager.Instance.gameSettings.fortDebuff;
+            battle.defender_BONUS_DEFENCE += fortsDebuff;
+            battle.attacker_BONUS_ATTACK -= fortsDebuff;
         }
 
-        ReferencesManager.Instance.army.defenderBonus[1].text = $"+{attackerFortsDebuff}%";
-
-        if (myDamage < enemyDamage)
+        if (battle.attackerArmorPiercing < battle.defenderArmor)
         {
-            float difference = Mathf.Abs(enemyDamage) - Mathf.Abs(myDamage);
-            difference = Mathf.Abs(difference * 100 / enemyDamage);
+            battle.attacker_BONUS_ATTACK -= 50;
+        }
+
+        if (battle.attackerStrength < battle.defenderStrength)
+        {
+            float difference = Mathf.Abs(battle.defenderStrength) - Mathf.Abs(battle.attackerStrength);
+            difference = Mathf.Abs(difference * 100 / battle.defenderStrength);
 
             if (difference >= 1 && difference <= 15)
             {
                 winChance = Random.Range(47, 49);
 
-                
                 offset = 85;
             }
 
@@ -386,7 +316,6 @@ public class MovePoint : MonoBehaviour
             {
                 winChance = Random.Range(45, 47);
 
-                
                 offset = 75;
             }
 
@@ -394,7 +323,6 @@ public class MovePoint : MonoBehaviour
             {
                 winChance = Random.Range(43, 45);
 
-                
                 offset = 65;
             }
 
@@ -402,7 +330,6 @@ public class MovePoint : MonoBehaviour
             {
                 winChance = Random.Range(41, 43);
 
-                
                 offset = 55;
             }
 
@@ -410,7 +337,6 @@ public class MovePoint : MonoBehaviour
             {
                 winChance = Random.Range(39, 41);
 
-                
                 offset = 45;
             }
 
@@ -418,7 +344,6 @@ public class MovePoint : MonoBehaviour
             {
                 winChance = Random.Range(37, 39);
 
-                
                 offset = 35;
             }
 
@@ -426,7 +351,6 @@ public class MovePoint : MonoBehaviour
             {
                 winChance = Random.Range(35, 37);
 
-                
                 offset = 25;
             }
 
@@ -434,7 +358,6 @@ public class MovePoint : MonoBehaviour
             {
                 winChance = Random.Range(30, 37);
 
-                
                 offset = 20;
             }
 
@@ -442,7 +365,6 @@ public class MovePoint : MonoBehaviour
             {
                 winChance = Random.Range(10, 25);
 
-                
                 offset = 10;
             }
 
@@ -450,18 +372,17 @@ public class MovePoint : MonoBehaviour
             {
                 winChance = Random.Range(0, 15);
 
-                
                 offset = 0;
             }
         }
-        else if (myDamage == enemyDamage)
+        else if (battle.defenderStrength == battle.attackerStrength)
         {
             winChance = 50;
         }
-        else if (myDamage > enemyDamage)
+        else if (battle.attackerStrength > battle.defenderStrength)
         {
-            float difference = Mathf.Abs(myDamage) - Mathf.Abs(enemyDamage);
-            difference = Mathf.Abs(difference * 100 / myDamage);
+            float difference = Mathf.Abs(battle.attackerStrength) - Mathf.Abs(battle.defenderStrength);
+            difference = Mathf.Abs(difference * 100 / battle.attackerStrength);
 
             if (difference >= 1 && difference <= 10)
             {
@@ -547,12 +468,6 @@ public class MovePoint : MonoBehaviour
             }
         }
 
-        /*
-        myDMG = 100%
-        enemyDMG = chance
-        chance = enemyDamage * 100 / myDamage
-        */
-
         ReferencesManager.Instance.regionUI.winChance = winChance;
         ReferencesManager.Instance.regionUI.hit = hit;
         ReferencesManager.Instance.regionUI.unitMovement = attackerUnit; // Атакующий юнит, с него возьмуться очки движения
@@ -582,32 +497,32 @@ public class MovePoint : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        CountPlayerUnitData(myUnits);
+        CountPlayerUnitData(battle);
 
-        foreach (UnitScriptableObject unit in enemyUnits)
+        foreach (UnitMovement.UnitHealth unit in battle.enemyUnits)
         {
-            ReferencesManager.Instance.regionUI.CreateFightUnitUI(unit, ReferencesManager.Instance.regionUI.fightPanelDefenderHorizontalGroup);
+            ReferencesManager.Instance.regionUI.CreateFightUnitUI(unit.unit, ReferencesManager.Instance.regionUI.fightPanelDefenderHorizontalGroup);
 
-            if (unit.type == UnitScriptableObject.Type.SOLDIER)
+            if (unit.unit.type == UnitScriptableObject.Type.SOLDIER)
             {
-                enemyInfantry++;
+                battle.enemyInfantry++;
             }
-            if (unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+            if (unit.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
             {
-                enemyMotoInfantry++;
+                battle.enemyMotoInfantry++;
             }
-            if (unit.type == UnitScriptableObject.Type.ARTILERY)
+            if (unit.unit.type == UnitScriptableObject.Type.ARTILERY)
             {
-                enemyArtilery++;
+                battle.enemyArtilery++;
             }
-            if (unit.type == UnitScriptableObject.Type.TANK)
+            if (unit.unit.type == UnitScriptableObject.Type.TANK)
             {
-                enemyHeavy++;
+                battle.enemyHeavy++;
             }
         }
 
 
-        if (motoInfantry >= 6 || myHeavy >= 6)
+        if (battle.motoInfantry >= 6 || battle.myHeavy >= 6)
         {
             CheckMotorize(attackerUnit);
         }
@@ -615,13 +530,13 @@ public class MovePoint : MonoBehaviour
         attackerUnit.firstMove = false;
         attackerUnit._movePoints--;
 
-        ReferencesManager.Instance.army.attackerArmy[0].text = myInfantry.ToString();
-        ReferencesManager.Instance.army.attackerArmy[1].text = myArtilery.ToString();
-        ReferencesManager.Instance.army.attackerArmy[2].text = myHeavy.ToString();
+        ReferencesManager.Instance.army.attackerArmy[0].text = battle.myInfantry.ToString();
+        ReferencesManager.Instance.army.attackerArmy[1].text = battle.myArtilery.ToString();
+        ReferencesManager.Instance.army.attackerArmy[2].text = battle.myHeavy.ToString();
 
-        ReferencesManager.Instance.army.defenderArmy[0].text = enemyInfantry.ToString();
-        ReferencesManager.Instance.army.defenderArmy[1].text = enemyArtilery.ToString();
-        ReferencesManager.Instance.army.defenderArmy[2].text = enemyHeavy.ToString();
+        ReferencesManager.Instance.army.defenderArmy[0].text = battle.enemyInfantry.ToString();
+        ReferencesManager.Instance.army.defenderArmy[1].text = battle.enemyArtilery.ToString();
+        ReferencesManager.Instance.army.defenderArmy[2].text = battle.enemyHeavy.ToString();
     }
 
 
@@ -887,14 +802,14 @@ public class MovePoint : MonoBehaviour
 
     public void MoveUnit(RaycastHit2D hit, bool forceParent, Transform parent, bool selectRegion)
     {
+        UnitMovement.BattleInfo battle = new UnitMovement.BattleInfo();
+
         if (ReferencesManager.Instance.gameSettings.onlineGame)
         {
             Multiplayer.Instance.MoveUnit(parent.GetComponent<RegionManager>()._id, regionTo.GetComponent<RegionManager>()._id);
         }
         else
         {
-            
-            
             attackerUnit.transform.position = hit.collider.transform.position;
 
             //attackerUnit.transform.position = Vector3.Lerp(attackerUnit.transform.position, hit.collider.transform.position, Time.deltaTime * 5f);
@@ -908,15 +823,16 @@ public class MovePoint : MonoBehaviour
             newRegion.hasArmy = true;
             if (selectRegion) newRegion.SelectRegionNoHit(newRegion);
             attackerUnit.currentProvince = regionTo.GetComponent<RegionManager>();
+
+
+            battle.myUnits = attackerUnit.unitsHealth;
         }
 
-        CountPlayerUnitData(attackerUnit.unitsHealth);
-        PlayMoveSFX();
+        CountPlayerUnitData(battle);
+        PlayMoveSFX(battle);
 
-        if (motoInfantry >= 6)
-        {
-            CheckMotorize(attackerUnit);
-        }
+        CheckMotorize(attackerUnit);
+
         attackerUnit.firstMove = false;
         attackerUnit._movePoints--;
 
@@ -924,42 +840,42 @@ public class MovePoint : MonoBehaviour
     }
 
 
-    private void CountPlayerUnitData(List<UnitMovement.UnitHealth> myUnits)
+    private void CountPlayerUnitData(UnitMovement.BattleInfo battle)
     {
-        foreach (UnitMovement.UnitHealth unit in myUnits)
+        foreach (UnitMovement.UnitHealth unit in battle.myUnits)
         {
             ReferencesManager.Instance.regionUI.CreateFightUnitUI(unit.unit, ReferencesManager.Instance.regionUI.fightPanelAttackerHorizontalGroup);
 
             if (unit.unit.type == UnitScriptableObject.Type.SOLDIER)
             {
-                myInfantry++;
+                battle.myInfantry++;
             }
             if (unit.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
             {
-                motoInfantry++;
+                battle.motoInfantry++;
             }
             if (unit.unit.type == UnitScriptableObject.Type.ARTILERY)
             {
-                myArtilery++;
+                battle.myArtilery++;
             }
             if (unit.unit.type == UnitScriptableObject.Type.TANK)
             {
-                myHeavy++;
+                battle.myHeavy++;
             }
         }
     }
 
-    private void PlayMoveSFX()
+    private void PlayMoveSFX(UnitMovement.BattleInfo battle)
     {
-        if (myInfantry >= 5)
+        if (battle.myInfantry >= 5)
         {
             UISoundEffect.Instance.PlayAudio(ReferencesManager.Instance.gameSettings.m_infantry_move[Random.Range(0, 1)]);
         }
-        if (motoInfantry >= 6)
+        if (battle.motoInfantry >= 6)
         {
             UISoundEffect.Instance.PlayAudio(ReferencesManager.Instance.gameSettings.m_motorized_infantry_move[Random.Range(0, 1)]);
         }
-        if (myHeavy >= 5)
+        if (battle.myHeavy >= 5)
         {
             UISoundEffect.Instance.PlayAudio(ReferencesManager.Instance.gameSettings.m_heavy_move[Random.Range(0, 1)]);
         }
