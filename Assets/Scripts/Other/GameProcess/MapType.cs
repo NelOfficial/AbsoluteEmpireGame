@@ -1,3 +1,4 @@
+using Photon.Realtime;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,9 +7,9 @@ public class MapType : MonoBehaviour
 {
     private CountryManager countryManager;
 
-    private int minPopulation = 0;
-    private int maxPopulation = 0;
-    private List<int> populationList = new List<int>();
+    private float minPopulation = 0;
+    private float maxPopulation = 0;
+    private List<float> populationList = new List<float>();
     private float currentAlpha = 0;
 
     public bool viewMap;
@@ -40,27 +41,26 @@ public class MapType : MonoBehaviour
         ///curr - x
 
         populationList.Clear();
+
         for (int i = 0; i < countryManager.regions.Count; i++)
         {
             RegionManager region = countryManager.regions[i];
+            float _population = float.Parse(region.population.ToString());
 
-            populationList.Add(region.population);
+            populationList.Add(_population);
+
             minPopulation = populationList.Min();
             maxPopulation = populationList.Max();
+        }
 
-            if (region.population == minPopulation)
-            {
-                SetAlphaColor(region, 0.15f);
-            }
-            else if (region.population == maxPopulation)
-            {
-                SetAlphaColor(region, 1f);
-            }
-            else
-            {
-                currentAlpha = (float)region.population / (float)maxPopulation;
-                SetAlphaColor(region, currentAlpha);
-            }
+        for (int i = 0;i < countryManager.regions.Count; i++)
+        {
+            RegionManager region = countryManager.regions[i];
+            float _population = float.Parse(region.population.ToString());
+
+            currentAlpha = _population / maxPopulation;
+
+            SetAlphaColor(region, currentAlpha);
         }
     }
 

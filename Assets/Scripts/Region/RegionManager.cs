@@ -15,7 +15,7 @@ public class RegionManager : MonoBehaviour
     [HideInInspector] public int armyMaxLevel;
     [HideInInspector] public int defenseMaxLevel;
 
-    [HideInInspector] public int population;
+    public int population;
     [HideInInspector] public int populationGrowRate;
 
     [HideInInspector] public float happines;
@@ -95,14 +95,14 @@ public class RegionManager : MonoBehaviour
         currentDefenseUnits = ReferencesManager.Instance.gameSettings.currentDefenseUnits_FirstLevel;
 
 
-        if (capital)
-        {
-            population = Random.Range(100000, 800000);
-        }
-        else if (!capital)
-        {
-            population = random;
-        }
+        //if (capital)
+        //{
+        //    population = Random.Range(100000, 800000);
+        //}
+        //else if (!capital)
+        //{
+        //    population = random;
+        //}
         //if (gameSettings.onlineGame)
         //{
         //    Multiplayer.Instance.SetRegionValues(_id, population, hasArmy, goldIncome, foodIncome, civFactory_Amount,

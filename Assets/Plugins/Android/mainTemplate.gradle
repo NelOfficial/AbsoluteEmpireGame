@@ -4,7 +4,8 @@ apply plugin: 'com.android.library'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
-    implementation 'com.yandex.android:mobileads:5.10.0' // Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:7
+    implementation 'androidx.lifecycle:lifecycle-process:2.4.1' // Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:20
+    implementation 'com.yandex.android:mobileads:6.1.0' // Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:15
 // Android Resolver Dependencies End
 **DEPS**}
 

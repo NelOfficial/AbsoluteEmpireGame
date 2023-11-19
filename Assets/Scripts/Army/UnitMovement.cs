@@ -909,7 +909,7 @@ public class UnitMovement : MonoBehaviour
         public UnitMovement defenderDivision;
         public UnitMovement attackerDivision;
 
-        public int attackerStrength;
-        public int defenderStrength;
+        public float attackerStrength;
+        public float defenderStrength;
     }
 }

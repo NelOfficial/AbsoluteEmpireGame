@@ -236,8 +236,8 @@ public class MovePoint : MonoBehaviour
             List<float> defenderArmors = new List<float>();
 
             battle.defenderDivision = null;
-            battle.enemyUnits = battle.defenderDivision.unitsHealth;
             battle.fightRegion = fightRegion;
+            battle.enemyUnits = battle.fightRegion.currentDefenseUnits;
 
             foreach (UnitMovement.UnitHealth unit in fightRegion.currentDefenseUnits)
             {
@@ -252,9 +252,9 @@ public class MovePoint : MonoBehaviour
             }
 
             float maxArmor = defenderArmors.Max();
-            float midArmor = battle.defenderArmor / battle.defenderDivision.unitsHealth.Count;
+            float midArmor = battle.defenderArmor / battle.enemyUnits.Count;
 
-            battle.defenderHardness = battle.defenderHardness / battle.defenderDivision.unitsHealth.Count;
+            battle.defenderHardness = battle.defenderHardness / battle.enemyUnits.Count;
             battle.defenderArmor = 0.4f * maxArmor + 0.6f * midArmor;
         }
 
@@ -288,6 +288,12 @@ public class MovePoint : MonoBehaviour
 
         #endregion
 
+        battle.defender_BONUS_ATTACK = 100;
+        battle.defender_BONUS_DEFENCE = 100;
+
+        battle.attacker_BONUS_ATTACK = 100;
+        battle.attacker_BONUS_DEFENCE = 100;
+
         if (battle.defenderForts > 0)
         {
             float fortsDebuff = battle.defenderForts * ReferencesManager.Instance.gameSettings.fortDebuff;
@@ -299,6 +305,39 @@ public class MovePoint : MonoBehaviour
         {
             battle.attacker_BONUS_ATTACK -= 50;
         }
+
+        #region Buffs / Final Countings
+
+        float buffs_attackerSoftAttack = battle.attackerSoftAttack * (battle.attacker_BONUS_ATTACK / 100f);
+        float buffs_attackerHardAttack = battle.attackerHardAttack * (battle.attacker_BONUS_ATTACK / 100f);
+
+        float buffs_defenderSoftAttack = battle.defenderSoftAttack * (battle.defender_BONUS_ATTACK / 100f);
+        float buffs_defenderHardAttack = battle.defenderHardAttack * (battle.defender_BONUS_ATTACK / 100f);
+
+        float defender_receive_SoftAttack = 100 - battle.defenderHardness;
+        float defender_receive_HardAttack = battle.defenderHardness;
+
+        float attacker_receive_SoftAttack = 100 - battle.attackerHardness;
+        float attacker_receive_HardAttack = battle.attackerHardness;
+
+        float finalAttackerSoftAttack = buffs_attackerSoftAttack * (defender_receive_SoftAttack / 100);
+        float finalAttackerHardAttack = buffs_attackerHardAttack * (defender_receive_HardAttack / 100);
+
+        float finalDefenderSoftAttack = buffs_defenderSoftAttack * (attacker_receive_SoftAttack / 100);
+        float finalDefenderHardAttack = buffs_defenderHardAttack * (attacker_receive_HardAttack / 100);
+        float finalDefenderDefence = battle.defenderDefense * (battle.defender_BONUS_DEFENCE / 100f);
+
+        battle.attackerSoftAttack = finalAttackerSoftAttack;
+        battle.attackerHardAttack = finalAttackerHardAttack;
+
+        battle.defenderDefense = finalDefenderDefence;
+        battle.defenderSoftAttack = finalDefenderSoftAttack;
+        battle.defenderHardAttack = finalDefenderHardAttack;
+
+        battle.attackerStrength = battle.attackerSoftAttack + battle.attackerHardAttack;
+        battle.defenderStrength = battle.defenderSoftAttack + battle.defenderHardAttack;
+
+        #endregion
 
         if (battle.attackerStrength < battle.defenderStrength)
         {
@@ -537,6 +576,8 @@ public class MovePoint : MonoBehaviour
         ReferencesManager.Instance.army.defenderArmy[0].text = battle.enemyInfantry.ToString();
         ReferencesManager.Instance.army.defenderArmy[1].text = battle.enemyArtilery.ToString();
         ReferencesManager.Instance.army.defenderArmy[2].text = battle.enemyHeavy.ToString();
+
+        ReferencesManager.Instance.gameSettings.currentBattle = battle;
     }
 
 
@@ -566,48 +607,55 @@ public class MovePoint : MonoBehaviour
                 if (random >= offset) // -1 art
                 {
                     damageToDefender = 30;
+                    damageToAttacker = 5;
                 }
             }
             else if (winChance >= 50 && winChance < 57)
             {
                 if (random >= offset) // -1 art; -1 infantry
                 {
-                    damageToAttacker = 50;
+                    damageToDefender = 50;
+                    damageToAttacker = 10;
                 }
             }
             else if (winChance >= 57 && winChance < 63)
             {
                 if (random >= offset) // -1 art; -2 infantry
                 {
-                    damageToAttacker = 70;
+                    damageToDefender = 70;
+                    damageToAttacker = 14;
                 }
             }
             else if (winChance >= 63 && winChance < 70)
             {
                 if (random >= offset) // -2 art; -3 infantry
                 {
-                    damageToAttacker = 90;
+                    damageToDefender = 90;
+                    damageToAttacker = 18;
                 }
             }
             else if (winChance >= 70 && winChance < 80)
             {
                 if (random >= offset) // -2 art; -4 infantry
                 {
-                    damageToAttacker = 130;
+                    damageToDefender = 130;
+                    damageToAttacker = 26;
                 }
             }
             else if (winChance >= 80 && winChance < 90)
             {
                 if (random >= offset) // -2 art; -4 infantry
                 {
-                    damageToAttacker = 200;
+                    damageToDefender = 200;
+                    damageToAttacker = 40;
                 }
             }
             else if (winChance >= 90)
             {
                 if (random >= offset) // -2 art; -4 infantry
                 {
-                    damageToAttacker = 500;
+                    damageToDefender = 500;
+                    damageToAttacker = 100;
                 }
             }
         }
@@ -618,6 +666,7 @@ public class MovePoint : MonoBehaviour
                 if (random >= offset) // -1 art
                 {
                     damageToAttacker = 30;
+                    damageToDefender = 5;
                 }
             }
             else if (winChance >= 39 && winChance < 43)
@@ -625,6 +674,7 @@ public class MovePoint : MonoBehaviour
                 if (random >= offset) // -1 art; -1 infantry
                 {
                     damageToAttacker = 50;
+                    damageToDefender = 10;
                 }
             }
             else if (winChance >= 37 && winChance < 39)
@@ -632,6 +682,7 @@ public class MovePoint : MonoBehaviour
                 if (random >= offset) // -1 art; -2 infantry
                 {
                     damageToAttacker = 70;
+                    damageToDefender = 14;
                 }
             }
             else if (winChance >= 30 && winChance < 37)
@@ -639,6 +690,7 @@ public class MovePoint : MonoBehaviour
                 if (random >= offset) // -2 art; -3 infantry
                 {
                     damageToAttacker = 90;
+                    damageToDefender = 18;
                 }
             }
             else if (winChance >= 30 && winChance < 37)
@@ -646,6 +698,7 @@ public class MovePoint : MonoBehaviour
                 if (random >= offset) // -2 art; -4 infantry
                 {
                     damageToAttacker = 130;
+                    damageToDefender = 26;
                 }
             }
             else if (winChance >= 10 && winChance < 25)
@@ -653,6 +706,7 @@ public class MovePoint : MonoBehaviour
                 if (random >= offset) // -2 art; -4 infantry
                 {
                     damageToAttacker = 200;
+                    damageToDefender = 40;
                 }
             }
             else if (winChance >= 0 && winChance < 10)
@@ -660,6 +714,7 @@ public class MovePoint : MonoBehaviour
                 if (random >= offset) // -2 art; -4 infantry
                 {
                     damageToAttacker = 500;
+                    damageToDefender = 100;
                 }
             }
         }
@@ -670,72 +725,109 @@ public class MovePoint : MonoBehaviour
 
     private void ApplyDamage(float damageToAttacker, float damageToDefender)
     {
-        if (winChance >= 50)
-        {
-            attackerWon = true;
-        }
+        Debug.Log(damageToAttacker);
+        Debug.Log(damageToDefender);
 
-        else if (winChance < 50)
-        {
-            attackerWon = false;
-        }
+        int att_inf_losses = 0;
+        int att_art_losses = 0;
+        int att_hvy_losses = 0;
 
-        if (attackerWon)
+        int def_inf_losses = 0;
+        int def_art_losses = 0;
+        int def_hvy_losses = 0;
+
+        #region Defender Losses
+
+        if (defenderUnit != null)
         {
-            if (defenderUnit != null)
+            for (int j = 0; j < defenderUnit.unitsHealth.Count; j++)
             {
-                for (int j = 0; j < defenderUnit.unitsHealth.Count; j++)
-                {
-                    defenderUnit.unitsHealth[j].health -= damageToDefender;
+                defenderUnit.unitsHealth[j].health -= damageToDefender;
 
-                    if (defenderUnit.unitsHealth[j].health <= 0)
+                if (defenderUnit.unitsHealth[j].health <= 0)
+                {
+                    damageToDefender = Mathf.Abs(defenderUnit.unitsHealth[j].health);
+
+                    defenderUnit.currentCountry.moneyNaturalIncome += defenderUnit.unitsHealth[j].unit.moneyIncomeCost;
+                    defenderUnit.currentCountry.foodNaturalIncome += defenderUnit.unitsHealth[j].unit.foodIncomeCost;
+
+                    if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER)
                     {
-                        defenderUnit.currentCountry.moneyNaturalIncome += defenderUnit.unitsHealth[j].unit.moneyIncomeCost;
-                        defenderUnit.currentCountry.foodNaturalIncome += defenderUnit.unitsHealth[j].unit.foodIncomeCost;
-                        defenderUnit.unitsHealth.Remove(defenderUnit.unitsHealth[j]);
+                        def_inf_losses++;
                     }
-                }
-                if (defenderUnit.unitsHealth.Count < 1)
-                {
-                    defenderUnit.currentProvince = transform.parent.GetComponent<RegionManager>();
-                    defenderUnit.currentProvince.CheckRegionUnits(defenderUnit.currentProvince);
+                    else if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+                    {
+                        def_inf_losses++;
+                    }
+                    else if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.ARTILERY)
+                    {
+                        def_art_losses++;
+                    }
+                    else if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.TANK)
+                    {
+                        def_hvy_losses++;
+                    }
+
+                    defenderUnit.unitsHealth.Remove(defenderUnit.unitsHealth[j]);
                 }
             }
-        }
-        else if (!attackerWon)
-        {
-            for (int j = 0; j < attackerUnit.unitsHealth.Count; j++)
+            if (defenderUnit.unitsHealth.Count < 1)
             {
-                attackerUnit.unitsHealth[j].health -= damageToAttacker;
-
-                if (attackerUnit.unitsHealth[j].health <= 0)
-                {
-                    attackerUnit.currentCountry.moneyNaturalIncome += attackerUnit.unitsHealth[j].unit.moneyIncomeCost;
-                    attackerUnit.currentCountry.foodNaturalIncome += attackerUnit.unitsHealth[j].unit.foodIncomeCost;
-                    attackerUnit.unitsHealth.Remove(attackerUnit.unitsHealth[j]);
-                }
-            }
-            if (attackerUnit.unitsHealth.Count < 1)
-            {
-                attackerUnit.currentProvince = transform.parent.GetComponent<RegionManager>();
-                attackerUnit.currentProvince.CheckRegionUnits(attackerUnit.currentProvince);
+                defenderUnit.currentProvince = transform.parent.GetComponent<RegionManager>();
+                defenderUnit.currentProvince.CheckRegionUnits(defenderUnit.currentProvince);
             }
         }
 
-        if (ReferencesManager.Instance.gameSettings.onlineGame)
+        #endregion
+
+        #region Attacker Losses
+
+        for (int j = 0; j < attackerUnit.unitsHealth.Count; j++)
         {
-            Multiplayer.Instance.SetCountryIncomeValues(
-                defenderUnit.currentCountry.country._id,
-                defenderUnit.currentCountry.moneyNaturalIncome,
-                defenderUnit.currentCountry.foodNaturalIncome,
-                defenderUnit.currentCountry.recrootsIncome);
+            attackerUnit.unitsHealth[j].health -= damageToAttacker;
 
-            Multiplayer.Instance.SetCountryIncomeValues(
-                attackerUnit.currentCountry.country._id,
-                attackerUnit.currentCountry.moneyNaturalIncome,
-                attackerUnit.currentCountry.foodNaturalIncome,
-                attackerUnit.currentCountry.recrootsIncome);
+            if (attackerUnit.unitsHealth[j].health <= 0)
+            {
+                damageToAttacker = Mathf.Abs(attackerUnit.unitsHealth[j].health);
+
+                attackerUnit.currentCountry.moneyNaturalIncome += attackerUnit.unitsHealth[j].unit.moneyIncomeCost;
+                attackerUnit.currentCountry.foodNaturalIncome += attackerUnit.unitsHealth[j].unit.foodIncomeCost;
+
+                if (attackerUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER)
+                {
+                    att_inf_losses++;
+                }
+                else if (attackerUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+                {
+                    att_inf_losses++;
+                }
+                else if (attackerUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.ARTILERY)
+                {
+                    att_art_losses++;
+                }
+                else if (attackerUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.TANK)
+                {
+                    att_hvy_losses++;
+                }
+
+                attackerUnit.unitsHealth.Remove(attackerUnit.unitsHealth[j]);
+            }
         }
+        if (attackerUnit.unitsHealth.Count < 1)
+        {
+            attackerUnit.currentProvince = transform.parent.GetComponent<RegionManager>();
+            attackerUnit.currentProvince.CheckRegionUnits(attackerUnit.currentProvince);
+        }
+
+        #endregion
+
+        ReferencesManager.Instance.army.defenderArmyLossesValue[0] = def_inf_losses;
+        ReferencesManager.Instance.army.defenderArmyLossesValue[1] = def_art_losses;
+        ReferencesManager.Instance.army.defenderArmyLossesValue[2] = def_hvy_losses;
+
+        ReferencesManager.Instance.army.attackerArmyLossesValue[0] = att_inf_losses;
+        ReferencesManager.Instance.army.attackerArmyLossesValue[1] = att_art_losses;
+        ReferencesManager.Instance.army.attackerArmyLossesValue[2] = att_hvy_losses;
     }
 
 

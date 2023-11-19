@@ -1,10 +1,5 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Networking;
-using System.Linq;
 
 public class GameSettings : MonoBehaviour
 {
@@ -15,7 +10,9 @@ public class GameSettings : MonoBehaviour
 	public bool onlineGame;
 	public bool jsonTest;
 
-	[Header("DEBUG")]
+	public UnitMovement.BattleInfo currentBattle;
+
+    [Header("DEBUG")]
 	public bool _DEBUG_REGIONS_IDS;
 	public GameObject debugText;
 
@@ -112,7 +109,6 @@ public class GameSettings : MonoBehaviour
 	public Multiplayer multiplayer;
 
 	[SerializeField] BoolValue devMode;
-	[SerializeField] RewardedAds rewardedAds;
 
 	[Header("Fight settings")]
 	public float fortDebuff = 5;
@@ -146,8 +142,6 @@ public class GameSettings : MonoBehaviour
 			return;
 		}
 		playerListButton.SetActive(false);
-
-		rewardedAds.RequestRewarded();
     }
 
     public void TogglePlayerList()

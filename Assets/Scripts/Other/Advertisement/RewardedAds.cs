@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using YandexMobileAds;
 using YandexMobileAds.Base;
 using System;
@@ -6,78 +7,115 @@ using System;
 public class RewardedAds : MonoBehaviour
 {
     public string reward;
-    private string message = "";
-
+    private RewardedAdLoader rewardedAdLoader;
     private RewardedAd rewardedAd;
+    [SerializeField] Button[] buttons;
 
-    private void Start()
+    private void Awake()
     {
-        RequestRewarded();
-    }
+        SetupLoader();
+        RequestRewardedAd();
+        DontDestroyOnLoad(gameObject);
 
-    public void RequestRewarded()
-    {
-        MobileAds.SetAgeRestrictedUser(true);
-
-        string adUnitId = "R-M-2659272-3";
-
-        if (this.rewardedAd != null)
+        for (int i = 0; i < buttons.Length; i++)
         {
-            this.rewardedAd.Destroy();
+            buttons[i].onClick.AddListener(ShowRewardedAd);
         }
+    }
 
-        this.rewardedAd = new RewardedAd(adUnitId);
+    private void SetupLoader()
+    {
+        rewardedAdLoader = new RewardedAdLoader();
+        rewardedAdLoader.OnAdLoaded += HandleAdLoaded;
+        rewardedAdLoader.OnAdFailedToLoad += HandleAdFailedToLoad;
+    }
 
-        this.rewardedAd.LoadAd(this.CreateAdRequest());
+    private void RequestRewardedAd()
+    {
+        string adUnitId = "demo-rewarded-yandex"; // R-M-2659272-3
+        AdRequestConfiguration adRequestConfiguration = new AdRequestConfiguration.Builder(adUnitId).Build();
+        rewardedAdLoader.LoadAd(adRequestConfiguration);
+    }
 
-        rewardedAd.OnRewardedAdLoaded += HandleRewardedAdlLoaded;
-        rewardedAd.OnRewardedAdShown += HandleRewardedAdShown;
+    private void ShowRewardedAd()
+    {
+        if (rewardedAd != null)
+        {
+            rewardedAd.Show();
+        }
+    }
+
+    public void HandleAdLoaded(object sender, RewardedAdLoadedEventArgs args)
+    {
+        // The ad was loaded successfully. Now you can handle it.
+        rewardedAd = args.RewardedAd;
+
+        // Add events handlers for ad actions
+        rewardedAd.OnAdClicked += HandleAdClicked;
+        rewardedAd.OnAdShown += HandleAdShown;
+        rewardedAd.OnAdFailedToShow += HandleAdFailedToShow;
+        rewardedAd.OnAdImpression += HandleImpression;
+        rewardedAd.OnAdDismissed += HandleAdDismissed;
         rewardedAd.OnRewarded += HandleRewarded;
-        rewardedAd.OnRewardedAdFailedToLoad += HandleRewardedAdlFailedToLoad;
-        rewardedAd.OnRewardedAdFailedToShow += HandleRewardedAdlFailedToShow;
-
-        this.DisplayMessage("RewardedAd is requested");
     }
 
-    public void ShowRewardedAd()
+    public void HandleAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
-        this.rewardedAd.Show();
+        // Ad {args.AdUnitId} failed for to load with {args.Message}
+        // Attempting to load a new ad from the OnAdFailedToLoad event is strongly discouraged.
     }
 
-    public void HandleRewardedAdlLoaded(object sender, EventArgs args)
+    public void HandleAdDismissed(object sender, EventArgs args)
     {
-        Debug.Log("Ad loaded");
+        // Called when an ad is dismissed.
+
+        // Clear resources after an ad dismissed.
+        DestroyRewardedAd();
+
+        // Now you can preload the next rewarded ad.
+        RequestRewardedAd();
     }
 
-    public void HandleRewardedAdlFailedToLoad(object sender, EventArgs args)
+    public void HandleAdFailedToShow(object sender, AdFailureEventArgs args)
     {
-        Debug.Log($"FailedToLoad | Sender ({sender}) | Args ({args})");
+        // Called when rewarded ad failed to show.
+
+        // Clear resources after an ad dismissed.
+        DestroyRewardedAd();
+
+        // Now you can preload the next rewarded ad.
+        RequestRewardedAd();
     }
 
-    public void HandleRewardedAdlFailedToShow(object sender, EventArgs args)
+    public void HandleAdClicked(object sender, EventArgs args)
     {
-        Debug.Log($"FailedToShow | Sender ({sender}) | Args ({args})");
+        // Called when a click is recorded for an ad.
     }
 
-    public void HandleRewardedAdShown(object sender, EventArgs args)
+    public void HandleAdShown(object sender, EventArgs args)
     {
-        RequestRewarded();
+        // Called when an ad is shown.
+        RequestRewardedAd();
     }
 
-    public void HandleRewarded(object sender, EventArgs args)
+    public void HandleImpression(object sender, ImpressionData impressionData)
     {
-        UserGotReward(reward);
+        // Called when an impression is recorded for an ad.
     }
 
-    private AdRequest CreateAdRequest()
+    public void HandleRewarded(object sender, Reward args)
     {
-        return new AdRequest.Builder().Build();
+        UserGotReward(this.reward);
+        // Called when the user can be rewarded with {args.type} and {args.amount}.
     }
 
-    private void DisplayMessage(string message)
+    public void DestroyRewardedAd()
     {
-        this.message = message + (this.message.Length == 0 ? "" : "\n--------\n" + this.message);
-        MonoBehaviour.print(this.message);
+        if (rewardedAd != null)
+        {
+            rewardedAd.Destroy();
+            rewardedAd = null;
+        }
     }
 
     public void SetReward(string reward)
