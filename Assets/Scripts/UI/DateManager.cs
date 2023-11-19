@@ -166,17 +166,37 @@ public class DateManager : MonoBehaviour
 		int num2 = int.Parse(array[1]);
 		int num3 = int.Parse(array[0]);
 
-		if (currentDate[0] >= num3 && num2 == this.currentDate[1] && this.currentDate[2] >= num && !eventScriptableObject._checked)
+		if (currentDate[0] >= num3 && num2 <= this.currentDate[1] && this.currentDate[2] >= num && !eventScriptableObject._checked)
 		{
-			if (!eventScriptableObject.silentEvent)
+			if (eventScriptableObject.receivers.Count > 0)
 			{
-				gameEventUI.gameObject.SetActive(true);
-				UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
-				UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
+				if (eventScriptableObject.receivers.Contains(ReferencesManager.Instance.countryManager.currentCountry.country._id))
+				{
+					if (!eventScriptableObject.silentEvent)
+					{
+						gameEventUI.gameObject.SetActive(true);
+						UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
+						UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
+					}
+
+					gameEventUI.currentGameEvent = eventScriptableObject;
+					eventScriptableObject._checked = true;
+					gameEventUI.UpdateUI();
+				}
 			}
-			gameEventUI.currentGameEvent = eventScriptableObject;
-			eventScriptableObject._checked = true;
-			gameEventUI.UpdateUI();
+			else
+			{
+				if (!eventScriptableObject.silentEvent)
+				{
+					gameEventUI.gameObject.SetActive(true);
+					UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
+					UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
+				}
+
+				gameEventUI.currentGameEvent = eventScriptableObject;
+				eventScriptableObject._checked = true;
+				gameEventUI.UpdateUI();
+			}
 		}
 	}
 }

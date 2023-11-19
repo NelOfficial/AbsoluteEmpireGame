@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b827dd8bde9b9c6438e425c7948232f1, type: 3}
   m_Name: WW2Player
   m_EditorClassIdentifier: 
-  id: 7
+  id: 1007
   _name: "\u0414\u0430\u043D\u0446\u0438\u0433 \u0438\u043B\u0438 \u0432\u043E\u0439\u043D\u0430?"
   description: "\u041E\u0434\u043D\u0438\u043C \u0438\u0437 \u0433\u043B\u0430\u0432\u043D\u044B\u0445
     \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439 \u0413\u0438\u0442\u043B\u0435\u0440\u0430
@@ -103,6 +103,8 @@ MonoBehaviour:
   conditions:
   - country_exist;12
   - is_country_player;27
+  receivers: 1b000000
+  aiWillDo_Index: 0
   buttons:
   - name: "\u0414\u0430\u043D\u0446\u0438\u0433 \u043E\u0441\u0442\u0430\u043D\u0435\u0442\u0441\u044F
       \u0413\u0434\u0430\u043D\u044C\u0441\u043A\u043E\u043C!"

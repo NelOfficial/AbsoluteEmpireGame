@@ -17,6 +17,8 @@ public class EventScriptableObject : ScriptableObject
     public bool silentEvent;
 
     public List<string> conditions = new List<string>();
+    public List<int> receivers = new List<int>();
+    public int aiWillDo_Index = 0;
 
     public List<EventButton> buttons = new List<EventButton>();
 
