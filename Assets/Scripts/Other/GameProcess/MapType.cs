@@ -60,6 +60,11 @@ public class MapType : MonoBehaviour
 
             currentAlpha = _population / maxPopulation;
 
+            if (currentAlpha < 0.1f)
+            {
+                currentAlpha = 0.1f;
+            }
+
             SetAlphaColor(region, currentAlpha);
         }
     }
