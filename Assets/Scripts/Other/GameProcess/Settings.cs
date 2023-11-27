@@ -41,7 +41,10 @@ public class Settings : MonoBehaviour
     private void Start()
     {
         songNameText.text = musicSource.clip.name;
+        songNameText.text = musicSource.clip.name;
 
+
+        Debug.Log(songNameText);
         regionUI = FindObjectOfType<RegionUI>();
         gameSettings = FindObjectOfType<GameSettings>();
 

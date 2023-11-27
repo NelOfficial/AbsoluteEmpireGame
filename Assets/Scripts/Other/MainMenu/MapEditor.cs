@@ -73,6 +73,7 @@ public class MapEditor : MonoBehaviour
     [SerializeField] IntListValue regionList;
 
     private Texture2D EventImageTexture;
+    public List<int> countriesInRegionsIDs = new List<int>();
 
 
     private void Start()
@@ -100,7 +101,7 @@ public class MapEditor : MonoBehaviour
 
         if (test == false)
         {
-            LoadMod();
+            StartCoroutine(LoadMod_Co());
         }
 
         _eventCreatorManager = FindObjectOfType<EventCreatorManager>();
@@ -290,6 +291,7 @@ public class MapEditor : MonoBehaviour
 
         StreamReader reader = new StreamReader(Path.Combine(loadedModPath, $"{loadedModName}.AEMod"));
         modData = reader.ReadToEnd();
+        currentModText = modData;
 
         reader.Close();
 
@@ -328,9 +330,7 @@ public class MapEditor : MonoBehaviour
 
             allowEventsToggle.isOn = allowEventsBoolean;
 
-            List<int> countriesInRegionsIDs = new List<int>();
-
-            for (int r = 0; r < regionsDataLines.Length; r++)
+            for (int r = 1; r < regionsDataLines.Length - 1; r++)
             {
                 try
                 {
@@ -347,25 +347,23 @@ public class MapEditor : MonoBehaviour
                 try
                 {
                     string _line = regionsDataLines[i];
-                    if (!string.IsNullOrEmpty(_line))
-                    {
-                        string[] regionIdParts = _line.Split(' ');
-                        regionValue = regionIdParts[0].Remove(0, 7);
-                        int regValue = int.Parse(regionValue);
+                    string[] regionIdParts = _line.Split(' ');
+                    regionValue = regionIdParts[0].Remove(0, 7);
+                    int regValue = int.Parse(regionValue);
 
-                        for (int c = 0; c < ReferencesManager.Instance.countryManager.countries.Count; c++)
+                    //for (int c = 0; c < ReferencesManager.Instance.countryManager.countries.Count; c++)
+                    //{
+                    //    if (ReferencesManager.Instance.countryManager.countries[c].country._id == countriesInRegionsIDs[0])
+                    //    {
+                    //        ReferencesManager.Instance.AnnexRegion(ReferencesManager.Instance.countryManager.regions[0], ReferencesManager.Instance.countryManager.countries[c]);
+                    //    }
+                    //}
+                    for (int c = 0; c < ReferencesManager.Instance.countryManager.countries.Count; c++)
+                    {
+                        Debug.Log($"{ReferencesManager.Instance.countryManager.countries[c].country._id} | {countriesInRegionsIDs[i]}");
+                        if (ReferencesManager.Instance.countryManager.countries[c].country._id == countriesInRegionsIDs[i])
                         {
-                            if (ReferencesManager.Instance.countryManager.countries[c].country._id == countriesInRegionsIDs[0])
-                            {
-                                ReferencesManager.Instance.AnnexRegion(ReferencesManager.Instance.countryManager.regions[0], ReferencesManager.Instance.countryManager.countries[c]);
-                            }
-                        }
-                        for (int c = 0; c < ReferencesManager.Instance.countryManager.countries.Count; c++)
-                        {
-                            if (ReferencesManager.Instance.countryManager.countries[c].country._id == countriesInRegionsIDs[i])
-                            {
-                                ReferencesManager.Instance.AnnexRegion(ReferencesManager.Instance.countryManager.regions[i], ReferencesManager.Instance.countryManager.countries[c]);
-                            }
+                            ReferencesManager.Instance.AnnexRegion(ReferencesManager.Instance.countryManager.regions[i], ReferencesManager.Instance.countryManager.countries[c]);
                         }
                     }
                 }
@@ -591,6 +589,12 @@ public class MapEditor : MonoBehaviour
         yield return wwwEventImageRequest.SendWebRequest();
 
         EventImageTexture = DownloadHandlerTexture.GetContent(wwwEventImageRequest);
+    }
+
+    private IEnumerator LoadMod_Co()
+    {
+        yield return new WaitForSecondsRealtime(2f);
+        LoadMod();
     }
 
     public void CompileMod()
@@ -859,6 +863,8 @@ public class MapEditor : MonoBehaviour
             RegionManager region = ReferencesManager.Instance.countryManager.regions[i];
             currentModText += $"REGION_{region._id} = {region.currentCountry.country._id};";
         }
+
+        currentModText += "#REGIONS#;";
     }
 
     private void CompileEvents()
