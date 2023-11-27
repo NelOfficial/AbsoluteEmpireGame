@@ -60,11 +60,11 @@ public class RegionManager : MonoBehaviour
 
     [Header("Building")]
     public List<BuildingScriptableObject> buildings = new List<BuildingScriptableObject>();
-    public List<BuildingQueueItem> buildingsQueue = new List<BuildingQueueItem>();
+    [HideInInspector] public List<BuildingQueueItem> buildingsQueue = new List<BuildingQueueItem>();
 
-    public Color hoverColor;
-    public Color selectedColor;
-    public Color defaultColor;
+    [HideInInspector] public Color hoverColor;
+    [HideInInspector] public Color selectedColor;
+    [HideInInspector] public Color defaultColor;
 
     public bool capital = false;
     [HideInInspector] public bool isSelected;
@@ -90,19 +90,23 @@ public class RegionManager : MonoBehaviour
         mainCamera = FindObjectOfType<CameraMovement>();
         //StartPos = camera.Cam.WorldToViewportPoint(Input.mousePosition);
 
-        random = Random.Range(10000, 80000);
+        random = Random.Range(2000, 12000);
 
         currentDefenseUnits = ReferencesManager.Instance.gameSettings.currentDefenseUnits_FirstLevel;
 
 
-        //if (capital)
-        //{
-        //    population = Random.Range(100000, 800000);
-        //}
-        //else if (!capital)
-        //{
-        //    population = random;
-        //}
+        if (population == 0)
+        {
+            if (capital)
+            {
+                population = Random.Range(100000, 800000);
+            }
+            else if (!capital)
+            {
+                population = random;
+            }
+        }
+
         //if (gameSettings.onlineGame)
         //{
         //    Multiplayer.Instance.SetRegionValues(_id, population, hasArmy, goldIncome, foodIncome, civFactory_Amount,
