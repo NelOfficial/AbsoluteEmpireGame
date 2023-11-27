@@ -160,33 +160,37 @@ public class CountrySettings : MonoBehaviour
         {
             DiplomatyUI diplomatyUI = ReferencesManager.Instance.gameSettings.diplomatyUI;
 
-            for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
+            if (diplomatyUI != null)
             {
-                CountrySettings country = ReferencesManager.Instance.countryManager.countries[i];
+                for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
+                {
+                    CountrySettings country = ReferencesManager.Instance.countryManager.countries[i];
 
-                Relationships.Relation senderToReceiver = diplomatyUI.FindCountriesRelation(this, country);
-                Relationships.Relation receiverToSender = diplomatyUI.FindCountriesRelation(country, this);
+                    Relationships.Relation senderToReceiver = diplomatyUI.FindCountriesRelation(this, country);
+                    Relationships.Relation receiverToSender = diplomatyUI.FindCountriesRelation(country, this);
 
-                senderToReceiver.war = false;
-                receiverToSender.war = false;
+                    senderToReceiver.war = false;
+                    receiverToSender.war = false;
 
-                senderToReceiver.trade = false;
-                receiverToSender.trade = false;
+                    senderToReceiver.trade = false;
+                    receiverToSender.trade = false;
 
-                senderToReceiver.pact = false;
-                receiverToSender.pact = false;
+                    senderToReceiver.pact = false;
+                    receiverToSender.pact = false;
 
-                senderToReceiver.right = false;
-                receiverToSender.right = false;
+                    senderToReceiver.right = false;
+                    receiverToSender.right = false;
 
-                senderToReceiver.union = false;
-                receiverToSender.union = false;
+                    senderToReceiver.union = false;
+                    receiverToSender.union = false;
 
-                senderToReceiver.vassal = false;
-                receiverToSender.vassal = false;
+                    senderToReceiver.vassal = false;
+                    receiverToSender.vassal = false;
 
-                senderToReceiver.relationship = 0;
-                receiverToSender.relationship = 0;
+                    senderToReceiver.relationship = 0;
+                    receiverToSender.relationship = 0;
+                }
+
             }
         }
 
