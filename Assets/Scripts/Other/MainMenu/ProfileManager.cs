@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -63,7 +64,15 @@ public class ProfileManager : MonoBehaviour
     private void Start()
     {
         createModButton.interactable = false;
-        createModButtonText.text = "Войдите в аккаунт, чтобы создавать моды";
+
+        if (PlayerPrefs.GetInt("languageId") == 1)
+        {
+            createModButtonText.text = "Войдите в аккаунт, чтобы создавать моды";
+        }
+        else if (PlayerPrefs.GetInt("languageId") == 0)
+        {
+            createModButtonText.text = "Log in create mods";
+        }
 
         if (PlayerPrefs.GetString("LOGGED_IN") == "TRUE")
         {
@@ -84,8 +93,16 @@ public class ProfileManager : MonoBehaviour
 
     public void UpdateUI()
     {
-        playerProgressExp.text = $"{currentExp} / 100 опыта";
-        playerLevel.text = $"{currentLvl}/{maxLevels} уровень";
+        if (PlayerPrefs.GetInt("languageId") == 1)
+        {
+            playerProgressExp.text = $"{currentExp} / 100 опыта";
+            playerLevel.text = $"{currentLvl}/{maxLevels} уровень";
+        }
+        else if (PlayerPrefs.GetInt("languageId") == 0)
+        {
+            playerProgressExp.text = $"{currentExp} / 100 exp";
+            playerLevel.text = $"{currentLvl}/{maxLevels} level";
+        }
 
         if (PlayerPrefs.GetInt("languageId") == 1)
         {
@@ -224,11 +241,25 @@ public class ProfileManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(login_AccountNameInputField.text))
         {
-            login_MessageText.text = "Логин не может быть пустым.";
+            if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                login_MessageText.text = "Логин не может быть пустым.";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                login_MessageText.text = "The login cannot be empty.";
+            }
         }
         if (string.IsNullOrEmpty(login_AccountPasswordInputField.text))
         {
-            login_MessageText.text = "Пароль не может быть пустым.";
+            if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                login_MessageText.text = "Пароль не может быть пустым.";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                login_MessageText.text = "The password cannot be empty.";
+            }
         }
         if (!string.IsNullOrEmpty(login_AccountNameInputField.text) && !string.IsNullOrEmpty(login_AccountPasswordInputField.text))
         {
@@ -297,18 +328,35 @@ public class ProfileManager : MonoBehaviour
                     PlayerPrefs.SetString("PASSWORD", $"{_profilePassword}");
                     PlayerPrefs.SetString("nickname", $"{_profileName}");
 
+                    PhotonNetwork.NickName = _profileName;
+
                     ReferencesManager.Instance.mainMenu.UpdateNickname(_profileName);
 
                     loginButton.SetActive(false);
                     profileButton.SetActive(true);
 
                     createModButton.interactable = true;
-                    createModButtonText.text = "Создать мод";
+                    if (PlayerPrefs.GetInt("languageId") == 1)
+                    {
+                        createModButtonText.text = "Создать мод";
+                    }
+                    else if (PlayerPrefs.GetInt("languageId") == 0)
+                    {
+                        createModButtonText.text = "Create mod";
+                    }
                 }
                 catch (System.Exception)
                 {
                     Debug.Log(accountLoginRequest.text);
-                    login_MessageText.text = $"Произошла ошибка. \n {accountLoginRequest.text}";
+
+                    if (PlayerPrefs.GetInt("languageId") == 1)
+                    {
+                        login_MessageText.text = $"Произошла ошибка. \n {accountLoginRequest.text}";
+                    }
+                    else if (PlayerPrefs.GetInt("languageId") == 0)
+                    {
+                        login_MessageText.text = $"Error: \n {accountLoginRequest.text}";
+                    }
                 }
             }
 

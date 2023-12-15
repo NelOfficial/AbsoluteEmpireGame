@@ -4,6 +4,8 @@ using Photon.Pun;
 using Photon.Chat;
 using ExitGames.Client.Photon;
 using TMPro;
+using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class ChatManager : MonoBehaviour, IChatClientListener
 {
@@ -28,12 +30,20 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnConnected()
     {
-        chatClient.Subscribe($"roomChat_{roomName}");
+        StartCoroutine(ChatSubscribe());
     }
 
     public void OnDisconnected()
     {
         chatClient.Unsubscribe(new string[] { $"roomChat_{roomName}" });
+    }
+
+    private IEnumerator ChatSubscribe()
+    {
+        yield return new WaitUntil(() => string.IsNullOrEmpty(roomName) == false);
+        chatClient.Subscribe($"roomChat_{roomName}");
+
+        yield break;
     }
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)

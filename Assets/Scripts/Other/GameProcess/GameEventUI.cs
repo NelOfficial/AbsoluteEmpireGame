@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class GameEventUI : MonoBehaviour
 {
@@ -116,735 +117,779 @@ public class GameEventUI : MonoBehaviour
         }
     }
 
-    public void ProceedEvent(int b)
+    public bool CheckConditions(EventScriptableObject currentGameEvent)
     {
+        gameSettings = FindObjectOfType<GameSettings>();
+        countryManager = FindObjectOfType<CountryManager>();
+        diplomatyUI = FindObjectOfType<DiplomatyUI>();
+
+        int conditionsAccepted = 0;
+        int conditionsAmount = 0;
         bool allowEvent = false;
 
-        for (int a = 0; a < currentGameEvent.buttons[b].actions.Count; a++)
+        conditionsAmount = currentGameEvent.conditions.Count;
+
+        for (int c = 0; c < currentGameEvent.conditions.Count; c++)
         {
-            if (!string.IsNullOrEmpty(currentGameEvent.buttons[b].actions[a]) ||
-            !string.IsNullOrWhiteSpace(currentGameEvent.buttons[b].actions[a]))
+            string[] condition = currentGameEvent.conditions[c].Split(';');
+
+            if (condition[0] == "country_exist")
             {
-
-                string[] act = currentGameEvent.buttons[b].actions[a].Split(';');
-                for (int c = 0; c < currentGameEvent.conditions.Count; c++)
+                for (int i = 0; i < countryManager.countries.Count; i++)
                 {
-                    string[] condition = currentGameEvent.conditions[c].Split(';');
-
-                    if (condition[0] == "country_exist")
+                    if (countryManager.countries[i].country._id == int.Parse(condition[1]))
                     {
-                        for (int i = 0; i < countryManager.countries.Count; i++)
-                        {
-                            if (countryManager.countries[i].country._id == int.Parse(condition[1]))
-                            {
-                                attacker = countryManager.countries[i];
-                            }
-                        } // Asign countries
-
-                        attacker.UpdateCapitulation();
-
-                        if (attacker.exist)
-                        {
-                            allowEvent = true;
-                        }
-                        else
-                        {
-                            allowEvent = false;
-                        }
+                        attacker = countryManager.countries[i];
                     }
-                    else if (condition[0] == "country_not_exist")
+                } // Asign countries
+
+                try
+                {
+                    if (attacker.exist || attacker != null)
                     {
-                        for (int i = 0; i < countryManager.countries.Count; i++)
-                        {
-                            if (countryManager.countries[i].country._id == int.Parse(condition[1]))
-                            {
-                                attacker = countryManager.countries[i];
-                            }
-                        } // Asign countries
-
-                        attacker.UpdateCapitulation();
-
-                        if (!attacker.exist)
-                        {
-                            allowEvent = true;
-                        }
-                        else
-                        {
-                            allowEvent = false;
-                        }
+                        conditionsAccepted++;
                     }
-                    else if (condition[0] == "own_province")
+                }
+                catch (System.Exception)
+                {
+                    conditionsAccepted = conditionsAccepted;
+                }
+
+            }
+            else if (condition[0] == "country_not_exist")
+            {
+                for (int i = 0; i < countryManager.countries.Count; i++)
+                {
+                    if (countryManager.countries[i].country._id == int.Parse(condition[1]))
                     {
-                        for (int i = 0; i < countryManager.countries.Count; i++)
-                        {
-                            if (countryManager.countries[i].country._id == int.Parse(condition[1]))
-                            {
-                                attacker = countryManager.countries[i];
-                            }
-                        } // Asign countries
-
-                        for (int r = 0; r < attacker.myRegions.Count; r++)
-                        {
-                            if (attacker.myRegions[r]._id == int.Parse(condition[2]))
-                            {
-                                region = attacker.myRegions[r];
-                            }
-                        }
-
-                        if (attacker.myRegions.Contains(region))
-                        {
-                            allowEvent = true;
-                        }
-                        else
-                        {
-                            allowEvent = false;
-                        }
+                        attacker = countryManager.countries[i];
                     }
-                    else if (condition[0] == "not_own_province")
+                } // Asign countries
+
+                try
+                {
+                    if (!attacker.exist || attacker == null)
                     {
-                        for (int i = 0; i < countryManager.countries.Count; i++)
-                        {
-                            if (countryManager.countries[i].country._id == int.Parse(condition[1]))
-                            {
-                                attacker = countryManager.countries[i];
-                            }
-                        } // Asign countries
-
-                        for (int r = 0; r < attacker.myRegions.Count; r++)
-                        {
-                            if (attacker.myRegions[r]._id == int.Parse(condition[2]))
-                            {
-                                region = attacker.myRegions[r];
-                            }
-                        }
-
-                        if (!attacker.myRegions.Contains(region))
-                        {
-                            allowEvent = true;
-                        }
-                        else
-                        {
-                            allowEvent = false;
-                        }
+                        conditionsAccepted++;
                     }
-                    else if (condition[0] == "ongoing_war")
-                    {
-                        for (int i = 0; i < countryManager.countries.Count; i++)
-                        {
-                            if (countryManager.countries[i].country._id == int.Parse(condition[1]))
-                            {
-                                attacker = countryManager.countries[i];
-                            }
-                        } // Asign countries
+                }
+                catch (System.Exception)
+                {
 
-                        if (attacker.inWar)
-                        {
-                            allowEvent = true;
-                        }
-                        else
-                        {
-                            allowEvent = false;
-                        }
+                    throw;
+                }
+            }
+            else if (condition[0] == "own_province")
+            {
+                for (int i = 0; i < countryManager.countries.Count; i++)
+                {
+                    if (countryManager.countries[i].country._id == int.Parse(condition[1]))
+                    {
+                        attacker = countryManager.countries[i];
                     }
-                    else if (condition[0] == "date_before")
-                    {
-                        string[] dateSecond = condition[1].Split('-');
+                } // Asign countries
 
-                        if (ReferencesManager.Instance.dateManager.currentDate[0] < int.Parse(dateSecond[0]))
-                        {
-                            allowEvent = true;
-                        }
-                        if (ReferencesManager.Instance.dateManager.currentDate[1] < int.Parse(dateSecond[1]))
-                        {
-                            allowEvent = true;
-                        }
+                for (int r = 0; r < attacker.myRegions.Count; r++)
+                {
+                    if (attacker.myRegions[r]._id == int.Parse(condition[2]))
+                    {
+                        region = attacker.myRegions[r];
+                    }
+                }
+
+                if (attacker.myRegions.Contains(region))
+                {
+                    conditionsAccepted++;
+                }
+            }
+            else if (condition[0] == "not_own_province")
+            {
+                for (int i = 0; i < countryManager.countries.Count; i++)
+                {
+                    if (countryManager.countries[i].country._id == int.Parse(condition[1]))
+                    {
+                        attacker = countryManager.countries[i];
+                    }
+                } // Asign countries
+
+                for (int r = 0; r < attacker.myRegions.Count; r++)
+                {
+                    if (attacker.myRegions[r]._id == int.Parse(condition[2]))
+                    {
+                        region = attacker.myRegions[r];
+                    }
+                }
+
+                if (!attacker.myRegions.Contains(region))
+                {
+                    conditionsAccepted++;
+                }
+            }
+            else if (condition[0] == "ongoing_war")
+            {
+                for (int i = 0; i < countryManager.countries.Count; i++)
+                {
+                    if (countryManager.countries[i].country._id == int.Parse(condition[1]))
+                    {
+                        attacker = countryManager.countries[i];
+                    }
+                } // Asign countries
+
+                if (attacker.inWar)
+                {
+                    conditionsAccepted++;
+                }
+            }
+            else if (condition[0] == "date_before")
+            {
+                string[] dateSecond = condition[1].Split('-');
+
+                if (ReferencesManager.Instance.dateManager.currentDate[0] < int.Parse(dateSecond[0]))
+                {
+                    if (ReferencesManager.Instance.dateManager.currentDate[1] < int.Parse(dateSecond[1]))
+                    {
                         if (ReferencesManager.Instance.dateManager.currentDate[2] < int.Parse(dateSecond[2]))
                         {
-                            allowEvent = true;
-                        }
-                    }
-                    else if (condition[0] == "date_after")
-                    {
-                        string[] dateSecond = condition[1].Split('-');
-
-                        if (ReferencesManager.Instance.dateManager.currentDate[0] > int.Parse(dateSecond[0]))
-                        {
-                            allowEvent = true;
-                        }
-                        if (ReferencesManager.Instance.dateManager.currentDate[1] > int.Parse(dateSecond[1]))
-                        {
-                            allowEvent = true;
-                        }
-                        if (ReferencesManager.Instance.dateManager.currentDate[2] > int.Parse(dateSecond[2]))
-                        {
-                            allowEvent = true;
-                        }
-                    }
-                    else if (condition[0] == "in_union")
-                    {
-                        for (int i = 0; i < countryManager.countries.Count; i++)
-                        {
-                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                            {
-                                attacker = countryManager.countries[i];
-                            }
-                            if (countryManager.countries[i].country._id == int.Parse(act[2]))
-                            {
-                                defender = countryManager.countries[i];
-                            }
-                        } // Asign countries
-
-                        if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(attacker, defender).union)
-                        {
-                            allowEvent = true;
-                        }
-                        else
-                        {
-                            allowEvent = false;
-                        }
-                    }
-                    else if (condition[0] == "not_in_union")
-                    {
-                        for (int i = 0; i < countryManager.countries.Count; i++)
-                        {
-                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                            {
-                                attacker = countryManager.countries[i];
-                            }
-                            if (countryManager.countries[i].country._id == int.Parse(act[2]))
-                            {
-                                defender = countryManager.countries[i];
-                            }
-                        } // Asign countries
-
-                        if (!ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(attacker, defender).union)
-                        {
-                            allowEvent = true;
-                        }
-                        else
-                        {
-                            allowEvent = false;
-                        }
-                    }
-                    else if (condition[0] == "in_war_with")
-                    {
-                        for (int i = 0; i < countryManager.countries.Count; i++)
-                        {
-                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                            {
-                                attacker = countryManager.countries[i];
-                            }
-                            if (countryManager.countries[i].country._id == int.Parse(act[2]))
-                            {
-                                defender = countryManager.countries[i];
-                            }
-                        } // Asign countries
-
-                        if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(attacker, defender).war)
-                        {
-                            allowEvent = true;
-                        }
-                        else
-                        {
-                            allowEvent = false;
-                        }
-                    }
-                    else if (condition[0] == "not_in_war_with")
-                    {
-                        for (int i = 0; i < countryManager.countries.Count; i++)
-                        {
-                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                            {
-                                attacker = countryManager.countries[i];
-                            }
-                            if (countryManager.countries[i].country._id == int.Parse(act[2]))
-                            {
-                                defender = countryManager.countries[i];
-                            }
-                        } // Asign countries
-
-                        if (!ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(attacker, defender).war)
-                        {
-                            allowEvent = true;
-                        }
-                        else
-                        {
-                            allowEvent = false;
-                        }
-                    }
-                    else if (condition[0] == "is_country_player")
-                    {
-                        for (int i = 0; i < countryManager.countries.Count; i++)
-                        {
-                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                            {
-                                attacker = countryManager.countries[i];
-                            }
-
-                            allowEvent = attacker.isPlayer;
-                        }
-                    }
-                    else if (condition[0] == "is_country_not_player")
-                    {
-                        for (int i = 0; i < countryManager.countries.Count; i++)
-                        {
-                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                            {
-                                attacker = countryManager.countries[i];
-                            }
-
-                            allowEvent = !attacker.isPlayer;
-                        }
-                    }
-                    else if (condition[0] == "")
-                    {
-                        allowEvent = true;
-                    }
-
-                    if (allowEvent)
-                    {
-                        if (act[0] == "annex")
-                        {
-                            for (int i = 0; i < countryManager.countries.Count; i++)
-                            {
-                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                                {
-                                    attacker = countryManager.countries[i];
-                                }
-                            } // Asign countries
-
-                            List<RegionManager> regionsToAnnex = new List<RegionManager>();
-
-
-                            if (act.Length > 2)
-                            {
-                                for (int i = 2; i < act.Length; i++)
-                                {
-                                    regionsToAnnex.Add(countryManager.regions[int.Parse(act[i])]);
-                                }
-
-                                SmallNewsManager.Instance.countrySender = attacker.country;
-                                SmallNewsManager.Instance.message = $"Государство {attacker.country._name} присоединило {act.Length - 2} провинций государства {countryManager.regions[int.Parse(act[2])].currentCountry.country._name}";
-                                SmallNewsManager.Instance.UpdateUI();
-
-                                foreach (RegionManager region in regionsToAnnex)
-                                {
-                                    ReferencesManager.Instance.AnnexRegion(region, attacker);
-                                }
-                            }
-                        }
-                        else if (act[0] == "war")
-                        {
-                            for (int i = 0; i < countryManager.countries.Count; i++)
-                            {
-                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                                {
-                                    attacker = countryManager.countries[i];
-                                }
-                                if (countryManager.countries[i].country._id == int.Parse(act[2]))
-                                {
-                                    defender = countryManager.countries[i];
-                                }
-                            } // Asign countries
-
-                            DiplomatySend("war", attacker, defender);
-                        }
-                        else if (act[0] == "peace")
-                        {
-                            for (int i = 0; i < countryManager.countries.Count; i++)
-                            {
-                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                                {
-                                    attacker = countryManager.countries[i];
-                                }
-                                if (countryManager.countries[i].country._id == int.Parse(act[2]))
-                                {
-                                    defender = countryManager.countries[i];
-                                }
-                            } // Asign countries
-
-                            DiplomatySend("peace", attacker, defender);
-                        }
-                        else if (act[0] == "trade")
-                        {
-                            for (int i = 0; i < countryManager.countries.Count; i++)
-                            {
-                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                                {
-                                    attacker = countryManager.countries[i];
-                                }
-                                if (countryManager.countries[i].country._id == int.Parse(act[2]))
-                                {
-                                    defender = countryManager.countries[i];
-                                }
-                            } // Asign countries
-
-                            DiplomatySend("trade", attacker, defender);
-                        }
-                        else if (act[0] == "untrade")
-                        {
-                            for (int i = 0; i < countryManager.countries.Count; i++)
-                            {
-                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                                {
-                                    attacker = countryManager.countries[i];
-                                }
-                                if (countryManager.countries[i].country._id == int.Parse(act[2]))
-                                {
-                                    defender = countryManager.countries[i];
-                                }
-                            } // Asign countries
-
-                            DiplomatySend("untrade", attacker, defender);
-                        }
-                        else if (act[0] == "pact")
-                        {
-                            for (int i = 0; i < countryManager.countries.Count; i++)
-                            {
-                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                                {
-                                    attacker = countryManager.countries[i];
-                                }
-                                if (countryManager.countries[i].country._id == int.Parse(act[2]))
-                                {
-                                    defender = countryManager.countries[i];
-                                }
-                            } // Asign countries
-
-                            DiplomatySend("pact", attacker, defender);
-                        }
-                        else if (act[0] == "unpact")
-                        {
-                            for (int i = 0; i < countryManager.countries.Count; i++)
-                            {
-                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                                {
-                                    attacker = countryManager.countries[i];
-                                }
-                                if (countryManager.countries[i].country._id == int.Parse(act[2]))
-                                {
-                                    defender = countryManager.countries[i];
-                                }
-                            } // Asign countries
-
-                            DiplomatySend("unpact", attacker, defender);
-                        }
-                        else if (act[0] == "union")
-                        {
-                            for (int i = 0; i < countryManager.countries.Count; i++)
-                            {
-                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                                {
-                                    attacker = countryManager.countries[i];
-                                }
-                                if (countryManager.countries[i].country._id == int.Parse(act[2]))
-                                {
-                                    defender = countryManager.countries[i];
-                                }
-                            } // Asign countries
-
-                            DiplomatySend("union", attacker, defender);
-                        }
-                        else if (act[0] == "deunion")
-                        {
-                            for (int i = 0; i < countryManager.countries.Count; i++)
-                            {
-                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                                {
-                                    attacker = countryManager.countries[i];
-                                }
-                                if (countryManager.countries[i].country._id == int.Parse(act[2]))
-                                {
-                                    defender = countryManager.countries[i];
-                                }
-                            } // Asign countries
-
-                            DiplomatySend("deunion", attacker, defender);
-                        }
-                        else if (act[0] == "create_country")
-                        {
-                            foreach (CountryScriptableObject country in ReferencesManager.Instance.globalCountries)
-                            {
-                                if (country._id == int.Parse(act[1]))
-                                {
-                                    ReferencesManager.Instance.CreateCountry(country, act[2]);
-                                }
-                            }
-                        }
-                        else if (act[0] == "add_claim")
-                        {
-                            for (int i = 0; i < countryManager.regions.Count; i++)
-                            {
-                                if (countryManager.regions[i]._id == int.Parse(act[1]))
-                                {
-                                    foreach (CountryScriptableObject country in ReferencesManager.Instance.globalCountries)
-                                    {
-                                        if (country._id == int.Parse(act[2]))
-                                        {
-                                            countryManager.regions[i].regionClaims.Add(country);
-
-                                            SmallNewsManager.Instance.countrySender = attacker.country;
-                                            SmallNewsManager.Instance.message = $"Государство {country._name} заявило претензии на провинции государства {countryManager.regions[i].currentCountry.country._name}";
-                                            SmallNewsManager.Instance.UpdateUI();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if (act[0] == "remove_claim")
-                        {
-                            for (int i = 0; i < countryManager.regions.Count; i++)
-                            {
-                                if (countryManager.regions[i]._id == int.Parse(act[1]))
-                                {
-                                    foreach (CountryScriptableObject country in ReferencesManager.Instance.globalCountries)
-                                    {
-                                        if (country._id == int.Parse(act[2]))
-                                        {
-                                            countryManager.regions[i].regionClaims.Remove(country);
-
-                                            SmallNewsManager.Instance.countrySender = attacker.country;
-                                            SmallNewsManager.Instance.message = $"Государство {country._name} отозвало претензии на провинции государства {countryManager.regions[i].currentCountry.country._name}";
-                                            SmallNewsManager.Instance.UpdateUI();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if (act[0] == "remove_army")
-                        {
-                            for (int i = 0; i < countryManager.countries.Count; i++)
-                            {
-                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                                {
-                                    attacker = countryManager.countries[i];
-                                }
-                            } // Asign countries
-
-                            for (int i = 0; i < attacker.countryUnits.Count; i++)
-                            {
-                                attacker.countryUnits[i].Destroy();
-                            }
-
-                            attacker.countryUnits.Clear();
-                        }
-                        else if (act[0] == "create_army")
-                        {
-                            for (int i = 0; i < countryManager.regions.Count; i++)
-                            {
-                                if (countryManager.regions[i]._id == int.Parse(act[1]))
-                                {
-                                    region = countryManager.regions[i];
-                                }
-                            }
-
-                            ReferencesManager.Instance.army.CreateUnit_NoCheck(region);
-
-                            for (int i = 2; i < act.Length; i++)
-                            {
-                                string[] army_data = act[i].Split('=');
-
-                                if (army_data[0] == "INF_01")
-                                {
-                                    unitToAdd = ReferencesManager.Instance.gameSettings.soldierLVL1;
-                                }
-                                else if (army_data[0] == "INF_02")
-                                {
-                                    unitToAdd = ReferencesManager.Instance.gameSettings.soldierLVL2;
-                                }
-                                else if (army_data[0] == "INF_03")
-                                {
-                                    unitToAdd = ReferencesManager.Instance.gameSettings.soldierLVL3;
-                                }
-                                else if (army_data[0] == "ART_01")
-                                {
-                                    unitToAdd = ReferencesManager.Instance.gameSettings.artileryLVL1;
-                                }
-                                else if (army_data[0] == "ART_02")
-                                {
-                                    unitToAdd = ReferencesManager.Instance.gameSettings.artileryLVL2;
-                                }
-                                else if (army_data[0] == "HVY_01")
-                                {
-                                    unitToAdd = ReferencesManager.Instance.gameSettings.tankLVL1;
-                                }
-                                else if (army_data[0] == "HVY_02")
-                                {
-                                    unitToAdd = ReferencesManager.Instance.gameSettings.tankLVL2;
-                                }
-                                else if (army_data[0] == "MIF_01")
-                                {
-                                    unitToAdd = ReferencesManager.Instance.gameSettings.motoLVL1;
-                                }
-                                else if (army_data[0] == "MIF_02")
-                                {
-                                    unitToAdd = ReferencesManager.Instance.gameSettings.motoLVL2;
-                                }
-
-                                for (int ad = 1; ad < int.Parse(army_data[1]); ad++)
-                                {
-                                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(unitToAdd, region);
-                                }
-                            }
-                        }
-                        else if (act[0] == "war_to_countries_in_regs")
-                        {
-                            List<CountrySettings> countriesInActions = new List<CountrySettings>();
-
-                            for (int ai = 2; ai < act.Length; ai++)
-                            {
-                                foreach (RegionManager region in countryManager.regions)
-                                {
-                                    if (region._id == int.Parse(act[ai]))
-                                    {
-                                        if (!countriesInActions.Contains(region.currentCountry))
-                                        {
-                                            countriesInActions.Add(region.currentCountry);
-                                        }
-                                    }
-                                }
-                            }
-
-                            for (int i = 0; i < countryManager.countries.Count; i++)
-                            {
-                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                                {
-                                    attacker = countryManager.countries[i];
-                                }
-                            } // Asign countries
-
-                            foreach (CountrySettings country in countriesInActions)
-                            {
-                                DiplomatySend("war", attacker, country);
-                            }
-                        }
-                        else if (act[0] == "add_res")
-                        {
-                            for (int i = 0; i < countryManager.countries.Count; i++)
-                            {
-                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                                {
-                                    attacker = countryManager.countries[i];
-                                }
-
-                                if (act[2] == "money")
-                                {
-                                    attacker.money += int.Parse(act[3]);
-                                }
-                                else if (act[2] == "food")
-                                {
-                                    attacker.food += int.Parse(act[3]);
-                                }
-                                else if (act[2] == "recroots")
-                                {
-                                    attacker.recroots += int.Parse(act[3]);
-                                }
-                            }
-                        }
-                        else if (act[0] == "set_res")
-                        {
-                            for (int i = 0; i < countryManager.countries.Count; i++)
-                            {
-                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                                {
-                                    attacker = countryManager.countries[i];
-                                }
-
-                                if (act[2] == "money")
-                                {
-                                    attacker.money = int.Parse(act[3]);
-                                }
-                                else if (act[2] == "food")
-                                {
-                                    attacker.food = int.Parse(act[3]);
-                                }
-                                else if (act[2] == "recroots")
-                                {
-                                    attacker.recroots = int.Parse(act[3]);
-                                }
-                            }
-                        }
-                        else if (act[0] == "set_ideology")
-                        {
-                            for (int i = 0; i < countryManager.countries.Count; i++)
-                            {
-                                if (countryManager.countries[i].country._id == int.Parse(act[1]))
-                                {
-                                    attacker = countryManager.countries[i];
-                                }
-                            }
-
-                            attacker.ideology = act[2];
-                            attacker.UpdateCountryGraphics(attacker.ideology);
-                        }
-                        else if (act[0] == "build")
-                        {
-                            for (int i = 0; i < countryManager.regions.Count; i++)
-                            {
-                                if (countryManager.regions[i]._id == int.Parse(act[1]))
-                                {
-                                    region = countryManager.regions[i];
-                                }
-                            }
-
-                            BuildingScriptableObject building = new BuildingScriptableObject();
-
-                            if (act[2] == "FCT") building = ReferencesManager.Instance.gameSettings.fabric;
-                            else if (act[2] == "FRM") building = ReferencesManager.Instance.gameSettings.farm;
-                            else if (act[2] == "CFR") building = ReferencesManager.Instance.gameSettings.chefarm;
-                            else if (act[2] == "INF")
-                            {
-                                region.UpgradeInfrastructureForce(region);
-                            }
-
-                            region.BuildBuilding(building, region, false);
-                        }
-                        else if (act[0] == "build_queue")
-                        {
-                            for (int i = 0; i < countryManager.regions.Count; i++)
-                            {
-                                if (countryManager.regions[i]._id == int.Parse(act[1]))
-                                {
-                                    region = countryManager.regions[i];
-                                }
-                            }
-
-                            BuildingScriptableObject building = new BuildingScriptableObject();
-
-                            if (act[2] == "FCT") building = ReferencesManager.Instance.gameSettings.fabric;
-                            if (act[2] == "FRM") building = ReferencesManager.Instance.gameSettings.farm;
-                            if (act[2] == "CFR") building = ReferencesManager.Instance.gameSettings.chefarm;
-
-                            region.AddBuildingToQueueForce(building, region);
-                        }
-                        else if (act[0] == "add_population")
-                        {
-                            for (int i = 0; i < countryManager.regions.Count; i++)
-                            {
-                                if (countryManager.regions[i]._id == int.Parse(act[1]))
-                                {
-                                    region = countryManager.regions[i];
-                                }
-                            }
-
-                            region.population += int.Parse(act[2]);
-                        }
-                        else if (act[0] == "set_population")
-                        {
-                            for (int i = 0; i < countryManager.regions.Count; i++)
-                            {
-                                if (countryManager.regions[i]._id == int.Parse(act[1]))
-                                {
-                                    region = countryManager.regions[i];
-                                }
-                            }
-
-                            region.population = int.Parse(act[2]);
+                            conditionsAccepted++;
                         }
                     }
                 }
             }
+            else if (condition[0] == "date_after")
+            {
+                string[] dateSecond = condition[1].Split('-');
+
+                if (ReferencesManager.Instance.dateManager.currentDate[0] > int.Parse(dateSecond[0]))
+                {
+                    if (ReferencesManager.Instance.dateManager.currentDate[1] > int.Parse(dateSecond[1]))
+                    {
+                        if (ReferencesManager.Instance.dateManager.currentDate[2] > int.Parse(dateSecond[2]))
+                        {
+                            conditionsAccepted++;
+                        }
+                    }
+                }
+            }
+            else if (condition[0] == "in_union")
+            {
+                for (int i = 0; i < countryManager.countries.Count; i++)
+                {
+                    if (countryManager.countries[i].country._id == int.Parse(condition[1]))
+                    {
+                        attacker = countryManager.countries[i];
+                    }
+                    if (countryManager.countries[i].country._id == int.Parse(condition[2]))
+                    {
+                        defender = countryManager.countries[i];
+                    }
+                } // Asign countries
+
+                if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(attacker, defender).union)
+                {
+                    conditionsAccepted++;
+                }
+            }
+            else if (condition[0] == "not_in_union")
+            {
+                for (int i = 0; i < countryManager.countries.Count; i++)
+                {
+                    if (countryManager.countries[i].country._id == int.Parse(condition[1]))
+                    {
+                        attacker = countryManager.countries[i];
+                    }
+                    if (countryManager.countries[i].country._id == int.Parse(condition[2]))
+                    {
+                        defender = countryManager.countries[i];
+                    }
+                } // Asign countries
+
+                if (!ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(attacker, defender).union)
+                {
+                    conditionsAccepted++;
+                }
+            }
+            else if (condition[0] == "in_war_with")
+            {
+                for (int i = 0; i < countryManager.countries.Count; i++)
+                {
+                    if (countryManager.countries[i].country._id == int.Parse(condition[1]))
+                    {
+                        attacker = countryManager.countries[i];
+                    }
+                    if (countryManager.countries[i].country._id == int.Parse(condition[2]))
+                    {
+                        defender = countryManager.countries[i];
+                    }
+                } // Asign countries
+
+                if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(attacker, defender).war)
+                {
+                    conditionsAccepted++;
+                }
+            }
+            else if (condition[0] == "not_in_war_with")
+            {
+                try
+                {
+                    for (int i = 0; i < countryManager.countries.Count; i++)
+                    {
+                        if (countryManager.countries[i].country._id == int.Parse(condition[1]))
+                        {
+                            attacker = countryManager.countries[i];
+                        }
+                        if (countryManager.countries[i].country._id == int.Parse(condition[2]))
+                        {
+                            defender = countryManager.countries[i];
+                        }
+                    } // Asign countries
+
+                    if (!ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(attacker, defender).war)
+                    {
+                        conditionsAccepted++;
+                    }
+                }
+                catch (System.Exception)
+                {
+
+                }
+
+            }
+            else if (condition[0] == "is_country_player")
+            {
+                for (int i = 0; i < countryManager.countries.Count; i++)
+                {
+                    if (countryManager.countries[i].country._id == int.Parse(condition[1]))
+                    {
+                        attacker = countryManager.countries[i];
+                    }
+
+                    if (attacker.isPlayer)
+                    {
+                        conditionsAccepted++;
+                    }
+                }
+            }
+            else if (condition[0] == "is_country_not_player")
+            {
+                for (int i = 0; i < countryManager.countries.Count; i++)
+                {
+                    if (countryManager.countries[i].country._id == int.Parse(condition[1]))
+                    {
+                        attacker = countryManager.countries[i];
+                    }
+
+                    if (!attacker.isPlayer)
+                    {
+                        conditionsAccepted++;
+                    }
+                }
+            }
+            else if (condition[0] == "")
+            {
+                conditionsAccepted++;
+            }
+
+            if (conditionsAccepted >= conditionsAmount)
+            {
+                allowEvent = true;
+            }
+            else
+            {
+                allowEvent = false;
+            }
         }
+
+        return allowEvent;
+    }
+
+    public void ProceedEvent(int b)
+    {
+        if (currentGameEvent != null)
+        {
+
+            for (int a = 0; a < currentGameEvent.buttons[b].actions.Count; a++)
+            {
+                if (!string.IsNullOrEmpty(currentGameEvent.buttons[b].actions[a]) ||
+                !string.IsNullOrWhiteSpace(currentGameEvent.buttons[b].actions[a]))
+                {
+
+                    string[] act = currentGameEvent.buttons[b].actions[a].Split(';');
+
+                    if (act[0] == "annex")
+                    {
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                        } // Asign countries
+
+                        List<RegionManager> regionsToAnnex = new List<RegionManager>();
+
+
+                        if (act.Length > 2)
+                        {
+                            for (int i = 2; i < act.Length; i++)
+                            {
+                                regionsToAnnex.Add(countryManager.regions[int.Parse(act[i])]);
+                            }
+
+                            SmallNewsManager.Instance.countrySender = attacker.country;
+                            SmallNewsManager.Instance.message = $"Государство {attacker.country._name} присоединило {act.Length - 2} провинций государства {countryManager.regions[int.Parse(act[2])].currentCountry.country._name}";
+                            SmallNewsManager.Instance.UpdateUI();
+
+                            foreach (RegionManager region in regionsToAnnex)
+                            {
+                                ReferencesManager.Instance.AnnexRegion(region, attacker);
+                            }
+                        }
+                    }
+                    else if (act[0] == "war")
+                    {
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                            if (countryManager.countries[i].country._id == int.Parse(act[2]))
+                            {
+                                defender = countryManager.countries[i];
+                            }
+                        } // Asign countries
+
+                        DiplomatySend("war", attacker, defender);
+                    }
+                    else if (act[0] == "peace")
+                    {
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                            if (countryManager.countries[i].country._id == int.Parse(act[2]))
+                            {
+                                defender = countryManager.countries[i];
+                            }
+                        } // Asign countries
+
+                        DiplomatySend("peace", attacker, defender);
+                    }
+                    else if (act[0] == "trade")
+                    {
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                            if (countryManager.countries[i].country._id == int.Parse(act[2]))
+                            {
+                                defender = countryManager.countries[i];
+                            }
+                        } // Asign countries
+
+                        DiplomatySend("trade", attacker, defender);
+                    }
+                    else if (act[0] == "untrade")
+                    {
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                            if (countryManager.countries[i].country._id == int.Parse(act[2]))
+                            {
+                                defender = countryManager.countries[i];
+                            }
+                        } // Asign countries
+
+                        DiplomatySend("untrade", attacker, defender);
+                    }
+                    else if (act[0] == "pact")
+                    {
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                            if (countryManager.countries[i].country._id == int.Parse(act[2]))
+                            {
+                                defender = countryManager.countries[i];
+                            }
+                        } // Asign countries
+
+                        DiplomatySend("pact", attacker, defender);
+                    }
+                    else if (act[0] == "unpact")
+                    {
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                            if (countryManager.countries[i].country._id == int.Parse(act[2]))
+                            {
+                                defender = countryManager.countries[i];
+                            }
+                        } // Asign countries
+
+                        DiplomatySend("unpact", attacker, defender);
+                    }
+                    else if (act[0] == "union")
+                    {
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                            if (countryManager.countries[i].country._id == int.Parse(act[2]))
+                            {
+                                defender = countryManager.countries[i];
+                            }
+                        } // Asign countries
+
+                        DiplomatySend("union", attacker, defender);
+                    }
+                    else if (act[0] == "deunion")
+                    {
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                            if (countryManager.countries[i].country._id == int.Parse(act[2]))
+                            {
+                                defender = countryManager.countries[i];
+                            }
+                        } // Asign countries
+
+                        DiplomatySend("deunion", attacker, defender);
+                    }
+                    else if (act[0] == "create_country")
+                    {
+                        foreach (CountryScriptableObject country in ReferencesManager.Instance.globalCountries)
+                        {
+                            if (country._id == int.Parse(act[1]))
+                            {
+                                ReferencesManager.Instance.CreateCountry(country, act[2]);
+                            }
+                        }
+                    }
+                    else if (act[0] == "add_claim")
+                    {
+                        for (int i = 0; i < countryManager.regions.Count; i++)
+                        {
+                            if (countryManager.regions[i]._id == int.Parse(act[1]))
+                            {
+                                foreach (CountryScriptableObject country in ReferencesManager.Instance.globalCountries)
+                                {
+                                    if (country._id == int.Parse(act[2]))
+                                    {
+                                        countryManager.regions[i].regionClaims.Add(country);
+
+                                        SmallNewsManager.Instance.countrySender = attacker.country;
+                                        SmallNewsManager.Instance.message = $"Государство {country._name} заявило претензии на провинции государства {countryManager.regions[i].currentCountry.country._name}";
+                                        SmallNewsManager.Instance.UpdateUI();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (act[0] == "remove_claim")
+                    {
+                        for (int i = 0; i < countryManager.regions.Count; i++)
+                        {
+                            if (countryManager.regions[i]._id == int.Parse(act[1]))
+                            {
+                                foreach (CountryScriptableObject country in ReferencesManager.Instance.globalCountries)
+                                {
+                                    if (country._id == int.Parse(act[2]))
+                                    {
+                                        countryManager.regions[i].regionClaims.Remove(country);
+
+                                        SmallNewsManager.Instance.countrySender = attacker.country;
+                                        SmallNewsManager.Instance.message = $"Государство {country._name} отозвало претензии на провинции государства {countryManager.regions[i].currentCountry.country._name}";
+                                        SmallNewsManager.Instance.UpdateUI();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (act[0] == "remove_army")
+                    {
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                        } // Asign countries
+
+                        for (int i = 0; i < attacker.countryUnits.Count; i++)
+                        {
+                            attacker.countryUnits[i].Destroy();
+                        }
+
+                        attacker.countryUnits.Clear();
+                    }
+                    else if (act[0] == "create_division")
+                    {
+                        for (int i = 0; i < countryManager.regions.Count; i++)
+                        {
+                            if (countryManager.regions[i]._id == int.Parse(act[1]))
+                            {
+                                region = countryManager.regions[i];
+                            }
+                        }
+
+                        ReferencesManager.Instance.army.CreateUnit_NoCheck(region);
+
+                        for (int i = 2; i < act.Length; i++)
+                        {
+                            string[] army_data = act[i].Split('=');
+
+                            if (army_data[0] == "INF_01")
+                            {
+                                unitToAdd = ReferencesManager.Instance.gameSettings.soldierLVL1;
+                            }
+                            else if (army_data[0] == "INF_02")
+                            {
+                                unitToAdd = ReferencesManager.Instance.gameSettings.soldierLVL2;
+                            }
+                            else if (army_data[0] == "INF_03")
+                            {
+                                unitToAdd = ReferencesManager.Instance.gameSettings.soldierLVL3;
+                            }
+                            else if (army_data[0] == "ART_01")
+                            {
+                                unitToAdd = ReferencesManager.Instance.gameSettings.artileryLVL1;
+                            }
+                            else if (army_data[0] == "ART_02")
+                            {
+                                unitToAdd = ReferencesManager.Instance.gameSettings.artileryLVL2;
+                            }
+                            else if (army_data[0] == "HVY_01")
+                            {
+                                unitToAdd = ReferencesManager.Instance.gameSettings.tankLVL1;
+                            }
+                            else if (army_data[0] == "HVY_02")
+                            {
+                                unitToAdd = ReferencesManager.Instance.gameSettings.tankLVL2;
+                            }
+                            else if (army_data[0] == "MIF_01")
+                            {
+                                unitToAdd = ReferencesManager.Instance.gameSettings.motoLVL1;
+                            }
+                            else if (army_data[0] == "MIF_02")
+                            {
+                                unitToAdd = ReferencesManager.Instance.gameSettings.motoLVL2;
+                            }
+
+                            for (int ad = 1; ad < int.Parse(army_data[1]); ad++)
+                            {
+                                ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(unitToAdd, region);
+                            }
+                        }
+                    }
+                    else if (act[0] == "war_to_countries_in_regs")
+                    {
+                        List<CountrySettings> countriesInActions = new List<CountrySettings>();
+
+                        for (int ai = 2; ai < act.Length; ai++)
+                        {
+                            foreach (RegionManager region in countryManager.regions)
+                            {
+                                if (region._id == int.Parse(act[ai]))
+                                {
+                                    if (!countriesInActions.Contains(region.currentCountry))
+                                    {
+                                        countriesInActions.Add(region.currentCountry);
+                                    }
+                                }
+                            }
+                        }
+
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                        } // Asign countries
+
+                        foreach (CountrySettings country in countriesInActions)
+                        {
+                            DiplomatySend("war", attacker, country);
+                        }
+                    }
+                    else if (act[0] == "add_res")
+                    {
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                        }
+
+                        if (act[2] == "money")
+                        {
+                            attacker.money += int.Parse(act[3]);
+                        }
+                        else if (act[2] == "food")
+                        {
+                            attacker.food += int.Parse(act[3]);
+                        }
+                        else if (act[2] == "recroots")
+                        {
+                            attacker.recroots += int.Parse(act[3]);
+                        }
+                    }
+                    else if (act[0] == "set_res")
+                    {
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                        }
+
+                        if (act[2] == "money")
+                        {
+                            int setMoney = int.Parse(act[3]);
+                            attacker.money = setMoney;
+                        }
+                        else if (act[2] == "food")
+                        {
+                            attacker.food = int.Parse(act[3]);
+                        }
+                        else if (act[2] == "recroots")
+                        {
+                            attacker.recroots = int.Parse(act[3]);
+                        }
+                    }
+                    else if (act[0] == "set_ideology")
+                    {
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                        }
+
+                        attacker.ideology = act[2];
+                        attacker.UpdateCountryGraphics(attacker.ideology);
+                    }
+                    else if (act[0] == "build")
+                    {
+                        for (int i = 0; i < countryManager.regions.Count; i++)
+                        {
+                            if (countryManager.regions[i]._id == int.Parse(act[1]))
+                            {
+                                region = countryManager.regions[i];
+                            }
+                        }
+
+                        BuildingScriptableObject building = new BuildingScriptableObject();
+
+                        if (act[2] == "FCT") building = ReferencesManager.Instance.gameSettings.fabric;
+                        else if (act[2] == "FRM") building = ReferencesManager.Instance.gameSettings.farm;
+                        else if (act[2] == "CFR") building = ReferencesManager.Instance.gameSettings.chefarm;
+                        else if (act[2] == "INF")
+                        {
+                            region.UpgradeInfrastructureForce(region);
+                        }
+
+                        if (act[2] != "INF")
+                        {
+                            region.BuildBuilding(building, region, false);
+                        }
+                    }
+                    else if (act[0] == "build_queue")
+                    {
+                        for (int i = 0; i < countryManager.regions.Count; i++)
+                        {
+                            if (countryManager.regions[i]._id == int.Parse(act[1]))
+                            {
+                                region = countryManager.regions[i];
+                            }
+                        }
+
+                        BuildingScriptableObject building = new BuildingScriptableObject();
+
+                        if (act[2] == "FCT") building = ReferencesManager.Instance.gameSettings.fabric;
+                        if (act[2] == "FRM") building = ReferencesManager.Instance.gameSettings.farm;
+                        if (act[2] == "CFR") building = ReferencesManager.Instance.gameSettings.chefarm;
+
+                        region.AddBuildingToQueueForce(building, region);
+                    }
+                    else if (act[0] == "add_population")
+                    {
+                        for (int i = 0; i < countryManager.regions.Count; i++)
+                        {
+                            if (countryManager.regions[i]._id == int.Parse(act[1]))
+                            {
+                                region = countryManager.regions[i];
+                            }
+                        }
+
+                        region.population += int.Parse(act[2]);
+                    }
+                    else if (act[0] == "set_population")
+                    {
+                        for (int i = 0; i < countryManager.regions.Count; i++)
+                        {
+                            if (countryManager.regions[i]._id == int.Parse(act[1]))
+                            {
+                                region = countryManager.regions[i];
+                            }
+                        }
+
+                        region.population = int.Parse(act[2]);
+                    }
+                    else if (act[0] == "change")
+                    {
+                        for (int i = 0; i < countryManager.regions.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                        }
+
+                        countryManager.currentCountry.AddComponent<CountryAIManager>();
+                        ReferencesManager.Instance.aiManager.AICountries.Add(countryManager.currentCountry);
+                        countryManager.currentCountry = attacker;
+                        Destroy(countryManager.currentCountry.GetComponent<CountryAIManager>());
+                    }
+                    else if (act[0] == "set_ai_level")
+                    {
+                        for (int i = 0; i < countryManager.regions.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                        }
+
+                        attacker.aiAccuracy = float.Parse(act[2]);
+                    }
+                }
+            }
+        }
+
+        countryManager.UpdateIncomeValuesUI();
+        countryManager.UpdateValuesUI();
     }
 
     private void DiplomatySend(string offer, CountrySettings sender, CountrySettings receiver)

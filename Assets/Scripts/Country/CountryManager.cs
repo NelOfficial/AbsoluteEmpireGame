@@ -33,21 +33,6 @@ public class CountryManager : MonoBehaviour
     {
         ReferencesManager.Instance.gameSettings.allowGameEvents = true;
 
-        regions.Clear();
-
-        for (int i = 0; i < countries.Count; i++)
-        {
-            for (int r = 0; r < countries[i].myRegions.Count; r++)
-            {
-                regions.Add(countries[i].myRegions[r]);
-            }
-        }
-
-        for (int i = 0; i < regions.Count; i++)
-        {
-            regions[i]._id = i;
-        }
-
         if (ReferencesManager.Instance.gameSettings.onlineGame)
         {
             ReferencesManager.Instance.gameSettings.playMod.value = false;
@@ -563,6 +548,10 @@ public class CountryManager : MonoBehaviour
             string _localEvent_Description = "";
             string _localEvent_Date = "";
             string _localEvent_silentEvent = "";
+
+            List<int> _localEvent_receivers = new List<int>();
+            List<int> _localEvent_receiversBlacklist = new List<int>();
+
             bool _localEvent_silentEventBoolean = false;
             string[] _localEvent_conditions;
             string _localEvent_imagePath = "";
@@ -573,7 +562,35 @@ public class CountryManager : MonoBehaviour
             _localEvent_Description = GetValue(eventLines[2]);
             _localEvent_Date = GetValue(eventLines[3]);
             _localEvent_silentEvent = GetValue(eventLines[4]);
-            _localEvent_conditions = GetValue(eventLines[5]).Split('!');
+
+            string[] receiversString = GetValue(eventLines[5]).Split('-');
+            string[] receiversBlacklistString = GetValue(eventLines[6]).Split('-');
+
+            try
+            {
+                for (int i = 0; i < receiversString.Length; i++)
+                {
+                    if (!string.IsNullOrEmpty(receiversString[i]))
+                    {
+                        _localEvent_receivers.Add(int.Parse(receiversString[i]));
+                    }
+                }
+            }
+            catch (Exception) { }
+
+            try
+            {
+                for (int i = 0; i < receiversBlacklistString.Length; i++)
+                {
+                    if (!string.IsNullOrEmpty(receiversBlacklistString[i]))
+                    {
+                        _localEvent_receiversBlacklist.Add(int.Parse(receiversBlacklistString[i]));
+                    }
+                }
+            }
+            catch (Exception) { }
+
+            _localEvent_conditions = GetValue(eventLines[7]).Split('!');
 
             if (pathType == "local")
             {
@@ -647,12 +664,16 @@ public class CountryManager : MonoBehaviour
             _event._name = _localEvent_Name;
             _event.description = _localEvent_Description;
             _event.date = _localEvent_Date;
+            _event.receivers = _localEvent_receivers;
+            _event.exceptionsReceivers = _localEvent_receiversBlacklist;
+
             if (File.Exists(_localEvent_imagePath))
             {
                 Texture2D finalTexture = NativeGallery.LoadImageAtPath(_localEvent_imagePath);
 
                 _event.image = Sprite.Create(finalTexture, new Rect(0, 0, finalTexture.width, finalTexture.height), Vector2.zero);
             }
+
             _event.silentEvent = _localEvent_silentEventBoolean;
             _event.conditions = _localEvent_conditions.ToList();
 

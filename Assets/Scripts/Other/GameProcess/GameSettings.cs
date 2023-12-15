@@ -90,6 +90,7 @@ public class GameSettings : MonoBehaviour
 
 	[Header("DateDisplayMonths")]
 	public string[] monthsDisplay;
+	public string[] monthsDisplayEN;
 
 	[Header("Multiplayer")]
 	[SerializeField]

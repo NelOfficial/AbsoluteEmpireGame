@@ -50,6 +50,8 @@ public class Army : MonoBehaviour
 
     private List<UnitUI> unitUIs;
 
+    public List<Template> templates = new List<Template>();
+
     private void Start()
     {
         unitMovements = FindObjectsOfType<UnitMovement>();
@@ -307,9 +309,9 @@ public class Army : MonoBehaviour
         }
     }
 
-    /*public void UpdateUIs()
+    public void UpdateUIs()
     {
-        Transform unitTransform = regionManager.currentRegionManager.transform.Find("Unit(Clone)");
+        Transform unitTransform = ReferencesManager.Instance.regionManager.currentRegionManager.transform.Find("Unit(Clone)");
         UnitMovement unitMovement;
 
         unitMovement = unitTransform.GetComponent<UnitMovement>();
@@ -323,9 +325,17 @@ public class Army : MonoBehaviour
                 unitUIs.Add(child.GetComponent<UnitUI>());
             }
         }
-        for (int i = 0; i < unitMovement.worldUnits.Count; i++)
+        for (int i = 0; i < unitMovement.unitsHealth.Count; i++)
         {
             unitUIs[i].id = i;
         }
-    }*/
+    }
+
+    [System.Serializable]
+    public class Template
+    {
+        public string _name;
+
+        public List<UnitScriptableObject> _batalions = new List<UnitScriptableObject>();
+    }
 }

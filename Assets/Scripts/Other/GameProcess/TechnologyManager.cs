@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Assets.Scripts.UI;
+using Unity.Burst.Intrinsics;
 
 public class TechnologyManager : MonoBehaviour
 {
@@ -107,7 +109,14 @@ public class TechnologyManager : MonoBehaviour
                 spawnedNeededTech.transform.SetParent(neededTechsGrid);
                 spawnedNeededTech.transform.localScale = new Vector3(1, 1, 1);
 
-                spawnedNeededTech.text = selectedTechnology.techsNeeded[i]._name;
+                if (PlayerPrefs.GetInt("languageId") == 0)
+                {
+                    spawnedNeededTech.text = selectedTechnology.techsNeeded[i]._nameEN;
+                }
+                if (PlayerPrefs.GetInt("languageId") == 1)
+                {
+                    spawnedNeededTech.text = selectedTechnology.techsNeeded[i]._name;
+                }
 
                 if (Researched(selectedTechnology.techsNeeded[i]))
                 {
@@ -125,13 +134,20 @@ public class TechnologyManager : MonoBehaviour
             neededTechsPanel.SetActive(false);
         }
 
-        techName.text = selectedTechnology._name;
-        techDescription.text = selectedTechnology.description;
+        if (PlayerPrefs.GetInt("languageId") == 0)
+        {
+            techName.text = selectedTechnology._nameEN;
+            techDescription.text = selectedTechnology.descriptionEN;
+        }
+        if (PlayerPrefs.GetInt("languageId") == 1)
+        {
+            techName.text = selectedTechnology._name;
+            techDescription.text = selectedTechnology.description;
+        }
 
         if (selectedTechnology.moneyCost >= 5000)
         {
-            int firstNum = selectedTechnology.moneyCost / 1000;
-            techMoneyCost.text = $"{firstNum} тыс.";
+            techMoneyCost.text = $"{ReferencesManager.Instance.GoodNumberString(selectedTechnology.moneyCost)}";
         }
         else
         {
@@ -210,7 +226,14 @@ public class TechnologyManager : MonoBehaviour
         }
         else
         {
-            WarningManager.Instance.Warn("Вы уже исследуете технологию.");
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                WarningManager.Instance.Warn("You are already researching the technology.");
+            }
+            if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                WarningManager.Instance.Warn("Вы уже исследуете технологию.");
+            }
         }
 
         Multiplayer.Instance.SetCountryValues(
@@ -279,11 +302,25 @@ public class TechnologyManager : MonoBehaviour
         if (Researched(selectedTechnology))
         {
             recearchButton.interactable = false;
-            recearchButtonText.text = "Изучено";
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                recearchButtonText.text = "Researched";
+            }
+            if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                recearchButtonText.text = "Изучено";
+            }
         }
         else
         {
-            recearchButtonText.text = "Изучить технологию";
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                recearchButtonText.text = "Research";
+            }
+            if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                recearchButtonText.text = "Изучить технологию";
+            }
         }
     }
 

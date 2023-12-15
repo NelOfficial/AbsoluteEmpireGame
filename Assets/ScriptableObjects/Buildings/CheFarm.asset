@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: CheFarm
   m_EditorClassIdentifier: 
   uiTitle: "\u0425\u0438\u043C\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0444\u0435\u0440\u043C\u0430"
+  uiTitleEN: Chemical Farm
   _name: CHF
   buildType: 0
   icon: {fileID: 21300000, guid: dc0c6e02d992eb94eb77d688bfeebf67, type: 3}

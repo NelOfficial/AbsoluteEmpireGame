@@ -82,6 +82,8 @@ MonoBehaviour:
   silentEvent: 0
   conditions:
   - country_exist;33
+  receivers: 
+  aiWillDo_Index: 0
   buttons:
   - name: "\u0418\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E..."
     actions:
@@ -89,5 +91,6 @@ MonoBehaviour:
     - remove_army;33
     - annex;5533;328;329;336;337;338;339;333;344;347;350;351;352;355;356;357
     - war;5533;33
+    - set_res;5533;money;10000
     rejectUltimatum: 0
   IS_GAME_MAIN_EVENT: 1

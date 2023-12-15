@@ -32,7 +32,7 @@ public class RewardedAds : MonoBehaviour
 
     private void RequestRewardedAd()
     {
-        string adUnitId = "demo-rewarded-yandex"; // R-M-2659272-3
+        string adUnitId = "R-M-2659272-3"; // R-M-2659272-3
         AdRequestConfiguration adRequestConfiguration = new AdRequestConfiguration.Builder(adUnitId).Build();
         rewardedAdLoader.LoadAd(adRequestConfiguration);
     }
@@ -61,6 +61,7 @@ public class RewardedAds : MonoBehaviour
 
     public void HandleAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
+        Debug.Log($"Ad {args.AdUnitId} failed to load with {args.Message}");
         // Ad {args.AdUnitId} failed for to load with {args.Message}
         // Attempting to load a new ad from the OnAdFailedToLoad event is strongly discouraged.
     }
@@ -78,6 +79,7 @@ public class RewardedAds : MonoBehaviour
 
     public void HandleAdFailedToShow(object sender, AdFailureEventArgs args)
     {
+        Debug.Log($"Ad failed to show with {args.Message}");
         // Called when rewarded ad failed to show.
 
         // Clear resources after an ad dismissed.

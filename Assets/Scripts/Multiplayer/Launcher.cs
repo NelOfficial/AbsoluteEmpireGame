@@ -79,6 +79,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         roomOptions.CustomRoomProperties = properties;
         roomOptions.BroadcastPropsChangeToAll = true;
 
+        ReferencesManager.Instance.chatManager.roomName = roomName;
         PhotonNetwork.CreateRoom(roomName, roomOptions);
     }
 
@@ -112,7 +113,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void StartGame()
     {
         mainMenu.loadingMenu.SetActive(true);
-        PhotonNetwork.LoadLevel(2);
+        PhotonNetwork.LoadLevel(1);
     }
 
     public void LeaveRoom()

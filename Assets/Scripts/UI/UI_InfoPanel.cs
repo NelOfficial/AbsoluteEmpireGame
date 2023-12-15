@@ -20,47 +20,51 @@ public class UI_InfoPanel : MonoBehaviour
 
     public void ShowPanel(string text)
     {
+        infoPanelText.text = "No info.";
         infoPanel.SetActive(true);
-        if (mainMenu != null)
+            
+        if (PlayerPrefs.GetInt("languageId") == 0)
         {
-            mainMenu.ScrollEffect(infoPanelContent);
-            if (text == "DIPLOMATY_UI_INFO_TEXT")
+            string localisation_data = ReferencesManager.Instance.localisation_en.value;
+            string[] localisation_parts = localisation_data.Split(';');
+
+            for (int i = 0; i < localisation_parts.Length; i++)
             {
-                infoPanelText.text = ReferencesManager.Instance.gameSettings.DIPLOMATY_UI_INFO_TEXT;
-            }
-            else if (text != "DIPLOMATY_UI_INFO_TEXT")
-            {
-                if (PlayerPrefs.GetInt("languageId") == 0)
+                string current_localisation_data = localisation_parts[i].Split(":")[0];
+                current_localisation_data = current_localisation_data.Trim('\n');
+                current_localisation_data = current_localisation_data.Trim(' ');
+
+                text = text.Trim(' ');
+
+                if (current_localisation_data == text)
                 {
-                    infoPanelText.text = text.Split('\t')[0];
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    infoPanelText.text = text.Split('\t')[1];
+                    string newText = localisation_parts[i].Split(":")[1];
+                    infoPanelText.text = newText;
                 }
             }
         }
+        else if (PlayerPrefs.GetInt("languageId") == 1)
+        {
+            string localisation_data = ReferencesManager.Instance.localisation_ru.value;
+            string[] localisation_parts = localisation_data.Split(';');
+
+            for (int i = 0; i < localisation_parts.Length; i++)
+            {
+                string current_localisation_data = localisation_parts[i].Split(":")[0];
+
+                if (current_localisation_data == text)
+                {
+                    infoPanelText.text = localisation_parts[i].Split(":")[1];
+                }
+            }
+        }
+
+        if (mainMenu != null)
+        {
+            mainMenu.ScrollEffect(infoPanelContent);
+        }
         else
         {
-            if (text == "DIPLOMATY_UI_INFO_TEXT")
-            {
-                infoPanelText.text = ReferencesManager.Instance.gameSettings.DIPLOMATY_UI_INFO_TEXT;
-            }
-            else if (text == "BUILDING_INFO_TEXT")
-            {
-                infoPanelText.text = ReferencesManager.Instance.gameSettings.BUILDING_INFO_TEXT;
-            }
-            else if (text != "DIPLOMATY_UI_INFO_TEXT")
-            {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    infoPanelText.text = text.Split('\t')[0];
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    infoPanelText.text = text.Split('\t')[1];
-                }
-            }
             regionUI.ScrollEffect(infoPanelContent);
         }
     }

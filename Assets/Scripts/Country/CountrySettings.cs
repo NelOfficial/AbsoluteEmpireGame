@@ -199,7 +199,7 @@ public class CountrySettings : MonoBehaviour
 
     private void Start()
     {
-        if (ReferencesManager.Instance.gameSettings.loadGame == false)
+        if (ReferencesManager.Instance.gameSettings.loadGame.value == false && ReferencesManager.Instance.gameSettings.playMod.value == false && ReferencesManager.Instance.gameSettings.playTestingMod.value == false)
         {
             if (country.countryType == CountryScriptableObject.CountryType.Poor)
             {
@@ -239,18 +239,30 @@ public class CountrySettings : MonoBehaviour
             }
         }
 
+        if (isPlayer)
+        {
+            ReferencesManager.Instance.countryManager.UpdateCountryInfo();
+            ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
+            ReferencesManager.Instance.countryManager.UpdateValuesUI();
+        }
+
         startFoodIncome = foodNaturalIncome;
         startMoneyIncome = moneyIncomeUI;
 
         int difficulty_AI_BUFF = 0;
         int difficulty_PLAYER_BUFF = 0;
-        float _aiAccuracy_increment = 0;
+        float _aiAccuracy_increment = 1;
 
         if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "EASY")
         {
             difficulty_AI_BUFF = -15;
             difficulty_PLAYER_BUFF = 15;
-            _aiAccuracy_increment = 0;
+            _aiAccuracy_increment = 0.5f;
+            if (country.countryType == CountryScriptableObject.CountryType.Rich ||
+                country.countryType == CountryScriptableObject.CountryType.Ussr)
+            {
+                _aiAccuracy_increment *= 2f;
+            }
         }
         else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "HARD")
         {

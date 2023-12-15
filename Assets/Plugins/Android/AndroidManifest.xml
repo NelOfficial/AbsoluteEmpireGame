@@ -12,7 +12,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
-	    <preference name="AndroidXEnabled" value="true" />
         </activity>
     </application>
 </manifest>

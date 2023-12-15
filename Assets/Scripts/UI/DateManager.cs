@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.Playables;
 
 public class DateManager : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class DateManager : MonoBehaviour
     private GameSettings gameSettings;
 
     [SerializeField]
-    private GameEventUI gameEventUI;
+    public GameEventUI gameEventUI;
 
 	private void Awake()
 	{
@@ -132,8 +133,20 @@ public class DateManager : MonoBehaviour
 			_localMonth = 1;
 			_localYear++;
 		}
-		string arg = this.gameSettings.monthsDisplay[_localMonth];
-		this.dateText.text = string.Format("{0} {1} {2}", _localDay, arg, _localYear);
+
+
+		string arg = "";
+
+        if (PlayerPrefs.GetInt("languageId") == 0)
+        {
+            arg = gameSettings.monthsDisplayEN[_localMonth];
+        }
+        if (PlayerPrefs.GetInt("languageId") == 1)
+        {
+            arg = gameSettings.monthsDisplay[_localMonth];
+        }
+
+        this.dateText.text = string.Format("{0} {1} {2}", _localDay, arg, _localYear);
 		this.currentDate[2] = _localYear;
 		this.currentDate[1] = _localMonth;
 		this.currentDate[0] = _localDay;
@@ -168,9 +181,58 @@ public class DateManager : MonoBehaviour
 
 		if (currentDate[0] >= num3 && num2 <= this.currentDate[1] && this.currentDate[2] >= num && !eventScriptableObject._checked)
 		{
-			if (eventScriptableObject.receivers.Count > 0)
+			bool allowEvents = gameEventUI.CheckConditions(eventScriptableObject);
+
+            if (allowEvents)
 			{
-				if (eventScriptableObject.receivers.Contains(ReferencesManager.Instance.countryManager.currentCountry.country._id))
+				if (eventScriptableObject.receivers.Count > 0)
+				{
+					if (eventScriptableObject.receivers.Contains(ReferencesManager.Instance.countryManager.currentCountry.country._id))
+					{
+						if (eventScriptableObject.exceptionsReceivers.Count > 0)
+						{
+							foreach (int exceptId in eventScriptableObject.exceptionsReceivers)
+							{
+								if (exceptId != ReferencesManager.Instance.countryManager.currentCountry.country._id)
+								{
+									if (!eventScriptableObject.silentEvent)
+									{
+										gameEventUI.gameObject.SetActive(true);
+										UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
+										UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
+									}
+									else
+									{
+										gameEventUI.ProceedEvent(0);
+									}
+
+									gameEventUI.currentGameEvent = eventScriptableObject;
+									eventScriptableObject._checked = true;
+									gameEventUI.UpdateUI();
+								}
+							}
+						}
+						else
+						{
+							if (!eventScriptableObject.silentEvent)
+							{
+								gameEventUI.gameObject.SetActive(true);
+								UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
+								UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
+							}
+							else
+							{
+								gameEventUI.ProceedEvent(0);
+							}
+
+							gameEventUI.currentGameEvent = eventScriptableObject;
+							eventScriptableObject._checked = true;
+							gameEventUI.UpdateUI();
+						}
+
+					}
+				}
+				else
 				{
 					if (!eventScriptableObject.silentEvent)
 					{
@@ -178,24 +240,15 @@ public class DateManager : MonoBehaviour
 						UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
 						UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
 					}
+					else
+					{
+						gameEventUI.ProceedEvent(0);
+					}
 
 					gameEventUI.currentGameEvent = eventScriptableObject;
 					eventScriptableObject._checked = true;
 					gameEventUI.UpdateUI();
 				}
-			}
-			else
-			{
-				if (!eventScriptableObject.silentEvent)
-				{
-					gameEventUI.gameObject.SetActive(true);
-					UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
-					UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
-				}
-
-				gameEventUI.currentGameEvent = eventScriptableObject;
-				eventScriptableObject._checked = true;
-				gameEventUI.UpdateUI();
 			}
 		}
 	}

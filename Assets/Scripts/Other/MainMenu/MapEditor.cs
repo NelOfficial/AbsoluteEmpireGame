@@ -9,6 +9,7 @@ using System.IO;
 using System;
 using System.Text;
 using UnityEngine.Networking;
+using Unity.VisualScripting;
 
 public class MapEditor : MonoBehaviour
 {
@@ -438,17 +439,48 @@ public class MapEditor : MonoBehaviour
                 string _localEvent_Description = "";
                 string _localEvent_Date = "";
                 string _localEvent_silentEvent = "";
+
+                List<int> _localEvent_receivers = new List<int>();
+                List<int> _localEvent_receiversBlacklist = new List<int>();
+
                 bool _localEvent_silentEventBoolean = false;
                 string[] _localEvent_conditions;
                 string _localEvent_imagePath = "";
-
 
                 _localEvent_ID = int.Parse(GetValue(eventLines[0]));
                 _localEvent_Name = GetValue(eventLines[1]);
                 _localEvent_Description = GetValue(eventLines[2]);
                 _localEvent_Date = GetValue(eventLines[3]);
                 _localEvent_silentEvent = GetValue(eventLines[4]);
-                _localEvent_conditions = GetValue(eventLines[5]).Split('!');
+
+                string[] receiversString = GetValue(eventLines[5]).Split('-');
+                string[] receiversBlacklistString = GetValue(eventLines[6]).Split('-');
+
+                try
+                {
+                    for (int i = 0; i < receiversString.Length; i++)
+                    {
+                        if (!string.IsNullOrEmpty(receiversString[i]))
+                        {
+                            _localEvent_receivers.Add(int.Parse(receiversString[i]));
+                        }
+                    }
+                }
+                catch (Exception) {}
+
+                try
+                {
+                    for (int i = 0; i < receiversBlacklistString.Length; i++)
+                    {
+                        if (!string.IsNullOrEmpty(receiversBlacklistString[i]))
+                        {
+                            _localEvent_receiversBlacklist.Add(int.Parse(receiversBlacklistString[i]));
+                        }
+                    }
+                }
+                catch (Exception) {}
+
+                _localEvent_conditions = GetValue(eventLines[7]).Split('!');
                 _localEvent_imagePath = $"{Application.persistentDataPath}/savedMods/{loadedModName}/events/{_localEvent_ID}/{_localEvent_ID}.jpg";
 
                 if (_localEvent_silentEvent == "0") _localEvent_silentEventBoolean = false;
@@ -512,6 +544,8 @@ public class MapEditor : MonoBehaviour
                 _event._name = _localEvent_Name;
                 _event.description = _localEvent_Description;
                 _event.date = _localEvent_Date;
+                _event.receivers = _localEvent_receivers;
+                _event.exceptionsReceivers = _localEvent_receiversBlacklist;
 
                 if (EventImageTexture != null)
                 {
@@ -750,6 +784,32 @@ public class MapEditor : MonoBehaviour
 
                     string buttons_data = "";
                     string conditions_data = "";
+                    string receivers_data = "";
+                    string receiversBlacklist_data = "";
+
+                    for (int r = 0; r < modEvent.receivers.Count; r++)
+                    {
+                        string endline = "";
+
+                        if (modEvent.receivers.Count != r)
+                        {
+                            endline = "-";
+                        }
+
+                        receivers_data += $"{modEvent.receivers[r]}{endline}";
+                    }
+
+                    for (int rb = 0; rb < modEvent.exceptionsReceivers.Count; rb++)
+                    {
+                        string endline = "";
+
+                        if (modEvent.receivers.Count != rb)
+                        {
+                            endline = "-";
+                        }
+
+                        receiversBlacklist_data += $"{modEvent.exceptionsReceivers[rb]}{endline}";
+                    }
 
                     for (int b = 0; b < modEvent.buttons.Count; b++)
                     {
@@ -814,6 +874,8 @@ public class MapEditor : MonoBehaviour
                         $"description = {modEvent.description};\n" +
                         $"date = {modEvent.date};\n" +
                         $"silentEvent = {silentEvent};\n" +
+                        $"receivers = {receivers_data};\n" +
+                        $"receiversBlacklist = {receiversBlacklist_data};\n" +
                         $"conditions:\n{conditions_data};\n" +
                         $"buttons:\n{buttons_data}\n";
 
@@ -873,10 +935,20 @@ public class MapEditor : MonoBehaviour
 
         for (int i = 0; i < _eventCreatorManager.modEvents.Count; i++)
         {
+            try
+            {
+                File.Delete(Path.Combine(Application.persistentDataPath, "localmods", nameInputField.text, "events", $"{_eventCreatorManager.modEvents[i].id}", $"{_eventCreatorManager.modEvents[i].id}.AEEvent"));
+            }
+            catch (Exception)
+            {
+
+            }
             CreateEventAsset(_eventCreatorManager.modEvents[i].id);
 
             currentModText += $"{_eventCreatorManager.modEvents[i].id};";
         }
+
+        currentModText += $"#EVENTS#;";
     }
 
     public void UploadFile(string filepath, string filename, string fileextension, string modName, int eventID)

@@ -25,7 +25,12 @@ public class ReferencesManager : MonoBehaviour
     public CountrySettings countrySettingsPrefab;
     public Settings settings;
 
+    public StringValue localisation_en;
+    public StringValue localisation_ru;
+
     public CountryScriptableObject[] globalCountries;
+
+    public ChatManager chatManager;
 
     private void Awake()
     {

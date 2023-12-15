@@ -5,9 +5,10 @@ using UnityEngine;
 public class EventScriptableObject : ScriptableObject
 {
     public int id;
+    [TextArea(1, 100)]
     public string _name;
 
-    [TextArea(0, 50)]
+    [TextArea(1, 100)]
     public string description;
     public string date;
 
@@ -16,8 +17,11 @@ public class EventScriptableObject : ScriptableObject
     public bool _checked;
     public bool silentEvent;
 
+    [TextArea(1, 100)]
     public List<string> conditions = new List<string>();
+
     public List<int> receivers = new List<int>();
+    public List<int> exceptionsReceivers = new List<int>();
     public int aiWillDo_Index = 0;
 
     public List<EventButton> buttons = new List<EventButton>();
@@ -28,6 +32,7 @@ public class EventScriptableObject : ScriptableObject
     public class EventButton
     {
         public string name;
+        [TextArea(1,100)]
         public List<string> actions = new List<string>();
         public bool rejectUltimatum;
     }

@@ -273,7 +273,10 @@ MonoBehaviour:
   image: {fileID: 21300000, guid: 4c759cf3e9190ed4a8a27e318f1d1418, type: 3}
   _checked: 1
   silentEvent: 0
-  conditions: []
+  conditions:
+  - 
+  receivers: 
+  aiWillDo_Index: 0
   buttons:
   - name: "\u0422\u0435\u0440\u043F\u0435\u043D\u0438\u0435 \u0441\u043E\u0432\u0435\u0442\u043E\u0432
       \u0438\u0441\u0441\u044F\u043A\u043B\u043E"

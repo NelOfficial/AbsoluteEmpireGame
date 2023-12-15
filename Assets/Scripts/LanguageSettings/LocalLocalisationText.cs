@@ -5,6 +5,7 @@ using TMPro;
 public class LocalLocalisationText : MonoBehaviour
 {
     [Header("0 - English 1 - Russian")]
+    [TextArea(1, 100)]
     public string[] localisationText;
 
     private void Awake()

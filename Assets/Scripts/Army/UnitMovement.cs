@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 public class UnitMovement : MonoBehaviour
 {
@@ -200,26 +201,100 @@ public class UnitMovement : MonoBehaviour
     {
         UnitMovement.BattleInfo battle = new UnitMovement.BattleInfo();
 
-        winChance = 0;
+        battle.defender_BONUS_ATTACK = 100;
+        battle.defender_BONUS_DEFENCE = 100;
 
-        battle.defenderForts = fightRegion.fortifications_Amount;
+        battle.attacker_BONUS_ATTACK = 100;
+        battle.attacker_BONUS_DEFENCE = 100;
 
-        #region Defender info
-
-        if (fightRegion.hasArmy)
+        try
         {
+            attackerUnit = oldRegion.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
+        }
+        catch (System.Exception)
+        {
+        }
+
+        if (attackerUnit != null)
+        {
+            winChance = 0;
+
+            battle.defenderForts = fightRegion.fortifications_Amount;
+
             try
             {
-                List<float> _armors = new List<float>();
-                UnitMovement fightRegionUnitMovement = fightRegion.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
-
-                battle.defenderDivision = fightRegionUnitMovement;
-                battle.enemyUnits = battle.defenderDivision.unitsHealth;
-                battle.fightRegion = fightRegion;
-
-                foreach (UnitMovement.UnitHealth unit in battle.defenderDivision.unitsHealth)
+                if (defenderUnit.Encircled(defenderUnit.currentProvince))
                 {
-                    _armors.Add(unit.unit.armor);
+                    battle.defender_BONUS_ATTACK -= 50;
+                    battle.defender_BONUS_DEFENCE -= 50;
+                }
+            }
+            catch (System.Exception) {}
+
+            try
+            {
+                if (attackerUnit.Encircled(attackerUnit.currentProvince))
+                {
+                    battle.attacker_BONUS_ATTACK -= 50;
+                    battle.attacker_BONUS_DEFENCE -= 50;
+                }
+            }
+            catch (System.Exception) {}
+
+
+            #region Defender info
+
+            if (fightRegion.hasArmy)
+            {
+                try
+                {
+                    List<float> _armors = new List<float>();
+                    UnitMovement fightRegionUnitMovement = fightRegion.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
+
+                    if (fightRegionUnitMovement != null)
+                    {
+                        battle.defenderDivision = fightRegionUnitMovement;
+                        battle.enemyUnits = battle.defenderDivision.unitsHealth;
+                        battle.fightRegion = fightRegion;
+
+                        foreach (UnitMovement.UnitHealth unit in battle.defenderDivision.unitsHealth)
+                        {
+                            _armors.Add(unit.unit.armor);
+
+                            battle.defenderSoftAttack += unit.unit.softAttack;
+                            battle.defenderHardAttack += unit.unit.hardAttack;
+                            battle.defenderDefense += unit.unit.defense;
+                            battle.defenderArmor += unit.unit.armor;
+                            battle.defenderArmorPiercing += unit.unit.armorPiercing;
+                            battle.defenderHardness += unit.unit.hardness;
+                        }
+
+                        if (_armors.Count > 0)
+                        {
+                            float _maxArmor = _armors.Max();
+                            float _midArmor = battle.defenderArmor / battle.defenderDivision.unitsHealth.Count;
+
+                            battle.defenderHardness = battle.defenderHardness / battle.defenderDivision.unitsHealth.Count;
+                            battle.defenderArmor = 0.4f * _maxArmor + 0.6f * _midArmor;
+                        }
+                    }
+                }
+                catch (System.NullReferenceException)
+                {
+                    fightRegion.hasArmy = false;
+                }
+            }
+            else if (!fightRegion.hasArmy)
+            {
+                List<float> defenderArmors = new List<float>();
+
+                battle.defenderDivision = null;
+                battle.fightRegion = fightRegion;
+                battle.enemyUnits = battle.fightRegion.currentDefenseUnits;
+
+                foreach (UnitMovement.UnitHealth unit in fightRegion.currentDefenseUnits)
+                {
+                    defenderArmors.Add(unit.unit.armor);
 
                     battle.defenderSoftAttack += unit.unit.softAttack;
                     battle.defenderHardAttack += unit.unit.hardAttack;
@@ -229,280 +304,211 @@ public class UnitMovement : MonoBehaviour
                     battle.defenderHardness += unit.unit.hardness;
                 }
 
-                float _maxArmor = _armors.Max();
-                float _midArmor = battle.defenderArmor / battle.defenderDivision.unitsHealth.Count;
+                float maxArmor = defenderArmors.Max();
+                float midArmor = battle.defenderArmor / battle.fightRegion.currentDefenseUnits.Count;
 
-                battle.defenderHardness = battle.defenderHardness / battle.defenderDivision.unitsHealth.Count;
-                battle.defenderArmor = 0.4f * _maxArmor + 0.6f * _midArmor;
+                battle.defenderHardness = battle.defenderHardness / battle.fightRegion.currentDefenseUnits.Count;
+                battle.defenderArmor = 0.4f * maxArmor + 0.6f * midArmor;
             }
-            catch (System.NullReferenceException)
-            {
-                fightRegion.hasArmy = false;
-            }
-        }
-        else if (!fightRegion.hasArmy)
-        {
-            List<float> defenderArmors = new List<float>();
 
-            battle.defenderDivision = null;
-            battle.enemyUnits = battle.defenderDivision.unitsHealth;
+            #endregion
+
+            #region Attacker info
+
+            List<float> attackerArmors = new List<float>();
+
+            battle.attackerDivision = attackerUnit;
+            battle.myUnits = battle.attackerDivision.unitsHealth;
             battle.fightRegion = fightRegion;
 
-            foreach (UnitMovement.UnitHealth unit in fightRegion.currentDefenseUnits)
+            foreach (UnitMovement.UnitHealth unit in attackerUnit.unitsHealth)
             {
-                defenderArmors.Add(unit.unit.armor);
+                attackerArmors.Add(unit.unit.armor);
 
-                battle.defenderSoftAttack += unit.unit.softAttack;
-                battle.defenderHardAttack += unit.unit.hardAttack;
-                battle.defenderDefense += unit.unit.defense;
-                battle.defenderArmor += unit.unit.armor;
-                battle.defenderArmorPiercing += unit.unit.armorPiercing;
-                battle.defenderHardness += unit.unit.hardness;
+                battle.attackerSoftAttack += unit.unit.softAttack;
+                battle.attackerHardAttack += unit.unit.hardAttack;
+                battle.attackerDefense += unit.unit.defense;
+                battle.attackerArmor += unit.unit.armor;
+                battle.attackerArmorPiercing += unit.unit.armorPiercing;
+                battle.attackerHardness += unit.unit.hardness;
             }
 
-            float maxArmor = defenderArmors.Max();
-            float midArmor = battle.defenderArmor / battle.defenderDivision.unitsHealth.Count;
-
-            battle.defenderHardness = battle.defenderHardness / battle.defenderDivision.unitsHealth.Count;
-            battle.defenderArmor = 0.4f * maxArmor + 0.6f * midArmor;
-        }
-
-        #endregion
-
-        #region Attacker info
-
-        List<float> attackerArmors = new List<float>();
-
-        battle.attackerDivision = attackerUnit;
-        battle.myUnits = battle.attackerDivision.unitsHealth;
-        battle.fightRegion = fightRegion;
-
-        foreach (UnitMovement.UnitHealth unit in attackerUnit.unitsHealth)
-        {
-            attackerArmors.Add(unit.unit.armor);
-
-            battle.attackerSoftAttack += unit.unit.softAttack;
-            battle.attackerHardAttack += unit.unit.hardAttack;
-            battle.attackerDefense += unit.unit.defense;
-            battle.attackerArmor += unit.unit.armor;
-            battle.attackerArmorPiercing += unit.unit.armorPiercing;
-            battle.attackerHardness += unit.unit.hardness;
-        }
-
-        float attackerMaxArmor = attackerArmors.Max();
-        float attackerMidArmor = battle.attackerArmor / battle.attackerDivision.unitsHealth.Count;
-
-        battle.attackerHardness = battle.attackerHardness / battle.attackerDivision.unitsHealth.Count;
-        battle.attackerArmor = 0.4f * attackerMaxArmor + 0.6f * attackerMidArmor;
-
-        #endregion
-
-        if (battle.defenderForts > 0)
-        {
-            float fortsDebuff = battle.defenderForts * ReferencesManager.Instance.gameSettings.fortDebuff;
-            battle.defender_BONUS_DEFENCE += fortsDebuff;
-            battle.attacker_BONUS_ATTACK -= fortsDebuff;
-        }
-
-        if (battle.attackerArmorPiercing < battle.defenderArmor)
-        {
-            battle.attacker_BONUS_ATTACK -= 50;
-        }
-
-        if (battle.attackerStrength < battle.defenderStrength)
-        {
-            float difference = Mathf.Abs(battle.defenderStrength) - Mathf.Abs(battle.attackerStrength);
-            difference = Mathf.Abs(difference * 100 / battle.defenderStrength);
-
-            if (difference >= 1 && difference <= 15)
+            if (attackerArmors.Count > 0)
             {
-                winChance = Random.Range(47, 49);
+                float attackerMaxArmor = attackerArmors.Max();
+                float attackerMidArmor = battle.attackerArmor / battle.attackerDivision.unitsHealth.Count;
 
-                offset = 85;
+                battle.attackerHardness = battle.attackerHardness / battle.attackerDivision.unitsHealth.Count;
+                battle.attackerArmor = 0.4f * attackerMaxArmor + 0.6f * attackerMidArmor;
             }
 
-            else if (difference >= 15 && difference <= 20)
-            {
-                winChance = Random.Range(45, 47);
+            #endregion
 
-                offset = 75;
+            if (battle.defenderForts > 0)
+            {
+                float fortsDebuff = battle.defenderForts * ReferencesManager.Instance.gameSettings.fortDebuff;
+                battle.defender_BONUS_DEFENCE += fortsDebuff;
+                battle.attacker_BONUS_ATTACK -= fortsDebuff;
             }
 
-            else if (difference >= 20 && difference <= 25)
+            if (battle.attackerArmorPiercing < battle.defenderArmor)
             {
-                winChance = Random.Range(43, 45);
-
-                offset = 65;
+                battle.attacker_BONUS_ATTACK -= 50;
             }
 
-            else if (difference >= 25 && difference <= 30)
+            if (battle.defender_BONUS_ATTACK <= 0) battle.defender_BONUS_ATTACK = 5;
+            if (battle.defender_BONUS_DEFENCE <= 0) battle.defender_BONUS_DEFENCE = 5;
+            if (battle.attacker_BONUS_ATTACK <= 0) battle.attacker_BONUS_ATTACK = 5;
+            if (battle.attacker_BONUS_DEFENCE <= 0) battle.attacker_BONUS_DEFENCE = 5;
+
+            if (battle.attackerStrength < battle.defenderStrength)
             {
-                winChance = Random.Range(41, 43);
+                float difference = Mathf.Abs(battle.defenderStrength) - Mathf.Abs(battle.attackerStrength);
+                difference = Mathf.Abs(difference * 100 / battle.defenderStrength);
 
-                offset = 55;
-            }
-
-            else if (difference >= 35 && difference <= 40)
-            {
-                winChance = Random.Range(39, 41);
-
-                offset = 45;
-            }
-
-            else if (difference >= 45 && difference <= 50)
-            {
-                winChance = Random.Range(37, 39);
-
-                offset = 35;
-            }
-
-            else if (difference >= 55 && difference <= 60)
-            {
-                winChance = Random.Range(35, 37);
-
-                offset = 25;
-            }
-
-            else if (difference >= 65 && difference <= 70)
-            {
-                winChance = Random.Range(30, 37);
-
-                offset = 20;
-            }
-
-            else if (difference >= 75 && difference <= 80)
-            {
-                winChance = Random.Range(10, 25);
-
-                offset = 10;
-            }
-
-            else if (difference >= 85 && difference <= 100)
-            {
-                winChance = Random.Range(0, 15);
-
-                offset = 0;
-            }
-        }
-        else if (battle.defenderStrength == battle.attackerStrength)
-        {
-            winChance = 50;
-        }
-        else if (battle.attackerStrength > battle.defenderStrength)
-        {
-            float difference = Mathf.Abs(battle.attackerStrength) - Mathf.Abs(battle.defenderStrength);
-            difference = Mathf.Abs(difference * 100 / battle.attackerStrength);
-
-            if (difference >= 1 && difference <= 10)
-            {
-                winChance = Random.Range(51, 53);
-
-                offset = 85;
-            }
-
-            else if (difference > 10 && difference <= 15)
-            {
-                winChance = Random.Range(53, 56);
-
-                offset = 75;
-            }
-
-            else if (difference > 15 && difference <= 20)
-            {
-                winChance = Random.Range(56, 60);
-
-                offset = 65;
-            }
-
-            else if (difference > 25 && difference <= 30)
-            {
-                winChance = Random.Range(60, 64);
-
-                offset = 55;
-            }
-
-            else if (difference > 30 && difference <= 40)
-            {
-                winChance = Random.Range(64, 68);
-
-                offset = 45;
-            }
-
-            else if (difference > 40 && difference <= 50)
-            {
-                winChance = Random.Range(68, 74);
-
-
-                offset = 35;
-            }
-
-            else if (difference > 50 && difference <= 60)
-            {
-                winChance = Random.Range(74, 78);
-
-
-                offset = 25;
-            }
-
-            else if (difference > 60 && difference <= 70)
-            {
-                winChance = Random.Range(78, 82);
-
-
-                offset = 15;
-            }
-
-            else if (difference > 70 && difference <= 80)
-            {
-                winChance = Random.Range(82, 86);
-
-
-                offset = 5;
-            }
-
-            else if (difference > 80 && difference <= 90)
-            {
-                winChance = Random.Range(86, 90);
-
-
-                offset = 0;
-            }
-
-            else if (difference > 90 && difference <= 100)
-            {
-                winChance = Random.Range(90, 92);
-
-
-                offset = 0;
-            }
-        }
-
-
-        firstMove = false;
-
-        if (battle.motoInfantry >= 6)
-        {
-            CheckMotorize(this);
-        }
-
-        _movePoints--;
-
-        if (winChance >= 50)
-        {
-            foreach (Transform child in fightRegion.transform)
-            {
-                if (child.GetComponent<UnitMovement>())
+                if (difference >= 1 && difference <= 15)
                 {
-                    UnitMovement division = child.GetComponent<UnitMovement>();
-                    division.Retreat();
+                    winChance = Random.Range(47, 49);
+                }
+
+                else if (difference >= 15 && difference <= 20)
+                {
+                    winChance = Random.Range(45, 47);
+                }
+
+                else if (difference >= 20 && difference <= 25)
+                {
+                    winChance = Random.Range(43, 45);
+                }
+
+                else if (difference >= 25 && difference <= 30)
+                {
+                    winChance = Random.Range(41, 43);
+                }
+
+                else if (difference >= 30 && difference <= 40)
+                {
+                    winChance = Random.Range(39, 41);
+                }
+
+                else if (difference >= 40 && difference <= 50)
+                {
+                    winChance = Random.Range(37, 39);
+                }
+
+                else if (difference >= 50 && difference <= 60)
+                {
+                    winChance = Random.Range(35, 37);
+                }
+
+                else if (difference >= 60 && difference <= 70)
+                {
+                    winChance = Random.Range(30, 37);
+                }
+
+                else if (difference >= 70 && difference <= 80)
+                {
+                    winChance = Random.Range(10, 25);
+                }
+
+                else if (difference >= 80 && difference <= 100)
+                {
+                    winChance = Random.Range(0, 15);
+                }
+            }
+            else if (battle.defenderStrength == battle.attackerStrength)
+            {
+                winChance = Random.Range(49, 51);
+            }
+            else if (battle.attackerStrength > battle.defenderStrength)
+            {
+                float difference = Mathf.Abs(battle.attackerStrength) - Mathf.Abs(battle.defenderStrength);
+                difference = Mathf.Abs(difference * 100 / battle.attackerStrength);
+
+                if (difference >= 1 && difference <= 10)
+                {
+                    winChance = Random.Range(51, 53);
+                }
+
+                else if (difference > 10 && difference <= 15)
+                {
+                    winChance = Random.Range(53, 56);
+                }
+
+                else if (difference > 15 && difference <= 20)
+                {
+                    winChance = Random.Range(56, 60);
+                }
+
+                else if (difference > 20 && difference <= 30)
+                {
+                    winChance = Random.Range(60, 64);
+                }
+
+                else if (difference > 30 && difference <= 40)
+                {
+                    winChance = Random.Range(64, 68);
+                }
+
+                else if (difference > 40 && difference <= 50)
+                {
+                    winChance = Random.Range(68, 74);
+                }
+
+                else if (difference > 50 && difference <= 60)
+                {
+                    winChance = Random.Range(74, 78);
+                }
+
+                else if (difference > 60 && difference <= 70)
+                {
+                    winChance = Random.Range(78, 82);
+                }
+
+                else if (difference > 70 && difference <= 80)
+                {
+                    winChance = Random.Range(82, 86);
+                }
+
+                else if (difference > 80 && difference <= 90)
+                {
+                    winChance = Random.Range(86, 90);
+                }
+
+                else if (difference > 90 && difference <= 100)
+                {
+                    winChance = Random.Range(90, 92);
                 }
             }
 
-            MoveUnit(fightRegion, oldRegion);
-            ReferencesManager.Instance.AnnexRegion(fightRegion, oldRegion.currentCountry);
-        }
 
-        CountLosses(winChance, offset);
+            firstMove = false;
+
+            if (battle.motoInfantry >= 6)
+            {
+                CheckMotorize(this);
+            }
+
+            _movePoints--;
+
+            if (winChance >= 50)
+            {
+                foreach (Transform child in fightRegion.transform)
+                {
+                    if (child.GetComponent<UnitMovement>())
+                    {
+                        UnitMovement division = child.GetComponent<UnitMovement>();
+                        division.Retreat();
+                    }
+                }
+
+                MoveUnit(fightRegion, oldRegion);
+                ReferencesManager.Instance.AnnexRegion(fightRegion, oldRegion.currentCountry);
+            }
+
+            battle.winChance = winChance;
+            ApplyDamage(battle);
+        }
     }
 
     private void CheckMotorize(UnitMovement unitMovement)
@@ -544,200 +550,141 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    private void CountLosses(float winChance, int offset)
+    private void ApplyDamage(UnitMovement.BattleInfo battle)
     {
-        int damageToAttacker = 0;
-        int damageToDefender = 0;
+        int att_inf_losses = 0;
+        int att_art_losses = 0;
+        int att_hvy_losses = 0;
 
-        int random = Random.Range(0, 100);
+        int def_inf_losses = 0;
+        int def_art_losses = 0;
+        int def_hvy_losses = 0;
 
-        if (winChance >= 50) // Атакующий победил
+        float defender_losses_factor = 1;
+        float attacker_losses_factor = 1;
+
+        bool defenderWin = false;
+        bool attackerWin = false;
+
+        if (battle.winChance >= 50) attackerWin = true;
+        else defenderWin = true;
+
+        if (winChance <= 0)
         {
-            if (winChance >= 50 && winChance < 57)
-            {
-                if (random >= offset) // -1 art
-                {
-                    damageToDefender = 30;
-                }
-            }
-            else if (winChance >= 50 && winChance < 57)
-            {
-                if (random >= offset) // -1 art; -1 infantry
-                {
-                    damageToAttacker = 50;
-                }
-            }
-            else if (winChance >= 57 && winChance < 63)
-            {
-                if (random >= offset) // -1 art; -2 infantry
-                {
-                    damageToAttacker = 70;
-                }
-            }
-            else if (winChance >= 63 && winChance < 70)
-            {
-                if (random >= offset) // -2 art; -3 infantry
-                {
-                    damageToAttacker = 90;
-                }
-            }
-            else if (winChance >= 70 && winChance < 80)
-            {
-                if (random >= offset) // -2 art; -4 infantry
-                {
-                    damageToAttacker = 130;
-                }
-            }
-            else if (winChance >= 80 && winChance < 90)
-            {
-                if (random >= offset) // -2 art; -4 infantry
-                {
-                    damageToAttacker = 200;
-                }
-            }
-            else if (winChance >= 90)
-            {
-                if (random >= offset) // -2 art; -4 infantry
-                {
-                    damageToAttacker = 500;
-                }
-            }
-        }
-        else if (winChance < 50) // Защитник победил
-        {
-            if (winChance >= 43 && winChance < 50)
-            {
-                if (random >= offset) // -1 art
-                {
-                    damageToAttacker = 30;
-                }
-            }
-            else if (winChance >= 39 && winChance < 43)
-            {
-                if (random >= offset) // -1 art; -1 infantry
-                {
-                    damageToAttacker = 50;
-                }
-            }
-            else if (winChance >= 37 && winChance < 39)
-            {
-                if (random >= offset) // -1 art; -2 infantry
-                {
-                    damageToAttacker = 70;
-                }
-            }
-            else if (winChance >= 30 && winChance < 37)
-            {
-                if (random >= offset) // -1 art; -2 infantry
-                {
-                    damageToAttacker = 90;
-                }
-            }
-            else if (winChance >= 25f && winChance < 30f)
-            {
-                if (random >= offset)
-                {
-                    damageToAttacker = 130;
-                }
-            }
-            else if (winChance >= 10f && winChance < 25f)
-            {
-                if (random >= offset)
-                {
-                    damageToAttacker = 200;
-                }
-            }
-            else if (winChance >= 0f && winChance < 10f)
-            {
-                if (random >= offset)
-                {
-                    damageToAttacker = 500;
-                }
-            }
-
-            ApplyDamage(damageToAttacker, damageToDefender);
-        }
-    }
-
-    private void ApplyDamage(float damageToAttacker, float damageToDefender)
-    {
-        if (winChance >= 50)
-        {
-            attackerWon = true;
+            winChance = Random.Range(1, 5);
         }
 
-        else if (winChance < 50)
+        if (attackerWin)
         {
-            attackerWon = false;
+            defender_losses_factor = 1 / (winChance / (101f - winChance));
+            attacker_losses_factor = ((101f - winChance) / winChance);
+        }
+        else if (defenderWin)
+        {
+            attacker_losses_factor = ((101f - winChance) / winChance);
+            defender_losses_factor = 1 / (winChance / (101f - winChance));
         }
 
-        if (attackerWon)
-        {
-            if (defenderUnit != null)
-            {
-                for (int j = 0; j < defenderUnit.unitsHealth.Count; j++)
-                {
-                    defenderUnit.unitsHealth[j].health -= damageToDefender;
+        float attackerDamage_Soft = battle.defenderSoftAttack * attacker_losses_factor;
+        float defenderDamage_Soft = battle.attackerSoftAttack * defender_losses_factor;
+        
+        float attackerDamage_Hard = battle.defenderHardAttack * attacker_losses_factor;
+        float defenderDamage_Hard = battle.attackerHardAttack * defender_losses_factor;
 
-                    if (defenderUnit.unitsHealth[j].health <= 0)
+        #region Defender Losses
+
+        if (defenderUnit != null)
+        {
+            for (int j = 0; j < defenderUnit.unitsHealth.Count; j++)
+            {
+                if (defenderUnit.unitsHealth[j].unit.hardness <= 15)
+                {
+                    defenderUnit.unitsHealth[j].health -= defenderDamage_Soft;
+                }
+                else if (defenderUnit.unitsHealth[j].unit.hardness > 15)
+                {
+                    defenderUnit.unitsHealth[j].health -= defenderDamage_Hard;
+                }
+
+                if (defenderUnit.unitsHealth[j].health <= 0)
+                {
+                    defenderUnit.currentCountry.moneyNaturalIncome += defenderUnit.unitsHealth[j].unit.moneyIncomeCost;
+                    defenderUnit.currentCountry.foodNaturalIncome += defenderUnit.unitsHealth[j].unit.foodIncomeCost;
+
+                    if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER)
                     {
-                        currentCountry.moneyNaturalIncome += defenderUnit.unitsHealth[j].unit.moneyIncomeCost;
-                        currentCountry.foodNaturalIncome += defenderUnit.unitsHealth[j].unit.foodIncomeCost;
-                        defenderUnit.unitsHealth.Remove(defenderUnit.unitsHealth[j]);
-
-                        if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER || defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
-                        {
-                            army.defenderArmyLossesValue[0]++;
-                        }
-                        else if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.ARTILERY)
-                        {
-                            army.defenderArmyLossesValue[1]++;
-                        }
-                        else if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.TANK)
-                        {
-                            army.defenderArmyLossesValue[2]++;
-                        }
+                        def_inf_losses++;
                     }
-                }
-                if (defenderUnit.unitsHealth.Count < 1)
-                {
-                    currentProvince = transform.parent.GetComponent<RegionManager>();
-                    currentProvince.CheckRegionUnits(currentProvince);
+                    else if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+                    {
+                        def_inf_losses++;
+                    }
+                    else if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.ARTILERY)
+                    {
+                        def_art_losses++;
+                    }
+                    else if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.TANK)
+                    {
+                        def_hvy_losses++;
+                    }
+
+                    defenderUnit.unitsHealth.Remove(defenderUnit.unitsHealth[j]);
                 }
             }
+            if (defenderUnit.unitsHealth.Count < 1)
+            {
+                defenderUnit.currentProvince = transform.parent.GetComponent<RegionManager>();
+                StartCoroutine(DestroyDivision_Co());
+            }
         }
-        else if (!attackerWon)
+
+        #endregion
+
+        #region Attacker Losses
+
+        for (int j = 0; j < attackerUnit.unitsHealth.Count; j++)
         {
-            for (int j = 0; j < unitsHealth.Count; j++)
+            if (attackerUnit.unitsHealth[j].unit.hardness <= 15)
             {
-                unitsHealth[j].health -= damageToAttacker;
-
-                if (unitsHealth[j].health <= 0)
-                {
-                    currentCountry.moneyNaturalIncome += unitsHealth[j].unit.moneyIncomeCost;
-                    currentCountry.foodNaturalIncome += unitsHealth[j].unit.foodIncomeCost;
-
-                    if (unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER || unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
-                    {
-                        army.attackerArmyLossesValue[0]++;
-                    }
-                    else if (unitsHealth[j].unit.type == UnitScriptableObject.Type.ARTILERY)
-                    {
-                        army.attackerArmyLossesValue[1]++;
-                    }
-                    else if (unitsHealth[j].unit.type == UnitScriptableObject.Type.TANK)
-                    {
-                        army.attackerArmyLossesValue[2]++;
-                    }
-                    unitsHealth.Remove(unitsHealth[j]);
-                }
+                attackerUnit.unitsHealth[j].health -= attackerDamage_Soft;
             }
-            if (unitsHealth.Count < 1)
+            else if (attackerUnit.unitsHealth[j].unit.hardness > 15)
             {
-                currentProvince = transform.parent.GetComponent<RegionManager>();
-                currentProvince.CheckRegionUnits(currentProvince);
+                attackerUnit.unitsHealth[j].health -= attackerDamage_Hard;
+            }
+
+            if (attackerUnit.unitsHealth[j].health <= 0)
+            {
+                attackerUnit.currentCountry.moneyNaturalIncome += attackerUnit.unitsHealth[j].unit.moneyIncomeCost;
+                attackerUnit.currentCountry.foodNaturalIncome += attackerUnit.unitsHealth[j].unit.foodIncomeCost;
+
+                if (attackerUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER)
+                {
+                    att_inf_losses++;
+                }
+                else if (attackerUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+                {
+                    att_inf_losses++;
+                }
+                else if (attackerUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.ARTILERY)
+                {
+                    att_art_losses++;
+                }
+                else if (attackerUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.TANK)
+                {
+                    att_hvy_losses++;
+                }
+
+                attackerUnit.unitsHealth.Remove(attackerUnit.unitsHealth[j]);
             }
         }
+        if (attackerUnit.unitsHealth.Count < 1)
+        {
+            attackerUnit.currentProvince = transform.parent.GetComponent<RegionManager>();
+            StartCoroutine(DestroyDivision_Co());
+        }
+
+        #endregion
 
         if (ReferencesManager.Instance.gameSettings.onlineGame)
         {
@@ -753,6 +700,14 @@ public class UnitMovement : MonoBehaviour
                 currentCountry.foodNaturalIncome, 
                 currentCountry.recrootsIncome);
         }
+    }
+
+    private IEnumerator DestroyDivision_Co()
+    {
+        this.GetComponent<Animator>().Play("divisionDie");
+        currentProvince.hasArmy = false;
+        yield return new WaitForSecondsRealtime(0.6f);
+        attackerUnit.currentProvince.CheckRegionUnits(attackerUnit.currentProvince);
     }
 
     public void UpdateInfo()
@@ -911,5 +866,7 @@ public class UnitMovement : MonoBehaviour
 
         public float attackerStrength;
         public float defenderStrength;
+
+        public int winChance;
     }
 }

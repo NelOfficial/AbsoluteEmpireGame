@@ -4,7 +4,11 @@ using UnityEngine;
 public class TechnologyScriptableObject : ScriptableObject
 {
     public string _name;
+    public string _nameEN;
+    [TextArea(1, 100)]
     public string description;
+    [TextArea(1, 100)]
+    public string descriptionEN;
 
     public int moneyCost;
     public int moves;

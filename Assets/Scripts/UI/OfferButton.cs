@@ -226,6 +226,73 @@ public class OfferButton : MonoBehaviour
                 button.interactable = true;
             }
         }
+
+        if (data == "Отправить золото")
+        {
+            if (currentLanguage == 0)
+            {
+                text.text = "Send money";
+            }
+            else if (currentLanguage == 1)
+            {
+                text.text = "Отправить золото";
+            }
+        }
+        else if (data == "Попросить золото")
+        {
+            if (currentLanguage == 0)
+            {
+                text.text = "Ask money";
+            }
+            else if (currentLanguage == 1)
+            {
+                text.text = "Попросить золото";
+            }
+        }
+        else if (data == "Отправить провизию")
+        {
+            if (currentLanguage == 0)
+            {
+                text.text = "Send food";
+            }
+            else if (currentLanguage == 1)
+            {
+                text.text = "Отправить провизию";
+            }
+        }
+        else if (data == "Попросить провизию")
+        {
+            if (currentLanguage == 0)
+            {
+                text.text = "Ask food";
+            }
+            else if (currentLanguage == 1)
+            {
+                text.text = "Попросить провизию";
+            }
+        }
+        else if (data == "Отправить рекрутов")
+        {
+            if (currentLanguage == 0)
+            {
+                text.text = "Send recruits";
+            }
+            else if (currentLanguage == 1)
+            {
+                text.text = "Отправить рекрутов";
+            }
+        }
+        else if (data == "Попросить рекрутов")
+        {
+            if (currentLanguage == 0)
+            {
+                text.text = "Ask recruits";
+            }
+            else if (currentLanguage == 1)
+            {
+                text.text = "Попросить рекрутов";
+            }
+        }
     }
 
     public void SendData()

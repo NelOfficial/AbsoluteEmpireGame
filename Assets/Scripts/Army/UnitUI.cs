@@ -4,15 +4,39 @@ using UnityEngine.UI;
 public class UnitUI : MonoBehaviour
 {
     public Image unitIcon;
+    public Image unitHealthBar;
     public GameObject unitWorldObject;
 
     public int id;
+    public float health;
 
     public UnitScriptableObject currentUnit;
 
     private void Awake()
     {
         ReferencesManager.Instance.army.CheckUnitTech();
+    }
+
+    public void UpdateUI()
+    {
+        if (unitWorldObject != null)
+        {
+            UnitMovement division = unitWorldObject.GetComponent<UnitMovement>();
+
+            for (int i = 0; i < division.unitsHealth.Count; i++)
+            {
+                if (division.unitsHealth[i]._id == id)
+                {
+                    health = division.unitsHealth[i].health;
+                }
+            }
+
+            unitHealthBar.fillAmount = health / currentUnit.health;
+        }
+        else
+        {
+            health = 0;
+        }
     }
 
     public void SelfDestroy()

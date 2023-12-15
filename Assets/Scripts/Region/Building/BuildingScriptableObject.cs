@@ -4,6 +4,7 @@ using UnityEngine;
 public class BuildingScriptableObject : ScriptableObject
 {
     public string uiTitle;
+    public string uiTitleEN;
     public string _name;
 
     public enum BuildType{ GoldProducer, FoodProducer, RecrootsProducer }

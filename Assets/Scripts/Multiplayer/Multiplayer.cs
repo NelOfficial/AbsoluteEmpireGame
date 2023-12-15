@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Linq;
 
 public class Multiplayer : MonoBehaviourPunCallbacks
 {
@@ -55,6 +56,8 @@ public class Multiplayer : MonoBehaviourPunCallbacks
             spawnedPlayerListPrefab.transform.GetChild(1).GetComponent<FillCountryFlag>().country = ReferencesManager.Instance.countryManager.countries[playerCountryIndex].country;
             spawnedPlayerListPrefab.transform.GetChild(1).GetComponent<FillCountryFlag>().FillInfo();
             spawnedPlayerListPrefab.transform.GetChild(1).GetComponent<FillCountryFlag>().InDiplomatyUI = true;
+
+            roomPlayers = FindObjectsOfType<PlayerData>().ToList();
 
             foreach (var _player in roomPlayers)
             {

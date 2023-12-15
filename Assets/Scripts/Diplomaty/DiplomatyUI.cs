@@ -857,8 +857,8 @@ public class DiplomatyUI : MonoBehaviour
                 senderToReceiver.right = false;
                 receiverToSender.right = false;
 
-                senderToReceiver.relationship -= 6;
-                receiverToSender.relationship -= 6;
+                senderToReceiver.relationship -= 18;
+                receiverToSender.relationship -= 18;
 
                 acceptationStatePanel.SetActive(true);
                 string currentLanguage = "";
@@ -893,6 +893,10 @@ public class DiplomatyUI : MonoBehaviour
                 {
                     random += 150;
                 }
+
+                int relationsBonus = receiverToSender.relationship / 15;
+
+                random += relationsBonus;
 
                 foreach (CountrySettings country in countryManager.countries)
                 {
@@ -1156,6 +1160,8 @@ public class DiplomatyUI : MonoBehaviour
                 accept = true;
                 sender.money -= value;
                 receiver.money += value;
+                receiverToSender.relationship += value / 500;
+                senderToReceiver.relationship += value / 500;
             }
             else if (data[1] == "ask")
             {
@@ -1166,6 +1172,8 @@ public class DiplomatyUI : MonoBehaviour
                         accept = true;
                         sender.money += value;
                         receiver.money -= value;
+                        receiverToSender.relationship -= value / 500;
+                        senderToReceiver.relationship -= value / 500;
                     }
                     else accept = false;
                 }
@@ -1178,6 +1186,8 @@ public class DiplomatyUI : MonoBehaviour
                 accept = true;
                 sender.food -= value;
                 receiver.food += value;
+                receiverToSender.relationship += value / 2500;
+                senderToReceiver.relationship += value / 2500;
             }
             else if (data[1] == "ask")
             {
@@ -1188,6 +1198,8 @@ public class DiplomatyUI : MonoBehaviour
                         accept = true;
                         sender.food += value;
                         receiver.food -= value;
+                        receiverToSender.relationship -= value / 2500;
+                        senderToReceiver.relationship -= value / 2500;
                     }
                     else accept = false;
                 }
@@ -1200,6 +1212,8 @@ public class DiplomatyUI : MonoBehaviour
                 accept = true;
                 sender.recroots -= value;
                 receiver.recroots += value;
+                receiverToSender.relationship += value / 2000;
+                senderToReceiver.relationship += value / 2000;
             }
             else if (data[1] == "ask")
             {
@@ -1210,11 +1224,15 @@ public class DiplomatyUI : MonoBehaviour
                         accept = true;
                         sender.recroots += value;
                         receiver.recroots -= value;
+                        receiverToSender.relationship -= value / 2000;
+                        senderToReceiver.relationship -= value / 2000;
                     }
                     else accept = false;
                 }
             }
         }
+
+        UpdateDiplomatyUI(sender, receiver);
 
         Multiplayer.Instance.SetCountryValues(
             sender.country._id,

@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine.UI;
+using WebSocketSharp;
 
 public class EventCreatorManager : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class EventCreatorManager : MonoBehaviour
     [SerializeField] TMP_InputField _eventNameInputfield;
     [SerializeField] TMP_InputField _eventDescriptionInputfield;
     [SerializeField] TMP_InputField _eventConditionsInputfield;
+    [SerializeField] TMP_InputField _eventReceiversInputfield;
+    [SerializeField] TMP_InputField _eventReceiversBlacklistInputfield;
     public TMP_InputField dateInputfield;
     [SerializeField] ModEventImage _eventImage;
     [SerializeField] Toggle _eventSilentToggle;
@@ -87,6 +90,19 @@ public class EventCreatorManager : MonoBehaviour
         _eventDescriptionInputfield.text = modEvents[currentModEventIndex].description;
         dateInputfield.text = modEvents[currentModEventIndex].date;
 
+        _eventReceiversInputfield.text = "";
+        _eventReceiversBlacklistInputfield.text = "";
+
+        for (int i = 0; i < modEvents[currentModEventIndex].receivers.Count; i++)
+        {
+            _eventReceiversInputfield.text += $"{modEvents[currentModEventIndex].receivers[i]};";
+        }
+
+        for (int i = 0; i < modEvents[currentModEventIndex].exceptionsReceivers.Count; i++)
+        {
+            _eventReceiversBlacklistInputfield.text += $"{modEvents[currentModEventIndex].exceptionsReceivers[i]};";
+        }
+
         _eventImage.SetUp();
         UpdateButtonsUI();
     }
@@ -118,8 +134,8 @@ public class EventCreatorManager : MonoBehaviour
         {
             ModEvent newEvent = new ModEvent();
             newEvent.id = newEventID;
-            newEvent._name = "[New event]";
-            newEvent.description = "[New event description]";
+            newEvent._name = "New event";
+            newEvent.description = "New event description";
             newEvent.date = "1-1-1936";
 
             modEvents.Add(newEvent);
@@ -191,6 +207,31 @@ public class EventCreatorManager : MonoBehaviour
 
         modEvents[currentModEventIndex].silentEvent = _eventSilentToggle.isOn;
 
+        List<int> receiversList = new List<int>();
+        List<int> receiversBlackList = new List<int>();
+
+        string[] receiversString = _eventReceiversInputfield.text.Split(';');
+        string[] receiversBlacklistString = _eventReceiversBlacklistInputfield.text.Split(';');
+
+        for (int i = 0; i < receiversString.Length; i++)
+        {
+            if (!string.IsNullOrEmpty(receiversString[i]))
+            {
+                receiversList.Add(int.Parse(receiversString[i]));
+            }
+        }
+        
+        for (int i = 0; i < receiversBlacklistString.Length; i++)
+        {
+            if (!string.IsNullOrEmpty(receiversBlacklistString[i]))
+            {
+                receiversBlackList.Add(int.Parse(receiversBlacklistString[i]));
+            }
+        }
+
+        modEvents[currentModEventIndex].receivers = receiversList;
+        modEvents[currentModEventIndex].exceptionsReceivers = receiversBlackList;
+
         for (int i = 0; i < modEvents[currentModEventIndex].buttons.Count; i++)
         {
             EventScriptableObject.EventButton eventButton = modEvents[currentModEventIndex].buttons[i];
@@ -213,9 +254,10 @@ public class EventCreatorManager : MonoBehaviour
     public class ModEvent
     {
         public int id;
+        [TextArea(1, 100)]
         public string _name;
 
-        [TextArea(0, 50)]
+        [TextArea(1, 100)]
         public string description;
         public string date;
 
@@ -225,7 +267,12 @@ public class EventCreatorManager : MonoBehaviour
         public bool _checked;
         public bool silentEvent;
 
+        [TextArea(1, 100)]
         public List<string> conditions = new List<string>();
+
+        public List<int> receivers = new List<int>();
+        public List<int> exceptionsReceivers = new List<int>();
+        public int aiWillDo_Index = 0;
 
         public List<EventScriptableObject.EventButton> buttons = new List<EventScriptableObject.EventButton>();
     }

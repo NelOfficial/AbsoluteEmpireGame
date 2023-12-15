@@ -163,9 +163,9 @@ public class RegionUI : MonoBehaviour
 
         for (int i = 0; i < regionInfoCanvases.Count; i++)
         {
-            ReferencesManager.Instance.mainCamera.regionInfos.Remove(regionInfoCanvases[i]);
             Destroy(ReferencesManager.Instance.mainCamera.regionInfos[i].gameObject);
         }
+        ReferencesManager.Instance.mainCamera.regionInfos.Distinct();
 
         if (tab.name == "BuildingContainer")
         {
@@ -335,7 +335,7 @@ public class RegionUI : MonoBehaviour
         StartCoroutine(UpdateUnitsUI_Co());
     }
 
-    public void CreateUnitUI(Sprite unitIcon, UnitScriptableObject unit)
+    public void CreateUnitUI(Sprite unitIcon, UnitScriptableObject unit, UnitMovement division)
     {
         UnitMovement unitMovement = ReferencesManager.Instance.regionManager.currentRegionManager.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
         if (unitMovement.unitsHealth != null)
@@ -343,6 +343,8 @@ public class RegionUI : MonoBehaviour
             GameObject spawnedUIButton = Instantiate(ReferencesManager.Instance.army.unitUIPrefab, ReferencesManager.Instance.army.armyHorizontalGroup.transform);
             spawnedUIButton.GetComponent<UnitUI>().unitIcon.sprite = unitIcon;
             spawnedUIButton.GetComponent<UnitUI>().currentUnit = unit;
+            spawnedUIButton.GetComponent<UnitUI>().unitWorldObject = division.gameObject;
+            spawnedUIButton.GetComponent<UnitUI>().UpdateUI();
 
             if (unitMovement.unitsHealth.Count != ReferencesManager.Instance.army.maxUnits)
             {
@@ -357,7 +359,7 @@ public class RegionUI : MonoBehaviour
         }
     }
 
-    public void CreateFightUnitUI(UnitScriptableObject unit, GameObject panel)
+    public void CreateFightUnitUI(UnitScriptableObject unit, GameObject panel, UnitMovement division)
     {
         Sprite unitIcon = unit.icon;
 
@@ -378,6 +380,11 @@ public class RegionUI : MonoBehaviour
 
         spawnedUnitUI.GetComponent<UnitUI>().unitIcon.sprite = unitIcon;
         spawnedUnitUI.GetComponent<UnitUI>().currentUnit = unit;
+        if (division != null)
+        {
+            spawnedUnitUI.GetComponent<UnitUI>().unitWorldObject = division.gameObject;
+        }
+        spawnedUnitUI.GetComponent<UnitUI>().GetComponent<UnitUI>().UpdateUI();
     }
 
     public void FightProceed(float winChance, RegionManager fightRegion, RaycastHit2D hit, UnitMovement unitMovement)
@@ -423,7 +430,7 @@ public class RegionUI : MonoBehaviour
                 {
                     foreach (UnitMovement.UnitHealth unit in unitMovement.unitsHealth)
                     {
-                        CreateUnitUI(unit.unit.icon, unit.unit);
+                        CreateUnitUI(unit.unit.icon, unit.unit, unitMovement);
                     }
 
                     if (unitMovement.unitsHealth.Count == 0)
@@ -451,6 +458,8 @@ public class RegionUI : MonoBehaviour
                             if (unitUIs[i] != null)
                             {
                                 unitUIs[i].id = unitMovement.unitsHealth[i]._id;
+                                unitUIs[i].unitWorldObject = unitMovement.gameObject;
+                                unitUIs[i].UpdateUI();
                             }
                         }
                     }
@@ -692,6 +701,7 @@ public class RegionUI : MonoBehaviour
 
                 spawnedUIButton.GetComponent<UnitUI>().unitIcon.sprite = unit.unit.icon;
                 spawnedUIButton.GetComponent<UnitUI>().currentUnit = unit.unit;
+                spawnedUIButton.GetComponent<UnitUI>().UpdateUI();
 
                 if (unit.unit.type == UnitScriptableObject.Type.SOLDIER)
                 {

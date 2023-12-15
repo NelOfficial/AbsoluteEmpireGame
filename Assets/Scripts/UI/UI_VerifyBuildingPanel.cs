@@ -15,7 +15,14 @@ public class UI_VerifyBuildingPanel : MonoBehaviour
     {
         container.SetActive(true);
 
-        descText.text = $"¬ы действительно хотите разрушить здание: {currentBuilding.uiTitle}";
+        if (PlayerPrefs.GetInt("languageId") == 0)
+        {
+            descText.text = $"¬ы действительно хотите разрушить здание: {currentBuilding.uiTitleEN}";
+        }
+        if (PlayerPrefs.GetInt("languageId") == 1)
+        {
+            descText.text = $"¬ы действительно хотите разрушить здание: {currentBuilding.uiTitle}";
+        }
         buildingImage.sprite = currentBuilding.icon;
 
         UISoundEffect.Instance.PlayAudio(ReferencesManager.Instance.gameSettings.m_paper_01);

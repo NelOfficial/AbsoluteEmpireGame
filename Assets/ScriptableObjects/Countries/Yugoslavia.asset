@@ -18,7 +18,7 @@ MonoBehaviour:
   _uiName: "\u042E\u0433\u043E\u0441\u043B\u0430\u0432\u0438\u044F"
   _tag: YUG
   countryType: 0
-  countryFlag: {fileID: 21300000, guid: 7f16fd7e2bad5f4478ce78c2f24369f4, type: 3}
+  countryFlag: {fileID: 21300000, guid: ce39d9d38b548244d8c4d7663d1e1a33, type: 3}
   ally: 
   capitulateLimit: 20
   countryColor: {r: 0.0627451, g: 0.16470589, b: 0.46666667, a: 0.5}
@@ -27,7 +27,7 @@ MonoBehaviour:
   - {r: 0.0627451, g: 0.16470589, b: 0.46666667, a: 0.5019608}
   - {r: 0.0627451, g: 0.16470589, b: 0.46666667, a: 0.5019608}
   - {r: 0.1764706, g: 0.18852301, b: 0.23529412, a: 0.5019608}
-  - {r: 0.078431375, g: 0.08732476, b: 0.12156863, a: 0.5019608}
+  - {r: 0, g: 0.027697966, b: 0.33962262, a: 0.5019608}
   - {r: 0.11609451, g: 0.062745094, b: 0.46666667, a: 0.5019608}
   countryIdeologyFlags:
   - {fileID: 21300000, guid: 7f16fd7e2bad5f4478ce78c2f24369f4, type: 3}

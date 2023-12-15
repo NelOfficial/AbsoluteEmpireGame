@@ -56,10 +56,12 @@ MonoBehaviour:
     \u0440\u0435\u0447\u044C\u044E."
   date: 25-4-1939
   image: {fileID: 21300000, guid: b8489135252cef1428f6338261ff091d, type: 3}
-  _checked: 1
+  _checked: 0
   silentEvent: 0
-  conditions: []
+  conditions:
+  - country_exist;12
   receivers: 
+  exceptionsReceivers: 
   aiWillDo_Index: 0
   buttons:
   - name: "\u0423 \u041B\u0438\u0442\u0432\u044B \u043D\u0435 \u0431\u044B\u043B\u043E

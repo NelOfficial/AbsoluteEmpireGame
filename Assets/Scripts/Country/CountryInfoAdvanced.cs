@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,6 +41,17 @@ public class CountryInfoAdvanced : MonoBehaviour
     [SerializeField] TMP_Text[] expenses;
 
     [SerializeField] IdeologyFlagFill[] ideologyFlagFills;
+
+    [Header("# Template Settings: ")]
+    [SerializeField] Transform _templatesUIContainer;
+    [SerializeField] Transform _templateUnitsUIContainer;
+    [SerializeField] GameObject _templateUnitPrefab;
+    [SerializeField] GameObject _templatePrefab;
+
+    [SerializeField] GameObject _templatePanel;
+    [SerializeField] GameObject _templateBatalionPanel;
+
+    [HideInInspector] public int _currentTemplateIndex;
 
     private void Awake()
     {
@@ -170,8 +182,74 @@ public class CountryInfoAdvanced : MonoBehaviour
     {
         if (!ReferencesManager.Instance.gameSettings.spectatorMode)
         {
-            countryNameText.text = countryManager.currentCountry.country._uiName;
-            countryIdeologyText.text = countryManager.currentCountry.ideology;
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                countryNameText.text = countryManager.currentCountry.country._nameEN;
+            }
+            if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                countryNameText.text = countryManager.currentCountry.country._uiName;
+            }
+
+            if (countryManager.currentCountry.ideology == "Неопределено" || countryManager.currentCountry.ideology == "Неопределённый")
+            {
+                if (PlayerPrefs.GetInt("languageId") == 0)
+                {
+                    countryIdeologyText.text = "Neutral";
+                }
+                else if (PlayerPrefs.GetInt("languageId") == 1)
+                {
+                    countryIdeologyText.text = countryManager.currentCountry.ideology;
+                }
+            }
+
+            if (countryManager.currentCountry.ideology == "Коммунизм")
+            {
+                if (PlayerPrefs.GetInt("languageId") == 0)
+                {
+                    countryIdeologyText.text = "Communism";
+                }
+                else if (PlayerPrefs.GetInt("languageId") == 1)
+                {
+                    countryIdeologyText.text = countryManager.currentCountry.ideology;
+                }
+            }
+
+            if (countryManager.currentCountry.ideology == "Демократия")
+            {
+                if (PlayerPrefs.GetInt("languageId") == 0)
+                {
+                    countryIdeologyText.text = "Democracy";
+                }
+                else if (PlayerPrefs.GetInt("languageId") == 1)
+                {
+                    countryIdeologyText.text = countryManager.currentCountry.ideology;
+                }
+            }
+
+            if (countryManager.currentCountry.ideology == "Фашизм")
+            {
+                if (PlayerPrefs.GetInt("languageId") == 0)
+                {
+                    countryIdeologyText.text = "Fascism";
+                }
+                else if (PlayerPrefs.GetInt("languageId") == 1)
+                {
+                    countryIdeologyText.text = countryManager.currentCountry.ideology;
+                }
+            }
+
+            if (countryManager.currentCountry.ideology == "Монархия")
+            {
+                if (PlayerPrefs.GetInt("languageId") == 0)
+                {
+                    countryIdeologyText.text = "Monarchy";
+                }
+                else if (PlayerPrefs.GetInt("languageId") == 1)
+                {
+                    countryIdeologyText.text = countryManager.currentCountry.ideology;
+                }
+            }
 
             countryRegionCountText.text = countryManager.currentCountry.myRegions.Count.ToString();
             countryPopulationCountText.text = ReferencesManager.Instance.GoodNumberString(countryManager.currentCountry.population);
@@ -366,6 +444,97 @@ public class CountryInfoAdvanced : MonoBehaviour
 
             spawnedObject.GetComponent<NationButton>().currentNation = countryManager.currentCountry.formableNations[i];
             spawnedObject.GetComponent<NationButton>().SetUp();
+        }
+    }
+
+    public void UpdateTemplatesUI()
+    {
+        _templatePanel.SetActive(true);
+        _templateBatalionPanel.SetActive(false);
+
+        foreach (Transform child in _templatesUIContainer)
+        {
+            if (child.gameObject.GetComponent<ArmyTemplateItem_UI>())
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        for (int i = 0; i < ReferencesManager.Instance.army.templates.Count; i++)
+        {
+            GameObject newTemplateObject = Instantiate(_templatePrefab, _templatesUIContainer);
+
+            ArmyTemplateItem_UI armyTemplateItem = newTemplateObject.GetComponent<ArmyTemplateItem_UI>();
+            armyTemplateItem._index = i;
+            armyTemplateItem._name = ReferencesManager.Instance.army.templates[i]._name;
+
+            armyTemplateItem.SetUp();
+        }
+    }
+
+    public void UpdateTemplateUI()
+    {
+        _templatePanel.SetActive(false);
+        _templateBatalionPanel.SetActive(true);
+
+        foreach (Transform child in _templateUnitsUIContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < ReferencesManager.Instance.army.templates[_currentTemplateIndex]._batalions.Count; i++)
+        {
+            GameObject newTemplateUnit = Instantiate(_templateUnitPrefab, _templateUnitsUIContainer);
+
+            ArmyTemplateUnit_UI armyTemplateItem = newTemplateUnit.GetComponent<ArmyTemplateUnit_UI>();
+
+            armyTemplateItem.batalion = ReferencesManager.Instance.army.templates[_currentTemplateIndex]._batalions[i];
+            armyTemplateItem.index = i;
+
+            armyTemplateItem.SetUp();
+        }
+    }
+
+    public void CreateTemplate()
+    {
+        Army.Template template = new Army.Template();
+
+        string newName = "";
+
+        if (PlayerPrefs.GetInt("languageId") == 0)
+        {
+            newName = "New template";
+        }
+        if (PlayerPrefs.GetInt("languageId") == 1)
+        {
+            newName = "Новый шаблон";
+        }
+
+        template._name = $"{newName} ({ReferencesManager.Instance.army.templates.Count})";
+        template._batalions.Add(ReferencesManager.Instance.gameSettings.soldierLVL1);
+
+        ReferencesManager.Instance.army.templates.Add(template);
+
+        UpdateTemplatesUI();
+    }
+
+    public void AddUnitToTemplate(UnitScriptableObject unit)
+    {
+        if (ReferencesManager.Instance.army.templates[_currentTemplateIndex]._batalions.Count + 1 <= 10)
+        {
+            ReferencesManager.Instance.army.templates[_currentTemplateIndex]._batalions.Add(unit);
+            UpdateTemplateUI();
+        }
+        else
+        {
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                WarningManager.Instance.Warn("The battalion limit has been reached");
+            }
+            if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                WarningManager.Instance.Warn("Достигнут лимит батальонов");
+            }
         }
     }
 

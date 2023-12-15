@@ -1,9 +1,7 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using System.Linq;
-using static UnityEngine.UI.CanvasScaler;
+using System.Collections;
 
 public class MovePoint : MonoBehaviour
 {
@@ -114,7 +112,7 @@ public class MovePoint : MonoBehaviour
                                 }
                             }
 
-                            Fight(newRegion, hit);
+                            Fight(newRegion);
 
                             ReferencesManager.Instance.regionManager.moveMode = false;
                             ReferencesManager.Instance.regionUI.barContent.SetActive(true);
@@ -187,13 +185,39 @@ public class MovePoint : MonoBehaviour
         }
     }
 
-    private void Fight(RegionManager fightRegion, RaycastHit2D hit)
+    private void Fight(RegionManager fightRegion)
     {
         UnitMovement.BattleInfo battle = new UnitMovement.BattleInfo();
 
         winChance = 0;
 
         battle.defenderForts = newRegion.fortifications_Amount;
+
+        battle.defender_BONUS_ATTACK = 100;
+        battle.defender_BONUS_DEFENCE = 100;
+
+        battle.attacker_BONUS_ATTACK = 100;
+        battle.attacker_BONUS_DEFENCE = 100;
+
+        try
+        {
+            if (defenderUnit.Encircled(defenderUnit.currentProvince))
+            {
+                battle.defender_BONUS_ATTACK -= 50;
+                battle.defender_BONUS_DEFENCE -= 50;
+            }
+        }
+        catch (System.Exception) { }
+
+        try
+        {
+            if (attackerUnit.Encircled(attackerUnit.currentProvince))
+            {
+                battle.attacker_BONUS_ATTACK -= 50;
+                battle.attacker_BONUS_DEFENCE -= 50;
+            }
+        }
+        catch (System.Exception) { }
 
         #region Defender info
 
@@ -288,12 +312,6 @@ public class MovePoint : MonoBehaviour
 
         #endregion
 
-        battle.defender_BONUS_ATTACK = 100;
-        battle.defender_BONUS_DEFENCE = 100;
-
-        battle.attacker_BONUS_ATTACK = 100;
-        battle.attacker_BONUS_DEFENCE = 100;
-
         if (battle.defenderForts > 0)
         {
             float fortsDebuff = battle.defenderForts * ReferencesManager.Instance.gameSettings.fortDebuff;
@@ -305,6 +323,12 @@ public class MovePoint : MonoBehaviour
         {
             battle.attacker_BONUS_ATTACK -= 50;
         }
+
+        if (battle.defender_BONUS_ATTACK <= 0) battle.defender_BONUS_ATTACK = 5;
+        if (battle.defender_BONUS_DEFENCE <= 0) battle.defender_BONUS_DEFENCE = 5;
+        if (battle.attacker_BONUS_ATTACK <= 0) battle.attacker_BONUS_ATTACK = 5;
+        if (battle.attacker_BONUS_DEFENCE <= 0) battle.attacker_BONUS_DEFENCE = 5;
+
 
         #region Buffs / Final Countings
 
@@ -372,42 +396,42 @@ public class MovePoint : MonoBehaviour
                 offset = 55;
             }
 
-            else if (difference >= 35 && difference <= 40)
+            else if (difference >= 30 && difference <= 40)
             {
                 winChance = Random.Range(39, 41);
 
                 offset = 45;
             }
 
-            else if (difference >= 45 && difference <= 50)
+            else if (difference >= 40 && difference <= 50)
             {
                 winChance = Random.Range(37, 39);
 
                 offset = 35;
             }
 
-            else if (difference >= 55 && difference <= 60)
+            else if (difference >= 50 && difference <= 60)
             {
                 winChance = Random.Range(35, 37);
 
                 offset = 25;
             }
 
-            else if (difference >= 65 && difference <= 70)
+            else if (difference >= 60 && difference <= 70)
             {
                 winChance = Random.Range(30, 37);
 
                 offset = 20;
             }
 
-            else if (difference >= 75 && difference <= 80)
+            else if (difference >= 70 && difference <= 80)
             {
                 winChance = Random.Range(10, 25);
 
                 offset = 10;
             }
 
-            else if (difference >= 85 && difference <= 100)
+            else if (difference >= 80 && difference <= 100)
             {
                 winChance = Random.Range(0, 15);
 
@@ -416,7 +440,7 @@ public class MovePoint : MonoBehaviour
         }
         else if (battle.defenderStrength == battle.attackerStrength)
         {
-            winChance = 50;
+            winChance = Random.Range(49, 51);
         }
         else if (battle.attackerStrength > battle.defenderStrength)
         {
@@ -444,7 +468,7 @@ public class MovePoint : MonoBehaviour
                 offset = 65;
             }
 
-            else if (difference > 25 && difference <= 30)
+            else if (difference > 20 && difference <= 30)
             {
                 winChance = Random.Range(60, 64);
 
@@ -523,8 +547,29 @@ public class MovePoint : MonoBehaviour
         ReferencesManager.Instance.regionUI.confirmDefeatButton.SetActive(false);
         ReferencesManager.Instance.regionUI.cancelFightButton.SetActive(true);
 
+        if (battle.attacker_BONUS_ATTACK >= 100) ReferencesManager.Instance.army.attackerBonus[0].text = $"+{battle.attacker_BONUS_ATTACK - 100}%";
+        else ReferencesManager.Instance.army.attackerBonus[0].text = $"-{100 - battle.attacker_BONUS_ATTACK}%";
+
+        if (battle.attacker_BONUS_DEFENCE >= 100) ReferencesManager.Instance.army.attackerBonus[1].text = $"+{battle.attacker_BONUS_DEFENCE - 100}%";
+        else ReferencesManager.Instance.army.attackerBonus[1].text = $"-{100 - battle.attacker_BONUS_DEFENCE}%";
+
+        if (battle.defender_BONUS_ATTACK >= 100) ReferencesManager.Instance.army.defenderBonus[0].text = $"+{battle.defender_BONUS_ATTACK - 100}%";
+        else ReferencesManager.Instance.army.defenderBonus[0].text = $"-{100 - battle.defender_BONUS_ATTACK}%";
+
+        if (battle.defender_BONUS_DEFENCE >= 100) ReferencesManager.Instance.army.defenderBonus[1].text = $"+{battle.defender_BONUS_DEFENCE - 100}%";
+        else ReferencesManager.Instance.army.defenderBonus[1].text = $"-{100 - battle.defender_BONUS_DEFENCE}%";
+
+
         ReferencesManager.Instance.regionUI.defenderCountryFlag.sprite = newRegion.currentCountry.country.countryFlag;
-        ReferencesManager.Instance.regionUI.defenderCountryName.text = newRegion.currentCountry.country._name;
+
+        if (PlayerPrefs.GetInt("languageId") == 0)
+        {
+            ReferencesManager.Instance.regionUI.defenderCountryName.text = newRegion.currentCountry.country._nameEN;
+        }
+        if (PlayerPrefs.GetInt("languageId") == 1)
+        {
+            ReferencesManager.Instance.regionUI.defenderCountryName.text = newRegion.currentCountry.country._name;
+        }
 
         foreach (Transform child in ReferencesManager.Instance.regionUI.fightPanelDefenderHorizontalGroup.transform)
         {
@@ -540,7 +585,7 @@ public class MovePoint : MonoBehaviour
 
         foreach (UnitMovement.UnitHealth unit in battle.enemyUnits)
         {
-            ReferencesManager.Instance.regionUI.CreateFightUnitUI(unit.unit, ReferencesManager.Instance.regionUI.fightPanelDefenderHorizontalGroup);
+            ReferencesManager.Instance.regionUI.CreateFightUnitUI(unit.unit, ReferencesManager.Instance.regionUI.fightPanelDefenderHorizontalGroup, battle.defenderDivision);
 
             if (unit.unit.type == UnitScriptableObject.Type.SOLDIER)
             {
@@ -569,165 +614,19 @@ public class MovePoint : MonoBehaviour
         attackerUnit.firstMove = false;
         attackerUnit._movePoints--;
 
-        ReferencesManager.Instance.army.attackerArmy[0].text = battle.myInfantry.ToString();
+        ReferencesManager.Instance.army.attackerArmy[0].text = (battle.myInfantry + battle.motoInfantry).ToString();
         ReferencesManager.Instance.army.attackerArmy[1].text = battle.myArtilery.ToString();
         ReferencesManager.Instance.army.attackerArmy[2].text = battle.myHeavy.ToString();
 
-        ReferencesManager.Instance.army.defenderArmy[0].text = battle.enemyInfantry.ToString();
+        ReferencesManager.Instance.army.defenderArmy[0].text = (battle.enemyInfantry + battle.enemyMotoInfantry).ToString();
         ReferencesManager.Instance.army.defenderArmy[1].text = battle.enemyArtilery.ToString();
         ReferencesManager.Instance.army.defenderArmy[2].text = battle.enemyHeavy.ToString();
 
         ReferencesManager.Instance.gameSettings.currentBattle = battle;
     }
 
-
-    private void CountLosses(float winChance, int offset)
+    private void ApplyDamage(UnitMovement.BattleInfo battle)
     {
-        for (int i = 0; i < ReferencesManager.Instance.army.defenderArmyLossesValue.Length; i++)
-        {
-            ReferencesManager.Instance.army.defenderArmyLossesValue[i] = 0;
-            ReferencesManager.Instance.army.attackerArmyLossesValue[i] = 0;
-        }
-
-        for (int i = 0; i < ReferencesManager.Instance.army.defenderEconomyValue.Length; i++)
-        {
-            ReferencesManager.Instance.army.defenderEconomyValue[i] = 0;
-            ReferencesManager.Instance.army.attackerEconomyValue[i] = 0;
-        }
-
-        int damageToAttacker = 0;
-        int damageToDefender = 0;
-
-        int random = Random.Range(0, 100);
-
-        if (winChance >= 50) // Атакующий победил
-        {
-            if (winChance >= 50 && winChance < 57)
-            {
-                if (random >= offset) // -1 art
-                {
-                    damageToDefender = 30;
-                    damageToAttacker = 5;
-                }
-            }
-            else if (winChance >= 50 && winChance < 57)
-            {
-                if (random >= offset) // -1 art; -1 infantry
-                {
-                    damageToDefender = 50;
-                    damageToAttacker = 10;
-                }
-            }
-            else if (winChance >= 57 && winChance < 63)
-            {
-                if (random >= offset) // -1 art; -2 infantry
-                {
-                    damageToDefender = 70;
-                    damageToAttacker = 14;
-                }
-            }
-            else if (winChance >= 63 && winChance < 70)
-            {
-                if (random >= offset) // -2 art; -3 infantry
-                {
-                    damageToDefender = 90;
-                    damageToAttacker = 18;
-                }
-            }
-            else if (winChance >= 70 && winChance < 80)
-            {
-                if (random >= offset) // -2 art; -4 infantry
-                {
-                    damageToDefender = 130;
-                    damageToAttacker = 26;
-                }
-            }
-            else if (winChance >= 80 && winChance < 90)
-            {
-                if (random >= offset) // -2 art; -4 infantry
-                {
-                    damageToDefender = 200;
-                    damageToAttacker = 40;
-                }
-            }
-            else if (winChance >= 90)
-            {
-                if (random >= offset) // -2 art; -4 infantry
-                {
-                    damageToDefender = 500;
-                    damageToAttacker = 100;
-                }
-            }
-        }
-        else if (winChance < 50) // Защитник победил
-        {
-            if (winChance >= 43 && winChance < 50)
-            {
-                if (random >= offset) // -1 art
-                {
-                    damageToAttacker = 30;
-                    damageToDefender = 5;
-                }
-            }
-            else if (winChance >= 39 && winChance < 43)
-            {
-                if (random >= offset) // -1 art; -1 infantry
-                {
-                    damageToAttacker = 50;
-                    damageToDefender = 10;
-                }
-            }
-            else if (winChance >= 37 && winChance < 39)
-            {
-                if (random >= offset) // -1 art; -2 infantry
-                {
-                    damageToAttacker = 70;
-                    damageToDefender = 14;
-                }
-            }
-            else if (winChance >= 30 && winChance < 37)
-            {
-                if (random >= offset) // -2 art; -3 infantry
-                {
-                    damageToAttacker = 90;
-                    damageToDefender = 18;
-                }
-            }
-            else if (winChance >= 30 && winChance < 37)
-            {
-                if (random >= offset) // -2 art; -4 infantry
-                {
-                    damageToAttacker = 130;
-                    damageToDefender = 26;
-                }
-            }
-            else if (winChance >= 10 && winChance < 25)
-            {
-                if (random >= offset) // -2 art; -4 infantry
-                {
-                    damageToAttacker = 200;
-                    damageToDefender = 40;
-                }
-            }
-            else if (winChance >= 0 && winChance < 10)
-            {
-                if (random >= offset) // -2 art; -4 infantry
-                {
-                    damageToAttacker = 500;
-                    damageToDefender = 100;
-                }
-            }
-        }
-
-        ApplyDamage(damageToAttacker, damageToDefender);
-    }
-
-
-    private void ApplyDamage(float damageToAttacker, float damageToDefender)
-    {
-        Debug.Log(damageToAttacker);
-        Debug.Log(damageToDefender);
-
         int att_inf_losses = 0;
         int att_art_losses = 0;
         int att_hvy_losses = 0;
@@ -736,18 +635,49 @@ public class MovePoint : MonoBehaviour
         int def_art_losses = 0;
         int def_hvy_losses = 0;
 
+        float defender_losses_factor = 1;
+        float attacker_losses_factor = 1;
+
+        bool defenderWin = false;
+        bool attackerWin = false;
+
+        if (battle.winChance >= 50) attackerWin = true;
+        else defenderWin = true;
+
+        if (attackerWin)
+        {
+            defender_losses_factor = 1 / (winChance / (100 - winChance));
+            attacker_losses_factor = ((100 - winChance) / winChance);
+        }
+        else if (defenderWin)
+        {
+            attacker_losses_factor = ((100 - winChance) / winChance);
+            defender_losses_factor = 1 / (winChance / (100 - winChance));
+        }
+
+        float attackerDamage_Soft = battle.defenderSoftAttack * attacker_losses_factor;
+        float defenderDamage_Soft = battle.attackerSoftAttack * defender_losses_factor;
+
+        float attackerDamage_Hard = battle.defenderHardAttack * attacker_losses_factor;
+        float defenderDamage_Hard = battle.attackerHardAttack * defender_losses_factor;
+
         #region Defender Losses
 
         if (defenderUnit != null)
         {
             for (int j = 0; j < defenderUnit.unitsHealth.Count; j++)
             {
-                defenderUnit.unitsHealth[j].health -= damageToDefender;
+                if (defenderUnit.unitsHealth[j].unit.hardness <= 15)
+                {
+                    defenderUnit.unitsHealth[j].health -= defenderDamage_Soft;
+                }
+                else if (defenderUnit.unitsHealth[j].unit.hardness > 15)
+                {
+                    defenderUnit.unitsHealth[j].health -= defenderDamage_Hard;
+                }
 
                 if (defenderUnit.unitsHealth[j].health <= 0)
                 {
-                    damageToDefender = Mathf.Abs(defenderUnit.unitsHealth[j].health);
-
                     defenderUnit.currentCountry.moneyNaturalIncome += defenderUnit.unitsHealth[j].unit.moneyIncomeCost;
                     defenderUnit.currentCountry.foodNaturalIncome += defenderUnit.unitsHealth[j].unit.foodIncomeCost;
 
@@ -774,7 +704,7 @@ public class MovePoint : MonoBehaviour
             if (defenderUnit.unitsHealth.Count < 1)
             {
                 defenderUnit.currentProvince = transform.parent.GetComponent<RegionManager>();
-                defenderUnit.currentProvince.CheckRegionUnits(defenderUnit.currentProvince);
+                StartCoroutine(DestroyDivision_Co(defenderUnit));
             }
         }
 
@@ -784,12 +714,17 @@ public class MovePoint : MonoBehaviour
 
         for (int j = 0; j < attackerUnit.unitsHealth.Count; j++)
         {
-            attackerUnit.unitsHealth[j].health -= damageToAttacker;
+            if (attackerUnit.unitsHealth[j].unit.hardness <= 15)
+            {
+                attackerUnit.unitsHealth[j].health -= attackerDamage_Soft;
+            }
+            else if (attackerUnit.unitsHealth[j].unit.hardness > 15)
+            {
+                attackerUnit.unitsHealth[j].health -= attackerDamage_Hard;
+            }
 
             if (attackerUnit.unitsHealth[j].health <= 0)
             {
-                damageToAttacker = Mathf.Abs(attackerUnit.unitsHealth[j].health);
-
                 attackerUnit.currentCountry.moneyNaturalIncome += attackerUnit.unitsHealth[j].unit.moneyIncomeCost;
                 attackerUnit.currentCountry.foodNaturalIncome += attackerUnit.unitsHealth[j].unit.foodIncomeCost;
 
@@ -816,7 +751,7 @@ public class MovePoint : MonoBehaviour
         if (attackerUnit.unitsHealth.Count < 1)
         {
             attackerUnit.currentProvince = transform.parent.GetComponent<RegionManager>();
-            attackerUnit.currentProvince.CheckRegionUnits(attackerUnit.currentProvince);
+            StartCoroutine(DestroyDivision_Co(attackerUnit));
         }
 
         #endregion
@@ -830,6 +765,12 @@ public class MovePoint : MonoBehaviour
         ReferencesManager.Instance.army.attackerArmyLossesValue[2] = att_hvy_losses;
     }
 
+    private IEnumerator DestroyDivision_Co(UnitMovement division)
+    {
+        division.GetComponent<Animator>().Play("divisionDie");
+        yield return new WaitForSecondsRealtime(0.6f);
+        division.currentProvince.CheckRegionUnits(division.currentProvince);
+    }
 
     public void ConfirmFight()
     {
@@ -867,7 +808,7 @@ public class MovePoint : MonoBehaviour
                 }
             }
         }
-        CountLosses(winChance, offset);
+        ApplyDamage(ReferencesManager.Instance.gameSettings.currentBattle);
     }
 
     public void CancelFight()
@@ -936,7 +877,7 @@ public class MovePoint : MonoBehaviour
     {
         foreach (UnitMovement.UnitHealth unit in battle.myUnits)
         {
-            ReferencesManager.Instance.regionUI.CreateFightUnitUI(unit.unit, ReferencesManager.Instance.regionUI.fightPanelAttackerHorizontalGroup);
+            ReferencesManager.Instance.regionUI.CreateFightUnitUI(unit.unit, ReferencesManager.Instance.regionUI.fightPanelAttackerHorizontalGroup, battle.attackerDivision);
 
             if (unit.unit.type == UnitScriptableObject.Type.SOLDIER)
             {

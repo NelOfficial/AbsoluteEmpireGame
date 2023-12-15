@@ -70,49 +70,9 @@ public class RegionManager : MonoBehaviour
     [HideInInspector] public bool isSelected;
     [HideInInspector] public bool canSelect = true;
 
-    private int random = 0;
-
     private Vector3 StartPos;
     private Vector3 PosAfter;
 
-    private CameraMovement mainCamera;
-
-
-    private void Start()
-    {
-        mEditor = FindObjectOfType<MapEditor>();
-
-        if (mEditor != null)
-        {
-            currentRegionManager = null;
-        }
-
-        mainCamera = FindObjectOfType<CameraMovement>();
-        //StartPos = camera.Cam.WorldToViewportPoint(Input.mousePosition);
-
-        random = Random.Range(2000, 12000);
-
-        currentDefenseUnits = ReferencesManager.Instance.gameSettings.currentDefenseUnits_FirstLevel;
-
-
-        if (population == 0)
-        {
-            if (capital)
-            {
-                population = Random.Range(100000, 800000);
-            }
-            else if (!capital)
-            {
-                population = random;
-            }
-        }
-
-        //if (gameSettings.onlineGame)
-        //{
-        //    Multiplayer.Instance.SetRegionValues(_id, population, hasArmy, goldIncome, foodIncome, civFactory_Amount,
-        //    infrastructure_Amount, farms_Amount, cheFarms, regionScore);
-        //}
-    }
 
     private void OnMouseDown()
     {
@@ -348,7 +308,6 @@ public class RegionManager : MonoBehaviour
 
         ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
         ReferencesManager.Instance.countryManager.UpdateValuesUI();
-        region.UpdateRegionUI();
 
         if (ReferencesManager.Instance.gameSettings.onlineGame)
         {
@@ -473,7 +432,7 @@ public class RegionManager : MonoBehaviour
 
                 for (int i = 0; i < regionClaims.Count; i++)
                 {
-                    if (currentRegionManager.currentCountry != regionClaims[i])
+                    if (currentRegionManager.currentCountry.country._id != regionClaims[i]._id)
                     {
                         GameObject spawnedCountryFlag = Instantiate(ReferencesManager.Instance.regionUI.countryFlagPrefab, ReferencesManager.Instance.regionUI.regionClaimsContainer.transform);
                         spawnedCountryFlag.GetComponent<FillCountryFlag>().country = regionClaims[i];
@@ -484,6 +443,7 @@ public class RegionManager : MonoBehaviour
                 }
 
                 ReferencesManager.Instance.regionUI.UpdateGarrisonUI();
+                ReferencesManager.Instance.regionUI.UpdateBuildingUI();
                 ReferencesManager.Instance.regionUI.UpdateBuildingUI();
 
                 UpdateRegionUI();

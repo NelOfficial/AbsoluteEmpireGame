@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Photon.Realtime;
 
 public class RegionLoader : MonoBehaviour
 {
@@ -12,24 +13,23 @@ public class RegionLoader : MonoBehaviour
 
     void Start()
     {
+        ReferencesManager.Instance.countryManager.regions.Clear();
 
-        regionsMax = ReferencesManager.Instance.countryManager.regions.Count;
-
-        foreach (RegionManager region in ReferencesManager.Instance.countryManager.regions)
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
         {
-            region.isSelected = false;
-            region.canSelect = true;
-            region.GetComponent<SpriteRenderer>().color = region.currentCountry.country.countryColor;
-            ReferencesManager.Instance.regionUI = FindObjectOfType<RegionUI>();
+            for (int r = 0; r < ReferencesManager.Instance.countryManager.countries[i].myRegions.Count; r++)
+            {
+                ReferencesManager.Instance.countryManager.regions.Add(ReferencesManager.Instance.countryManager.countries[i].myRegions[r]);
+            }
         }
-
-        //StartCoroutine(LoadRegions_Co());
 
         for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
         {
-            RegionManager region = ReferencesManager.Instance.countryManager.regions[i];
-            region.GetComponent<SpriteRenderer>().color = region.currentCountry.country.countryColor;
+            ReferencesManager.Instance.countryManager.regions[i]._id = i;
         }
+
+        regionsMax = ReferencesManager.Instance.countryManager.regions.Count;
+        StartCoroutine(LoadRegions_Co());
 
         ReferencesManager.Instance.mainCamera.Map_MoveTouch_IsAllowed = true;
 
@@ -52,33 +52,39 @@ public class RegionLoader : MonoBehaviour
     {
         ReferencesManager.Instance.regionUI.regionsLoadingPanel.SetActive(true);
 
-        ReferencesManager.Instance.regionUI.regionsLoadingMainText.text = "Загружаю провинции из файлов...";
-
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
+        ReferencesManager.Instance.regionUI.regionsLoadingMainText.text = "Загрузка провинций...";
+        foreach (RegionManager region in ReferencesManager.Instance.countryManager.regions)
         {
-            for (int k = 0; k < ReferencesManager.Instance.countryManager.countries[i].myRegions.Count; k++)
+            region.isSelected = false;
+            region.canSelect = true;
+
+            if (ReferencesManager.Instance.mEditor != null)
             {
-                RegionManager region = ReferencesManager.Instance.countryManager.countries[i].myRegions[k];
-
-                region.gameObject.SetActive(false);
-                regionsDeleted++;
-                UpdateDeletingLoadingBar();
+                region.currentRegionManager = null;
             }
-        }
 
-        ReferencesManager.Instance.regionUI.regionsLoadingMainText.text = "Назначаю данные в провинции...";
+            int random = Random.Range(2000, 12000);
 
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
-        {
-            foreach (RegionManager region in ReferencesManager.Instance.countryManager.countries[i].myRegions)
+            region.currentDefenseUnits = ReferencesManager.Instance.gameSettings.currentDefenseUnits_FirstLevel;
+
+            if (region.population == 0)
             {
-                region.gameObject.SetActive(true);
-                region.UpdateRegionGarrison();
-                regionsCompleted++;
-                UpdateLoadingBar();
+                if (region.capital)
+                {
+                    region.population = Random.Range(100000, 800000);
+                }
+                else if (!region.capital)
+                {
+                    region.population = random;
+                }
             }
-        }
+            region.GetComponent<SpriteRenderer>().color = region.currentCountry.country.countryColor;
 
+            regionsCompleted++;
+            UpdateLoadingBar();
+
+            yield return new WaitForSecondsRealtime(0.000001f);
+        }
 
         ReferencesManager.Instance.regionUI.regionsLoadingPanel.SetActive(false);
 
