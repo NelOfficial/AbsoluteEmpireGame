@@ -47,9 +47,8 @@ public class MovePoint : MonoBehaviour
             if (!noAutoCollider)
             {
                 this.GetComponent<PolygonCollider2D>().points = regionTo.GetComponent<PolygonCollider2D>().points;
+                this.transform.position = regionTo.position;
             }
-
-            this.transform.position = regionTo.position;
 
             //parentRegion.movePoints.Clear();
             //foreach (Transform child in parentRegion.transform)
