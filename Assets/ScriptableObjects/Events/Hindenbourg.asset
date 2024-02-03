@@ -15,6 +15,7 @@ MonoBehaviour:
   id: 11
   _name: "\u041A\u0430\u0442\u0430\u0441\u0442\u0440\u043E\u0444\u0430 \u0434\u0438\u0440\u0438\u0436\u0430\u0431\u043B\u044F
     \xAB\u0413\u0438\u043D\u0434\u0435\u043D\u0431\u0443\u0440\u0433\xBB"
+  _nameEN: The Hindenburg airship disaster
   description: "\u0410\u0432\u0438\u0430\u0446\u0438\u043E\u043D\u043D\u0430\u044F
     \u043A\u0430\u0442\u0430\u0441\u0442\u0440\u043E\u0444\u0430 \u043D\u0430 \u0430\u0432\u0438\u0430\u0431\u0430\u0437\u0435
     \u041B\u0435\u0439\u043A\u0445\u0435\u0440\u0441\u0442 \u0432 \u0433\u043E\u0440\u043E\u0434\u0435
@@ -35,14 +36,24 @@ MonoBehaviour:
     \u0435\u0449\u0451 1 \u0440\u0430\u0431\u043E\u0447\u0438\u0439 \u043D\u0430
     \u0437\u0435\u043C\u043B\u0435 \u043F\u043E\u0433\u0438\u0431 \u0432\u043E \u0432\u0440\u0435\u043C\u044F
     \u043F\u043E\u0436\u0430\u0440\u0430."
+  descriptionEN: An aviation accident at Lakehurst Air Force Base in Manchester Township.
+    While attempting to land after dropping the anchor ropes, the airship suddenly
+    caught fire and crashed to the ground, burning to the ground in 34 seconds. There
+    were 97 people on board - 61 crew members and 36 passengers. As a result of the
+    disaster, 35 people on board the airship died, and 1 more worker on the ground
+    died during the fire.
   date: 6-5-1937
   image: {fileID: 21300000, guid: e6dc4e5a7578ad94f9b5d82d546595f5, type: 3}
   _checked: 0
   silentEvent: 0
   conditions:
   - 
+  receivers: 
+  exceptionsReceivers: 
+  aiWillDo_Index: 0
   buttons:
   - name: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+    nameEN: Close
     actions:
     - 
     rejectUltimatum: 0

@@ -20,7 +20,8 @@ MonoBehaviour:
     - \u0423\u043B\u0443\u0447\u0448\u0435\u043D\u043D\u0430\u044F \u0430\u0440\u0442\u0438\u043B\u043B\u0435\u0440\u0438\u044F"
   descriptionEN: This technology will open access to a new type of troops - Improved
     artillery
-  moneyCost: 10000
+  moneyCost: 5500
+  researchPointsCost: 70
   moves: 7
   startReasearched: 0
   optional: 0

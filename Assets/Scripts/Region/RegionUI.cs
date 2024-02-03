@@ -4,6 +4,8 @@ using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
+using Photon.Chat.Demo;
 
 public class RegionUI : MonoBehaviour
 {
@@ -137,6 +139,9 @@ public class RegionUI : MonoBehaviour
 
     [SerializeField] GameObject RegionInfoCanvas;
 
+    public GameObject cancelRegionSelectionModeButton;
+
+
     private void Awake()
     {
         if (PlayerPrefs.HasKey("buttonDesign"))
@@ -230,6 +235,25 @@ public class RegionUI : MonoBehaviour
             {
                 WarningManager.Instance.Warn(ReferencesManager.Instance.gameSettings.NO_GOLD);
             }
+        }
+    }
+
+    public void UpdateTenplatesTab(Transform templatesContainer)
+    {
+        foreach (Transform child in templatesContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < ReferencesManager.Instance.army.templates.Count; i++)
+        {
+            GameObject newTemplateObject = Instantiate(ReferencesManager.Instance.countryInfo._templatePrefab, templatesContainer);
+
+            newTemplateObject.GetComponent<ArmyTemplateItem_UI>()._index = i;
+            newTemplateObject.GetComponent<ArmyTemplateItem_UI>()._name = ReferencesManager.Instance.army.templates[i]._name;
+            newTemplateObject.GetComponent<ArmyTemplateItem_UI>().SetUp();
+
+            newTemplateObject.GetComponent<Button>().onClick.AddListener(newTemplateObject.GetComponent<ArmyTemplateItem_UI>().BuyTemplate);
         }
     }
 
@@ -330,15 +354,14 @@ public class RegionUI : MonoBehaviour
         }
     }
 
-    public void UpdateUnitsUI()
+    public void UpdateUnitsUI(bool checkUnits)
     {
-        StartCoroutine(UpdateUnitsUI_Co());
+        StartCoroutine(UpdateUnitsUI_Co(checkUnits));
     }
 
     public void CreateUnitUI(Sprite unitIcon, UnitScriptableObject unit, UnitMovement division)
     {
-        UnitMovement unitMovement = ReferencesManager.Instance.regionManager.currentRegionManager.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
-        if (unitMovement.unitsHealth != null)
+        if (division.unitsHealth.Count > 0)
         {
             GameObject spawnedUIButton = Instantiate(ReferencesManager.Instance.army.unitUIPrefab, ReferencesManager.Instance.army.armyHorizontalGroup.transform);
             spawnedUIButton.GetComponent<UnitUI>().unitIcon.sprite = unitIcon;
@@ -346,7 +369,7 @@ public class RegionUI : MonoBehaviour
             spawnedUIButton.GetComponent<UnitUI>().unitWorldObject = division.gameObject;
             spawnedUIButton.GetComponent<UnitUI>().UpdateUI();
 
-            if (unitMovement.unitsHealth.Count != ReferencesManager.Instance.army.maxUnits)
+            if (division.unitsHealth.Count != ReferencesManager.Instance.army.maxUnits)
             {
                 addArmyButton.gameObject.SetActive(true);
                 ReferencesManager.Instance.army.addArmyButton.transform.SetAsLastSibling();
@@ -406,7 +429,7 @@ public class RegionUI : MonoBehaviour
     }
 
 
-    private IEnumerator UpdateUnitsUI_Co()
+    private IEnumerator UpdateUnitsUI_Co(bool checkUnits)
     {
         armyHorizontalAnimationUI.SetActive(true);
         foreach (Transform child in ReferencesManager.Instance.army.armyHorizontalGroup.transform)
@@ -416,7 +439,7 @@ public class RegionUI : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
-        yield return new WaitForSeconds(0f);
+        yield return new WaitForSeconds(0.000001f);
         unitUIs.Clear();
         //yield return new WaitForSeconds(0f);
 
@@ -433,7 +456,7 @@ public class RegionUI : MonoBehaviour
                         CreateUnitUI(unit.unit.icon, unit.unit, unitMovement);
                     }
 
-                    if (unitMovement.unitsHealth.Count == 0)
+                    if (unitMovement.unitsHealth.Count == 0 && checkUnits)
                     {
                         ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy = false;
                         unitMovement.unitsHealth.Clear();
@@ -464,10 +487,7 @@ public class RegionUI : MonoBehaviour
                         }
                     }
                 }
-                catch (System.Exception)
-                {
-
-                }
+                catch (System.Exception) {}
             }
         }
 

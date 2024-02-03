@@ -1,10 +1,10 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Linq;
+
 
 public class Multiplayer : MonoBehaviourPunCallbacks
 {
@@ -21,11 +21,15 @@ public class Multiplayer : MonoBehaviourPunCallbacks
     CountrySettings sender;
     CountrySettings receiver;
 
+    [SerializeField] GameObject _playerListButton;
+
 
     private void Start()
     {
         Instance = this;
         photonView = GetComponent<PhotonView>();
+
+        _playerListButton.SetActive(ReferencesManager.Instance.gameSettings.onlineGame);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -158,22 +162,12 @@ public class Multiplayer : MonoBehaviourPunCallbacks
 
             if (currentCountry.country._id == countryID)
             {
-                if (ideology == "Либерализм")
-                {
-                    currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[0];
-                    currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[0];
-                }
-                else if (ideology == "Республика")
+                if (ideology == "Неопределённый")
                 {
                     currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[1];
                     currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[1];
                 }
-                else if (ideology == "Неопределённый")
-                {
-                    currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[1];
-                    currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[1];
-                }
-                else if (ideology == "Консерватизм")
+                else if (ideology == "Демократия")
                 {
                     currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[1];
                     currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[1];
@@ -182,11 +176,6 @@ public class Multiplayer : MonoBehaviourPunCallbacks
                 {
                     currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[2];
                     currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[2];
-                }
-                else if (ideology == "Национал-Социализм")
-                {
-                    currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[3];
-                    currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[3];
                 }
                 else if (ideology == "Фашизм")
                 {
@@ -401,7 +390,7 @@ public class Multiplayer : MonoBehaviourPunCallbacks
                     }
                 }
 
-                ReferencesManager.Instance.regionUI.UpdateUnitsUI();
+                ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
 
                 SetCountryValues(
                     region.currentCountry.country._id,
@@ -508,7 +497,7 @@ public class Multiplayer : MonoBehaviourPunCallbacks
 
                 ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
                 ReferencesManager.Instance.countryManager.UpdateValuesUI();
-                ReferencesManager.Instance.regionUI.UpdateUnitsUI();
+                ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
             }
         }
     }
@@ -580,7 +569,7 @@ public class Multiplayer : MonoBehaviourPunCallbacks
         toRegion.hasArmy = true;
         toRegion.CheckRegionUnits(toRegion);
 
-        ReferencesManager.Instance.regionUI.UpdateUnitsUI();
+        ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
     }
 
     #endregion

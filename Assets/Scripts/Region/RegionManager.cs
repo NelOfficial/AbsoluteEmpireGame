@@ -21,8 +21,6 @@ public class RegionManager : MonoBehaviour
     [HideInInspector] public float happines;
     [HideInInspector] public float happinesGrowRate;
 
-    private MapEditor mEditor;
-
     [HideInInspector] public RegionManager currentRegionManager;
 
     [Header("Region Owner/Claims")]
@@ -35,7 +33,7 @@ public class RegionManager : MonoBehaviour
     [HideInInspector] public List<UnitMovement.UnitHealth> currentDefenseUnits = new List<UnitMovement.UnitHealth>();
     public List<Transform> movePoints = new List<Transform>();
     [HideInInspector] public bool moveMode = false;
-    [HideInInspector] public bool hasArmy;
+    public bool hasArmy;
 
     [Header("RegionEconomy")]
     [HideInInspector] public int goldIncome;
@@ -50,6 +48,7 @@ public class RegionManager : MonoBehaviour
     [HideInInspector] public int infrastructure_Amount;
     [HideInInspector] public int farms_Amount;
     [HideInInspector] public int cheFarms;
+    [HideInInspector] public int researchLabs;
     public int fortifications_Amount;
 
     public int regionScore;
@@ -81,32 +80,38 @@ public class RegionManager : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if (ReferencesManager.Instance.mapType != null)
+        if (Application.platform == RuntimePlatform.WindowsPlayer)
         {
-            if (!ReferencesManager.Instance.mapType.viewMap)
+            if (ReferencesManager.Instance.mapType != null)
             {
-                this.GetComponent<SpriteRenderer>().color = hoverColor;
+                if (!ReferencesManager.Instance.mapType.viewMap)
+                {
+                    this.GetComponent<SpriteRenderer>().color = hoverColor;
+                }
             }
         }
     }
 
     private void OnMouseExit()
     {
-        if (ReferencesManager.Instance.mapType != null)
+        if (Application.platform == RuntimePlatform.WindowsPlayer)
         {
-            if (!ReferencesManager.Instance.mapType.viewMap)
+            if (ReferencesManager.Instance.mapType != null)
             {
-                if (currentRegionManager != null && currentRegionManager == this.GetComponent<RegionManager>())
+                if (!ReferencesManager.Instance.mapType.viewMap)
                 {
-                    this.GetComponent<SpriteRenderer>().color = currentRegionManager.selectedColor;
-                }
-                else if (currentRegionManager == null)
-                {
-                    this.GetComponent<SpriteRenderer>().color = this.GetComponent<RegionManager>().currentCountry.country.countryColor;
-                }
-                else if (currentRegionManager != null && currentRegionManager != this.GetComponent<RegionManager>())
-                {
-                    this.GetComponent<SpriteRenderer>().color = this.GetComponent<RegionManager>().currentCountry.country.countryColor;
+                    if (currentRegionManager != null && currentRegionManager == this.GetComponent<RegionManager>())
+                    {
+                        this.GetComponent<SpriteRenderer>().color = currentRegionManager.selectedColor;
+                    }
+                    else if (currentRegionManager == null)
+                    {
+                        this.GetComponent<SpriteRenderer>().color = this.GetComponent<RegionManager>().currentCountry.country.countryColor;
+                    }
+                    else if (currentRegionManager != null && currentRegionManager != this.GetComponent<RegionManager>())
+                    {
+                        this.GetComponent<SpriteRenderer>().color = this.GetComponent<RegionManager>().currentCountry.country.countryColor;
+                    }
                 }
             }
         }
@@ -129,9 +134,9 @@ public class RegionManager : MonoBehaviour
             {
                 if (ReferencesManager.Instance.mainCamera.Map_MoveTouch_IsAllowed)
                 {
-                    if (mEditor != null)
+                    if (ReferencesManager.Instance.mEditor != null)
                     {
-                        if (mEditor.paintMapMode)
+                        if (ReferencesManager.Instance.mEditor.paintMapMode)
                         {
                             PaintRegion();
                         }
@@ -139,6 +144,10 @@ public class RegionManager : MonoBehaviour
                     else
                     {
                         SelectRegion();
+                    }
+                    if (ReferencesManager.Instance.gameSettings.regionSelectionMode)
+                    {
+                        D_SelectRegion(ReferencesManager.Instance.gameSettings.provincesList);
                     }
                 }
             }
@@ -265,12 +274,12 @@ public class RegionManager : MonoBehaviour
     {
         int check = currentRegionManager.infrastructure_Amount + 1;
 
-        if (currentRegionManager.currentCountry.money >= 800)
+        if (currentRegionManager.currentCountry.money >= 200)
         {
             if (check <= 10)
             {
                 currentRegionManager.infrastructure_Amount++;
-                currentRegionManager.currentCountry.money -= 800;
+                currentRegionManager.currentCountry.money -= 200;
                 currentRegionManager.currentCountry.moneyNaturalIncome += 8;
             }
         }
@@ -491,13 +500,60 @@ public class RegionManager : MonoBehaviour
                 //currentRegionManager = hit.collider.gameObject.GetComponent<RegionManager>();
                 hit.collider.gameObject.GetComponent<RegionManager>().currentCountry.myRegions.Remove(hit.collider.gameObject.GetComponent<RegionManager>());
 
-                hit.collider.gameObject.GetComponent<RegionManager>().currentCountry = mEditor.selectedCountry;
+                hit.collider.gameObject.GetComponent<RegionManager>().currentCountry = ReferencesManager.Instance.mEditor.selectedCountry;
                 hit.collider.gameObject.GetComponent<RegionManager>().currentCountry.myRegions.Add(hit.collider.gameObject.GetComponent<RegionManager>());
                 hit.collider.transform.SetParent(hit.collider.gameObject.GetComponent<RegionManager>().currentCountry.transform);
 
                 UpdateRegionsGraphics();
 
                 UpdateRegions();
+            }
+        }
+    }
+
+    public void D_SelectRegion(List<RegionManager> list)
+    {
+        if (canSelect)
+        {
+            Vector2 mainCamera = ReferencesManager.Instance.mainCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(mainCamera, Input.mousePosition);
+
+            if (hit.collider)
+            {
+                if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+                {
+                    if (EventSystem.current.IsPointerOverGameObject())
+                    {
+                        return;
+                    }
+                }
+                else if (Application.platform == RuntimePlatform.Android)
+                {
+                    if (Input.touchCount > 0)
+                    {
+                        Touch touch = Input.GetTouch(0);
+
+                        if (touch.phase == TouchPhase.Began)
+                        {
+                            var touchPostition = touch.position;
+
+                            bool isOverUI = touchPostition.IsPointerOverGameObject();
+
+                            if (isOverUI)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+
+
+                list.Add(hit.collider.GetComponent<RegionManager>());
+
+                foreach (RegionManager province in list)
+                {
+                    province.GetComponent<SpriteRenderer>().color = ReferencesManager.Instance.gameSettings.greenColor;
+                }
             }
         }
     }
@@ -535,7 +591,7 @@ public class RegionManager : MonoBehaviour
             ReferencesManager.Instance.regionUI.regionUpgradeButton.interactable = true;
         }
 
-        if (currentRegionManager.currentRegionManager != ReferencesManager.Instance.countryManager.currentCountry)
+        if (currentRegionManager.currentCountry != ReferencesManager.Instance.countryManager.currentCountry)
         {
             if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(currentRegionManager.currentCountry, ReferencesManager.Instance.countryManager.currentCountry).right)
             {
@@ -546,8 +602,12 @@ public class RegionManager : MonoBehaviour
                 ReferencesManager.Instance.regionUI.moveButton.interactable = false;
             }
         }
+        else
+        {
+            ReferencesManager.Instance.regionUI.moveButton.interactable = true;
+        }
 
-        ReferencesManager.Instance.regionUI.UpdateUnitsUI();
+        ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
         UpdateRegionUI();
         ReferencesManager.Instance.regionUI.UpdateBuildingUI();
         CheckRegionUnits(currentRegionManager);
@@ -791,6 +851,10 @@ public class RegionManager : MonoBehaviour
             {
                 region.cheFarms++;
             }
+            else if (building._name == "REL")
+            {
+                region.researchLabs++;
+            }
         }
     }
 
@@ -803,6 +867,7 @@ public class RegionManager : MonoBehaviour
             region.currentCountry.moneyNaturalIncome += building.goldIncome;
             region.currentCountry.foodNaturalIncome += building.foodIncome;
             region.currentCountry.recrootsIncome += building.recrootsIncome;
+            region.currentCountry.researchPointsIncome += building.researchPointsIncome;
         }
 
         if (building == ReferencesManager.Instance.gameSettings.fabric)
@@ -816,6 +881,10 @@ public class RegionManager : MonoBehaviour
         if (building == ReferencesManager.Instance.gameSettings.chefarm)
         {
             region.currentCountry.chemicalFarms++;
+        }
+        if (building == ReferencesManager.Instance.gameSettings.researchLab)
+        {
+            region.currentCountry.researchLabs++;
         }
 
         if (ReferencesManager.Instance.gameSettings.onlineGame)

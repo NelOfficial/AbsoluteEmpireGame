@@ -9,6 +9,9 @@ public class GameSettings : MonoBehaviour
 	public bool diplomatyCheats;
 	public bool onlineGame;
 	public bool jsonTest;
+	public bool regionSelectionMode;
+
+	public List<RegionManager> provincesList = new List<RegionManager>();
 
 	public UnitMovement.BattleInfo currentBattle;
 
@@ -38,9 +41,13 @@ public class GameSettings : MonoBehaviour
 	public UnitScriptableObject motoLVL1;
 	public UnitScriptableObject motoLVL2;
 
+	public UnitScriptableObject antitankLVL1;
+	public UnitScriptableObject antitankLVL2;
+
 	public BuildingScriptableObject fabric;
 	public BuildingScriptableObject farm;
 	public BuildingScriptableObject chefarm;
+	public BuildingScriptableObject researchLab;
 
 	public List<UnitMovement.UnitHealth> currentDefenseUnits_FirstLevel = new List<UnitMovement.UnitHealth>();
 	public List<UnitMovement.UnitHealth> currentDefenseUnits_SecondLevel = new List<UnitMovement.UnitHealth>();

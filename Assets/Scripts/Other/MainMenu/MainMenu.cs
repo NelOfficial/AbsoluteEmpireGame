@@ -40,6 +40,7 @@ public class MainMenu : MonoBehaviour
     private AsyncOperation loading;
 
     [SerializeField] TMP_Dropdown difficultyDropdown;
+    [SerializeField] GameObject loadingPanel;
     
     private void Awake()
     {
@@ -54,11 +55,6 @@ public class MainMenu : MonoBehaviour
         }
 
         SetLanguage(PlayerPrefs.GetInt("languageId"));
-
-        if (PlayerPrefs.HasKey("1_PLAYER_COUNTRY"))
-        {
-            LoadGameButton.interactable = true;
-        }
     }
 
     public void UpdateNickname(string nickname)
@@ -115,6 +111,8 @@ public class MainMenu : MonoBehaviour
 
     private IEnumerator LoadSceneCoroutine(string sceneName)
     {
+        loadingPanel.SetActive(true);
+
         loading = SceneManager.LoadSceneAsync(sceneName);
         loading.allowSceneActivation = true;
 

@@ -24,6 +24,13 @@ public class ModEventImage : MonoBehaviour
 
     public void SetUp()
     {
+        if (string.IsNullOrEmpty(_eventCreatorManager.modEvents[_eventCreatorManager.currentModEventIndex].imagePath))
+        {
+            _eventImage.sprite = null;
+            currentPicturePath = "";
+            _eventUploadImageTip.SetActive(true);
+        }
+
         if (_eventImage.sprite == null) // Hasn't image
         {
             string path = Path.Combine(Application.persistentDataPath, "localMods", _mapEditor.nameInputField.text, "events", $"{_eventCreatorManager.modEvents[_eventCreatorManager.currentModEventIndex].id}", $"{_eventCreatorManager.modEvents[_eventCreatorManager.currentModEventIndex].id}.jpg");

@@ -113,7 +113,7 @@ public class OfflineGameSettings : MonoBehaviour
             }
         }
 
-        imagePreview.sprite = currentScenario.mapPreview;
+        //imagePreview.sprite = currentScenario.mapPreview;
 
         UpdateSelectionCountriesUI();
     }

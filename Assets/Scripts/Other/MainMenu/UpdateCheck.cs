@@ -3,15 +3,16 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 
 namespace UpgradeSystem
 {
 
     struct GameData
     {
+        public string Name;
         public string DescriptionRU;
         public string DescriptionEN;
+        public string Description;
         public string Version;
         public string Url;
     }
@@ -86,6 +87,7 @@ namespace UpgradeSystem
                 if (!request.isNetworkError)
                 {
                     latestGameData = JsonUtility.FromJson<GameData>(request.downloadHandler.text);
+
                     if (!string.IsNullOrEmpty(latestGameData.Version) && !Application.version.Equals(latestGameData.Version))
                     {
                         // new update is available

@@ -15,6 +15,7 @@ MonoBehaviour:
   id: 16
   _name: "\u041F\u0440\u0438\u0441\u043E\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u0435
     \u041F\u0440\u0438\u0431\u0430\u043B\u0442\u0438\u043A\u0438 \u043A \u0421\u0421\u0421\u0420"
+  _nameEN: The accession of the Baltic States to the USSR
   description: "3 \u0438\u044E\u043D\u044F \u043F\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439
     \u0432 \u0434\u0435\u043B\u0430\u0445 \u0421\u0421\u0421\u0420 \u0432 \u041B\u0438\u0442\u0432\u0435
     \u0412. \u0421\u0435\u043C\u0451\u043D\u043E\u0432 \u043F\u0438\u0448\u0435\u0442
@@ -62,21 +63,42 @@ MonoBehaviour:
     \u043F\u0440\u0435\u0437\u0438\u0434\u0435\u043D\u0442\u043E\u0432 \u0431\u0430\u043B\u0442\u0438\u0439\u0441\u043A\u0438\u0445
     \u0441\u0442\u0440\u0430\u043D, \u0438 \u0431\u044B\u043B\u0438 \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u044B
     \u0441\u043E\u0433\u043B\u0430\u0448\u0435\u043D\u0438\u044F"
+  descriptionEN: 'On June 3, the Charge d''affaires of the USSR in Lithuania, V.
+    Semenov, wrote an overview note on the situation in Lithuania, in which the Soviet
+    plenipotentiary drew Moscow''s attention to the desire of the Lithuanian government
+    to "surrender into the hands of Germany", and to activate "the activities of
+    the German fifth column and arming members of the Union of shooters", preparing
+    for mobilization. It speaks of the "genuine intentions of the Lithuanian ruling
+    circles", which, in the event of a settlement of the conflict, will only strengthen
+    "their line against the treaty by switching to a "business" collusion with Germany,
+    waiting only for a convenient moment for a direct strike against the Soviet garrisons."
+
+    A
+    limited contingent of the Red Army (for example, in Latvia, in a confidential
+    protocol attached to the mutual assistance agreement, the number of Soviet troops
+    was agreed at 25 thousand people[9], which is comparable to the size of the Latvian
+    army) It was introduced with the permission of the Presidents of the Baltic countries,
+    and agreements were concluded'
   date: 21-7-1940
   image: {fileID: 21300000, guid: 4c759cf3e9190ed4a8a27e318f1d1418, type: 3}
-  _checked: 1
+  _checked: 0
   silentEvent: 0
   conditions:
   - country_exist;37
+  receivers: 
+  exceptionsReceivers: 
+  aiWillDo_Index: 0
   buttons:
   - name: "\u0422\u0440\u0438 \u043D\u043E\u0432\u044B\u0435 \u0441\u043E\u0432\u0435\u0442\u0441\u043A\u0438\u0435
       \u0440\u0435\u0441\u043F\u0443\u0431\u043B\u0438\u043A\u0438"
+    nameEN: Three new Soviet republics
     actions:
     - annex;37;43;44;45;46
-    - annex;37;231;232;233;234
-    - annex;37;236;237
+    - annex;37;244;245;246;247
+    - annex;37;275;249;250
     rejectUltimatum: 0
   - name: "\u041D\u0435\u0442!"
+    nameEN: No!
     actions:
     - war_to_countries_in_regs;37;43;44;45;46;231;232;233;234;236;237
     rejectUltimatum: 1

@@ -2,7 +2,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Collections;
 
@@ -1776,6 +1775,16 @@ public class DiplomatyUI : MonoBehaviour
 
         yield return new WaitForSeconds(0.1f);
     }
+
+
+    public void SetDiploRegionSelectionMode()
+    {
+        ReferencesManager.Instance.regionUI.cancelRegionSelectionModeButton.SetActive(true);
+        ReferencesManager.Instance.regionUI.CloseAllUI();
+
+        ReferencesManager.Instance.gameSettings.regionSelectionMode = true;
+    }
+
 
     [System.Serializable]
     public class LocalOffer

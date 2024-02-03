@@ -59,6 +59,7 @@ SpriteAtlas:
     - cd8f7357ca152f24dbc956ddb0a3a9c0: 21300000
     - a02ec288c48c1cd498192f3e61c7e2ed: 21300000
     - 36e17baa19bfe714f9e45683a3393c28: 21300000
+    - 89d22d1ca9acdc142890a8ba93fca8b9: 21300000
     - b2740ddf037e43a42b2b6b533e58e072: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -71,6 +72,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: cd8f7357ca152f24dbc956ddb0a3a9c0, type: 3}
   - {fileID: 21300000, guid: a02ec288c48c1cd498192f3e61c7e2ed, type: 3}
   - {fileID: 21300000, guid: 36e17baa19bfe714f9e45683a3393c28, type: 3}
+  - {fileID: 21300000, guid: 89d22d1ca9acdc142890a8ba93fca8b9, type: 3}
   - {fileID: 21300000, guid: b2740ddf037e43a42b2b6b533e58e072, type: 3}
   m_PackedSpriteNamesToIndex:
   - steek_transparent
@@ -82,6 +84,7 @@ SpriteAtlas:
   - moneyIcon256PNG
   - moneyIconWhite256PNG
   - foodIconWhite256PNG
+  - researchPointIcon256PNG
   - oil_transparent
   m_RenderDataMap: {}
   m_Tag: ResAtlas

@@ -18,7 +18,7 @@ MonoBehaviour:
   _uiName: "\u0420\u0443\u043C\u044B\u043D\u0438\u044F"
   _tag: RUM
   countryType: 2
-  countryFlag: {fileID: 21300000, guid: 518f44270eaf27a43ad9c8b7c3fc2868, type: 3}
+  countryFlag: {fileID: 21300000, guid: a831fcac43e631e4a93d2ab9cdb90057, type: 3}
   ally: 
   capitulateLimit: 20
   countryColor: {r: 0.58431375, g: 0.56078434, b: 0.27058825, a: 0.5}

@@ -9,7 +9,7 @@ using System.IO;
 using System;
 using System.Text;
 using UnityEngine.Networking;
-using Unity.VisualScripting;
+
 
 public class MapEditor : MonoBehaviour
 {
@@ -76,25 +76,22 @@ public class MapEditor : MonoBehaviour
     private Texture2D EventImageTexture;
     public List<int> countriesInRegionsIDs = new List<int>();
 
+    public List<ModCustomCountry> modCustomCountries = new List<ModCustomCountry>();
+
+    [Header("# Create Country UI:")]
+    [SerializeField] TMP_InputField _countryName_RU_Inputfield;
+    [SerializeField] TMP_InputField _countryName_EN_Inputfield;
+
+    [SerializeField] TMP_InputField _countryTag_Inputfield;
+    [SerializeField] TMP_InputField _countryCapLimit_Inputfield;
+
+    [SerializeField] TMP_InputField _countryIdeology_Dropdown;
+
+    [SerializeField] Image[] _countryImages;
 
     private void Start()
     {
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
-        {
-            for (int r = 0; r < ReferencesManager.Instance.countryManager.countries[i].myRegions.Count; r++)
-            {
-                if (!ReferencesManager.Instance.countryManager.regions.Contains(ReferencesManager.Instance.countryManager.countries[i].myRegions[r]))
-                {
-                    ReferencesManager.Instance.countryManager.regions.Add(ReferencesManager.Instance.countryManager.countries[i].myRegions[r]);
-                }
-            }
-        }
-
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
-        {
-            RegionManager region = ReferencesManager.Instance.countryManager.regions[i];
-            region._id = i;
-        }
+        ReferencesManager.Instance.countryManager.regions = FindObjectsOfType<RegionManager>().ToList();
 
         ReferencesManager.Instance.regionManager.UpdateRegions();
 
@@ -480,7 +477,7 @@ public class MapEditor : MonoBehaviour
                 }
                 catch (Exception) {}
 
-                _localEvent_conditions = GetValue(eventLines[7]).Split('!');
+                _localEvent_conditions = GetValue(eventLines[7]).Split('@');
                 _localEvent_imagePath = $"{Application.persistentDataPath}/savedMods/{loadedModName}/events/{_localEvent_ID}/{_localEvent_ID}.jpg";
 
                 if (_localEvent_silentEvent == "0") _localEvent_silentEventBoolean = false;
@@ -491,7 +488,7 @@ public class MapEditor : MonoBehaviour
 
                 for (int c = 0; c < conditionsLines.Length; c++)
                 {
-                    string[] conditions = conditionsLines[c].Split('!');
+                    string[] conditions = conditionsLines[c].Split('@');
 
                     for (int cd = 0; cd < conditions.Length; cd++)
                     {
@@ -520,7 +517,7 @@ public class MapEditor : MonoBehaviour
                     if (buttonData[2] == "0") newButton.rejectUltimatum = false;
                     else if (buttonData[2] == "1") newButton.rejectUltimatum = true;
 
-                    string[] actions = buttonData[1].Split('!');
+                    string[] actions = buttonData[1].Split('@');
 
                     for (int a = 0; a < actions.Length; a++)
                     {
@@ -834,13 +831,13 @@ public class MapEditor : MonoBehaviour
 
                                 if (!string.IsNullOrEmpty(action))
                                 {
-                                    actions_data += $"{action.Replace(';', '-')}!";
+                                    actions_data += $"{action.Replace(';', '-')}@";
                                 }
                             }
                         }
                         else if (modEvent.buttons[b].actions.Any() || modEvent.buttons[b].actions.Count <= 0)
                         {
-                            actions_data = "!";
+                            actions_data = "@";
                         }
 
                         buttons_data +=
@@ -859,13 +856,13 @@ public class MapEditor : MonoBehaviour
 
                             if (!string.IsNullOrEmpty(condition))
                             {
-                                conditions_data += $"{condition.Replace(';', '-')}!";
+                                conditions_data += $"{condition.Replace(';', '-')}@";
                             }
                         }
                     }
                     else if (modEvent.conditions.Any() || modEvent.conditions.Count <= 0)
                     {
-                        conditions_data = "!";
+                        conditions_data = "@";
                     }
 
                     assetData =
@@ -1120,5 +1117,178 @@ public class MapEditor : MonoBehaviour
     public bool IsNullOrEmpty(Array array)
     {
         return (array == null || array.Length == 0);
+    }
+
+
+    public void CreateCountry()
+    {
+        ModCustomCountry newCountry = new ModCustomCountry();
+
+        string _name = "";
+        string _nameEN = "";
+        string _ideology = "";
+        string _tag = "";
+        int _capLimit = 0;
+
+        if (!string.IsNullOrEmpty(_countryName_RU_Inputfield.text))
+        {
+            _name = _countryName_RU_Inputfield.text;
+        }
+        else
+        {
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                WarningManager.Instance.Warn("Please enter the country name in Russian language");
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                WarningManager.Instance.Warn("Пожалуйста, введите название страны на русском языке");
+            }
+        }
+
+        if (!string.IsNullOrEmpty(_countryName_EN_Inputfield.text))
+        {
+            _nameEN = _countryName_EN_Inputfield.text;
+        }
+        else
+        {
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                WarningManager.Instance.Warn("Please enter the country name in English language");
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                WarningManager.Instance.Warn("Пожалуйста, введите название страны на английском языке");
+            }
+        }
+
+        if (!string.IsNullOrEmpty(_countryTag_Inputfield.text))
+        {
+            _tag = _countryTag_Inputfield.text;
+        }
+        else
+        {
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                WarningManager.Instance.Warn("Please enter the country tag");
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                WarningManager.Instance.Warn("Пожалуйста, введите тэг страны");
+            }
+        }
+
+        if (!string.IsNullOrEmpty(_countryCapLimit_Inputfield.text))
+        {
+            _capLimit = 100 - int.Parse(_countryCapLimit_Inputfield.text);
+        }
+        else
+        {
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                WarningManager.Instance.Warn("Please enter the country capitulation percent");
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                WarningManager.Instance.Warn("Пожалуйста, укажите процент капитуляции страны");
+            }
+        }
+
+        newCountry._name = _name;
+        newCountry._nameEN = _nameEN;
+        newCountry.tag = _tag;
+        newCountry.capitulationLimit = _capLimit;
+
+        modCustomCountries.Add(newCountry);
+    }
+
+    public void LoadCountryFlag(string ideology)
+    {
+        int currentImageIndex = 0;
+
+        if (ideology == "Неопределено" || ideology == "Неопределённый")
+        {
+            currentImageIndex = 0;
+        }
+
+        if (ideology == "Демократия")
+        {
+            currentImageIndex = 1;
+        }
+
+        if (ideology == "Монархия")
+        {
+            currentImageIndex = 2;
+        }
+
+        if (ideology == "Фашизм")
+        {
+            currentImageIndex = 3;
+        }
+
+        if (ideology == "Коммунизм")
+        {
+            currentImageIndex = 4;
+        }
+
+        if (!string.IsNullOrEmpty(nameInputField.text))
+        {
+            NativeGallery.GetImageFromGallery((path) =>
+            {
+                Texture2D texture = NativeGallery.LoadImageAtPath(path);
+                if (texture == null)
+                {
+                    WarningManager.Instance.Warn($"Couldn't load texture from + {path}");
+                    return;
+                }
+
+                string fileName = $"{_countryName_EN_Inputfield.text}_{currentImageIndex}.jpg";
+
+                string eventImageOriginPath = Path.Combine(path);
+                string eventImageDestinationPath = Path.Combine(Application.persistentDataPath, "localMods", nameInputField.text, "countries", $"{_countryName_EN_Inputfield.text}", fileName);
+
+                CreateFolder(Path.Combine(Application.persistentDataPath), "localMods");
+                CreateFolder(Path.Combine(Application.persistentDataPath, "localMods"), nameInputField.text);
+                CreateFolder(Path.Combine(Application.persistentDataPath, "localMods", nameInputField.text), "events");
+                CreateFolder(Path.Combine(Application.persistentDataPath, "localMods", nameInputField.text, "events"), $"{_eventCreatorManager.modEvents[_eventCreatorManager.currentModEventIndex].id}");
+
+                if (File.Exists(eventImageOriginPath))
+                {
+                    File.Copy(eventImageOriginPath, eventImageDestinationPath);
+                }
+
+                Texture2D finalTexture = NativeGallery.LoadImageAtPath(eventImageDestinationPath);
+
+                _countryImages[currentImageIndex].sprite = Sprite.Create(finalTexture, new Rect(0, 0, finalTexture.width, finalTexture.height), Vector2.zero);
+            });
+        }
+        else
+        {
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                WarningManager.Instance.Warn("Enter mod name.");
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                WarningManager.Instance.Warn("Введите имя мода.");
+            }
+        }
+    }
+
+
+    public class ModCustomCountry
+    {
+        public int id;
+        public string _name;
+        public string _nameEN;
+        public string tag;
+        public int capitulationLimit;
+
+        public Sprite countryFlag;
+
+        public Color color;
+
+        public Color[] ideologyColors;
+        public Sprite[] ideologyFlags;
     }
 }

@@ -11,6 +11,7 @@ public class TechnologyScriptableObject : ScriptableObject
     public string descriptionEN;
 
     public int moneyCost;
+    public int researchPointsCost;
     public int moves;
 
     public bool startReasearched;

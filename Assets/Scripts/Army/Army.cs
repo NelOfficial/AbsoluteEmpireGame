@@ -170,8 +170,7 @@ public class Army : MonoBehaviour
                         }
                         ReferencesManager.Instance.regionManager.CheckRegionUnits(ReferencesManager.Instance.regionManager.currentRegionManager);
 
-                        ReferencesManager.Instance.regionUI.UpdateUnitsUI();
-
+                        ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
                     }
 
                     else if (ReferencesManager.Instance.countryManager.currentCountry.money < unit.moneyCost)
@@ -195,6 +194,137 @@ public class Army : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void AddUnitToArmyNoUI(UnitScriptableObject unit)
+    {
+        if (ReferencesManager.Instance.gameSettings.onlineGame)
+        {
+            Multiplayer.Instance.AddUnitToArmy(unit.unitName, ReferencesManager.Instance.regionManager.currentRegionManager._id);
+        }
+        else
+        {
+            foreach (Transform child in ReferencesManager.Instance.regionManager.currentRegionManager.transform)
+            {
+                if (child.GetComponent<UnitMovement>())
+                {
+                    unitTransform = child;
+                }
+            }
+
+            if (unitTransform != null)
+            {
+                unitMovement = unitTransform.GetComponent<UnitMovement>();
+
+                if (unitMovement.unitsHealth.Count != 10)
+                {
+                    if (ReferencesManager.Instance.countryManager.currentCountry.money >= unit.moneyCost && ReferencesManager.Instance.countryManager.currentCountry.recroots >= unit.recrootsCost)
+                    {
+                        ReferencesManager.Instance.countryManager.currentCountry.money -= unit.moneyCost;
+                        ReferencesManager.Instance.countryManager.currentCountry.recroots -= unit.recrootsCost;
+                        ReferencesManager.Instance.countryManager.currentCountry.foodNaturalIncome -= unit.foodIncomeCost;
+                        ReferencesManager.Instance.countryManager.currentCountry.moneyNaturalIncome -= unit.moneyIncomeCost;
+
+                        if (unitTransform != null)
+                        {
+                            unitMovement = unitTransform.GetComponent<UnitMovement>();
+                            UnitMovement.UnitHealth newUnitHealth = new UnitMovement.UnitHealth();
+                            newUnitHealth.unit = unit;
+                            newUnitHealth.health = unit.health;
+                            if (unitMovement.unitsHealth.Count > 0)
+                            {
+                                newUnitHealth._id = unitMovement.unitsHealth[unitMovement.unitsHealth.Count - 1]._id + 1;
+                            }
+                            else
+                            {
+                                newUnitHealth._id = 0;
+                            }
+
+                            unitMovement.unitsHealth.Add(newUnitHealth);
+                        }
+                    }
+
+                    else if (ReferencesManager.Instance.countryManager.currentCountry.money < unit.moneyCost)
+                    {
+                        if (PlayerPrefs.GetInt("languageId") == 0)
+                        {
+                            WarningManager.Instance.Warn("Not enough money.");
+                        }
+                        if (PlayerPrefs.GetInt("languageId") == 1)
+                        {
+                            WarningManager.Instance.Warn("Недостаточно денег.");
+                        }
+                    }
+
+                    else if (ReferencesManager.Instance.countryManager.currentCountry.recroots < unit.recrootsCost)
+                    {
+                        if (PlayerPrefs.GetInt("languageId") == 0)
+                        {
+                            WarningManager.Instance.Warn("Not enough recruits.");
+                        }
+                        if (PlayerPrefs.GetInt("languageId") == 1)
+                        {
+                            WarningManager.Instance.Warn("Недостаточно рекрутов.");
+                        }
+                    }
+
+                    ReferencesManager.Instance.countryManager.UpdateValuesUI();
+                    ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
+                }
+                else
+                {
+                    if (PlayerPrefs.GetInt("languageId") == 0)
+                    {
+                        WarningManager.Instance.Warn("There can only be 10 units in a division template.");
+                    }
+                    if (PlayerPrefs.GetInt("languageId") == 1)
+                    {
+                        WarningManager.Instance.Warn("В шаблоне дивизии может быть только 10 юнитов.");
+                    }
+                }
+            }
+        }
+    }
+
+
+    public void UpdateDivisionUI()
+    {
+        ReferencesManager.Instance.regionManager.CheckRegionUnits(ReferencesManager.Instance.regionManager.currentRegionManager);
+
+        ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
+    }
+
+    public void RemoveUnitFromDivision(UnitMovement.UnitHealth batalion, UnitMovement division, bool checkDivisionOnDestroy)
+    {
+        if (division.unitsHealth.Count > 0)
+        {
+            ReferencesManager.Instance.countryManager.currentCountry.recroots += batalion.unit.recrootsCost;
+            ReferencesManager.Instance.countryManager.currentCountry.moneyNaturalIncome += batalion.unit.moneyIncomeCost;
+            ReferencesManager.Instance.countryManager.currentCountry.foodNaturalIncome += batalion.unit.foodIncomeCost;
+
+            ReferencesManager.Instance.countryManager.UpdateValuesUI();
+            ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
+
+            for (int i = 0; i < division.unitsHealth.Count; i++)
+            {
+                if (division.unitsHealth[i]._id == batalion._id)
+                {
+                    division.unitsHealth.Remove(batalion);
+                }
+            }
+
+            if (checkDivisionOnDestroy)
+            {
+                if (unitMovement.unitsHealth.Count <= 0)
+                {
+                    ReferencesManager.Instance.regionManager.currentRegionManager.DeselectRegions();
+                    division.currentCountry.countryUnits.Remove(division);
+                    Destroy(division.gameObject);
+                }
+            }
+        }
+
+        ReferencesManager.Instance.regionUI.UpdateUnitsUI(checkDivisionOnDestroy);
     }
 
     public void CreateUnit_NoCheck(RegionManager region)
@@ -241,7 +371,7 @@ public class Army : MonoBehaviour
                 region.CheckRegionUnits(region);
                 if (ReferencesManager.Instance.regionUI != null)
                 {
-                    ReferencesManager.Instance.regionUI.UpdateUnitsUI();
+                    ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
                 }
 
                 ReferencesManager.Instance.countryManager.UpdateValuesUI();
@@ -297,7 +427,7 @@ public class Army : MonoBehaviour
         }
     }
 
-    private bool HasUnitTech(CountrySettings country, UnitScriptableObject unit)
+    public bool HasUnitTech(CountrySettings country, UnitScriptableObject unit)
     {
         if (HasTech(country, ReferencesManager.Instance.gameSettings.technologies[unit.unlockLevel]))
         {

@@ -7,9 +7,13 @@ public class EventScriptableObject : ScriptableObject
     public int id;
     [TextArea(1, 100)]
     public string _name;
+    [TextArea(1, 100)]
+    public string _nameEN;
 
     [TextArea(1, 100)]
     public string description;
+    [TextArea(1, 100)]
+    public string descriptionEN;
     public string date;
 
     public Sprite image;
@@ -31,7 +35,10 @@ public class EventScriptableObject : ScriptableObject
     [System.Serializable]
     public class EventButton
     {
+        [TextArea(1, 100)]
         public string name;
+        [TextArea(1, 100)]
+        public string nameEN;
         [TextArea(1,100)]
         public List<string> actions = new List<string>();
         public bool rejectUltimatum;

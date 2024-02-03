@@ -47,14 +47,17 @@ public class MovePoint : MonoBehaviour
             if (!noAutoCollider)
             {
                 this.GetComponent<PolygonCollider2D>().points = regionTo.GetComponent<PolygonCollider2D>().points;
-                this.transform.position = regionTo.position;
+                this.transform.position = new Vector3(regionTo.position.x, regionTo.position.y, -1);
             }
 
-            //parentRegion.movePoints.Clear();
-            //foreach (Transform child in parentRegion.transform)
-            //{
-            //    parentRegion.movePoints.Add(child);
-            //}
+            parentRegion.movePoints.Clear();
+            foreach (Transform child in parentRegion.transform)
+            {
+                if (child.GetComponent<MovePoint>() != null)
+                {
+                    parentRegion.movePoints.Add(child);
+                }
+            }
         }
     }
 
@@ -94,7 +97,7 @@ public class MovePoint : MonoBehaviour
 
                             foreach (Transform child in attackerRegion.transform)
                             {
-                                if (child.name == "Unit(Clone)")
+                                if (child.GetComponent<UnitMovement>())
                                 {
                                     attackerUnit = child.GetComponent<UnitMovement>();
                                 }
@@ -104,7 +107,7 @@ public class MovePoint : MonoBehaviour
                             {
                                 foreach (Transform child in regionTo)
                                 {
-                                    if (child.name == "Unit(Clone)")
+                                    if (child.GetComponent<UnitMovement>())
                                     {
                                         defenderUnit = child.GetComponent<UnitMovement>();
                                     }
@@ -697,6 +700,7 @@ public class MovePoint : MonoBehaviour
                         def_hvy_losses++;
                     }
 
+                    defenderUnit.currentCountry.myRegions[Random.Range(0, defenderUnit.currentCountry.myRegions.Count)].population -= defenderUnit.unitsHealth[j].unit.recrootsCost;
                     defenderUnit.unitsHealth.Remove(defenderUnit.unitsHealth[j]);
                 }
             }
@@ -744,6 +748,7 @@ public class MovePoint : MonoBehaviour
                     att_hvy_losses++;
                 }
 
+                attackerUnit.currentCountry.myRegions[Random.Range(0, attackerUnit.currentCountry.myRegions.Count)].population -= attackerUnit.unitsHealth[j].unit.recrootsCost;
                 attackerUnit.unitsHealth.Remove(attackerUnit.unitsHealth[j]);
             }
         }
@@ -868,7 +873,7 @@ public class MovePoint : MonoBehaviour
         attackerUnit.firstMove = false;
         attackerUnit._movePoints--;
 
-        ReferencesManager.Instance.regionUI.UpdateUnitsUI();
+        ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
     }
 
 

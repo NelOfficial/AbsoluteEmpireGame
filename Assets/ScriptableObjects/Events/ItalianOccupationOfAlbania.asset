@@ -15,6 +15,7 @@ MonoBehaviour:
   id: 12
   _name: "\u0418\u0442\u0430\u043B\u044C\u044F\u043D\u0441\u043A\u0430\u044F \u043E\u043A\u043A\u0443\u043F\u0430\u0446\u0438\u044F
     \u0410\u043B\u0431\u0430\u043D\u0438\u0438"
+  _nameEN: The Italian occupation of Albania
   description: "\u0418\u0442\u0430\u043B\u044C\u044F\u043D\u0441\u043A\u0438\u0435
     \u0444\u0430\u0448\u0438\u0441\u0442\u044B \u0441\u0447\u0438\u0442\u0430\u043B\u0438
     \u0410\u043B\u0431\u0430\u043D\u0438\u044E \u0438\u0441\u0442\u043E\u0440\u0438\u0447\u0435\u0441\u043A\u043E\u0439
@@ -39,18 +40,29 @@ MonoBehaviour:
     \u043F\u0440\u043E\u0442\u0438\u0432\u043D\u0438\u043A\u0443. \u041A\u043E\u0440\u043E\u043B\u044C
     \u0410\u043B\u0431\u0430\u043D\u0438\u0438 \u0417\u043E\u0433\u0443 \u0431\u0435\u0436\u0430\u043B
     \u0432 \u0413\u0440\u0435\u0446\u0438\u044E."
+  descriptionEN: The Italian fascists considered Albania to be a historical part
+    of Italy, since at first it was part of the Roman Empire, and then the Albanian
+    coast (including Durazzo) was part of the Venetian Republic (Albania Veneta).
+    In addition, Albania occupied an important strategic position in the Balkans.
+    Italian troops met armed resistance from the Albanian army, but it was unable
+    to oppose the enemy. King Zogu of Albania fled to Greece.
   date: 7-4-1939
   image: {fileID: 21300000, guid: 96d99a515b69fcb4dbd71ca9e0480e9a, type: 3}
   _checked: 0
   silentEvent: 0
   conditions:
   - country_exist;17
+  receivers: 
+  exceptionsReceivers: 
+  aiWillDo_Index: 0
   buttons:
-  - name: "\u041D\u0435 \u0434\u043E\u043B\u0433\u043E \u0436\u0438\u043B\u0430 \u0410\u043B\u0431\u0430\u043D\u0438\u044F"
+  - name: "\u041D\u0435\u0434\u043E\u043B\u0433\u043E \u0436\u0438\u043B\u0430 \u0410\u043B\u0431\u0430\u043D\u0438\u044F"
+    nameEN: Albania did not live long
     actions:
     - annex;17;0;1;2;3
     rejectUltimatum: 0
   - name: "\u041C\u044B \u043D\u0435 \u043E\u0442\u0441\u0442\u0443\u043F\u0438\u043C!"
+    nameEN: We will not retreat!
     actions:
     - war_to_countries_in_regs;17;0;1;2;3
     rejectUltimatum: 1

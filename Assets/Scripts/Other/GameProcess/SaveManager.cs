@@ -8,44 +8,119 @@ public class SaveManager : MonoBehaviour
 {
     public IntListValue localSavesIds;
 
-    public GameObject savesContainer;
-    public GameObject savePrefab;
+    [SerializeField] Transform savesContainer;
+    [SerializeField] GameObject savePrefab;
+
+    public StringValue currentSave;
+
+
+    private void Awake()
+    {
+        UpdateSavesList();
+    }
+
+    public void UpdateSavesList()
+    {
+        localSavesIds.list.Clear();
+
+        string saves = PlayerPrefs.GetString("SAVES_IDS");
+        string[] _saves = saves.Split(';');
+
+        for (int i = 0; i < _saves.Length; i++)
+        {
+            int value = int.Parse(_saves[i]);
+
+            localSavesIds.list.Add(value);
+        }
+    }
+
+    public void SetSavesIDs()
+    {
+        string _saves = "";
+
+        for (int i = 0; i < localSavesIds.list.Count; i++)
+        {
+            _saves += $"{localSavesIds.list[i]};";
+        }
+
+        PlayerPrefs.SetString("SAVES_IDS", _saves);
+    }
 
     public void Save()
     {
         PlayerPrefs.SetString("FIRST_LOAD", "FALSE");
 
-        //int saveId = localSavesIds.list[localSavesIds.list.Count] + 1;
-        int saveId = 1;
+        int saveId = 0;
+
+        if (localSavesIds.list.Count > 0)
+        {
+            saveId = localSavesIds.list.Max() + 1;
+        }
+        else
+        {
+            saveId = 1;
+        }
+
+        string date_time = $"{System.DateTime.Now}";
+
+        PlayerPrefs.SetString($"{saveId}_DATETIME", date_time);
+        PlayerPrefs.SetString($"{saveId}_DIFFICULTY", ReferencesManager.Instance.gameSettings.difficultyValue.value);
 
         #region CountrySave
 
+        string _countries = "";
+
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
+        {
+            _countries += $"{ReferencesManager.Instance.countryManager.countries[i].country._id};";
+        }
+
         PlayerPrefs.SetInt($"{saveId}_PLAYER_COUNTRY", ReferencesManager.Instance.countryManager.currentCountry.country._id);
+        PlayerPrefs.SetString($"{saveId}_COUNTRIES", _countries);
 
         for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
         {
             CountrySettings country = ReferencesManager.Instance.countryManager.countries[i];
 
-            PlayerPrefs.SetString($"{saveId}_COUNTRY_{i}_IDEOLOGY", country.ideology);
-            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{i}_MONEY", country.money);
-            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{i}_FOOD", country.food);
-            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{i}_RECROOTS", country.recroots);
+            PlayerPrefs.SetString($"{saveId}_COUNTRY_{country.country._id}_IDEOLOGY", country.ideology);
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_MONEY", country.money);
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_FOOD", country.food);
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_RECROOTS", country.recroots);
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_RESEARCH_POINTS", country.researchPoints);
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_RECROOTS_LIMIT", country.recruitsLimit);
 
             #region MONEY_INCOME
 
-            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{i}_startMoneyIncome", country.startMoneyIncome);
-            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{i}_moneyNaturalIncome", country.moneyNaturalIncome);
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_startMoneyIncome", country.startMoneyIncome);
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_moneyNaturalIncome", country.moneyNaturalIncome);
 
             #endregion
 
             #region FOOD_INCOME
 
-            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{i}_startFoodIncome", country.startFoodIncome);
-            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{i}_foodNaturalIncome", country.foodNaturalIncome);
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_startFoodIncome", country.startFoodIncome);
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_foodNaturalIncome", country.foodNaturalIncome);
+
             #endregion
 
-            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{i}_civFactories", country.civFactories);
-            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{i}_milFactories", country.milFactories);
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_recrootsIncome", country.recrootsIncome);
+
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_researchPointsIncome", country.researchPointsIncome);
+
+            if (country.mobilasing)
+            {
+                PlayerPrefs.SetString($"{saveId}_COUNTRY_{country.country._id}_MOBILASING", "TRUE");
+            }
+
+            if (country.deMobilasing)
+            {
+                PlayerPrefs.SetString($"{saveId} _COUNTRY_ {country.country._id}_DEMOBILASING", "TRUE");
+            }
+
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_civFactories", country.civFactories);
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_farms", country.farms);
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_cheFarms", country.chemicalFarms);
+            PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_resLabs", country.researchLabs);
         }
 
         #endregion
@@ -56,12 +131,14 @@ public class SaveManager : MonoBehaviour
         {
             RegionManager region = ReferencesManager.Instance.countryManager.regions[i];
 
-            PlayerPrefs.SetInt($"{saveId}_REGION_{i}_CURRENTCOUNTRY_ID", region.currentCountry.country._id);
+            PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_CURRENTCOUNTRY_ID", region.currentCountry.country._id);
 
-            PlayerPrefs.SetInt($"{saveId}_REGION_{i}_INFRASTRUCTURES", region.infrastructure_Amount);
-            PlayerPrefs.SetInt($"{saveId}_REGION_{i}_CIV_FABRICS", region.civFactory_Amount);
-            PlayerPrefs.SetInt($"{saveId}_REGION_{i}_FARMS", region.farms_Amount);
-            PlayerPrefs.SetInt($"{saveId}_REGION_{i}_CHEFARMS", region.cheFarms);
+            PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_INFRASTRUCTURES", region.infrastructure_Amount);
+            PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_CIV_FABRICS", region.civFactory_Amount);
+            PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_FARMS", region.farms_Amount);
+            PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_CHEFARMS", region.cheFarms);
+            PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_RESLABS", region.researchLabs);
+            PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_POPULATION", region.population);
         }
 
         #region Army
@@ -70,9 +147,11 @@ public class SaveManager : MonoBehaviour
         {
             RegionManager region = ReferencesManager.Instance.countryManager.regions[i];
 
+            region.CheckRegionUnits(region);
+
             if (region.hasArmy)
             {
-                PlayerPrefs.SetString($"{saveId}_REGION_{i}_HAS_ARMY", "TRUE");
+                PlayerPrefs.SetString($"{saveId}_REGION_{region._id}_HAS_ARMY", "TRUE");
 
                 UnitMovement unitMovement = region.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
 
@@ -82,6 +161,9 @@ public class SaveManager : MonoBehaviour
 
                 int artLVL1 = 0;
                 int artLVL2 = 0;
+
+                int atiLVL1 = 0;
+                int atiLVL2 = 0;
 
                 int tankLVL1 = 0;
                 int tankLVL2 = 0;
@@ -141,6 +223,15 @@ public class SaveManager : MonoBehaviour
                             motoLVL2++;
                         }
                     }
+
+                    else if (unit.unitName == "ATI_01")
+                    {
+                        artLVL1++;
+                    }
+                    else if (unit.unitName == "ATI_02")
+                    {
+                        artLVL2++;
+                    }
                 }
 
                 PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_INF_LVL1", infLVL1);
@@ -155,6 +246,9 @@ public class SaveManager : MonoBehaviour
 
                 PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_MOTO_LVL1", motoLVL1);
                 PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_MOTO_LVL2", motoLVL2);
+
+                PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_ATI_LVL1", atiLVL1);
+                PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_ATI_LVL2", atiLVL2);
             }
             else if (!region.hasArmy)
             {
@@ -180,11 +274,11 @@ public class SaveManager : MonoBehaviour
                 {
                     if (HasTech(country, tech))
                     {
-                        PlayerPrefs.SetString($"{saveId}_COUNTRY_{c}_TECH_{i}", "TRUE");
+                        PlayerPrefs.SetString($"{saveId}_COUNTRY_{country.country._id}_TECH_{i}", "TRUE");
                     }
                     else
                     {
-                        PlayerPrefs.SetString($"{saveId}_COUNTRY_{c}_TECH_{i}", "FALSE");
+                        PlayerPrefs.SetString($"{saveId}_COUNTRY_{country.country._id}_TECH_{i}", "FALSE");
                     }
                 }
             }
@@ -212,7 +306,98 @@ public class SaveManager : MonoBehaviour
 
         #endregion
 
+        #region Relations
+
+        foreach (CountrySettings country in ReferencesManager.Instance.countryManager.countries)
+        {
+            string country_trades = "";
+            string country_pacts = "";
+            string country_unions = "";
+            string country_rights = "";
+            string country_wars = "";
+
+            foreach (CountrySettings otherCountry in ReferencesManager.Instance.countryManager.countries)
+            {
+                if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, otherCountry).trade)
+                {
+                    country_trades += $"{otherCountry.country._id};";
+                }
+                else if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, otherCountry).pact)
+                {
+                    country_pacts += $"{otherCountry.country._id};";
+                }
+                else if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, otherCountry).union)
+                {
+                    country_unions += $"{otherCountry.country._id};";
+                }
+                else if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, otherCountry).right)
+                {
+                    country_rights += $"{otherCountry.country._id};";
+                }
+                else if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, otherCountry).war)
+                {
+                    country_wars += $"{otherCountry.country._id};";
+                }
+            }
+
+            PlayerPrefs.SetString($"{saveId}_COUNTRY_{country.country._id}_TRADES", country_trades);
+            PlayerPrefs.SetString($"{saveId}_COUNTRY_{country.country._id}_RIGHTS", country_rights);
+            PlayerPrefs.SetString($"{saveId}_COUNTRY_{country.country._id}_PACTS", country_pacts);
+            PlayerPrefs.SetString($"{saveId}_COUNTRY_{country.country._id}_UNIONS", country_unions);
+            PlayerPrefs.SetString($"{saveId}_COUNTRY_{country.country._id}_WARS", country_wars);
+        }
+
+        #endregion
+
         localSavesIds.list.Add(saveId);
+
+        string _saves = "";
+
+        for (int i = 0; i < localSavesIds.list.Count; i++)
+        {
+            _saves += $"{localSavesIds.list[i]};";
+        }
+
+        PlayerPrefs.SetString("SAVES_IDS", _saves);
+    }
+
+    public void UpdateUI()
+    {
+        foreach (Transform child in savesContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < localSavesIds.list.Count; i++)
+        {
+            try
+            {
+                int saveID = localSavesIds.list[i];
+
+                GameObject spawnedSavePrefab = Instantiate(savePrefab, savesContainer);
+
+                spawnedSavePrefab.GetComponent<SaveItem>().saveID = saveID;
+
+                CountryScriptableObject _country = null;
+
+                int countryId = PlayerPrefs.GetInt($"{saveID}_PLAYER_COUNTRY");
+
+                foreach (CountryScriptableObject country in ReferencesManager.Instance.globalCountries)
+                {
+                    if (country._id == countryId)
+                    {
+                        _country = country;
+                    }
+                }
+
+                spawnedSavePrefab.GetComponent<SaveItem>().country = _country;
+                spawnedSavePrefab.GetComponent<SaveItem>().date = PlayerPrefs.GetString($"{saveID}_DATETIME");
+
+                spawnedSavePrefab.GetComponent<SaveItem>().UpdateUI();
+
+            }
+            catch (System.Exception) { }
+        }
     }
 
     private bool HasTech(CountrySettings country, TechnologyScriptableObject tech)

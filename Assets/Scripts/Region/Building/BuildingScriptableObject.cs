@@ -7,7 +7,7 @@ public class BuildingScriptableObject : ScriptableObject
     public string uiTitleEN;
     public string _name;
 
-    public enum BuildType{ GoldProducer, FoodProducer, RecrootsProducer }
+    public enum BuildType{ GoldProducer, FoodProducer, RecrootsProducer, Other }
 
     public BuildType buildType;
 
@@ -18,6 +18,8 @@ public class BuildingScriptableObject : ScriptableObject
     public int goldIncome;
     public int foodIncome;
     public int recrootsIncome;
+
+    public int researchPointsIncome;
 
     public float moves;
 }

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Resources;
 using UnityEngine;
 
 public class CountryAIManager : MonoBehaviour
@@ -22,6 +21,13 @@ public class CountryAIManager : MonoBehaviour
     public int civilExpenses;
     public int buildingExpenses;
     public int researchingExpenses;
+
+    private DiplomatyUI diplomatyUI;
+
+    private void Awake()
+    {
+        diplomatyUI = FindObjectOfType<DiplomatyUI>();
+    }
 
     public void Process(CountrySettings country)
     {
@@ -222,6 +228,7 @@ public class CountryAIManager : MonoBehaviour
                         buildingExpenses -= ReferencesManager.Instance.gameSettings.farm.goldCost;
                     }
                 }
+
                 if (country.money >= ReferencesManager.Instance.gameSettings.chefarm.goldCost &&
                     buildingExpenses >= ReferencesManager.Instance.gameSettings.chefarm.goldCost &&
                     country.foodNaturalIncome <= 0 || country.foodIncomeUI <= 0)
@@ -230,6 +237,17 @@ public class CountryAIManager : MonoBehaviour
                     {
                         region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.chefarm, region);
                         buildingExpenses -= ReferencesManager.Instance.gameSettings.chefarm.goldCost;
+                    }
+                }
+
+                if (country.money >= ReferencesManager.Instance.gameSettings.researchLab.goldCost &&
+                    buildingExpenses >= ReferencesManager.Instance.gameSettings.researchLab.goldCost &&
+                    country.researchPointsIncome <= 0)
+                {
+                    if (region.buildings.Count + region.buildingsQueue.Count < 4)
+                    {
+                        region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.researchLab, region);
+                        buildingExpenses -= ReferencesManager.Instance.gameSettings.researchLab.goldCost;
                     }
                 }
 
@@ -297,9 +315,12 @@ public class CountryAIManager : MonoBehaviour
 
         #region SetMobilizationLaw
 
-        if (country.recroots <= 2100)
+        if (country.recroots <= 10000 && !country.mobilasing)
         {
-            ReferencesManager.Instance.SetRecroots(country.mobilizationLaw, country);
+            if (country.mobilizationLaw + 1 < ReferencesManager.Instance.gameSettings.mobilizationPercent.Length)
+            {
+                ReferencesManager.Instance.SetRecroots(country.mobilizationLaw + 1, country);
+            }
         }
 
         #endregion
@@ -490,7 +511,7 @@ public class CountryAIManager : MonoBehaviour
 
                         if (!ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).right && //Union
                             !ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).war &&
-                            ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).relationship >= 10)
+                            ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).relationship >= 20)
                         {
                             int random = Random.Range(0, 100);
 
@@ -522,7 +543,7 @@ public class CountryAIManager : MonoBehaviour
                                 random += Random.Range(70, 100);
                             }
 
-                            if (random >= 70)
+                            if (random >= 85)
                             {
                                 SendOffer("Ñîþç", country, countryOther);
                             }
@@ -538,19 +559,24 @@ public class CountryAIManager : MonoBehaviour
 
     private List<CountrySettings> GetBorderingCountiesWithRegion(RegionManager region)
     {
-        List<CountrySettings> countries = new List<CountrySettings>();
-
-        foreach (Transform point in region.movePoints)
+            List<CountrySettings> countries = new List<CountrySettings>();
+        try
         {
-            RegionManager _pointRegion = point.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
 
-            if (_pointRegion.currentCountry != region.currentCountry) // If founded region is not my state
+            foreach (Transform point in region.movePoints)
             {
-                countries.Add(_pointRegion.currentCountry);
-            }
-        }
+                RegionManager _pointRegion = point.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
 
-        countries.Distinct(); // Remove dupes
+                if (_pointRegion.currentCountry != region.currentCountry) // If founded region is not my state
+                {
+                    countries.Add(_pointRegion.currentCountry);
+                }
+            }
+
+            countries.Distinct(); // Remove dupes
+
+        }
+        catch (System.Exception) { }
 
         return countries;
     }
@@ -1029,11 +1055,13 @@ public class CountryAIManager : MonoBehaviour
     {
         RegionManager enemyRegion = new RegionManager();
 
+
         foreach (Transform point in myRegion.movePoints)
         {
-            if (ReferencesManager.Instance.diplomatyUI.
-                FindCountriesRelation(point.GetComponent<MovePoint>().
-                regionTo.GetComponent<RegionManager>().currentCountry, myRegion.currentCountry).war)
+            CountrySettings who = point.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>().currentCountry;
+
+            if (diplomatyUI.
+                FindCountriesRelation(who, myRegion.currentCountry).war)
             {
                 enemyRegion = point.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
             }
@@ -1422,7 +1450,7 @@ public class CountryAIManager : MonoBehaviour
                     }
                 }
 
-                if (country.money >= tech.moneyCost && researchingExpenses >= tech.moneyCost)
+                if (country.money >= tech.moneyCost && researchingExpenses >= tech.moneyCost && country.researchPoints >= tech.researchPointsCost)
                 {
                     if (tech.techsNeeded.Length == researchedNeeded)
                     {
@@ -1440,7 +1468,7 @@ public class CountryAIManager : MonoBehaviour
             }
             else
             {
-                if (country.money >= tech.moneyCost && researchingExpenses >= tech.moneyCost)
+                if (country.money >= tech.moneyCost && researchingExpenses >= tech.moneyCost && country.researchPoints >= tech.researchPointsCost)
                 {
                     result = true;
                 }
@@ -1475,6 +1503,7 @@ public class CountryAIManager : MonoBehaviour
 
                 currentTech = techQueue;
                 country.money -= currentTech.tech.moneyCost;
+                country.researchPoints -= currentTech.tech.researchPointsCost;
                 researchingExpenses -= currentTech.tech.moneyCost;
 
                 researching = true;
@@ -1521,8 +1550,8 @@ public class CountryAIManager : MonoBehaviour
 
             if (!receiver.isPlayer)
             {
-                senderToReceiver.pact = false;
-                receiverToSender.pact = false;
+                senderToReceiver.pact = true;
+                receiverToSender.pact = true;
 
                 senderToReceiver.relationship += relationsRandom;
                 receiverToSender.relationship += relationsRandom;
@@ -1542,8 +1571,8 @@ public class CountryAIManager : MonoBehaviour
 
             if (!receiver.isPlayer)
             {
-                senderToReceiver.right = false;
-                receiverToSender.right = false;
+                senderToReceiver.right = true;
+                receiverToSender.right = true;
 
                 senderToReceiver.relationship += relationsRandom;
                 receiverToSender.relationship += relationsRandom;
@@ -1585,6 +1614,27 @@ public class CountryAIManager : MonoBehaviour
             else if (receiver.isPlayer)
             {
                 SpawnEvent("Îáúÿâèòü âîéíó", sender, receiver);
+            }
+        }
+        else if (offer == "Ñîþç")
+        {
+            int relationsRandom = Random.Range(40, 70);
+
+            Relationships.Relation senderToReceiver = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(sender, receiver);
+            Relationships.Relation receiverToSender = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(receiver, sender);
+
+            if (!receiver.isPlayer)
+            {
+                senderToReceiver.union = true;
+                receiverToSender.union = true;
+
+                senderToReceiver.relationship += relationsRandom;
+                receiverToSender.relationship += relationsRandom;
+
+            }
+            else if (receiver.isPlayer)
+            {
+                SpawnEvent("Ñîþç", sender, receiver);
             }
         }
     }

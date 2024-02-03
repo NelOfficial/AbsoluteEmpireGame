@@ -28,6 +28,8 @@ public class CountrySettings : MonoBehaviour
     public int money;
     public int food;
     public int recroots;
+    public int researchPoints;
+    public int recruitsLimit;
     public int population;
 
     public int startMoneyIncome;
@@ -40,6 +42,8 @@ public class CountrySettings : MonoBehaviour
     public int startFoodIncome;
     public int recrootsIncome;
 
+    public int researchPointsIncome;
+
     public int mobilizationLaw;
 
     public int score = 0;
@@ -51,12 +55,25 @@ public class CountrySettings : MonoBehaviour
     public int farms;
     public int chemicalFarms;
     public int milFactories;
+    public int researchLabs;
 
     public bool inWar;
 
     public CountrySettings enemy;
     public List<TechnologyScriptableObject> countryTechnologies = new List<TechnologyScriptableObject>();
     public List<UnitMovement> countryUnits = new List<UnitMovement>();
+
+    public int armyPersonnel;
+    public int manpower;
+
+    public bool mobilasing;
+    public bool deMobilasing;
+
+    public int BONUS_FACTORIES_INCOME_MONEY;
+    public int BONUS_FARM_INCOME_MONEY;
+    public int BONUS_FARM_INCOME_FOOD;
+    public int BONUS_CHEFARM_INCOME_MONEY;
+    public int BONUS_CHEFARM_INCOME_FOOD;
 
     [Header("AI Settings")]
     public float aiAccuracy = 1;

@@ -15,6 +15,7 @@ MonoBehaviour:
   id: 22
   _name: "\u0418\u043E\u043D \u0410\u043D\u0442\u043E\u043D\u0435\u0441\u043A\u0443
     \u043F\u0440\u0438\u0445\u043E\u0434\u0438\u0442 \u043A \u0432\u043B\u0430\u0441\u0442\u0438"
+  _nameEN: Ion Antonescu comes to power
   description: "\u041F\u043E\u0441\u043B\u0435 \u0432\u043E\u0437\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u044F
     \u0432 \u0420\u0443\u043C\u044B\u043D\u0438\u044E \u0432 1927 \u0433\u043E\u0434\u0443
     \u0418\u043E\u043D \u0410\u043D\u0442\u043E\u043D\u0435\u0441\u043A\u0443 \u0431\u044B\u043B
@@ -65,6 +66,25 @@ MonoBehaviour:
     \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u043E\u043C\xBB,
     \u0430 \xAB\u0416\u0435\u043B\u0435\u0437\u043D\u0430\u044F \u0433\u0432\u0430\u0440\u0434\u0438\u044F\xBB
     \u2014 \u0435\u0451 \u043F\u0440\u0430\u0432\u044F\u0449\u0435\u0439 \u043F\u0430\u0440\u0442\u0438\u0435\u0439."
+  descriptionEN: 'After returning to Romania in 1927, Ion Antonescu was appointed
+    head of the cavalry School, and soon became commander of the Higher Military
+    School, holding this post in 1927-1930. In 1928, he became Secretary General
+    of the Ministry of National Defense, being first the commander of a regiment
+    and later of a brigade. In 1933, Antonescu was appointed Chief of the General
+    Staff of the Romanian Army, becoming division commander a year later. In 1937,
+    he became head of the country''s Ministry of Defense. In addition, Antonescu
+    has been a member of Romanian delegations to international conferences for many
+    years.
+
+    Already in September 1940, a German military mission arrived in Romania,
+    and units of the German 13th Motorized Infantry and 16th Panzer divisions were
+    sent to Ploiesti to protect oil developments.
+
+
+    Ion Antonescu also abolished
+    the Constitution and intensified repression against the opposition. By September
+    1940, 35 concentration camps had been established in Romania. Romania was declared
+    a "national legionary state", and the "Iron Guard" was its ruling party.'
   date: 4-9-1940
   image: {fileID: 21300000, guid: 9e8325f723b4e2a4982c16fe50631885, type: 3}
   _checked: 0
@@ -76,6 +96,7 @@ MonoBehaviour:
   aiWillDo_Index: 0
   buttons:
   - name: "\u041A\u0430\u043A\u043E\u0439 \u0443\u0436\u0430\u0441"
+    nameEN: Terribly
     actions:
     - "set_ideology;29;\u0424\u0430\u0448\u0438\u0437\u043C"
     rejectUltimatum: 0

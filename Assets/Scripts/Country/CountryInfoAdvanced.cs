@@ -46,7 +46,7 @@ public class CountryInfoAdvanced : MonoBehaviour
     [SerializeField] Transform _templatesUIContainer;
     [SerializeField] Transform _templateUnitsUIContainer;
     [SerializeField] GameObject _templateUnitPrefab;
-    [SerializeField] GameObject _templatePrefab;
+    public GameObject _templatePrefab;
 
     [SerializeField] GameObject _templatePanel;
     [SerializeField] GameObject _templateBatalionPanel;
@@ -189,6 +189,16 @@ public class CountryInfoAdvanced : MonoBehaviour
             if (PlayerPrefs.GetInt("languageId") == 1)
             {
                 countryNameText.text = countryManager.currentCountry.country._uiName;
+            }
+
+            if (countryManager.currentCountry.ideology != "Неопределено" &&
+                countryManager.currentCountry.ideology != "Неопределённый" &&
+                countryManager.currentCountry.ideology != "Коммунизм" &&
+                countryManager.currentCountry.ideology != "Демократия" &&
+                countryManager.currentCountry.ideology != "Монархия" &&
+                countryManager.currentCountry.ideology != "Фашизм")
+            {
+                countryIdeologyText.text = countryManager.currentCountry.ideology;
             }
 
             if (countryManager.currentCountry.ideology == "Неопределено" || countryManager.currentCountry.ideology == "Неопределённый")
@@ -390,37 +400,8 @@ public class CountryInfoAdvanced : MonoBehaviour
     public void ChangeMobilizationLaw(int id)
     {
         CountrySettings country = countryManager.currentCountry;
-        country.population += country.recroots;
 
-        int reservedManPower = country.population / 100 * ReferencesManager.Instance.gameSettings.mobilizationPercent[id];
-
-        country.population -= reservedManPower;
-
-        int difficulty_AI_BUFF = 0;
-        int difficulty_PLAYER_BUFF = 0;
-
-        if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "EASY")
-        {
-            difficulty_AI_BUFF = -15;
-            difficulty_PLAYER_BUFF = 15;
-        }
-        else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "HARD")
-        {
-            difficulty_AI_BUFF = 20;
-            difficulty_PLAYER_BUFF = -40;
-        }
-        else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "INSANE")
-        {
-            difficulty_AI_BUFF = 40;
-            difficulty_PLAYER_BUFF = -80;
-        }
-        else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "HARDCORE")
-        {
-            difficulty_AI_BUFF = 75;
-            difficulty_PLAYER_BUFF = -90;
-        }
-
-        country.recroots = reservedManPower + (reservedManPower / 100 * difficulty_PLAYER_BUFF);
+        ReferencesManager.Instance.ChangeMobilizationLaw(id, country);
 
         countryManager.UpdateCountryInfo();
         countryManager.UpdateValuesUI();
@@ -493,6 +474,13 @@ public class CountryInfoAdvanced : MonoBehaviour
 
             armyTemplateItem.SetUp();
         }
+
+        ArmyTemplateUnitBuy_UI[] unitBuy_UIs = FindObjectsOfType<ArmyTemplateUnitBuy_UI>();
+
+        for (int i = 0; i < unitBuy_UIs.Length; i++)
+        {
+            unitBuy_UIs[i].UpdateUI();
+        }
     }
 
     public void CreateTemplate()
@@ -510,7 +498,9 @@ public class CountryInfoAdvanced : MonoBehaviour
             newName = "Новый шаблон";
         }
 
-        template._name = $"{newName} ({ReferencesManager.Instance.army.templates.Count})";
+        int templatesCount = ReferencesManager.Instance.army.templates.Count + 1;
+
+        template._name = $"{newName} ({templatesCount})";
         template._batalions.Add(ReferencesManager.Instance.gameSettings.soldierLVL1);
 
         ReferencesManager.Instance.army.templates.Add(template);

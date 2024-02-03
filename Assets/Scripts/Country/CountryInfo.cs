@@ -48,6 +48,16 @@ public class CountryInfo : MonoBehaviour
             countryNameText.text = country.country._name;
         }
 
+        if (country.ideology != "Неопределено" &&
+            country.ideology != "Неопределённый" &&
+            country.ideology != "Коммунизм" &&
+            country.ideology != "Демократия" &&
+            country.ideology != "Монархия" &&
+            country.ideology != "Фашизм")
+        {
+            countryIdeologyText.text = country.ideology;
+        }
+
         if (country.ideology == "Неопределено" || country.ideology == "Неопределённый")
         {
             if (PlayerPrefs.GetInt("languageId") == 0)

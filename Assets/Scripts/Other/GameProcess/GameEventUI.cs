@@ -44,8 +44,17 @@ public class GameEventUI : MonoBehaviour
     {
         if (currentGameEvent != null)
         {
-            descriptionText.text = currentGameEvent.description;
-            titleText.text = currentGameEvent._name;
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                descriptionText.text = currentGameEvent.descriptionEN;
+                titleText.text = currentGameEvent._nameEN;
+            }
+            if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                descriptionText.text = currentGameEvent.description;
+                titleText.text = currentGameEvent._name;
+            }
+
             imageMin.sprite = currentGameEvent.image;
 
             foreach (Transform button in buttonsContainer)
@@ -92,7 +101,14 @@ public class GameEventUI : MonoBehaviour
                 GameObject spawnedButton = Instantiate(eventButton, buttonsContainer.transform);
 
                 spawnedButton.GetComponent<EventButtonUI>().buttonIndex = i;
-                spawnedButton.GetComponent<EventButtonUI>()._buttonName = currentGameEvent.buttons[i].name;
+                if (PlayerPrefs.GetInt("languageId") == 0)
+                {
+                    spawnedButton.GetComponent<EventButtonUI>()._buttonName = currentGameEvent.buttons[i].nameEN;
+                }
+                if (PlayerPrefs.GetInt("languageId") == 1)
+                {
+                    spawnedButton.GetComponent<EventButtonUI>()._buttonName = currentGameEvent.buttons[i].name;
+                }
                 spawnedButton.GetComponent<EventButtonUI>().SetUp();
             }
         }
@@ -145,15 +161,12 @@ public class GameEventUI : MonoBehaviour
 
                 try
                 {
-                    if (attacker.exist || attacker != null)
+                    if (attacker.exist && attacker != null && attacker.myRegions.Count > 0)
                     {
                         conditionsAccepted++;
                     }
                 }
-                catch (System.Exception)
-                {
-                    conditionsAccepted = conditionsAccepted;
-                }
+                catch (System.Exception) { }
 
             }
             else if (condition[0] == "country_not_exist")
@@ -432,7 +445,13 @@ public class GameEventUI : MonoBehaviour
                         {
                             for (int i = 2; i < act.Length; i++)
                             {
-                                regionsToAnnex.Add(countryManager.regions[int.Parse(act[i])]);
+                                foreach (RegionManager _region in countryManager.regions)
+                                {
+                                    if (_region._id == int.Parse(act[i]))
+                                    {
+                                        regionsToAnnex.Add(_region);
+                                    }
+                                }
                             }
 
                             SmallNewsManager.Instance.countrySender = attacker.country;
@@ -789,6 +808,11 @@ public class GameEventUI : MonoBehaviour
 
                         attacker.ideology = act[2];
                         attacker.UpdateCountryGraphics(attacker.ideology);
+
+                        if (attacker.isPlayer)
+                        {
+                            countryManager.UpdateCountryInfo();
+                        }
                     }
                     else if (act[0] == "build")
                     {
@@ -859,22 +883,31 @@ public class GameEventUI : MonoBehaviour
                     }
                     else if (act[0] == "change")
                     {
-                        for (int i = 0; i < countryManager.regions.Count; i++)
+                        for (int i = 0; i < countryManager.countries.Count; i++)
                         {
                             if (countryManager.countries[i].country._id == int.Parse(act[1]))
                             {
+                                attacker = countryManager.countries[i];
                                 attacker = countryManager.countries[i];
                             }
                         }
 
                         countryManager.currentCountry.AddComponent<CountryAIManager>();
+                        countryManager.currentCountry.isPlayer = false;
                         ReferencesManager.Instance.aiManager.AICountries.Add(countryManager.currentCountry);
+
                         countryManager.currentCountry = attacker;
+                        countryManager.currentCountry.isPlayer = true;
+                        ReferencesManager.Instance.aiManager.AICountries.Remove(countryManager.currentCountry);
                         Destroy(countryManager.currentCountry.GetComponent<CountryAIManager>());
+
+                        ReferencesManager.Instance.countryManager.UpdateCountryInfo();
+                        ReferencesManager.Instance.countryManager.UpdateValuesUI();
+                        ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
                     }
                     else if (act[0] == "set_ai_level")
                     {
-                        for (int i = 0; i < countryManager.regions.Count; i++)
+                        for (int i = 0; i < countryManager.countries.Count; i++)
                         {
                             if (countryManager.countries[i].country._id == int.Parse(act[1]))
                             {
@@ -883,6 +916,22 @@ public class GameEventUI : MonoBehaviour
                         }
 
                         attacker.aiAccuracy = float.Parse(act[2]);
+                    }
+                    else if (act[0] == "sync_tech")
+                    {
+                        for (int i = 0; i < countryManager.countries.Count; i++)
+                        {
+                            if (countryManager.countries[i].country._id == int.Parse(act[1]))
+                            {
+                                attacker = countryManager.countries[i];
+                            }
+                            if (countryManager.countries[i].country._id == int.Parse(act[2]))
+                            {
+                                defender = countryManager.countries[i];
+                            }
+                        }
+
+                        defender.countryTechnologies = attacker.countryTechnologies;
                     }
                 }
             }

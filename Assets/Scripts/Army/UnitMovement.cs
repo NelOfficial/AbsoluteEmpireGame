@@ -628,6 +628,7 @@ public class UnitMovement : MonoBehaviour
                         def_hvy_losses++;
                     }
 
+                    defenderUnit.currentCountry.myRegions[Random.Range(0, defenderUnit.currentCountry.myRegions.Count)].population -= defenderUnit.unitsHealth[j].unit.recrootsCost;
                     defenderUnit.unitsHealth.Remove(defenderUnit.unitsHealth[j]);
                 }
             }
@@ -675,6 +676,7 @@ public class UnitMovement : MonoBehaviour
                     att_hvy_losses++;
                 }
 
+                attackerUnit.currentCountry.myRegions[Random.Range(0, attackerUnit.currentCountry.myRegions.Count)].population -= attackerUnit.unitsHealth[j].unit.recrootsCost;
                 attackerUnit.unitsHealth.Remove(attackerUnit.unitsHealth[j]);
             }
         }

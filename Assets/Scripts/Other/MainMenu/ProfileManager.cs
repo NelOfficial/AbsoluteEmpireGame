@@ -71,7 +71,7 @@ public class ProfileManager : MonoBehaviour
         }
         else if (PlayerPrefs.GetInt("languageId") == 0)
         {
-            createModButtonText.text = "Log in create mods";
+            createModButtonText.text = "Log in for create mods";
         }
 
         if (PlayerPrefs.GetString("LOGGED_IN") == "TRUE")

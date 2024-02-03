@@ -14,6 +14,7 @@ public class TechnologyManager : MonoBehaviour
     [SerializeField] TMP_Text techName;
     [SerializeField] TMP_Text techDescription;
     [SerializeField] TMP_Text techMoneyCost;
+    [SerializeField] TMP_Text techReserchingPointsCost;
     [SerializeField] TMP_Text techMoves;
 
     [SerializeField] TMP_Text recearchButtonText;
@@ -155,6 +156,7 @@ public class TechnologyManager : MonoBehaviour
         }
 
         techMoves.text = selectedTechnology.moves.ToString();
+        techReserchingPointsCost.text = selectedTechnology.researchPointsCost.ToString();
 
         CheckConnectors();
 
@@ -219,6 +221,7 @@ public class TechnologyManager : MonoBehaviour
 
             currentTech = techQueue;
             countryManager.currentCountry.money -= currentTech.tech.moneyCost;
+            countryManager.currentCountry.researchPoints -= currentTech.tech.researchPointsCost;
             countryManager.UpdateValuesUI();
 
             SelectTechnology(currentTech.tech);
@@ -262,7 +265,7 @@ public class TechnologyManager : MonoBehaviour
             recearchButton.interactable = true;
         }
 
-        if (countryManager.currentCountry.money >= selectedTechnology.moneyCost)
+        if (countryManager.currentCountry.money >= selectedTechnology.moneyCost && countryManager.currentCountry.researchPoints >= selectedTechnology.researchPointsCost)
         {
             if (selectedTechnology.techsNeeded.Length > 0)
             {
@@ -327,6 +330,7 @@ public class TechnologyManager : MonoBehaviour
     public void CancelRecearch()
     {
         countryManager.currentCountry.money += currentTech.tech.moneyCost;
+        countryManager.currentCountry.researchPoints += currentTech.tech.researchPointsCost;
         countryManager.UpdateValuesUI();
 
         currentTech.tech = null;

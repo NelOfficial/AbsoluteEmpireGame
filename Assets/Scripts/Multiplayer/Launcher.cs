@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Realtime;
 using System.Collections.Generic;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using System.Collections;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -80,6 +81,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         roomOptions.BroadcastPropsChangeToAll = true;
 
         ReferencesManager.Instance.chatManager.roomName = roomName;
+        ReferencesManager.Instance.chatManager.ConnectUser();
         PhotonNetwork.CreateRoom(roomName, roomOptions);
     }
 
@@ -118,7 +120,16 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void LeaveRoom()
     {
+        StartCoroutine(LeaveRoom_Co());
+    }
+
+    private IEnumerator LeaveRoom_Co()
+    {
+        ReferencesManager.Instance.chatManager.DissconectUser();
+
         PhotonNetwork.LeaveRoom();
+
+        yield break;
     }
 
     public void JoinRoom(RoomInfo info)

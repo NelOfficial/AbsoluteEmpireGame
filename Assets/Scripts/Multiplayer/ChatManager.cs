@@ -35,12 +35,13 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnDisconnected()
     {
-        chatClient.Unsubscribe(new string[] { $"roomChat_{roomName}" });
+        Debug.Log("Disconnected");
     }
 
     private IEnumerator ChatSubscribe()
     {
         yield return new WaitUntil(() => string.IsNullOrEmpty(roomName) == false);
+        yield return new WaitForSecondsRealtime(1);
         chatClient.Subscribe($"roomChat_{roomName}");
 
         yield break;
@@ -133,17 +134,17 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         }
     }
 
-    void Start()
-    {
-        ConnectUser();
-    }
-
     public void ConnectUser()
     {
         userID = PlayerPrefs.GetString("nickname");
 
         chatClient = new ChatClient(this);
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(userID));
+    }
+
+    private void Awake()
+    {
+        ConnectUser();
     }
 
     private void Update()

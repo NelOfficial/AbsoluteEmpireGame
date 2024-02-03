@@ -51,6 +51,7 @@ SpriteAtlas:
     cachedData: {fileID: 0}
     packedSpriteRenderDataKeys:
     - 44b8e540590fa39458c34e01671c9185: 21300000
+    - e60ecd617fb47b54d96db6b540f8a257: 21300000
     - aa3527e1cb40b294fb0570dd01be5ba6: 21300000
     - 6b1c0552142b5af4eab996ffbf8ce704: 21300000
     - 25775852761fd834388ae36ed5f4bd30: 21300000
@@ -66,6 +67,7 @@ SpriteAtlas:
     - 84b80f359d13b024eb48fed37b34b717: 21300000
     - 866b9845d348a3b4cb2aa6f96cb29c14: 21300000
     - 965cba45b5b8f264bbf37abc07653158: 21300000
+    - 93d6bc55edc0e6841afe0c2f337a56e2: 21300000
     - b85b07955168182459ba3671342fdea5: 21300000
     - 7b3efd26c6b54fc47a62049c8ab82419: 21300000
     - eb4d8296bf081a749a8c7c17f50e9fb8: 21300000
@@ -89,6 +91,7 @@ SpriteAtlas:
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 44b8e540590fa39458c34e01671c9185, type: 3}
+  - {fileID: 21300000, guid: e60ecd617fb47b54d96db6b540f8a257, type: 3}
   - {fileID: 21300000, guid: aa3527e1cb40b294fb0570dd01be5ba6, type: 3}
   - {fileID: 21300000, guid: 6b1c0552142b5af4eab996ffbf8ce704, type: 3}
   - {fileID: 21300000, guid: 25775852761fd834388ae36ed5f4bd30, type: 3}
@@ -104,6 +107,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 84b80f359d13b024eb48fed37b34b717, type: 3}
   - {fileID: 21300000, guid: 866b9845d348a3b4cb2aa6f96cb29c14, type: 3}
   - {fileID: 21300000, guid: 965cba45b5b8f264bbf37abc07653158, type: 3}
+  - {fileID: 21300000, guid: 93d6bc55edc0e6841afe0c2f337a56e2, type: 3}
   - {fileID: 21300000, guid: b85b07955168182459ba3671342fdea5, type: 3}
   - {fileID: 21300000, guid: 7b3efd26c6b54fc47a62049c8ab82419, type: 3}
   - {fileID: 21300000, guid: eb4d8296bf081a749a8c7c17f50e9fb8, type: 3}
@@ -126,6 +130,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 19e37aff3b305ae408a4ed5c784df852, type: 3}
   m_PackedSpriteNamesToIndex:
   - tech_ArmyWeapon
+  - tech_Antitank_1
   - tech_TireProduction
   - tech_ArmyTrain
   - tech_Artilery_Aim
@@ -141,6 +146,7 @@ SpriteAtlas:
   - tech_Armored
   - tech_Artilery_DulniyTormoz
   - tech_Artilery_TormozOtkata
+  - tech_Antitank_2
   - tech_ArmyWeapon2
   - tech_Artilery_Stanini
   - tech_Artilery_MiniShield

@@ -32,7 +32,7 @@ public class RewardedAds : MonoBehaviour
 
     private void RequestRewardedAd()
     {
-        string adUnitId = "R-M-2659272-3"; // R-M-2659272-3
+        string adUnitId = "R-M-2659272-5"; // R-M-2659272-3
         AdRequestConfiguration adRequestConfiguration = new AdRequestConfiguration.Builder(adUnitId).Build();
         rewardedAdLoader.LoadAd(adRequestConfiguration);
     }

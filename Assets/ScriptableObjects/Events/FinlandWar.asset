@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 15
   _name: "\u0417\u0438\u043C\u043D\u044F\u044F \u0432\u043E\u0439\u043D\u0430"
+  _nameEN: The winter war
   description: "\u041D\u0435\u0441\u043C\u043E\u0442\u0440\u044F \u043D\u0430 \u0442\u0449\u0430\u0442\u0435\u043B\u044C\u043D\u043E
     \u0432\u044B\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0435\u043C\u044B\u0439
     \u0432 \u0425\u0435\u043B\u044C\u0441\u0438\u043D\u043A\u0438 \u043E\u0440\u0435\u043E\u043B
@@ -269,6 +270,72 @@ MonoBehaviour:
     \u0421\u043E\u0432\u0435\u0442\u0441\u043A\u0438\u0439 \u0421\u043E\u044E\u0437
     \u043A\u0430\u043A \u0443\u0433\u0440\u043E\u0437\u0443, \u043A\u043E\u0442\u043E\u0440\u0443\u044E
     \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u043E \u0443\u043D\u0438\u0447\u0442\u043E\u0436\u0438\u0442\u044C."
+  descriptionEN: "Despite the carefully constructed aura of a \"weak\" and small
+    country in Helsinki, which was unprovoked attacked by the \"huge\" Soviet Union
+    in the late autumn of 1939, the causes of the war are much more complex. The
+    fact is that in the 1920s and 1930s, ultranationalist sentiments were strong
+    in Finland itself. There were \"societies\" closely connected with government
+    circles, which set themselves the goal of creating nothing other than \"Great
+    Finland\". This virtual state was supposed to include Soviet Karelia, the Murmansk
+    Region and other territories of the USSR. The map of \"Great Finland\" is really
+    amazing. These nationalist ideas of the 19th century (when Finland was part of
+    the Russian Empire) found their main support just in the early years of the independent
+    Finnish state during the so-called \"interbellum\" (interwar period). The Finnish
+    nationalists were only waiting for a convenient moment for the weakening of the
+    Soviet Union to begin expanding their borders at its expense. Among the ruling
+    elite of Finland, memories of the occupation of significant areas of Soviet Russia
+    by Finnish troops during our Civil War were very strong \u2014 fighting in Soviet
+    Karelia against Finnish detachments (or \"belofins\", as they were then called)
+    continued until the early 1920s. Then came a period of peace. But this did not
+    mean that Helsinki decided to forget the old claims. In those years, many European
+    countries treated the USSR with distrust or outright hostility, but even among
+    these countries Finland stood out for its outright anti-Sovietism. It should
+    be recognized that such a negative background in bilateral relations did not
+    at all contribute to compromises. However, Moscow, in spite of everything, went
+    to them.\nIn 1932, the USSR and Finland signed a non-aggression treaty, which
+    in the future should have tempered the ardor of hotheads in the Finnish government
+    and created conditions for \"building bridges\", mutually beneficial cooperation
+    in the economy and in the field of security. But this did not happen. Hitler
+    wanted war. Britain and France strongly pushed him against the Soviet Union.
+    The states bordering the USSR, such as Poland, Romania and, together with them,
+    Finland, chose a hostile attitude towards Moscow.\n\nFinland improved and armed
+    its army by purchasing weapons and equipment in many countries. The so-called
+    \"Mannerheim line\" was being built at an accelerated pace on the Karelian Isthmus,
+    which included hundreds of long-term firing points, three main fortifications,
+    guns, machine guns and other weapons. This line, named after Marshal, then commander
+    of the Finnish army K.G. Mannerheim, is considered by many modern historians
+    to be a purely and purely defensive structure. But they forget to say that this
+    line could also serve as a concentration point for Finnish formations, which,
+    if necessary, could start openly offensive actions from it. Moreover, offensive
+    groups of troops of any third power or powers (Germany, or England and France,
+    or divisions of all these countries together) could be concentrated behind this
+    line. Moscow saw this and feared such a development. After all, then the blow
+    would have been struck at one of the most vulnerable places in the USSR's border
+    borders \u2014 there were only 32 km from the Finnish border to the country's
+    second most important city, Leningrad. In general, the Soviet Union felt itself
+    in the position of a \"besieged fortress.\"\n\nAs for the price of interstate
+    agreements, it was clearly demonstrated in the autumn of 1938 by the \"Munich
+    agreement\" between England and France with Germany and Italy. And the rapid,
+    abrupt militarization of Europe throughout the 1930s left the Soviet government
+    no choice but to prepare for a new great war, whose ghost clearly appeared over
+    the whole of Europe.\nIn this situation, the Soviet side initiated negotiations
+    with Finland, the main purpose of which was to change the borders of states in
+    order to remove them from Leningrad, the most important political and economic
+    center of the USSR and, perhaps, the first in ideological terms, as the \"cradle
+    of the revolution.\" Starting in 1937, Soviet-Finnish negotiations were conducted,
+    but the Finnish side delayed them in every possible way, changed the terms and
+    refused profitable offers. Hoping for the help of Western powers in the confrontation
+    with the USSR, Helsinki hoped to postpone as much as possible, or even not sign
+    any new mutually binding agreements with Moscow.\n\nIn 1938-1939, there was an
+    active phase of Soviet-Finnish contacts. Moscow has done everything possible
+    to reach a mutual compromise and conclude a mutual assistance pact on the eve
+    of the impending world war. Documents of that time convincingly show that the
+    Soviet leadership was primarily afraid not of a conflict with Finland itself,
+    but of other, more powerful states that use its territory as a springboard against
+    the USSR. It is a fact that part of the Finnish establishment was inclined to
+    a more balanced political course towards the USSR, but those Finnish leaders
+    who viewed the Soviet Union as a threat that needed to be destroyed \"ruled the
+    ball.\""
   date: 1-12-1939
   image: {fileID: 21300000, guid: 4c759cf3e9190ed4a8a27e318f1d1418, type: 3}
   _checked: 1
@@ -276,14 +343,17 @@ MonoBehaviour:
   conditions:
   - 
   receivers: 
+  exceptionsReceivers: 
   aiWillDo_Index: 0
   buttons:
   - name: "\u0422\u0435\u0440\u043F\u0435\u043D\u0438\u0435 \u0441\u043E\u0432\u0435\u0442\u043E\u0432
       \u0438\u0441\u0441\u044F\u043A\u043B\u043E"
+    nameEN: The patience of the Soviets has run out
     actions:
     - annex;37;57;51
     rejectUltimatum: 0
   - name: "\u041F\u0443\u0441\u0442\u044C \u0442\u043E\u043B\u044C\u043A\u043E \u0441\u0443\u043D\u0443\u0442\u0441\u044F!"
+    nameEN: Let them just stick their heads in if they have the guts!
     actions:
     - war_to_countries_in_regs;37;57;51
     rejectUltimatum: 1

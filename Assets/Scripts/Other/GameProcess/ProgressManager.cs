@@ -2,7 +2,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
-using Photon.Realtime;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -78,10 +77,43 @@ public class ProgressManager : MonoBehaviour
             {
                 for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
                 {
+                    ReferencesManager.Instance.countryManager.countries[i].armyPersonnel = 0;
+
                     for (int unitIndex = 0; unitIndex < ReferencesManager.Instance.countryManager.countries[i].countryUnits.Count; unitIndex++)
                     {
                         ReferencesManager.Instance.countryManager.countries[i].countryUnits.RemoveAll(item => item == null);
                         units.Add(ReferencesManager.Instance.countryManager.countries[i].countryUnits[unitIndex]);
+                    }
+
+                    foreach (UnitMovement division in ReferencesManager.Instance.countryManager.countries[i].countryUnits)
+                    {
+                        foreach (UnitMovement.UnitHealth batalion in division.unitsHealth)
+                        {
+                            ReferencesManager.Instance.countryManager.countries[i].armyPersonnel += batalion.unit.recrootsCost;
+                        }
+                    }
+
+                    ReferencesManager.Instance.countryManager.countries[i].manpower =
+                        ReferencesManager.Instance.countryManager.countries[i].recroots +
+                        ReferencesManager.Instance.countryManager.countries[i].armyPersonnel;
+
+                    if (ReferencesManager.Instance.countryManager.countries[i].mobilasing == true)
+                    {
+                        if (ReferencesManager.Instance.countryManager.countries[i].manpower >=
+                        ReferencesManager.Instance.countryManager.countries[i].recruitsLimit)
+                        {
+                            ReferencesManager.Instance.countryManager.countries[i].recrootsIncome = 0;
+                            ReferencesManager.Instance.countryManager.countries[i].mobilasing = false;
+                        }
+                    }
+                    else
+                    {
+                        if (ReferencesManager.Instance.countryManager.countries[i].manpower <=
+                        ReferencesManager.Instance.countryManager.countries[i].recruitsLimit)
+                        {
+                            ReferencesManager.Instance.countryManager.countries[i].recrootsIncome = 0;
+                            ReferencesManager.Instance.countryManager.countries[i].deMobilasing = false;
+                        }
                     }
                 }
             }
@@ -258,6 +290,7 @@ public class ProgressManager : MonoBehaviour
                 country.money += country.moneyIncomeUI;
                 country.food += country.foodIncomeUI;
                 country.recroots += country.recrootsIncome;
+                country.researchPoints += country.researchPointsIncome;
             }
             ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
             ReferencesManager.Instance.countryManager.UpdateValuesUI();

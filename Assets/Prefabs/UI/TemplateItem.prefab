@@ -504,7 +504,6 @@ GameObject:
   - component: {fileID: 2952826111563021532}
   - component: {fileID: 7048325637903971726}
   - component: {fileID: 635262087061760666}
-  - component: {fileID: 8850806528271993973}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -628,18 +627,3 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &8850806528271993973
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8112890438673097087}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86033426a505fe84c9640557d91950ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  localisationText:
-  - Unarmed country
-  - "\u0411\u0435\u0437\u043E\u0440\u0443\u0436\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0430"

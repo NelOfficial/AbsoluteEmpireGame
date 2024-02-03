@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
-using Photon.Realtime;
+using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class RegionLoader : MonoBehaviour
 {
@@ -13,20 +14,31 @@ public class RegionLoader : MonoBehaviour
 
     void Start()
     {
-        ReferencesManager.Instance.countryManager.regions.Clear();
-
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
+        if (SceneManager.GetActiveScene().name != "Editor")
         {
-            for (int r = 0; r < ReferencesManager.Instance.countryManager.countries[i].myRegions.Count; r++)
+            ReferencesManager.Instance.countryManager.regions.Clear();
+
+            for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
             {
-                ReferencesManager.Instance.countryManager.regions.Add(ReferencesManager.Instance.countryManager.countries[i].myRegions[r]);
+                for (int r = 0; r < ReferencesManager.Instance.countryManager.countries[i].myRegions.Count; r++)
+                {
+                    ReferencesManager.Instance.countryManager.regions.Add(ReferencesManager.Instance.countryManager.countries[i].myRegions[r]);
+                }
+            }
+
+            for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
+            {
+                if (ReferencesManager.Instance.countryManager.regions[i]._id == 0)
+                {
+                    ReferencesManager.Instance.countryManager.regions[i]._id = i;
+                }
             }
         }
-
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
+        else
         {
-            ReferencesManager.Instance.countryManager.regions[i]._id = i;
+            ReferencesManager.Instance.countryManager.regions = FindObjectsOfType<RegionManager>().ToList();
         }
+
 
         regionsMax = ReferencesManager.Instance.countryManager.regions.Count;
         StartCoroutine(LoadRegions_Co());

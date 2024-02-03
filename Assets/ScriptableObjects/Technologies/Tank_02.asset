@@ -22,7 +22,8 @@ MonoBehaviour:
     \u0437\u0430 \u0445\u043E\u0434"
   descriptionEN: This technology will open access to a new type of troops - the Medium
     Tank. Armored vehicles move twice per turn
-  moneyCost: 50000
+  moneyCost: 35000
+  researchPointsCost: 225
   moves: 20
   startReasearched: 0
   optional: 0

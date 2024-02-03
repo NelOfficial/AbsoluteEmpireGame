@@ -20,7 +20,8 @@ MonoBehaviour:
     - \u042D\u043B\u0438\u0442\u043D\u0430\u044F \u043F\u0435\u0445\u043E\u0442\u0430"
   descriptionEN: This technology will open access to a new type of troops - Elite
     Infantry
-  moneyCost: 20000
+  moneyCost: 12500
+  researchPointsCost: 45
   moves: 10
   startReasearched: 0
   optional: 0

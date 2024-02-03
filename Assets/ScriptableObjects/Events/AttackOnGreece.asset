@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 23
   _name: "\u041D\u0430\u043F\u0430\u0434\u0435\u043D\u0438\u0435 \u043D\u0430 \u0413\u0440\u0435\u0446\u0438\u044E"
+  _nameEN: Italy's attack on Greece
   description: "\u041D\u0430\u0447\u0438\u043D\u0430\u044F \u0441 \u043E\u0441\u0435\u043D\u0438
     1940 \u0433\u043E\u0434\u0430 \u0431\u043E\u0440\u044C\u0431\u0430 \u043C\u0435\u0436\u0434\u0443
     \u0441\u0442\u0440\u0430\u043D\u0430\u043C\u0438 \u041E\u0441\u0438 \u0438 \u0410\u043D\u0442\u0438\u0433\u0438\u0442\u043B\u0435\u0440\u043E\u0432\u0441\u043A\u043E\u0439
@@ -168,6 +169,47 @@ MonoBehaviour:
     \u0431\u043B\u043E\u043A\u043E\u0432. \u0413\u0440\u0435\u0446\u0438\u044F \u0436\u0435
     \u043D\u0430\u0445\u043E\u0434\u0438\u043B\u0430\u0441\u044C \u043F\u043E\u0434
     \u0431\u0440\u0438\u0442\u0430\u043D\u0441\u043A\u0438\u043C \u0432\u043B\u0438\u044F\u043D\u0438\u0435\u043C."
+  descriptionEN: "Starting in the autumn of 1940, the struggle between the Axis countries
+    and the Anti-Hitler Coalition for the Balkans reached a new, more acute level.
+    The rival States attached exceptional importance to establishing their superiority
+    in this military theater.\n\nThe ruling circles of Britain considered the Balkan
+    Peninsula as a cover for British possessions in the Near and Middle East, as
+    well as a valuable source of human resources and a springboard for opening one
+    of the fronts of the war with Germany.\n\nItaly considered Greece as its future
+    colony, thanks to which it was possible to control the Aegean and Ionian Seas.
+    For the Italian fascists, Greece was supposed to become part of the new \"Roman
+    Empire\" \u2014 territories washed by the Mediterranean Sea, which the fascists
+    called Mare Nostrum or Our Sea in Latin. In fact, Italy already owned some of
+    the Aegean islands inherited by it after the Italo-Turkish War of 1911-1912 and
+    disputed by Greece. From 1917 to 1920, Italy established a protectorate over
+    Albania. In 1918, Italian troops occupied Northern Epirus, the southern part
+    of Albania, where there was a Greek population, but in 1923 the Italians were
+    forced to leave this territory, which was ceded to Greece. In the 20s, the aggravation
+    of relations between Italy and Greece continued. In 1923, the Corfu crisis broke
+    out when, under the pretext of killing its military, Italy occupied the Greek
+    island of Corfu, but was forced to retreat under pressure from the League of
+    Nations. In 1939, Italian troops occupied Albania, creating their own protectorate
+    there. Thus Albania became Italy's foothold in the Balkans, from which Yugoslavia
+    and Greece could be invaded.\n\nThe government of Nazi Germany hoped to use the
+    Balkans as one of the springboards for the invasion of the USSR. The capture
+    of Norway with Denmark and the conclusion of an alliance treaty with Finland
+    provided Germany with a blockade of the USSR from the north-west direction, and
+    the capture of the Balkan Peninsula was supposed to create a southern flank and
+    would provide the most important supplies of raw materials and food. Here it
+    was supposed to concentrate a large grouping of the German army, whose strike
+    would be directed at Ukraine with the further development of the offensive in
+    the direction of the Caucasus. By controlling the Balkan Peninsula, Germany would
+    have the opportunity to conduct military operations against Britain and its allies
+    in the Mediterranean, the Middle East and North Africa, as well as to carry out
+    a direct invasion of Asia and Africa. In addition, Germany would have the opportunity
+    to deploy military air and naval bases on the peninsula and control the areas
+    of the Mediterranean Sea through which oil supply routes to Britain from the
+    Middle East countries passed.\n\nIn the second half of 1940 and early 1941, Germany
+    significantly increased its influence on the Balkan Peninsula by joining Hungary,
+    Romania and Bulgaria to the Triple Pact. But the position of such large states
+    in the region as Yugoslavia and Turkey was still uncertain. Their governments
+    were outside the spheres of influence of the opposing blocs. Greece was under
+    British influence."
   date: 28-10-1940
   image: {fileID: 21300000, guid: 6eeaf51dd7c45a84da2afec7706919a1, type: 3}
   _checked: 0
@@ -181,6 +223,7 @@ MonoBehaviour:
   buttons:
   - name: "\u0418\u0442\u0430\u043B\u0438\u044F \u043D\u0430\u0447\u0430\u043B\u0430
       \u0434\u0435\u0439\u0441\u0442\u0432\u043E\u0432\u0430\u0442\u044C"
+    nameEN: Italy has begun to act
     actions:
     - war;17;13
     rejectUltimatum: 0

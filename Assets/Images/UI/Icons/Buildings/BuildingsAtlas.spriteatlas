@@ -62,6 +62,7 @@ SpriteAtlas:
     - 269bc38a727daea49a8cf2f07db2d53e: 21300000
     - 8f68c2aaecbe0d04d9d444922497c9a9: 21300000
     - 70e331bcb43cdfc409dc3b85f99f5c34: 21300000
+    - ccc5ea2ebae4a70438a105743d91978c: 21300000
     - 2e50dc2f4fdce74458de1ba73c4e9c7b: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -77,6 +78,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 269bc38a727daea49a8cf2f07db2d53e, type: 3}
   - {fileID: 21300000, guid: 8f68c2aaecbe0d04d9d444922497c9a9, type: 3}
   - {fileID: 21300000, guid: 70e331bcb43cdfc409dc3b85f99f5c34, type: 3}
+  - {fileID: 21300000, guid: ccc5ea2ebae4a70438a105743d91978c, type: 3}
   - {fileID: 21300000, guid: 2e50dc2f4fdce74458de1ba73c4e9c7b, type: 3}
   m_PackedSpriteNamesToIndex:
   - b_chefarm
@@ -91,6 +93,7 @@ SpriteAtlas:
   - b_farm
   - ChemicalFarmIconBackground
   - civ_factory
+  - research_lab_transparent
   - civ_factory_transparent
   m_RenderDataMap: {}
   m_Tag: BuildingsAtlas

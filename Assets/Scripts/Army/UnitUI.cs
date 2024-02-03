@@ -88,7 +88,7 @@ public class UnitUI : MonoBehaviour
                 }
             }
 
-            ReferencesManager.Instance.regionUI.UpdateUnitsUI();
+            ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
         }
     }
 }

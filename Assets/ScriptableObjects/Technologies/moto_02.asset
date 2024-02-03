@@ -24,7 +24,8 @@ MonoBehaviour:
     \u0445\u043E\u0434"
   descriptionEN: This technology will open access to a new type of troops - Armored
     motorized infantry. Motorized infantry moves twice per turn
-  moneyCost: 20000
+  moneyCost: 12500
+  researchPointsCost: 70
   moves: 15
   startReasearched: 0
   optional: 0

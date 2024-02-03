@@ -15,6 +15,7 @@ MonoBehaviour:
   id: 0
   _name: "\u0420\u0435\u043C\u0438\u043B\u0438\u0442\u0430\u0440\u0438\u0437\u0430\u0446\u0438\u044F
     \u0420\u0435\u0439\u043D\u0441\u043A\u043E\u0439 \u043E\u0431\u043B\u0430\u0441\u0442\u0438"
+  _nameEN: Remilitarization of the Rhineland
   description: "\u0412 1936 \u0433\u043E\u0434\u0443 \u041A\u0430\u043D\u0446\u043B\u0435\u0440
     \u0422\u0440\u0435\u0442\u044C\u0435\u0433\u043E \u0440\u0435\u0439\u0445\u0430
     \u0438 \u0444\u044E\u0440\u0435\u0440 \u043D\u0435\u043C\u0435\u0446\u043A\u043E\u0433\u043E
@@ -77,14 +78,39 @@ MonoBehaviour:
     \u043D\u0430\u0441\u0442\u0430\u0438\u0432\u0430\u043B \u043D\u0430 \u043D\u0435\u043C\u0435\u0434\u043B\u0435\u043D\u043D\u043E\u0439
     \u043E\u0434\u043D\u043E\u0441\u0442\u043E\u0440\u043E\u043D\u043D\u0435\u0439
     \u0440\u0435\u043C\u0438\u043B\u0438\u0442\u0430\u0440\u0438\u0437\u0430\u0446\u0438\u0438."
+  descriptionEN: 'In 1936, the Chancellor of the Third Reich and the Fuhrer of the
+    German people, Adolf Hitler, decided to remilitarize the Rhineland. He originally
+    planned to produce it in 1937.
+
+
+    Some circumstances, first of all, the ratification
+    of the French-Soviet pact of 1935, allowed him to accelerate events. Hitler managed
+    to present his provocation as a defensive initiative against the "encirclement"
+    of hostile states. Other circumstances that influenced Hitler''s decision include
+    the possibility of the French army receiving better weapons in 1937, the recent
+    fall of the French government and the appointment of a provisional government
+    there, economic problems in Germany itself that required foreign policy success
+    to restore the popularity of the regime, the Italo-Ethiopian war that destroyed
+    the "Stresa Front".
+
+
+    On February 12, 1936, Hitler held a meeting attended
+    by Foreign Minister Konstantin Neurath and Ambassador-at-Large Joachim von Ribbentrop.
+    The possible reaction of the great Powers to the remilitarization of the Rhineland
+    was discussed. Neurath supported remilitarization, but insisted on additional
+    negotiations, while Ribbentrop insisted on immediate unilateral remilitarization.'
   date: 7-3-1936
   image: {fileID: 21300000, guid: 0be10395457ff654aaa30b661f46064a, type: 3}
   _checked: 1
   silentEvent: 0
   conditions:
   - 
+  receivers: 
+  exceptionsReceivers: 
+  aiWillDo_Index: 0
   buttons:
   - name: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+    nameEN: Close
     actions:
     - 
     rejectUltimatum: 0

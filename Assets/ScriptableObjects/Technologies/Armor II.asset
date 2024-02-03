@@ -17,7 +17,8 @@ MonoBehaviour:
   description: "\u041E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u0434\u043E\u0441\u0442\u0443\u043F
     \u043A \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u043C \u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u044F\u043C"
   descriptionEN: Opens up access to other technologies
-  moneyCost: 20000
+  moneyCost: 10000
+  researchPointsCost: 175
   moves: 10
   startReasearched: 0
   optional: 0

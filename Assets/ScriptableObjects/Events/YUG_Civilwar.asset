@@ -15,6 +15,7 @@ MonoBehaviour:
   id: 25
   _name: "\u0413\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439
     \u043F\u0435\u0440\u0435\u0432\u043E\u0440\u043E\u0442 \u0432 \u042E\u0433\u043E\u0441\u043B\u0430\u0432\u0438\u0438"
+  _nameEN: Coup d'etat in Yugoslavia
   description: "\u0413\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439
     \u043F\u0435\u0440\u0435\u0432\u043E\u0440\u043E\u0442 \u0432 \u042E\u0433\u043E\u0441\u043B\u0430\u0432\u0438\u0438
     1941 \u0433\u043E\u0434\u0430, \u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439
@@ -48,26 +49,38 @@ MonoBehaviour:
     \u0411\u0435\u043B\u0433\u0440\u0430\u0434\u0430 \u0438 \u043C\u043D\u043E\u0433\u0438\u0445
     \u0434\u0440\u0443\u0433\u0438\u0445 \u044E\u0433\u043E\u0441\u043B\u0430\u0432\u0441\u043A\u0438\u0445
     \u0433\u043E\u0440\u043E\u0434\u043E\u0432. "
+  descriptionEN: "The coup d'etat in Yugoslavia in 1941, known in Serbian and Yugoslav
+    historiography as the March Putsch (Serb. Martowski Puig) \u2014 overthrow of
+    the Yugoslav government of Regent Prince Pavel on March 27, 1941. It was committed
+    by a group of senior Serbian officers shortly after the signing of the treaty
+    on the annexation of Yugoslavia to the Berlin Pact of 1940. He gained a lot of
+    supporters among the Serbian military and Serbian nationalists due to dissatisfaction
+    with the policy of rapprochement with the Axis countries, which was led by Regent
+    Pavel, who was ousted as a result of the coup, and the government of Dragisa
+    Tsvetkovic. Supported by the residents of Belgrade and many other Yugoslav cities."
   date: 1-4-1941
   image: {fileID: 21300000, guid: 3cff66bdd5a53c94cbbfaddd800ff498, type: 3}
-  _checked: 1
+  _checked: 0
   silentEvent: 0
   conditions:
   - country_exist;38
   receivers: 
-  exceptionsReceivers: 
+  exceptionsReceivers: 26000000
   aiWillDo_Index: 0
   buttons:
   - name: "\u0410 \u043C\u043E\u0433\u043B\u043E \u0431\u044B\u0442\u044C \u043F\u043E
       \u0434\u0440\u0443\u0433\u043E\u043C\u0443?"
+    nameEN: Could it have been any other way?
     actions:
     - "create_country;5538;\u0414\u0435\u043C\u043E\u043A\u0440\u0430\u0442\u0438\u044F"
     - war;5538;38
-    - annex;5538;411;413;409;410;416;417;418;420;421;419;422;423;426;418;414
+    - annex;5538;424;426;425;423;422;427;431;430;429;428;432;433;434;439;436;435;418
     - union;5538;36
     - add_res;5538;recroots;50000
     - add_res;5538;money;10000
     - set_res;38;recroots;0
     - set_res;38;money;-1000
+    - set_ai_level;38;1
+    - sync_tech;38;5538
     rejectUltimatum: 0
   IS_GAME_MAIN_EVENT: 1

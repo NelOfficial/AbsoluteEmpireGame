@@ -21,8 +21,8 @@ MonoBehaviour:
   level: 2
   unlockLevel: 5
   rank: 1
-  health: 5
-  softAttack: 30
+  health: 2
+  softAttack: 5
   hardAttack: 2.5
   defense: 10
   maxEntrenchment: 0

@@ -35,6 +35,7 @@ public class UI_VerifyBuildingPanel : MonoBehaviour
         regionManager.currentRegionManager.currentCountry.moneyNaturalIncome -= currentBuilding.goldIncome;
         regionManager.currentRegionManager.currentCountry.foodNaturalIncome -= currentBuilding.foodIncome;
         regionManager.currentRegionManager.currentCountry.recrootsIncome -= currentBuilding.recrootsIncome;
+        regionManager.currentRegionManager.currentCountry.researchPointsIncome -= currentBuilding.researchPointsIncome;
         ReferencesManager.Instance.regionUI.UpdateBuildingUI();
 
         ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();

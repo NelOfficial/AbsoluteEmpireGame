@@ -79,6 +79,14 @@ public class ReferencesManager : MonoBehaviour
         createdCountry.GetComponent<CountrySettings>().ideology = ideology;
         createdCountry.GetComponent<CountrySettings>().UpdateCountryGraphics(ideology);
 
+        for (int i = 0; i < gameSettings.technologies.Length; i++)
+        {
+            if (gameSettings.technologies[i].moves == 0)
+            {
+                createdCountry.GetComponent<CountrySettings>().countryTechnologies.Add(gameSettings.technologies[i]);
+            }
+        }
+
         countryManager.UpdateRegionsColor();
     }
 
@@ -125,22 +133,35 @@ public class ReferencesManager : MonoBehaviour
 
     public void SetRecroots(int id, CountrySettings country)
     {
-        try
+        if (country.population > 0)
         {
-            if (country.population > 0)
+            int newManpower = country.population / 100 * Instance.gameSettings.mobilizationPercent[id];
+
+            if (country.recroots < 0)
             {
-                country.population += country.recroots;
-
-                int reservedManPower = country.population / 100 * ReferencesManager.Instance.gameSettings.mobilizationPercent[id];
-
-                country.population -= reservedManPower;
-                country.recroots = reservedManPower;
-
-                country.mobilizationLaw = id;
+                country.recroots = 0;
             }
-        }
-        catch (System.Exception)
-        {
+
+            country.manpower = country.recroots + country.armyPersonnel;
+
+            if (newManpower > country.manpower)
+            {
+                country.recruitsLimit = newManpower - country.armyPersonnel;
+                country.mobilasing = true;
+                country.deMobilasing = false;
+            }
+            else
+            {
+                country.recruitsLimit = newManpower - country.armyPersonnel;
+                country.mobilasing = false;
+                country.deMobilasing = true;
+            }
+
+            int recruitsNeeded = country.recruitsLimit - country.manpower;
+
+            country.recrootsIncome = recruitsNeeded / 25;
+
+            country.mobilizationLaw = id;
 
         }
     }

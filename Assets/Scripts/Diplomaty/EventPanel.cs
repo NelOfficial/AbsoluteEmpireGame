@@ -26,7 +26,33 @@ public class EventPanel : MonoBehaviour
         countryFlagImage.sprite = currentEventItem.sender.country.countryFlag;
         countryNameText.text = currentEventItem.sender.country._name;
 
-        offerText.text = $"Они предлагают вам {currentEventItem.offer}";
+        string offer_text = "";
+
+        if (PlayerPrefs.GetInt("languageId") == 0)
+        {
+            if (currentEventItem.offer == "Торговля")
+            {
+                offer_text = "Trading";
+            }
+            else if (currentEventItem.offer == "Пакт о ненападении")
+            {
+                offer_text = "Non-agression pact";
+            }
+            else if (currentEventItem.offer == "Право прохода войск")
+            {
+                offer_text = "Right of troops passage";
+            }
+            else if (currentEventItem.offer == "Союз")
+            {
+                offer_text = "Union";
+            }
+
+            offerText.text = $"They offer you {offer_text}";
+        }
+        else if (PlayerPrefs.GetInt("languageId") == 1)
+        {
+            offerText.text = currentEventItem.offer;
+        }
     }
 
     public void Accept()

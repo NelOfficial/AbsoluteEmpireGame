@@ -3,7 +3,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine.UI;
-using WebSocketSharp;
 
 public class EventCreatorManager : MonoBehaviour
 {
@@ -88,6 +87,21 @@ public class EventCreatorManager : MonoBehaviour
 
         _eventNameInputfield.text = modEvents[currentModEventIndex]._name;
         _eventDescriptionInputfield.text = modEvents[currentModEventIndex].description;
+
+        _eventConditionsInputfield.text = "";
+
+        if (modEvents[currentModEventIndex].conditions.Count > 0)
+        {
+            for (int i = 0; i < modEvents[currentModEventIndex].conditions.Count; i++)
+            {
+                _eventConditionsInputfield.text += modEvents[currentModEventIndex].conditions[i];
+            }
+        }
+        else
+        {
+            _eventConditionsInputfield.text = string.Empty;
+        }
+
         dateInputfield.text = modEvents[currentModEventIndex].date;
 
         _eventReceiversInputfield.text = "";
@@ -121,6 +135,9 @@ public class EventCreatorManager : MonoBehaviour
                     newEvent.id = newEventID;
                     newEvent._name = "[New event]";
                     newEvent.description = "[New event description]";
+                    newEvent.conditions = new List<string>();
+                    newEvent.imagePath = "";
+                    newEvent.date = "1-1-1936";
 
                     modEvents.Add(newEvent);
 
