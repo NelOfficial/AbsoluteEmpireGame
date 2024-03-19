@@ -49,7 +49,7 @@ public class DiplomatyUI : MonoBehaviour
 
     [HideInInspector] public int _messageOfferId;
 
-    private List<CountrySettings> senderWars = new List<CountrySettings>();
+    public List<CountrySettings> senderWars = new List<CountrySettings>();
     private List<CountrySettings> receiverWars = new List<CountrySettings>();
 
     public List<TradeBuff> globalTrades = new List<TradeBuff>();
@@ -63,6 +63,8 @@ public class DiplomatyUI : MonoBehaviour
     private int value;
     private bool accept;
     private int random;
+
+    public string regionTransferType;
 
     private void Start()
     {
@@ -885,13 +887,38 @@ public class DiplomatyUI : MonoBehaviour
                 Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
                 Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
 
-                if (countRandom) random = Random.Range(0, 100);
+                if (countRandom) random = Random.Range(0, 20);
                 else random = 100;
 
                 if (sender.myRegions.Count / receiver.myRegions.Count >= 3f)
                 {
-                    random += 150;
+                    random += Random.Range(5, 20);
                 }
+
+                if (receiver.civFactories > 0)
+                {
+                    if (sender.civFactories / receiver.civFactories >= 3)
+                    {
+                        random += Random.Range(5, 30);
+                    }
+                }
+
+                if (receiver.farms > 0)
+                {
+                    if (sender.farms / receiver.farms >= 3)
+                    {
+                        random += Random.Range(0, 30);
+                    }
+                }
+
+                if (receiver.chemicalFarms > 0)
+                {
+                    if (sender.chemicalFarms / receiver.chemicalFarms >= 3)
+                    {
+                        random += Random.Range(0, 30);
+                    }
+                }
+
 
                 int relationsBonus = receiverToSender.relationship / 15;
 
@@ -1777,12 +1804,200 @@ public class DiplomatyUI : MonoBehaviour
     }
 
 
-    public void SetDiploRegionSelectionMode()
+    public void SetDiploRegionSelectionMode(string type)
     {
+        ReferencesManager.Instance.gameSettings.provincesList.Clear();
+
         ReferencesManager.Instance.regionUI.cancelRegionSelectionModeButton.SetActive(true);
         ReferencesManager.Instance.regionUI.CloseAllUI();
 
         ReferencesManager.Instance.gameSettings.regionSelectionMode = true;
+
+        if (type == "receiver_country")
+        {
+            ReferencesManager.Instance.gameSettings.regionSelectionModeType = $"other_country;{receiverId}";
+            regionTransferType = "ask";
+        }
+        else
+        {
+            ReferencesManager.Instance.gameSettings.regionSelectionModeType = type;
+            regionTransferType = "give";
+        }
+    }
+
+    public void AcceptRegionsAndSendOffer()
+    {
+        regionManager.DeselectRegions();
+
+        bool countRandom = !ReferencesManager.Instance.gameSettings.diplomatyCheats;
+
+        Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
+        Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
+
+        if (regionTransferType == "give")
+        {
+            accept = false;
+
+            acceptationStatePanel.SetActive(true);
+            string currentLanguage = "";
+
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                currentLanguage = "EN";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                currentLanguage = "RU";
+            }
+
+            if (countRandom) random = Random.Range(0, 100);
+            else random = 9999;
+
+            random = 50;
+
+            if (senderToReceiver.relationship > 50)
+            {
+                random += Random.Range(10, 20);
+            }
+
+            if (sender.ideology == receiver.ideology)
+            {
+                random += Random.Range(10, 15);
+            }
+
+            foreach (RegionManager province in ReferencesManager.Instance.gameSettings.provincesList)
+            {
+                foreach (CountryScriptableObject country in province.regionClaims)
+                {
+                    if (country._id == receiverId)
+                    {
+                        random += Random.Range(20, 40);
+                    }
+                    //else if (country._id != receiverId)
+                    //{
+                    //    random -= Random.Range(20, 40);
+                    //}
+                }
+            }
+
+            if (random >= 50)
+            {
+                accept = true;
+
+                acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
+
+                if (currentLanguage == "EN")
+                {
+                    acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
+                }
+
+                int randomRelations = Random.Range(5, 15);
+
+                senderToReceiver.relationship += ReferencesManager.Instance.gameSettings.provincesList.Count * randomRelations;
+                receiverToSender.relationship += ReferencesManager.Instance.gameSettings.provincesList.Count * randomRelations;
+
+
+                foreach (RegionManager province in ReferencesManager.Instance.gameSettings.provincesList)
+                {
+                    ReferencesManager.Instance.AnnexRegion(province, receiver);
+                }
+            }
+            else
+            {
+                accept = false;
+
+                acceptationStateText.text = "Они <b><color=\"red\">отклонили</color></b> ваше предложение";
+
+                if (currentLanguage == "EN")
+                {
+                    acceptationStateText.text = "They are <b><color=\"red\">rejected</color></b> your offer";
+                }
+            }
+        }
+        else if (regionTransferType == "ask")
+        {
+            accept = false;
+            random = Random.Range(0, 10);
+
+            acceptationStatePanel.SetActive(true);
+            string currentLanguage = "";
+
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                currentLanguage = "EN";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                currentLanguage = "RU";
+            }
+
+            if (senderToReceiver.relationship > 50)
+            {
+                random += Random.Range(5, 15);
+            }
+
+            if (sender.ideology == receiver.ideology)
+            {
+                random += Random.Range(5, 10);
+            }
+
+            if (sender.ideology != receiver.ideology)
+            {
+                random -= Random.Range(20, 25);
+            }
+
+            if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(sender, receiver).vassal)
+            {
+                random += 100;
+            }
+
+            foreach (RegionManager province in ReferencesManager.Instance.gameSettings.provincesList)
+            {
+                foreach (CountryScriptableObject country in province.regionClaims)
+                {
+                    if (country._id == senderId)
+                    {
+                        random += Random.Range(20, 40);
+                    }
+                    else if (country._id != senderId)
+                    {
+                        random -= Random.Range(20, 40);
+                    }
+                }
+            }
+
+            if (random >= 50)
+            {
+                accept = true;
+
+                acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
+
+                if (currentLanguage == "EN")
+                {
+                    acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
+                }
+
+                foreach (RegionManager province in ReferencesManager.Instance.gameSettings.provincesList)
+                {
+                    ReferencesManager.Instance.AnnexRegion(province, sender);
+                }
+            }
+            else
+            {
+                accept = false;
+
+                acceptationStateText.text = "Они <b><color=\"red\">отклонили</color></b> ваше предложение";
+
+                if (currentLanguage == "EN")
+                {
+                    acceptationStateText.text = "They are <b><color=\"red\">rejected</color></b> your offer";
+                }
+            }
+        }
+
+        ReferencesManager.Instance.gameSettings.regionSelectionMode = false;
+        ReferencesManager.Instance.regionUI.cancelRegionSelectionModeButton.SetActive(false);
+        UpdateDiplomatyUI(sender, receiver);
     }
 
 

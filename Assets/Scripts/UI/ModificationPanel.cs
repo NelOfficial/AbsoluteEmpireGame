@@ -12,11 +12,15 @@ using UnityEngine.Networking;
 public class ModificationPanel : MonoBehaviour
 {
     public GameObject wallAnimationUI;
+    public GameObject notifications_wallAnimationUI;
     public GameObject wallItemPrefab;
     public Transform wallContrainer;
+    public Transform notifications_container;
 
     [SerializeField] Button refreshButton;
     [SerializeField] TMP_Text refreshButtonText;
+    [SerializeField] Button notifications_refreshButton;
+    [SerializeField] TMP_Text notifications_refreshButtonText;
 
     [SerializeField] TMP_Text modName_TMP;
     [SerializeField] TMP_Text modDesc_TMP;
@@ -27,12 +31,14 @@ public class ModificationPanel : MonoBehaviour
     public Modification currentLoadedModification;
 
     public List<int> loadedModificationsIds = new List<int>();
+    public List<string> notificationIds = new List<string>();
     public List<Modification> loadedModifications = new List<Modification>();
 
     [SerializeField] BoolValue jsonRead;
 
     [SerializeField] GameObject localModButtonPrefab;
     [SerializeField] Transform localModsContainer;
+    [SerializeField] GameObject notification_buttonPrefab;
 
     public ModListValue downloadedModsIds;
     public BoolValue isPlayModObject;
@@ -172,6 +178,85 @@ public class ModificationPanel : MonoBehaviour
         }
 
         StartCoroutine(WallUpdate());
+    }
+
+    public void GetNotifications()
+    {
+        StartCoroutine(GetNotifications_Co());
+    }
+
+    private IEnumerator GetNotifications_Co()
+    {
+        ReferencesManager.Instance.profileManager.loadedNotifications.Clear();
+        loadedModificationsIds.Clear();
+
+        notifications_wallAnimationUI.SetActive(true);
+        notifications_refreshButton.interactable = false;
+
+        if (PlayerPrefs.GetInt("languageId") == 0)
+        {
+            notifications_refreshButtonText.text = $"Loading data...";
+        }
+        else if (PlayerPrefs.GetInt("languageId") == 1)
+        {
+            notifications_refreshButtonText.text = $"Загрузка данных...";
+        }
+
+        WWWForm form = new WWWForm();
+        form.AddField("receiver", ReferencesManager.Instance.profileManager.userId);
+
+        WWW getPostRequest = new WWW("http://our-empire.7m.pl/core/getNotifications.php", form);
+
+        yield return getPostRequest;
+
+        notificationIds = getPostRequest.text.Split('\t').ToList();
+
+        for (int i = 0; i < notificationIds.Count; i++)
+        {
+            WWWForm _form = new WWWForm();
+            _form.AddField("id", int.Parse(notificationIds[i]));
+
+            WWW getPostRequestById = new WWW("http://our-empire.7m.pl/core/getNotificationById.php", _form);
+            yield return getPostRequestById;
+
+            string[] request = getPostRequestById.text.Split('\t');
+
+            if (!string.IsNullOrEmpty(request[0]))
+            {
+                ProfileManager.ProfileNotification newNotification = new ProfileManager.ProfileNotification();
+
+                try
+                {
+                    newNotification.title = request[0];
+                    newNotification.description = request[1];
+                    newNotification.moderator_id = int.Parse(request[2]);
+                    newNotification.date = request[3];
+
+                    ReferencesManager.Instance.profileManager.loadedNotifications.Add(newNotification);
+                }
+                catch (System.Exception)
+                {
+                    Debug.Log(getPostRequest.text);
+                }
+            }
+        }
+
+        yield return new WaitForSeconds(0.1f);
+        UpdateNotifications_UI();
+
+        notifications_wallAnimationUI.SetActive(false);
+        notifications_refreshButton.interactable = true;
+
+        yield return new WaitForSeconds(0.1f);
+
+        if (PlayerPrefs.GetInt("languageId") == 0)
+        {
+            notifications_refreshButtonText.text = $"Обновить";
+        }
+        else if (PlayerPrefs.GetInt("languageId") == 1)
+        {
+            notifications_refreshButtonText.text = $"Update";
+        }
     }
 
     private IEnumerator WallUpdate()
@@ -696,6 +781,23 @@ public class ModificationPanel : MonoBehaviour
         yield return new WaitUntil(() => isBytesNotEmpty == true);
 
         File.WriteAllBytes(Path.Combine(ModPath, "events", $"{eventID}", $"{eventID}.jpg"), c_bytes);
+    }
+
+    public void UpdateNotifications_UI()
+    {
+        foreach (Transform child in notifications_container)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (ProfileManager.ProfileNotification notification in ReferencesManager.Instance.profileManager.loadedNotifications)
+        {
+            GameObject localModButtonSpawned = Instantiate(notification_buttonPrefab, notifications_container);
+            localModButtonSpawned.GetComponent<ProfileNotificationItem>().title = notification.title;
+            localModButtonSpawned.GetComponent<ProfileNotificationItem>().description = notification.description;
+            localModButtonSpawned.GetComponent<ProfileNotificationItem>().date = notification.date;
+            localModButtonSpawned.GetComponent<ProfileNotificationItem>().SetUp();
+        }
     }
 
     [Serializable]

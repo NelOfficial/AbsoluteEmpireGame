@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class AIManager : MonoBehaviour
 {
@@ -53,4 +54,32 @@ public class AIManager : MonoBehaviour
 		}
 		progressManager.countryMovePanel.SetActive(false);
 	}
+
+	public void DisableAI()
+	{
+		CountrySettings _countryToDisable = ReferencesManager.Instance.diplomatyUI.receiver;
+
+		if (_countryToDisable != null)
+		{
+			_countryToDisable.isPlayer = false;
+
+			AICountries.Remove(_countryToDisable);
+
+			Destroy(_countryToDisable.GetComponent<CountryAIManager>());
+        }
+    }
+
+    public void EnableAI()
+    {
+        CountrySettings _countryToEnable = ReferencesManager.Instance.diplomatyUI.receiver;
+
+        if (_countryToEnable != null)
+        {
+            _countryToEnable.isPlayer = false;
+
+			_countryToEnable.AddComponent<CountryAIManager>();
+
+            AICountries.Add(_countryToEnable);
+        }
+    }
 }

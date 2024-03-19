@@ -24,7 +24,7 @@ public class Army : MonoBehaviour
     public Sprite pointSprite;
     public Sprite attackSprite;
 
-    public TMP_Text[] attackerArmyLosses; // 0 - Infantry; 1 - Artilery; 2 - Heavy
+    public TMP_Text[] attackerArmyLosses; // 0 - Infantry; 1 - Artilery; 2 - Heavy; 3 - Cavalry
     public TMP_Text[] attackerEconomy; // 0 - MoneyIncome; 1 - FoodIncome; 2 - Population; 3 - CivFactory; 4 - Farm
 
     public TMP_Text[] defenderArmyLosses; // 0 - Infantry; 1 - Artilery; 2 - Heavy
@@ -33,10 +33,10 @@ public class Army : MonoBehaviour
     public TMP_Text[] defenderBonus; // 0 - attack buff; 1 - defence buff;
     public TMP_Text[] attackerBonus; // 0 - attack buff; 1 - defence buff;
 
-    [HideInInspector] public int[] attackerArmyLossesValue; // 0 - Infantry; 1 - Artilery; 2 - Heavy
+    public int[] attackerArmyLossesValue = new int[3]; // 0 - Infantry; 1 - Artilery; 2 - Heavy
     [HideInInspector] public int[] attackerEconomyValue; // 0 - MoneyIncome; 1 - FoodIncome; 2 - Population; 3 - CivFactory; 4 - Farm
 
-    [HideInInspector] public int[] defenderArmyLossesValue; // 0 - Infantry; 1 - Artilery; 2 - Heavy
+    public int[] defenderArmyLossesValue = new int[3]; // 0 - Infantry; 1 - Artilery; 2 - Heavy
     [HideInInspector] public int[] defenderEconomyValue; // 0 - MoneyIncome; 1 - FoodIncome; 2 - Population; 3 - CivFactory; 4 - Farm
 
     [HideInInspector] public UnitMovement[] unitMovements;

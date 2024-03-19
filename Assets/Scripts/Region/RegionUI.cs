@@ -4,8 +4,6 @@ using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
-using Photon.Chat.Demo;
 
 public class RegionUI : MonoBehaviour
 {
@@ -140,6 +138,9 @@ public class RegionUI : MonoBehaviour
     [SerializeField] GameObject RegionInfoCanvas;
 
     public GameObject cancelRegionSelectionModeButton;
+    public GameObject createVassalRegionSelectionModeButton;
+
+    [SerializeField] TMP_Text _marchEventText;
 
 
     private void Awake()
@@ -150,6 +151,8 @@ public class RegionUI : MonoBehaviour
         }
 
         statisticShowed = false;
+
+        _marchEventText.gameObject.SetActive(ReferencesManager.Instance.gameSettings.marchEvent.value);
     }
 
     public void OpenTab(GameObject tab)
@@ -204,36 +207,50 @@ public class RegionUI : MonoBehaviour
 
     public void OpenArmyTab()
     {
-        for (int i = 0; i < tabs.Length; i++)
+        if (!ReferencesManager.Instance.regionManager.currentRegionManager.demilitarized)
         {
-            tabs[i].SetActive(false);
-            unitsShopContainer.SetActive(false);
-        }
-
-        unitsShopContainer.SetActive(false);
-        buildingsShopContainer.SetActive(false);
-
-        if (ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy && ReferencesManager.Instance.regionManager.currentRegionManager.currentCountry == ReferencesManager.Instance.countryManager.currentCountry)
-        {
-            addArmyTab.SetActive(true);
-        }
-        else if(!ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy && ReferencesManager.Instance.regionManager.currentRegionManager.currentCountry == ReferencesManager.Instance.countryManager.currentCountry)
-        {
-            if (ReferencesManager.Instance.countryManager.currentCountry.money >= ReferencesManager.Instance.gameSettings.soldierLVL1.moneyCost)
+            for (int i = 0; i < tabs.Length; i++)
             {
-                if (ReferencesManager.Instance.countryManager.currentCountry.recroots >= ReferencesManager.Instance.gameSettings.soldierLVL1.recrootsCost)
+                tabs[i].SetActive(false);
+                unitsShopContainer.SetActive(false);
+            }
+
+            unitsShopContainer.SetActive(false);
+            buildingsShopContainer.SetActive(false);
+
+            if (ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy && ReferencesManager.Instance.regionManager.currentRegionManager.currentCountry == ReferencesManager.Instance.countryManager.currentCountry)
+            {
+                addArmyTab.SetActive(true);
+            }
+            else if (!ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy && ReferencesManager.Instance.regionManager.currentRegionManager.currentCountry == ReferencesManager.Instance.countryManager.currentCountry)
+            {
+                if (ReferencesManager.Instance.countryManager.currentCountry.money >= ReferencesManager.Instance.gameSettings.soldierLVL1.moneyCost)
                 {
-                    createArmyTab.SetActive(true);
-                    UISoundEffect.Instance.PlayAudio(paper_01);
+                    if (ReferencesManager.Instance.countryManager.currentCountry.recroots >= ReferencesManager.Instance.gameSettings.soldierLVL1.recrootsCost)
+                    {
+                        createArmyTab.SetActive(true);
+                        UISoundEffect.Instance.PlayAudio(paper_01);
+                    }
+                    else
+                    {
+                        WarningManager.Instance.Warn(ReferencesManager.Instance.gameSettings.NO_RECROOTS);
+                    }
                 }
                 else
                 {
-                    WarningManager.Instance.Warn(ReferencesManager.Instance.gameSettings.NO_RECROOTS);
+                    WarningManager.Instance.Warn(ReferencesManager.Instance.gameSettings.NO_GOLD);
                 }
             }
-            else
+        }
+        else
+        {
+            if (PlayerPrefs.GetInt("languageId") == 0)
             {
-                WarningManager.Instance.Warn(ReferencesManager.Instance.gameSettings.NO_GOLD);
+                WarningManager.Instance.Warn("The province is demilitarized");
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                WarningManager.Instance.Warn("Провинция демилитаризована");
             }
         }
     }
@@ -403,11 +420,39 @@ public class RegionUI : MonoBehaviour
 
         spawnedUnitUI.GetComponent<UnitUI>().unitIcon.sprite = unitIcon;
         spawnedUnitUI.GetComponent<UnitUI>().currentUnit = unit;
+        
         if (division != null)
         {
             spawnedUnitUI.GetComponent<UnitUI>().unitWorldObject = division.gameObject;
         }
         spawnedUnitUI.GetComponent<UnitUI>().GetComponent<UnitUI>().UpdateUI();
+    }
+
+    public void UpdateFightUnitsUI(Transform panel, UnitMovement division)
+    {
+        try
+        {
+            foreach (Transform child in panel)
+            {
+                unitUIs.Add(child.GetComponent<UnitUI>());
+            }
+            unitUIs.RemoveAll(item => item == null);
+
+            if (division.unitsHealth.Count > 0 && unitUIs.Count > 0)
+            {
+                for (int i = 0; i < division.unitsHealth.Count; i++)
+                {
+                    division.unitsHealth[i]._id = i;
+                    if (unitUIs[i] != null)
+                    {
+                        unitUIs[i].id = division.unitsHealth[i]._id;
+                        unitUIs[i].unitWorldObject = division.gameObject;
+                        unitUIs[i].UpdateUI();
+                    }
+                }
+            }
+        }
+        catch (System.Exception) { }
     }
 
     public void FightProceed(float winChance, RegionManager fightRegion, RaycastHit2D hit, UnitMovement unitMovement)
@@ -633,6 +678,7 @@ public class RegionUI : MonoBehaviour
 
         unitMovement._movePoints++;
         unitMovement.firstMove = true;
+        unitMovement.UpdateInfo();
 
         DeMoveUnitMode(true);
     }

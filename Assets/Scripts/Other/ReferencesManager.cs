@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class ReferencesManager : MonoBehaviour
@@ -8,6 +9,7 @@ public class ReferencesManager : MonoBehaviour
     public RegionUI regionUI;
     public CountryManager countryManager;
     public RegionManager regionManager;
+    public SeaRegion seaRegionManager;
     public GameSettings gameSettings;
     public DateManager dateManager;
     public AIManager aiManager;
@@ -88,6 +90,61 @@ public class ReferencesManager : MonoBehaviour
         }
 
         countryManager.UpdateRegionsColor();
+    }
+
+    public CountrySettings CreateCountry_Component(CountryScriptableObject countryScriptableObject, string ideology)
+    {
+        GameObject createdCountry = Instantiate(countrySettingsPrefab.gameObject, countriesParent);
+
+        createdCountry.GetComponent<CountrySettings>().country = countryScriptableObject;
+
+        createdCountry.name = countryScriptableObject._nameEN;
+
+        foreach (CountrySettings country in countryManager.countries)
+        {
+            Relationships.Relation newRelation = new Relationships.Relation();
+            newRelation.country = country;
+            newRelation.war = false;
+            newRelation.trade = false;
+            newRelation.right = false;
+            newRelation.pact = false;
+            newRelation.union = false;
+            newRelation.vassal = false;
+            newRelation.relationship = 0;
+            newRelation.relationshipID = 0;
+
+            createdCountry.GetComponent<Relationships>().relationship.Add(newRelation);
+        }
+
+        foreach (CountrySettings country in countryManager.countries)
+        {
+            Relationships.Relation newRelation = new Relationships.Relation();
+            newRelation.country = createdCountry.GetComponent<CountrySettings>();
+            country.GetComponent<Relationships>().relationship.Add(newRelation);
+        }
+
+        Relationships.Relation myselfRelation = new Relationships.Relation();
+        myselfRelation.country = createdCountry.GetComponent<CountrySettings>();
+        createdCountry.GetComponent<Relationships>().relationship.Add(myselfRelation);
+
+        countryManager.countries.Add(createdCountry.GetComponent<CountrySettings>());
+        createdCountry.AddComponent<CountryAIManager>();
+        aiManager.AICountries.Add(createdCountry.GetComponent<CountrySettings>());
+
+        createdCountry.GetComponent<CountrySettings>().ideology = ideology;
+        createdCountry.GetComponent<CountrySettings>().UpdateCountryGraphics(ideology);
+
+        for (int i = 0; i < gameSettings.technologies.Length; i++)
+        {
+            if (gameSettings.technologies[i].moves == 0)
+            {
+                createdCountry.GetComponent<CountrySettings>().countryTechnologies.Add(gameSettings.technologies[i]);
+            }
+        }
+
+        countryManager.UpdateRegionsColor();
+
+        return createdCountry.GetComponent<CountrySettings>();
     }
 
     public void AnnexRegion(RegionManager annexedRegion, CountrySettings newCountry)

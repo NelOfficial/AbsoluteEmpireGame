@@ -43,8 +43,14 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Sea
+    uniqueID: 2506893945
+    locked: 0
   - name: Borders
     uniqueID: 449311721
+    locked: 0
+  - name: Sea_Borders
+    uniqueID: 2278211015
     locked: 0
   - name: Cities
     uniqueID: 1329210381

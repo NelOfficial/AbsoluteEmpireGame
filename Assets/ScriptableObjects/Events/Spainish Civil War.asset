@@ -120,6 +120,6 @@ MonoBehaviour:
     - set_res;5533;money;15000
     - set_ai_level;5533;1
     - set_res;33;recroots;0
-    - set_res;5533;recroots;50000
+    - add_res;5533;recroots;50000
     rejectUltimatum: 0
   IS_GAME_MAIN_EVENT: 1

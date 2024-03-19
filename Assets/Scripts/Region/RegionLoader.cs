@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System.Collections.Generic;
 
 public class RegionLoader : MonoBehaviour
 {
@@ -14,30 +15,33 @@ public class RegionLoader : MonoBehaviour
 
     void Start()
     {
-        if (SceneManager.GetActiveScene().name != "Editor")
-        {
-            ReferencesManager.Instance.countryManager.regions.Clear();
+        ReferencesManager.Instance.countryManager.regions.Clear();
 
-            for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
-            {
-                for (int r = 0; r < ReferencesManager.Instance.countryManager.countries[i].myRegions.Count; r++)
-                {
-                    ReferencesManager.Instance.countryManager.regions.Add(ReferencesManager.Instance.countryManager.countries[i].myRegions[r]);
-                }
-            }
+        ReferencesManager.Instance.countryManager.regions = FindObjectsOfType<RegionManager>().ToList();
 
-            for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
-            {
-                if (ReferencesManager.Instance.countryManager.regions[i]._id == 0)
-                {
-                    ReferencesManager.Instance.countryManager.regions[i]._id = i;
-                }
-            }
-        }
-        else
+        //for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
+        //{
+        //    for (int r = 0; r < ReferencesManager.Instance.countryManager.countries[i].myRegions.Count; r++)
+        //    {
+        //        ReferencesManager.Instance.countryManager.regions.Add(ReferencesManager.Instance.countryManager.countries[i].myRegions[r]);
+        //    }
+        //}
+
+        List<int> regionIds = new List<int>();
+
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
         {
-            ReferencesManager.Instance.countryManager.regions = FindObjectsOfType<RegionManager>().ToList();
+            regionIds.Add(ReferencesManager.Instance.countryManager.regions[i]._id);
         }
+
+        //for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
+        //{
+        //    if (ReferencesManager.Instance.countryManager.regions[i]._id == 0)
+        //    {
+        //        ReferencesManager.Instance.countryManager.regions[i]._id = regionIds.Max() + 1;
+        //        regionIds.Add(ReferencesManager.Instance.countryManager.regions[i]._id);
+        //    }
+        //}
 
 
         regionsMax = ReferencesManager.Instance.countryManager.regions.Count;

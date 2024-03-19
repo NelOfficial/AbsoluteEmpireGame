@@ -115,6 +115,7 @@ public class MovePoint : MonoBehaviour
                             }
 
                             Fight(newRegion);
+                            attackerUnit.UpdateInfo();
 
                             ReferencesManager.Instance.regionManager.moveMode = false;
                             ReferencesManager.Instance.regionUI.barContent.SetActive(true);
@@ -153,9 +154,12 @@ public class MovePoint : MonoBehaviour
         if (unitMovement.unitsHealth.Count > 0)
         {
             int myInfantry = 0;
+            int myCavlry = 0;
             int myMotoInfantry = 0;
             int myArtilery = 0;
             int myHeavy = 0;
+
+            bool hasFuel = false;
 
             foreach (UnitMovement.UnitHealth unit in unitMovement.unitsHealth)
             {
@@ -163,23 +167,36 @@ public class MovePoint : MonoBehaviour
                 {
                     myInfantry++;
                 }
+
+                if (unit.unit.type == UnitScriptableObject.Type.CAVALRY)
+                {
+                    myCavlry++;
+                }
+
                 if (unit.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
                 {
                     myMotoInfantry++;
                 }
+
                 if (unit.unit.type == UnitScriptableObject.Type.ARTILERY)
                 {
                     myArtilery++;
                 }
+
                 if (unit.unit.type == UnitScriptableObject.Type.TANK)
                 {
                     myHeavy++;
                 }
+
+                if (unit.fuel >= 50 || unit.unit.maxFuel <= 0)
+                {
+                    hasFuel = true;
+                }
             }
 
-            if (myMotoInfantry >= 6 || myHeavy >= 6)
+            if (myMotoInfantry >= 6 || myHeavy >= 6 || myCavlry >= 6)
             {
-                if (unitMovement.firstMove)
+                if (unitMovement.firstMove && hasFuel)
                 {
                     unitMovement._movePoints++;
                 }
@@ -238,8 +255,18 @@ public class MovePoint : MonoBehaviour
                 {
                     _armors.Add(unit.unit.armor);
 
-                    battle.defenderSoftAttack += unit.unit.softAttack;
-                    battle.defenderHardAttack += unit.unit.hardAttack;
+                    float unit_defenderHardAttack = unit.unit.hardAttack;
+                    float unit_defenderSoftAttack = unit.unit.softAttack;
+
+                    if (unit.unit.type == UnitScriptableObject.Type.TANK ||
+                        unit.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+                    {
+                        unit_defenderHardAttack = unit.fuel * unit.unit.hardAttack / unit.unit.maxFuel;
+                        unit_defenderSoftAttack = unit.fuel * unit.unit.softAttack / unit.unit.maxFuel;
+                    }
+
+                    battle.defenderHardAttack += unit_defenderHardAttack;
+                    battle.defenderSoftAttack += unit_defenderSoftAttack;
                     battle.defenderDefense += unit.unit.defense;
                     battle.defenderArmor += unit.unit.armor;
                     battle.defenderArmorPiercing += unit.unit.armorPiercing;
@@ -269,8 +296,18 @@ public class MovePoint : MonoBehaviour
             {
                 defenderArmors.Add(unit.unit.armor);
 
-                battle.defenderSoftAttack += unit.unit.softAttack;
-                battle.defenderHardAttack += unit.unit.hardAttack;
+                float unit_defenderHardAttack = unit.unit.hardAttack;
+                float unit_defenderSoftAttack = unit.unit.softAttack;
+
+                if (unit.unit.type == UnitScriptableObject.Type.TANK ||
+                    unit.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+                {
+                    unit_defenderHardAttack = unit.fuel * unit.unit.hardAttack / unit.unit.maxFuel;
+                    unit_defenderSoftAttack = unit.fuel * unit.unit.softAttack / unit.unit.maxFuel;
+                }
+
+                battle.defenderSoftAttack += unit_defenderSoftAttack;
+                battle.defenderHardAttack += unit_defenderHardAttack;
                 battle.defenderDefense += unit.unit.defense;
                 battle.defenderArmor += unit.unit.armor;
                 battle.defenderArmorPiercing += unit.unit.armorPiercing;
@@ -298,8 +335,18 @@ public class MovePoint : MonoBehaviour
         {
             attackerArmors.Add(unit.unit.armor);
 
-            battle.attackerSoftAttack += unit.unit.softAttack;
-            battle.attackerHardAttack += unit.unit.hardAttack;
+            float unit_attackerHardAttack = unit.unit.hardAttack;
+            float unit_attackerSoftAttack = unit.unit.softAttack;
+
+            if (unit.unit.type == UnitScriptableObject.Type.TANK ||
+                unit.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+            {
+                unit_attackerHardAttack = unit.fuel * unit.unit.hardAttack / unit.unit.maxFuel;
+                unit_attackerSoftAttack = unit.fuel * unit.unit.softAttack / unit.unit.maxFuel;
+            }
+
+            battle.attackerSoftAttack += unit_attackerSoftAttack;
+            battle.attackerHardAttack += unit_attackerHardAttack;
             battle.attackerDefense += unit.unit.defense;
             battle.attackerArmor += unit.unit.armor;
             battle.attackerArmorPiercing += unit.unit.armorPiercing;
@@ -605,24 +652,57 @@ public class MovePoint : MonoBehaviour
             {
                 battle.enemyHeavy++;
             }
+            if (unit.unit.type == UnitScriptableObject.Type.CAVALRY)
+            {
+                battle.enemyCavlry++;
+            }
         }
+        ReferencesManager.Instance.regionUI.UpdateFightUnitsUI(ReferencesManager.Instance.regionUI.fightPanelAttackerHorizontalGroup.transform, battle.attackerDivision);
+        ReferencesManager.Instance.regionUI.UpdateFightUnitsUI(ReferencesManager.Instance.regionUI.fightPanelDefenderHorizontalGroup.transform, battle.defenderDivision);
 
 
-        if (battle.motoInfantry >= 6 || battle.myHeavy >= 6)
+        if (battle.motoInfantry >= 6 || battle.myHeavy >= 6 || battle.myCavlry >= 6)
         {
             CheckMotorize(attackerUnit);
         }
 
         attackerUnit.firstMove = false;
         attackerUnit._movePoints--;
+        attackerUnit.UpdateInfo();
+
+        foreach (UnitMovement.UnitHealth unit in battle.attackerDivision.unitsHealth)
+        {
+            if (unit.unit.maxFuel > 0)
+            {
+                unit.fuel -= 200;
+            }
+        }
+
+        try
+        {
+            if (battle.defenderDivision != null)
+            {
+                foreach (UnitMovement.UnitHealth unit in battle.defenderDivision.unitsHealth)
+                {
+                    if (unit.unit.maxFuel > 0)
+                    {
+                        unit.fuel -= 50;
+                    }
+                }
+            }
+        }
+        catch (System.Exception) {}
+
 
         ReferencesManager.Instance.army.attackerArmy[0].text = (battle.myInfantry + battle.motoInfantry).ToString();
         ReferencesManager.Instance.army.attackerArmy[1].text = battle.myArtilery.ToString();
         ReferencesManager.Instance.army.attackerArmy[2].text = battle.myHeavy.ToString();
+        ReferencesManager.Instance.army.attackerArmy[3].text = battle.myCavlry.ToString();
 
         ReferencesManager.Instance.army.defenderArmy[0].text = (battle.enemyInfantry + battle.enemyMotoInfantry).ToString();
         ReferencesManager.Instance.army.defenderArmy[1].text = battle.enemyArtilery.ToString();
         ReferencesManager.Instance.army.defenderArmy[2].text = battle.enemyHeavy.ToString();
+        ReferencesManager.Instance.army.defenderArmy[3].text = battle.enemyCavlry.ToString();
 
         ReferencesManager.Instance.gameSettings.currentBattle = battle;
     }
@@ -632,10 +712,12 @@ public class MovePoint : MonoBehaviour
         int att_inf_losses = 0;
         int att_art_losses = 0;
         int att_hvy_losses = 0;
+        int att_cav_losses = 0;
 
         int def_inf_losses = 0;
         int def_art_losses = 0;
         int def_hvy_losses = 0;
+        int def_cav_losses = 0;
 
         float defender_losses_factor = 1;
         float attacker_losses_factor = 1;
@@ -699,6 +781,10 @@ public class MovePoint : MonoBehaviour
                     {
                         def_hvy_losses++;
                     }
+                    else if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.CAVALRY)
+                    {
+                        def_cav_losses++;
+                    }
 
                     defenderUnit.currentCountry.myRegions[Random.Range(0, defenderUnit.currentCountry.myRegions.Count)].population -= defenderUnit.unitsHealth[j].unit.recrootsCost;
                     defenderUnit.unitsHealth.Remove(defenderUnit.unitsHealth[j]);
@@ -747,6 +833,10 @@ public class MovePoint : MonoBehaviour
                 {
                     att_hvy_losses++;
                 }
+                else if (attackerUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.CAVALRY)
+                {
+                    att_cav_losses++;
+                }
 
                 attackerUnit.currentCountry.myRegions[Random.Range(0, attackerUnit.currentCountry.myRegions.Count)].population -= attackerUnit.unitsHealth[j].unit.recrootsCost;
                 attackerUnit.unitsHealth.Remove(attackerUnit.unitsHealth[j]);
@@ -763,10 +853,12 @@ public class MovePoint : MonoBehaviour
         ReferencesManager.Instance.army.defenderArmyLossesValue[0] = def_inf_losses;
         ReferencesManager.Instance.army.defenderArmyLossesValue[1] = def_art_losses;
         ReferencesManager.Instance.army.defenderArmyLossesValue[2] = def_hvy_losses;
+        ReferencesManager.Instance.army.defenderArmyLossesValue[3] = def_cav_losses;
 
         ReferencesManager.Instance.army.attackerArmyLossesValue[0] = att_inf_losses;
         ReferencesManager.Instance.army.attackerArmyLossesValue[1] = att_art_losses;
         ReferencesManager.Instance.army.attackerArmyLossesValue[2] = att_hvy_losses;
+        ReferencesManager.Instance.army.attackerArmyLossesValue[3] = att_cav_losses;
     }
 
     private IEnumerator DestroyDivision_Co(UnitMovement division)
@@ -863,6 +955,15 @@ public class MovePoint : MonoBehaviour
 
 
             battle.myUnits = attackerUnit.unitsHealth;
+            battle.attackerDivision = attackerUnit;
+
+            foreach (UnitMovement.UnitHealth unit in battle.attackerDivision.unitsHealth)
+            {
+                if (unit.unit.maxFuel > 0)
+                {
+                    unit.fuel -= 100;
+                }
+            }
         }
 
         CountPlayerUnitData(battle);
@@ -873,6 +974,7 @@ public class MovePoint : MonoBehaviour
         attackerUnit.firstMove = false;
         attackerUnit._movePoints--;
 
+        attackerUnit.UpdateInfo();
         ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
     }
 
@@ -887,6 +989,10 @@ public class MovePoint : MonoBehaviour
             {
                 battle.myInfantry++;
             }
+            if (unit.unit.type == UnitScriptableObject.Type.CAVALRY)
+            {
+                battle.myCavlry++;
+            }
             if (unit.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
             {
                 battle.motoInfantry++;
@@ -900,6 +1006,10 @@ public class MovePoint : MonoBehaviour
                 battle.myHeavy++;
             }
         }
+
+        ReferencesManager.Instance.regionUI.UpdateFightUnitsUI(ReferencesManager.Instance.regionUI.fightPanelAttackerHorizontalGroup.transform, battle.attackerDivision);
+        ReferencesManager.Instance.regionUI.UpdateFightUnitsUI(ReferencesManager.Instance.regionUI.fightPanelDefenderHorizontalGroup.transform, battle.defenderDivision);
+
     }
 
     private void PlayMoveSFX(UnitMovement.BattleInfo battle)

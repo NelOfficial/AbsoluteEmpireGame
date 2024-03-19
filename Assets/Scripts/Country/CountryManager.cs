@@ -11,7 +11,7 @@ using System;
 
 public class CountryManager : MonoBehaviour
 {
-    [SerializeField] TMP_Text moneyText, moneyIncomeText, foodText, foodIncomeText, recrootsText, recrootsIncomeText, debtText, researchPointsText, researchIncomeText;
+    [SerializeField] TMP_Text moneyText, moneyIncomeText, foodText, foodIncomeText, recrootsText, recrootsIncomeText, debtText, researchPointsText, researchIncomeText, fuelIncomeText, fuelText;
     [SerializeField] Image[] countryFlagImages;
     [SerializeField] TMP_Text[] countryNameTexts;
 
@@ -244,6 +244,7 @@ public class CountryManager : MonoBehaviour
             countries[i].recroots = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_RECROOTS");
             countries[i].recruitsLimit = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_RECROOTS_LIMIT");
             countries[i].researchPoints = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_RESEARCH_POINTS");
+            countries[i].fuel = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_fuel");
 
             bool isMob = false;
             bool isDeMob = false;
@@ -387,6 +388,15 @@ public class CountryManager : MonoBehaviour
                 {
                     ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.antitankLVL2, region);
                 }
+
+                for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_CAV_LVL1"); index++)
+                {
+                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.cavLVL1, region);
+                }
+                for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_CAV_LVL2"); index++)
+                {
+                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.cavLVL2, region);
+                }
             }
         }
 
@@ -417,6 +427,20 @@ public class CountryManager : MonoBehaviour
             else
             {
                 ReferencesManager.Instance.gameSettings.gameEvents[i]._checked = false;
+            }
+        }
+
+        string[] AI_BLACK_LIST = PlayerPrefs.GetString($"{currentSaveIndex_INT}_AI_BLACK_LIST").Split(';').ToArray();
+        for (int i = 0; i < AI_BLACK_LIST.Length; i++)
+        {
+            foreach (CountrySettings country in countries)
+            {
+                if (int.Parse(AI_BLACK_LIST[i]) == country.country._id)
+                {
+                    ReferencesManager.Instance.aiManager.AICountries.Remove(country);
+
+                    Destroy(country.GetComponent<CountryAIManager>());
+                }
             }
         }
     }
@@ -524,19 +548,19 @@ public class CountryManager : MonoBehaviour
                     string[] regionIdParts = _line.Split(' ');
                     regionValue = regionIdParts[0].Remove(0, 7);
                     int regValue = int.Parse(regionValue);
+                    int regionCountryID = int.Parse(regionIdParts[2]);
 
-                    for (int c = 0; c < countries.Count; c++)
+                    foreach (RegionManager province in regions)
                     {
-                        if (countries[c].country._id == countriesInRegionsIDs[0])
+                        if (regValue == province._id)
                         {
-                            ReferencesManager.Instance.AnnexRegion(regions[0], countries[c]);
-                        }
-                    }
-                    for (int c = 0; c < countries.Count; c++)
-                    {
-                        if (countries[c].country._id == countriesInRegionsIDs[i])
-                        {
-                            ReferencesManager.Instance.AnnexRegion(regions[i], countries[c]);
+                            for (int c = 0; c < countries.Count; c++)
+                            {
+                                if (regionCountryID == countries[c].country._id)
+                                {
+                                    ReferencesManager.Instance.AnnexRegion(province, countries[c]);
+                                }
+                            }
                         }
                     }
                 }
@@ -818,7 +842,15 @@ public class CountryManager : MonoBehaviour
         {
             if (moneyText != null)
             {
-                moneyText.text = currentCountry.money.ToString();
+                if (currentCountry.money >= 30000)
+                {
+                    moneyText.text = ReferencesManager.Instance.GoodNumberString((int)currentCountry.money);
+                }
+                else
+                {
+                    moneyText.text = currentCountry.money.ToString();
+                }
+
             }
             if (foodText != null)
             {
@@ -826,7 +858,14 @@ public class CountryManager : MonoBehaviour
             }
             if (recrootsText != null)
             {
-                recrootsText.text = currentCountry.recroots.ToString();
+                if (currentCountry.recroots >= 10000)
+                {
+                    recrootsText.text = ReferencesManager.Instance.GoodNumberString((int)currentCountry.recroots);
+                }
+                else
+                {
+                    recrootsText.text = currentCountry.recroots.ToString();
+                }
             }
             if (debtText != null)
             {
@@ -835,6 +874,17 @@ public class CountryManager : MonoBehaviour
             if (researchPointsText != null)
             {
                 researchPointsText.text = currentCountry.researchPoints.ToString();
+            }
+            if (fuelText != null)
+            {
+                if (currentCountry.fuel >= 10000)
+                {
+                    fuelText.text = ReferencesManager.Instance.GoodNumberString((int)currentCountry.fuel);
+                }
+                else
+                {
+                    fuelText.text = currentCountry.fuel.ToString();
+                }
             }
         }
     }
@@ -886,6 +936,17 @@ public class CountryManager : MonoBehaviour
             {
                 researchIncomeText.text = currentCountry.researchPointsIncome.ToString();
                 researchIncomeText.color = ReferencesManager.Instance.gameSettings.redColor;
+            }
+
+            if (currentCountry.fuelIncome >= 0)
+            {
+                fuelIncomeText.text = "+" + currentCountry.fuelIncome.ToString();
+                fuelIncomeText.color = ReferencesManager.Instance.gameSettings.greenColor;
+            }
+            else
+            {
+                fuelIncomeText.text = currentCountry.fuelIncome.ToString();
+                fuelIncomeText.color = ReferencesManager.Instance.gameSettings.redColor;
             }
         }
     }

@@ -9,6 +9,7 @@ using System.IO;
 using System;
 using System.Text;
 using UnityEngine.Networking;
+using Photon.Realtime;
 
 
 public class MapEditor : MonoBehaviour
@@ -345,27 +346,32 @@ public class MapEditor : MonoBehaviour
                 try
                 {
                     string _line = regionsDataLines[i];
-                    string[] regionIdParts = _line.Split(' ');
-                    regionValue = regionIdParts[0].Remove(0, 7);
-                    int regValue = int.Parse(regionValue);
-
-                    //for (int c = 0; c < ReferencesManager.Instance.countryManager.countries.Count; c++)
-                    //{
-                    //    if (ReferencesManager.Instance.countryManager.countries[c].country._id == countriesInRegionsIDs[0])
-                    //    {
-                    //        ReferencesManager.Instance.AnnexRegion(ReferencesManager.Instance.countryManager.regions[0], ReferencesManager.Instance.countryManager.countries[c]);
-                    //    }
-                    //}
-                    for (int c = 0; c < ReferencesManager.Instance.countryManager.countries.Count; c++)
+                    if (!string.IsNullOrEmpty(_line))
                     {
-                        Debug.Log($"{ReferencesManager.Instance.countryManager.countries[c].country._id} | {countriesInRegionsIDs[i]}");
-                        if (ReferencesManager.Instance.countryManager.countries[c].country._id == countriesInRegionsIDs[i])
+                        string[] regionIdParts = _line.Split(' ');
+                        regionValue = regionIdParts[0].Remove(0, 7);
+                        int regValue = int.Parse(regionValue);
+                        int regionCountryID = int.Parse(regionIdParts[2]);
+
+                        foreach (RegionManager province in ReferencesManager.Instance.countryManager.regions)
                         {
-                            ReferencesManager.Instance.AnnexRegion(ReferencesManager.Instance.countryManager.regions[i], ReferencesManager.Instance.countryManager.countries[c]);
+                            if (regValue == province._id)
+                            {
+                                for (int c = 0; c < ReferencesManager.Instance.countryManager.countries.Count; c++)
+                                {
+                                    if (regionCountryID == ReferencesManager.Instance.countryManager.countries[c].country._id)
+                                    {
+                                        ReferencesManager.Instance.AnnexRegion(province, ReferencesManager.Instance.countryManager.countries[c]);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+
+                }
             }
 
             for (int i = 0; i < countriesDataLines.Length; i++)

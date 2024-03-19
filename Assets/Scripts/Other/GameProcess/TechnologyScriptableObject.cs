@@ -18,4 +18,6 @@ public class TechnologyScriptableObject : ScriptableObject
     public bool optional;
 
     public TechnologyScriptableObject[] techsNeeded;
+
+    public int oilBonus;
 }

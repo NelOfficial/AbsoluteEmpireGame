@@ -14,18 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   icon: {fileID: 21300000, guid: 5906474fa1f5495448a17f806c36e03a, type: 3}
-  moneyCost: 160
+  moneyCost: 200
   moneyIncomeCost: 15
   foodIncomeCost: 10
   recrootsCost: 1000
   level: 2
   unlockLevel: 11
   rank: 1
-  damage: 150
+  maxFuel: 0
   health: 12.5
   softAttack: 2.5
   hardAttack: 0.5
   defense: 20
+  maxEntrenchment: 0
   armor: 0
   armorPiercing: 1
   hardness: 0

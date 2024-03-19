@@ -35,6 +35,7 @@ public class UnitMovement : MonoBehaviour
     private int motoInfantry;
 
     [SerializeField] Image flagImage;
+    [SerializeField] GameObject canMoveState;
 
     private void Awake()
     {
@@ -141,6 +142,14 @@ public class UnitMovement : MonoBehaviour
                 attackerRegion.hasArmy = false;
                 defenderRegion.hasArmy = true;
 
+                foreach (UnitHealth unit in unitsHealth)
+                {
+                    if (unit.unit.maxFuel > 0)
+                    {
+                        unit.fuel -= 50;
+                    }
+                }
+
                 this.currentProvince = defenderRegion;
             }
             else
@@ -156,6 +165,11 @@ public class UnitMovement : MonoBehaviour
                             this.firstMove = false;
 
                             Fight(defenderRegion, attackerRegion);
+
+                            foreach (UnitHealth unit in unitsHealth)
+                            {
+                                unit.fuel -= 100;
+                            }
                         }
                         else if (realtion.right)
                         {
@@ -164,6 +178,11 @@ public class UnitMovement : MonoBehaviour
                             MoveUnit(defenderRegion, attackerRegion);
                             attackerRegion.hasArmy = false;
                             defenderRegion.hasArmy = true;
+
+                            foreach (UnitHealth unit in unitsHealth)
+                            {
+                                unit.fuel -= 50;
+                            }
 
                             this.currentProvince = defenderRegion;
                         }
@@ -188,6 +207,7 @@ public class UnitMovement : MonoBehaviour
             oldRegion.hasArmy = false;
 
             this.transform.position = regionTo.transform.position;
+            UpdateInfo();
 
             this.transform.SetParent(regionTo.transform);
 
@@ -261,8 +281,18 @@ public class UnitMovement : MonoBehaviour
                         {
                             _armors.Add(unit.unit.armor);
 
-                            battle.defenderSoftAttack += unit.unit.softAttack;
-                            battle.defenderHardAttack += unit.unit.hardAttack;
+                            float unit_defenderHardAttack = unit.unit.hardAttack;
+                            float unit_defenderSoftAttack = unit.unit.softAttack;
+
+                            if (unit.unit.type == UnitScriptableObject.Type.TANK ||
+                                unit.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+                            {
+                                unit_defenderHardAttack = unit.fuel * unit.unit.hardAttack / unit.unit.maxFuel;
+                                unit_defenderSoftAttack = unit.fuel * unit.unit.softAttack / unit.unit.maxFuel;
+                            }
+
+                            battle.defenderSoftAttack += unit_defenderSoftAttack;
+                            battle.defenderHardAttack += unit_defenderHardAttack;
                             battle.defenderDefense += unit.unit.defense;
                             battle.defenderArmor += unit.unit.armor;
                             battle.defenderArmorPiercing += unit.unit.armorPiercing;
@@ -296,8 +326,18 @@ public class UnitMovement : MonoBehaviour
                 {
                     defenderArmors.Add(unit.unit.armor);
 
-                    battle.defenderSoftAttack += unit.unit.softAttack;
-                    battle.defenderHardAttack += unit.unit.hardAttack;
+                    float unit_defenderHardAttack = unit.unit.hardAttack;
+                    float unit_defenderSoftAttack = unit.unit.softAttack;
+
+                    if (unit.unit.type == UnitScriptableObject.Type.TANK ||
+                        unit.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+                    {
+                        unit_defenderHardAttack = unit.fuel * unit.unit.hardAttack / unit.unit.maxFuel;
+                        unit_defenderSoftAttack = unit.fuel * unit.unit.softAttack / unit.unit.maxFuel;
+                    }
+
+                    battle.defenderSoftAttack += unit_defenderSoftAttack;
+                    battle.defenderHardAttack += unit_defenderHardAttack;
                     battle.defenderDefense += unit.unit.defense;
                     battle.defenderArmor += unit.unit.armor;
                     battle.defenderArmorPiercing += unit.unit.armorPiercing;
@@ -325,8 +365,18 @@ public class UnitMovement : MonoBehaviour
             {
                 attackerArmors.Add(unit.unit.armor);
 
-                battle.attackerSoftAttack += unit.unit.softAttack;
-                battle.attackerHardAttack += unit.unit.hardAttack;
+                float unit_attackerHardAttack = unit.unit.hardAttack;
+                float unit_attackerSoftAttack = unit.unit.softAttack;
+
+                if (unit.unit.type == UnitScriptableObject.Type.TANK ||
+                    unit.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+                {
+                    unit_attackerHardAttack = unit.fuel * unit.unit.hardAttack / unit.unit.maxFuel;
+                    unit_attackerSoftAttack = unit.fuel * unit.unit.softAttack / unit.unit.maxFuel;
+                }
+
+                battle.attackerSoftAttack += unit_attackerSoftAttack;
+                battle.attackerHardAttack += unit_attackerHardAttack;
                 battle.attackerDefense += unit.unit.defense;
                 battle.attackerArmor += unit.unit.armor;
                 battle.attackerArmorPiercing += unit.unit.armorPiercing;
@@ -508,6 +558,8 @@ public class UnitMovement : MonoBehaviour
 
             battle.winChance = winChance;
             ApplyDamage(battle);
+
+            UpdateInfo();
         }
     }
 
@@ -519,6 +571,9 @@ public class UnitMovement : MonoBehaviour
             int myMotoInfantry = 0;
             int myArtilery = 0;
             int myHeavy = 0;
+            int myCavlry = 0;
+
+            bool hasFuel = false;
 
             foreach (UnitHealth unit in unitMovement.unitsHealth)
             {
@@ -538,11 +593,16 @@ public class UnitMovement : MonoBehaviour
                 {
                     myHeavy++;
                 }
+
+                if (unit.fuel >= 50 || unit.unit.maxFuel <= 0)
+                {
+                    hasFuel = true;
+                }
             }
 
-            if (myMotoInfantry >= 6 || myHeavy >= 6)
+            if (myMotoInfantry >= 6 || myHeavy >= 6 || myCavlry >= 6)
             {
-                if (unitMovement.firstMove)
+                if (unitMovement.firstMove && hasFuel)
                 {
                     unitMovement._movePoints++;
                 }
@@ -715,6 +775,15 @@ public class UnitMovement : MonoBehaviour
     public void UpdateInfo()
     {
         flagImage.sprite = currentCountry.country.countryFlag;
+
+        if (_movePoints > 0)
+        {
+            canMoveState.SetActive(true);
+        }
+        else
+        {
+            canMoveState.SetActive(false);
+        }
     }
 
     public void Retreat()
@@ -816,6 +885,7 @@ public class UnitMovement : MonoBehaviour
         public int _id;
         public float health;
         public UnitScriptableObject unit;
+        public float fuel;
     }
 
     [System.Serializable]
@@ -828,6 +898,9 @@ public class UnitMovement : MonoBehaviour
 
         public int myInfantry = 0;
         public int enemyInfantry = 0;
+
+        public int myCavlry = 0;
+        public int enemyCavlry = 0;
 
         public int motoInfantry = 0;
         public int enemyMotoInfantry = 0;

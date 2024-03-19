@@ -5,10 +5,13 @@ public class UnitUI : MonoBehaviour
 {
     public Image unitIcon;
     public Image unitHealthBar;
+    public Image fuelBar;
+    public GameObject fuelSlider;
     public GameObject unitWorldObject;
 
     public int id;
     public float health;
+    public float fuel;
 
     public UnitScriptableObject currentUnit;
 
@@ -28,10 +31,20 @@ public class UnitUI : MonoBehaviour
                 if (division.unitsHealth[i]._id == id)
                 {
                     health = division.unitsHealth[i].health;
+                    fuel = division.unitsHealth[i].fuel;
+
+                    unitHealthBar.fillAmount = health / currentUnit.health;
+
+                    if (currentUnit.maxFuel > 0)
+                    {
+                        fuelBar.fillAmount = fuel / currentUnit.maxFuel;
+                    }
+                    else
+                    {
+                        fuelSlider.gameObject.SetActive(false);
+                    }
                 }
             }
-
-            unitHealthBar.fillAmount = health / currentUnit.health;
         }
         else
         {

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +11,7 @@ public class CountryInfoAdvanced : MonoBehaviour
     private RegionManager regionManager;
     private RegionUI regionUI;
 
-    [SerializeField] GameObject countryInfoPanelAdvanced;
+    public GameObject countryInfoPanelAdvanced;
 
     [SerializeField] TMP_Text countryNameText;
     [SerializeField] TMP_Text countryIdeologyText;
@@ -38,6 +37,9 @@ public class CountryInfoAdvanced : MonoBehaviour
     [SerializeField] TMP_Text[] goldIncomes;
     [SerializeField] TMP_Text[] foodIncomes;
 
+    [SerializeField] TMP_Text oilCount;
+    [SerializeField] TMP_Text fuelIncome;
+
     [SerializeField] TMP_Text[] expenses;
 
     [SerializeField] IdeologyFlagFill[] ideologyFlagFills;
@@ -52,6 +54,11 @@ public class CountryInfoAdvanced : MonoBehaviour
     [SerializeField] GameObject _templateBatalionPanel;
 
     [HideInInspector] public int _currentTemplateIndex;
+
+    [SerializeField] Transform countriesPanel;
+    [SerializeField] GameObject countryListItem;
+
+    [HideInInspector] public CountrySettings newVassal;
 
     private void Awake()
     {
@@ -176,6 +183,9 @@ public class CountryInfoAdvanced : MonoBehaviour
         expenses[0].text = $"-{countryManager.currentCountry.regionCosts}";
         expenses[1].text = $"{countryManager.currentCountry.inflation}%";
         expenses[2].text = $"-{countryManager.currentCountry.inflationDebuff}";
+
+        oilCount.text = $"{countryManager.currentCountry.oil}";
+        fuelIncome.text = $"{countryManager.currentCountry.fuelIncome}";
     }
 
     private void UpdateUI()
@@ -526,6 +536,52 @@ public class CountryInfoAdvanced : MonoBehaviour
                 WarningManager.Instance.Warn("Достигнут лимит батальонов");
             }
         }
+    }
+
+    public void CreateVassalMenu()
+    {
+        foreach (Transform child in countriesPanel)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (CountryScriptableObject _country in ReferencesManager.Instance.globalCountries)
+        {
+            if (_country._id != ReferencesManager.Instance.countryManager.currentCountry.country._id)
+            {
+                bool countryExists = ReferencesManager.Instance.countryManager.countries.Any(item => item.country._id == _country._id && item.exist == true);
+
+                if (!countryExists)
+                {
+                    GameObject spawnedCountryItem = Instantiate(countryListItem, countriesPanel);
+                    spawnedCountryItem.GetComponent<SelectCountryButton>().country_ScriptableObject = _country;
+                    spawnedCountryItem.GetComponent<SelectCountryButton>().UpdateUI();
+
+                    spawnedCountryItem.GetComponent<Button>().onClick.AddListener(spawnedCountryItem.GetComponent<SelectCountryButton>().CreateVassal);
+                }
+                else if (countryExists)
+                {
+                    GameObject spawnedCountryItem = Instantiate(countryListItem, countriesPanel);
+                    spawnedCountryItem.GetComponent<SelectCountryButton>().country_ScriptableObject = _country;
+                    spawnedCountryItem.GetComponent<SelectCountryButton>().UpdateUI();
+                    spawnedCountryItem.GetComponent<Button>().interactable = false;
+
+                    spawnedCountryItem.GetComponent<Button>().onClick.AddListener(spawnedCountryItem.GetComponent<SelectCountryButton>().CreateVassal);
+                }
+            }
+        }
+    }
+
+    public void VassalGetRegions()
+    {
+        foreach (RegionManager province in ReferencesManager.Instance.gameSettings.provincesList)
+        {
+            ReferencesManager.Instance.AnnexRegion(province, newVassal);
+        }
+
+        ReferencesManager.Instance.regionUI.createVassalRegionSelectionModeButton.SetActive(false);
+        ReferencesManager.Instance.gameSettings.regionSelectionMode = false;
+        countryInfoPanelAdvanced.SetActive(true);
     }
 
     [System.Serializable]

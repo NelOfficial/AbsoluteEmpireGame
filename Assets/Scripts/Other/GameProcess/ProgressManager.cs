@@ -77,7 +77,28 @@ public class ProgressManager : MonoBehaviour
             {
                 for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
                 {
+                    ReferencesManager.Instance.countryManager.countries[i].oil = 0;
                     ReferencesManager.Instance.countryManager.countries[i].armyPersonnel = 0;
+
+                    foreach (RegionManager province in ReferencesManager.Instance.countryManager.countries[i].myRegions)
+                    {
+                        ReferencesManager.Instance.countryManager.countries[i].oil += province.OilAmount;
+                    }
+
+                    ReferencesManager.Instance.countryManager.countries[i].fuelIncome =
+                        ReferencesManager.Instance.countryManager.countries[i].oil * 65;
+
+                    float fuelIncome_Bonus = 0;
+
+                    if (ReferencesManager.Instance.countryManager.countries[i].BONUS_INCOME_FUEL > 0)
+                    {
+                        fuelIncome_Bonus = ReferencesManager.Instance.countryManager.countries[i].fuelIncome *
+                            ((ReferencesManager.Instance.countryManager.countries[i].BONUS_INCOME_FUEL + 100) / 100);
+                    }
+
+                    ReferencesManager.Instance.countryManager.countries[i].fuelIncome += fuelIncome_Bonus;
+                    ReferencesManager.Instance.countryManager.countries[i].fuel +=
+                        ReferencesManager.Instance.countryManager.countries[i].fuelIncome;
 
                     for (int unitIndex = 0; unitIndex < ReferencesManager.Instance.countryManager.countries[i].countryUnits.Count; unitIndex++)
                     {
@@ -119,6 +140,8 @@ public class ProgressManager : MonoBehaviour
             }
             catch (System.Exception) { }
 
+            bool hasFuel = false;
+
             for (int i = 0; i < units.Count; i++)
             {
                 int motorized = 0;
@@ -129,14 +152,29 @@ public class ProgressManager : MonoBehaviour
                 {
                     UnitMovement.UnitHealth unit = units[i].unitsHealth[unitIndex];
 
+                    float fuelToFill = unit.unit.maxFuel - unit.fuel;
+
+                    if (units[i].currentCountry.fuel > fuelToFill)
+                    {
+                        units[i].currentCountry.fuel -= fuelToFill;
+
+                        unit.fuel += fuelToFill;
+                    }
+
+                    if (unit.fuel >= 50 || unit.unit.maxFuel <= 0)
+                    {
+                        hasFuel = true;
+                    }
+
                     if (unit.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED ||
-                        unit.unit.type == UnitScriptableObject.Type.TANK)
+                        unit.unit.type == UnitScriptableObject.Type.TANK ||
+                        unit.unit.type == UnitScriptableObject.Type.CAVALRY)
                     {
                         motorized++;
                     }
                 }
 
-                if (motorized >= 6)
+                if (motorized >= 6 && hasFuel)
                 {
                     units[i]._movePoints = 2;
                 }
@@ -163,7 +201,15 @@ public class ProgressManager : MonoBehaviour
 
                 if (ReferencesManager.Instance.technologyManager.currentTech.moves <= 0)
                 {
-                    WarningManager.Instance.Warn($"Успешно исследована технология: {ReferencesManager.Instance.technologyManager.currentTech.tech._name}");
+                    if (PlayerPrefs.GetInt("languageId") == 0)
+                    {
+                        WarningManager.Instance.Warn($"{ReferencesManager.Instance.technologyManager.currentTech.tech._name} has been successfully researched");
+                    }
+                    else if (PlayerPrefs.GetInt("languageId") == 1)
+                    {
+                        WarningManager.Instance.Warn($"Успешно исследована технология: {ReferencesManager.Instance.technologyManager.currentTech.tech._name}");
+                    }
+                    ReferencesManager.Instance.countryManager.currentCountry.BONUS_INCOME_FUEL += ReferencesManager.Instance.technologyManager.currentTech.tech.oilBonus;
                     ReferencesManager.Instance.technologyManager.SetResearchState(false);
 
                     ReferencesManager.Instance.countryManager.currentCountry.countryTechnologies.Add(ReferencesManager.Instance.technologyManager.currentTech.tech);
@@ -338,6 +384,8 @@ public class ProgressManager : MonoBehaviour
 
         UnitMovement[] units = FindObjectsOfType<UnitMovement>();
 
+        bool hasFuel = false;
+
         for (int i = 0; i < units.Length; i++)
         {
             int motorized = 0;
@@ -348,13 +396,18 @@ public class ProgressManager : MonoBehaviour
             {
                 UnitMovement.UnitHealth unit = units[i].unitsHealth[unitIndex];
 
+                if (unit.fuel >= 50)
+                {
+                    hasFuel = true;
+                }
+
                 if (unit.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
                 {
                     motorized++;
                 }
             }
 
-            if (motorized >= 6)
+            if (motorized >= 6 && hasFuel)
             {
                 units[i]._movePoints = 2;
             }

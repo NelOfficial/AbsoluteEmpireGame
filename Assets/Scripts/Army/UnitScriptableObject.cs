@@ -7,6 +7,7 @@ public class UnitScriptableObject : ScriptableObject
     {
         SOLDIER,
         SOLDIER_MOTORIZED,
+        CAVALRY,
         ARTILERY,
         TANK
     }
@@ -25,6 +26,7 @@ public class UnitScriptableObject : ScriptableObject
     public int level;
     public int unlockLevel;
     public int rank;
+    public float maxFuel;
 
     [Header("Battle parameters")]
     public float health;

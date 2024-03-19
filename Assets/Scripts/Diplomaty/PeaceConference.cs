@@ -1,6 +1,4 @@
-using Photon.Realtime;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 
 public class PeaceConference : MonoBehaviour

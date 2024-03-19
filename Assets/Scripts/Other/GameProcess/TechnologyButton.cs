@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro;
-using Assets.Scripts.UI;
-using Unity.Burst.Intrinsics;
+
 
 public class TechnologyButton : MonoBehaviour
 {

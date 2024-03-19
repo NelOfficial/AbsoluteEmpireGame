@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 617fa2bcca24e1f47897baf9f4729f9a, type: 3}
   m_Name: AntitankLVL2
   m_EditorClassIdentifier: 
-  type: 2
+  type: 3
   icon: {fileID: 21300000, guid: 9ba3dbb66cb6f744abfa8234ca7388ed, type: 3}
   moneyCost: 320
   moneyIncomeCost: 15
@@ -21,6 +21,7 @@ MonoBehaviour:
   level: 2
   unlockLevel: 37
   rank: 1
+  maxFuel: 0
   health: 2
   softAttack: 0.8
   hardAttack: 20

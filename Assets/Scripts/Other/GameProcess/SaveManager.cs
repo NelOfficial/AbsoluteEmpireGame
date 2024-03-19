@@ -107,6 +107,8 @@ public class SaveManager : MonoBehaviour
 
             PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_researchPointsIncome", country.researchPointsIncome);
 
+            PlayerPrefs.SetFloat($"{saveId}_COUNTRY_{country.country._id}_fuel", country.fuel);
+
             if (country.mobilasing)
             {
                 PlayerPrefs.SetString($"{saveId}_COUNTRY_{country.country._id}_MOBILASING", "TRUE");
@@ -171,6 +173,9 @@ public class SaveManager : MonoBehaviour
                 int motoLVL1 = 0;
                 int motoLVL2 = 0;
 
+                int cavLVL1 = 0;
+                int cavLVL2 = 0;
+
                 for (int unitIndex = 0; unitIndex < unitMovement.unitsHealth.Count; unitIndex++)
                 {
                     UnitScriptableObject unit = unitMovement.unitsHealth[unitIndex].unit;
@@ -232,6 +237,15 @@ public class SaveManager : MonoBehaviour
                     {
                         artLVL2++;
                     }
+
+                    else if (unit.unitName == "CAV_01")
+                    {
+                        cavLVL1++;
+                    }
+                    else if (unit.unitName == "CAV_02")
+                    {
+                        cavLVL2++;
+                    }
                 }
 
                 PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_INF_LVL1", infLVL1);
@@ -249,6 +263,9 @@ public class SaveManager : MonoBehaviour
 
                 PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_ATI_LVL1", atiLVL1);
                 PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_ATI_LVL2", atiLVL2);
+
+                PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_CAV_LVL1", cavLVL1);
+                PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_CAV_LVL2", cavLVL2);
             }
             else if (!region.hasArmy)
             {
@@ -349,6 +366,20 @@ public class SaveManager : MonoBehaviour
 
         #endregion
 
+        string result = "";
+
+        foreach (CountrySettings country in ReferencesManager.Instance.countryManager.countries)
+        {
+            if (!country.GetComponent<CountryAIManager>() && !country.isPlayer)
+            {
+                result += $"{country.country._id};";
+            }
+        }
+
+        result = result.Remove(result.Length - 1);
+
+        PlayerPrefs.SetString($"{saveId}_AI_BLACK_LIST", result);
+
         localSavesIds.list.Add(saveId);
 
         string _saves = "";
@@ -359,6 +390,7 @@ public class SaveManager : MonoBehaviour
         }
 
         PlayerPrefs.SetString("SAVES_IDS", _saves);
+
     }
 
     public void UpdateUI()

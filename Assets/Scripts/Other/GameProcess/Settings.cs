@@ -12,11 +12,14 @@ public class Settings : MonoBehaviour
     public Camera mainCamera;
     public Camera renderCamera;
     public Color[] colors;
+    public Color[] colorsHigh;
+    public Color[] colorsDeco;
     public Sprite[] maps;
 
     [SerializeField] Image waterImage;
     [SerializeField] Image waterDecoImage;
     [SerializeField] Image mapImage;
+    [SerializeField] Image seaMapImage;
 
     public TMP_Text songNameText;
     public Image buttonPlayIcon;
@@ -43,8 +46,6 @@ public class Settings : MonoBehaviour
         songNameText.text = musicSource.clip.name;
         songNameText.text = musicSource.clip.name;
 
-
-        Debug.Log(songNameText);
         regionUI = FindObjectOfType<RegionUI>();
         gameSettings = FindObjectOfType<GameSettings>();
 
@@ -81,7 +82,8 @@ public class Settings : MonoBehaviour
     public void ChangeOceanColor(int index)
     {
         waterImage.color = colors[index];
-        waterDecoImage.color = colors[index];
+        waterDecoImage.color = colorsDeco[index];
+        seaMapImage.color = colorsHigh[index];
         UISoundEffect.Instance.PlayAudio(regionUI.click_01);
     }
 
@@ -99,6 +101,11 @@ public class Settings : MonoBehaviour
     public void ChangeMoveSpeed(float speed)
     {
         mainCamera.GetComponent<CameraMovement>().CameraSpeed = speed;
+    }
+
+    public void SetTexturesSize(int index)
+    {
+        QualitySettings.globalTextureMipmapLimit = index;
     }
 
     public void ChangeOutlineState(bool borders)

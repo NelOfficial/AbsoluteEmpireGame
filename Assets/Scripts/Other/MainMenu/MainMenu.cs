@@ -82,6 +82,26 @@ public class MainMenu : MonoBehaviour
         else if (difficulty == 4) difficultyValue.value = "HARDCORE";
     }
 
+    public void SetMarchEvent(bool state)
+    {
+        if (state)
+        {
+            SetDifficulty(4);
+            difficultyDropdown.value = 4;
+            difficultyDropdown.interactable = false;
+
+            ReferencesManager.Instance.gameSettings.marchEvent.value = true;
+        }
+        else
+        {
+            SetDifficulty(2);
+            difficultyDropdown.value = 2;
+            difficultyDropdown.interactable = true;
+
+            ReferencesManager.Instance.gameSettings.marchEvent.value = false;
+        }
+    }
+
     public void LoadThroughMenu()
     {
         ReferencesManager.Instance.gameSettings.playTestingMod.value = false;

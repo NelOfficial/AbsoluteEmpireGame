@@ -12,20 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 617fa2bcca24e1f47897baf9f4729f9a, type: 3}
   m_Name: TankLVL2
   m_EditorClassIdentifier: 
-  type: 3
+  type: 4
   icon: {fileID: 21300000, guid: ef2a21386f806be4bbaa34d5a86c1216, type: 3}
-  moneyCost: 320
+  moneyCost: 450
   moneyIncomeCost: 20
   foodIncomeCost: 5
   recrootsCost: 500
   level: 2
   unlockLevel: 26
   rank: 1
-  damage: 300
+  maxFuel: 600
   health: 6
   softAttack: 19
   hardAttack: 14
   defense: 5
+  maxEntrenchment: 0
   armor: 60
   armorPiercing: 61
   hardness: 90

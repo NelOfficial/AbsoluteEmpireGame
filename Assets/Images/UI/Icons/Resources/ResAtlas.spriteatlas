@@ -54,7 +54,9 @@ SpriteAtlas:
     - 027dec51cc8f23f47a24a1c113112499: 21300000
     - 5df352c283d7d654ab5bc88f83b6b1a5: 21300000
     - bea335d2ba4124540ba8fb4fd5d0eb3d: 21300000
+    - 253caff476fbf524699060ce66818745: 21300000
     - 81ad5355fbd74e34792f06e88ed14d0d: 21300000
+    - 484936764a2007542b3a1f60cfe0fb9b: 21300000
     - b43ba72767110ba4e8abc8dd278b6e58: 21300000
     - cd8f7357ca152f24dbc956ddb0a3a9c0: 21300000
     - a02ec288c48c1cd498192f3e61c7e2ed: 21300000
@@ -67,7 +69,9 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 027dec51cc8f23f47a24a1c113112499, type: 3}
   - {fileID: 21300000, guid: 5df352c283d7d654ab5bc88f83b6b1a5, type: 3}
   - {fileID: 21300000, guid: bea335d2ba4124540ba8fb4fd5d0eb3d, type: 3}
+  - {fileID: 21300000, guid: 253caff476fbf524699060ce66818745, type: 3}
   - {fileID: 21300000, guid: 81ad5355fbd74e34792f06e88ed14d0d, type: 3}
+  - {fileID: 21300000, guid: 484936764a2007542b3a1f60cfe0fb9b, type: 3}
   - {fileID: 21300000, guid: b43ba72767110ba4e8abc8dd278b6e58, type: 3}
   - {fileID: 21300000, guid: cd8f7357ca152f24dbc956ddb0a3a9c0, type: 3}
   - {fileID: 21300000, guid: a02ec288c48c1cd498192f3e61c7e2ed, type: 3}
@@ -79,7 +83,9 @@ SpriteAtlas:
   - al_transparent
   - economy
   - moneyDebtIcon256PNG
+  - oil_transparent_white
   - foodIcon256PNG
+  - oil_white
   - rubber_transparent
   - moneyIcon256PNG
   - moneyIconWhite256PNG

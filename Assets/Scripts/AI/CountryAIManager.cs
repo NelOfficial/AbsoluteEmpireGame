@@ -142,19 +142,21 @@ public class CountryAIManager : MonoBehaviour
                     float _winChance = CountWinChance(warBorderingRegions[i], enemyRegion);
                     float currentAttackPreference = 0;
 
-                    if (country.aiAccuracy == 0)
-                    {
-                        currentAttackPreference = 100;
-                    }
+                    //if (country.aiAccuracy == 0)
+                    //{
+                    //    currentAttackPreference = 100;
+                    //}
 
-                    if (_winChance < 50)
-                    {
-                        currentAttackPreference = _winChance / country.aiAccuracy;
-                    }
-                    else if (_winChance >= 50)
-                    {
-                        currentAttackPreference = _winChance * country.aiAccuracy;
-                    }
+                    //if (_winChance < 50)
+                    //{
+                    //    currentAttackPreference = _winChance / country.aiAccuracy;
+                    //}
+                    //else if (_winChance >= 50)
+                    //{
+                    //    currentAttackPreference = _winChance * country.aiAccuracy;
+                    //}
+
+                    currentAttackPreference = 100;
 
                     //if (!enemyRegion.currentCountry.isPlayer && enemyRegion.currentCountry.country._tag != "POL")
                     //{
@@ -315,11 +317,42 @@ public class CountryAIManager : MonoBehaviour
 
         #region SetMobilizationLaw
 
-        if (country.recroots <= 10000 && !country.mobilasing)
+        if (country.myRegions.Count > 0 && ReferencesManager.Instance.dateManager.currentDate[0] > 1)
         {
-            if (country.mobilizationLaw + 1 < ReferencesManager.Instance.gameSettings.mobilizationPercent.Length)
+            float preferedMP = country.myRegions.Count * Random.Range(700, 4500);
+
+            preferedMP *= country.aiAccuracy;
+
+            if (country.ideology == "Коммунизм" || country.ideology == "Фашизм")
             {
-                ReferencesManager.Instance.SetRecroots(country.mobilizationLaw + 1, country);
+                preferedMP *= Random.Range(2, 5);
+            }
+            else if (country.ideology == "Демократия")
+            {
+                preferedMP /= 2;
+            }
+
+            if (country.recroots <= preferedMP)
+            {
+                if (!country.inWar)
+                {
+                    if (!country.mobilasing)
+                    {
+                        if (country.mobilizationLaw + 1 < ReferencesManager.Instance.gameSettings.mobilizationPercent.Length)
+                        {
+                            ReferencesManager.Instance.SetRecroots(country.mobilizationLaw + 1, country);
+                            //Debug.Log($"{country.country._name} начинает мобилизацию, устанавливая закон {country.mobilizationLaw} | {country.recroots} людей => {preferedMP} людей");
+                        }
+                    }
+                }
+                else
+                {
+                    if (country.mobilizationLaw + 1 < ReferencesManager.Instance.gameSettings.mobilizationPercent.Length)
+                    {
+                        ReferencesManager.Instance.SetRecroots(country.mobilizationLaw + 1, country);
+                        //Debug.Log($"{country.country._name} начинает мобилизацию, устанавливая закон {country.mobilizationLaw} | {country.recroots} людей => {preferedMP} людей");
+                    }
+                }
             }
         }
 

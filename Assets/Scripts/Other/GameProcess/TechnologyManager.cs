@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Assets.Scripts.UI;
-using Unity.Burst.Intrinsics;
+
 
 public class TechnologyManager : MonoBehaviour
 {

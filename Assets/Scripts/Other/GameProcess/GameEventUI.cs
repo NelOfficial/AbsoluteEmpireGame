@@ -455,7 +455,16 @@ public class GameEventUI : MonoBehaviour
                             }
 
                             SmallNewsManager.Instance.countrySender = attacker.country;
-                            SmallNewsManager.Instance.message = $"Государство {attacker.country._name} присоединило {act.Length - 2} провинций государства {countryManager.regions[int.Parse(act[2])].currentCountry.country._name}";
+
+                            if (PlayerPrefs.GetInt("languageId") == 0)
+                            {
+                                SmallNewsManager.Instance.message = $"State {attacker.country._name} annexed {act.Length - 2} provinces of {countryManager.regions[int.Parse(act[2])].currentCountry.country._name}";
+                            }
+                            else if (PlayerPrefs.GetInt("languageId") == 1)
+                            {
+                                SmallNewsManager.Instance.message = $"Государство {attacker.country._name} присоединило {act.Length - 2} провинций государства {countryManager.regions[int.Parse(act[2])].currentCountry.country._name}";
+                            }
+
                             SmallNewsManager.Instance.UpdateUI();
 
                             foreach (RegionManager region in regionsToAnnex)
@@ -615,7 +624,15 @@ public class GameEventUI : MonoBehaviour
                                         countryManager.regions[i].regionClaims.Add(country);
 
                                         SmallNewsManager.Instance.countrySender = attacker.country;
-                                        SmallNewsManager.Instance.message = $"Государство {country._name} заявило претензии на провинции государства {countryManager.regions[i].currentCountry.country._name}";
+
+                                        if (PlayerPrefs.GetInt("languageId") == 0)
+                                        {
+                                            SmallNewsManager.Instance.message = $"State {attacker.country._name} has claimed on {act.Length - 2} provinces of {countryManager.regions[int.Parse(act[2])].currentCountry.country._name}";
+                                        }
+                                        else if (PlayerPrefs.GetInt("languageId") == 1)
+                                        {
+                                            SmallNewsManager.Instance.message = $"Государство {country._name} заявило претензии на провинции государства {countryManager.regions[i].currentCountry.country._name}";
+                                        }
                                         SmallNewsManager.Instance.UpdateUI();
                                     }
                                 }
@@ -635,7 +652,14 @@ public class GameEventUI : MonoBehaviour
                                         countryManager.regions[i].regionClaims.Remove(country);
 
                                         SmallNewsManager.Instance.countrySender = attacker.country;
-                                        SmallNewsManager.Instance.message = $"Государство {country._name} отозвало претензии на провинции государства {countryManager.regions[i].currentCountry.country._name}";
+                                        if (PlayerPrefs.GetInt("languageId") == 0)
+                                        {
+                                            SmallNewsManager.Instance.message = $"State {attacker.country._name} withdrew claims on {act.Length - 2} provinces of {countryManager.regions[int.Parse(act[2])].currentCountry.country._name}";
+                                        }
+                                        else if (PlayerPrefs.GetInt("languageId") == 1)
+                                        {
+                                            SmallNewsManager.Instance.message = $"Государство {country._name} отозвало претензии на провинции государства {countryManager.regions[i].currentCountry.country._name}";
+                                        }
                                         SmallNewsManager.Instance.UpdateUI();
                                     }
                                 }
@@ -970,7 +994,14 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship -= 100;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} объявило войну государству {receiver.country._name}";
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                SmallNewsManager.Instance.message = $"{sender.country._name} declared war on {receiver.country._name}";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                SmallNewsManager.Instance.message = $"Государство {sender.country._name} объявило войну государству {receiver.country._name}";
+            }
             SmallNewsManager.Instance.UpdateUI();
         }
 
@@ -993,7 +1024,14 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship += 60;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} заключило мир с государством {receiver.country._name}";
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                SmallNewsManager.Instance.message = $"{sender.country._name} made peace with {receiver.country._name}";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                SmallNewsManager.Instance.message = $"Государство {sender.country._name} заключило мир с государством {receiver.country._name}";
+            }
             SmallNewsManager.Instance.UpdateUI();
         }
 
@@ -1010,7 +1048,14 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship += 18;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} заключило торговлю с государством {receiver.country._name}";
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                SmallNewsManager.Instance.message = $"{sender.country._name} concluded trade with {receiver.country._name}";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                SmallNewsManager.Instance.message = $"Государство {sender.country._name} заключило торговлю с государством {receiver.country._name}";
+            }
             SmallNewsManager.Instance.UpdateUI();
         }
 
@@ -1026,7 +1071,14 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship -= 9;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} расторгло торговлю с государством {receiver.country._name}";
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                SmallNewsManager.Instance.message = $"{sender.country._name} terminated trade with {receiver.country._name}";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                SmallNewsManager.Instance.message = $"Государство {sender.country._name} расторгло торговлю с государством {receiver.country._name}";
+            }
             SmallNewsManager.Instance.UpdateUI();
         }
 
@@ -1043,7 +1095,14 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship += 18;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} подписало пакт о ненападении с государством {receiver.country._name}";
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                SmallNewsManager.Instance.message = $"{sender.country._name} signed a non-aggression pact with {receiver.country._name}";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                SmallNewsManager.Instance.message = $"Государство {sender.country._name} подписало пакт о ненападении с государством {receiver.country._name}";
+            }
             SmallNewsManager.Instance.UpdateUI();
         }
 
@@ -1059,7 +1118,14 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship -= 18;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} расторгло пакт о ненападении с государством {receiver.country._name}";
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                SmallNewsManager.Instance.message = $"{sender.country._name} terminated the non-aggression pact with {receiver.country._name}";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                SmallNewsManager.Instance.message = $"Государство {sender.country._name} расторгло пакт о ненападении с государством {receiver.country._name}";
+            }
             SmallNewsManager.Instance.UpdateUI();
         }
 
@@ -1076,7 +1142,14 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship += 75;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} заключило союз с государством {receiver.country._name}";
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                SmallNewsManager.Instance.message = $"{sender.country._name} entered into an alliance with {receiver.country._name}";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                SmallNewsManager.Instance.message = $"Государство {sender.country._name} заключило союз с государством {receiver.country._name}";
+            }
             SmallNewsManager.Instance.UpdateUI();
         }
 
@@ -1092,7 +1165,14 @@ public class GameEventUI : MonoBehaviour
             receiverToSender.relationship -= 75;
 
             SmallNewsManager.Instance.countrySender = sender.country;
-            SmallNewsManager.Instance.message = $"Государство {sender.country._name} расторгло союз с государством {receiver.country._name}";
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                SmallNewsManager.Instance.message = $"{sender.country._name} terminated the union with {receiver.country._name}";
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                SmallNewsManager.Instance.message = $"Государство {sender.country._name} расторгло союз с государством {receiver.country._name}";
+            }
             SmallNewsManager.Instance.UpdateUI();
         }
     }

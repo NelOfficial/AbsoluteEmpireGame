@@ -1,0 +1,181 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SeaAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 8192
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 3
+      m_CompressionQuality: 100
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_IgnorePlatformSupport: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 2
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: b6b76c0826f72e348bd42ee298769ef8, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - 6fdb14603780cb845828c60a1cc133e3: 21300000
+    - edd0e1b095a115e42851f9c9ede4be19: 21300000
+    - 8b4320f111152704eb9aa189264442e8: 21300000
+    - 2b92f772193ba1343887a398e6405bd3: 21300000
+    - 51630cd2c2ad2e64ba4cf9a3ad4b0256: 21300000
+    - 9e88a7035908da045b890ace6e342f8e: 21300000
+    - c2655433fd04d53499c5f91691e4f1c9: 21300000
+    - 7e30c6b3c0ca86945b37983daa2a205f: 21300000
+    - 6a67b4c3e639f03418b4ea34cd62e61e: 21300000
+    - c69ed514880ec524d94d017d882834b4: 21300000
+    - 8d585c74b40cc2443b2953f17d304b57: 21300000
+    - 7b470e8494b00c84b87df9441d584aea: 21300000
+    - 6915e8c4a731a6c4e9f56242c5b9692c: 21300000
+    - 450db33567cae744ba98fbd02c685c79: 21300000
+    - d0e1a865d8b048e489a0df766b72480f: 21300000
+    - fb7ae875efa365241ad90906ee2e0f16: 21300000
+    - 911411f5015ed7c4eb40bc4ac4249354: 21300000
+    - 8de0d396a6cd6bc418b9928f6b018fcc: 21300000
+    - 8a8dd8f64ffc6f842be45be76f63ab80: 21300000
+    - d309cf27706ace74c920d7770f9eafba: 21300000
+    - 602952286ba41a64f9d2ba4eb72484ca: 21300000
+    - 32be2d98c639f4948b3bc9b438e9658e: 21300000
+    - ebcd158963280a040afbb89d67219f76: 21300000
+    - da66768ad820f554c907f3fe19aa572b: 21300000
+    - 057391ba96f38c248b61c365ee8cd20d: 21300000
+    - b7be00da28eb922458fd5babaedf2b78: 21300000
+    - fcc4b11bf3cfd294c8a5b5d921e2440d: 21300000
+    - eb6aa96b8217fe54f8052ee27ad2251b: 21300000
+    - 22fa3c9b648ca0a4a83dbd9256a44b74: 21300000
+    - a4ef02cb03d709c40b2ca8785999ee24: 21300000
+    - f12abadb8262c884b8c29d4c3cfefc51: 21300000
+    - a52941dcdd39f92479ca39877a2d4872: 21300000
+    - 4f1cb8fc903d9f8489fc614c68bcd08c: 21300000
+    - 4ebde24d1023efa44bf1714f26e7dd78: 21300000
+    - b634ed6d0d696334da992a57a338770c: 21300000
+    - f9c614dd2623c0d4d9d308c4ecda0701: 21300000
+    - 1cfcec6ec9667cd488430326a1476651: 21300000
+    - 6e4a6eceb111b8344b441fb93d40068c: 21300000
+    - f620981f6f722d745a4d800d262382e4: 21300000
+    - 2357393f80b34524bb4df51fcac01d35: 21300000
+    - 3bd1a2af87061ed4faa3029f71ce3ea2: 21300000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 6fdb14603780cb845828c60a1cc133e3, type: 3}
+  - {fileID: 21300000, guid: edd0e1b095a115e42851f9c9ede4be19, type: 3}
+  - {fileID: 21300000, guid: 8b4320f111152704eb9aa189264442e8, type: 3}
+  - {fileID: 21300000, guid: 2b92f772193ba1343887a398e6405bd3, type: 3}
+  - {fileID: 21300000, guid: 51630cd2c2ad2e64ba4cf9a3ad4b0256, type: 3}
+  - {fileID: 21300000, guid: 9e88a7035908da045b890ace6e342f8e, type: 3}
+  - {fileID: 21300000, guid: c2655433fd04d53499c5f91691e4f1c9, type: 3}
+  - {fileID: 21300000, guid: 7e30c6b3c0ca86945b37983daa2a205f, type: 3}
+  - {fileID: 21300000, guid: 6a67b4c3e639f03418b4ea34cd62e61e, type: 3}
+  - {fileID: 21300000, guid: c69ed514880ec524d94d017d882834b4, type: 3}
+  - {fileID: 21300000, guid: 8d585c74b40cc2443b2953f17d304b57, type: 3}
+  - {fileID: 21300000, guid: 7b470e8494b00c84b87df9441d584aea, type: 3}
+  - {fileID: 21300000, guid: 6915e8c4a731a6c4e9f56242c5b9692c, type: 3}
+  - {fileID: 21300000, guid: 450db33567cae744ba98fbd02c685c79, type: 3}
+  - {fileID: 21300000, guid: d0e1a865d8b048e489a0df766b72480f, type: 3}
+  - {fileID: 21300000, guid: fb7ae875efa365241ad90906ee2e0f16, type: 3}
+  - {fileID: 21300000, guid: 911411f5015ed7c4eb40bc4ac4249354, type: 3}
+  - {fileID: 21300000, guid: 8de0d396a6cd6bc418b9928f6b018fcc, type: 3}
+  - {fileID: 21300000, guid: 8a8dd8f64ffc6f842be45be76f63ab80, type: 3}
+  - {fileID: 21300000, guid: d309cf27706ace74c920d7770f9eafba, type: 3}
+  - {fileID: 21300000, guid: 602952286ba41a64f9d2ba4eb72484ca, type: 3}
+  - {fileID: 21300000, guid: 32be2d98c639f4948b3bc9b438e9658e, type: 3}
+  - {fileID: 21300000, guid: ebcd158963280a040afbb89d67219f76, type: 3}
+  - {fileID: 21300000, guid: da66768ad820f554c907f3fe19aa572b, type: 3}
+  - {fileID: 21300000, guid: 057391ba96f38c248b61c365ee8cd20d, type: 3}
+  - {fileID: 21300000, guid: b7be00da28eb922458fd5babaedf2b78, type: 3}
+  - {fileID: 21300000, guid: fcc4b11bf3cfd294c8a5b5d921e2440d, type: 3}
+  - {fileID: 21300000, guid: eb6aa96b8217fe54f8052ee27ad2251b, type: 3}
+  - {fileID: 21300000, guid: 22fa3c9b648ca0a4a83dbd9256a44b74, type: 3}
+  - {fileID: 21300000, guid: a4ef02cb03d709c40b2ca8785999ee24, type: 3}
+  - {fileID: 21300000, guid: f12abadb8262c884b8c29d4c3cfefc51, type: 3}
+  - {fileID: 21300000, guid: a52941dcdd39f92479ca39877a2d4872, type: 3}
+  - {fileID: 21300000, guid: 4f1cb8fc903d9f8489fc614c68bcd08c, type: 3}
+  - {fileID: 21300000, guid: 4ebde24d1023efa44bf1714f26e7dd78, type: 3}
+  - {fileID: 21300000, guid: b634ed6d0d696334da992a57a338770c, type: 3}
+  - {fileID: 21300000, guid: f9c614dd2623c0d4d9d308c4ecda0701, type: 3}
+  - {fileID: 21300000, guid: 1cfcec6ec9667cd488430326a1476651, type: 3}
+  - {fileID: 21300000, guid: 6e4a6eceb111b8344b441fb93d40068c, type: 3}
+  - {fileID: 21300000, guid: f620981f6f722d745a4d800d262382e4, type: 3}
+  - {fileID: 21300000, guid: 2357393f80b34524bb4df51fcac01d35, type: 3}
+  - {fileID: 21300000, guid: 3bd1a2af87061ed4faa3029f71ce3ea2, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - 4
+  - 20
+  - 27
+  - 22
+  - 17
+  - 31
+  - 25
+  - 41
+  - 26
+  - 40
+  - 12
+  - 24
+  - 15
+  - 32
+  - 10
+  - 33
+  - 37
+  - 38
+  - 28
+  - 5
+  - 7
+  - 30
+  - 6
+  - 9
+  - 19
+  - 11
+  - 1
+  - 34
+  - 29
+  - 8
+  - 18
+  - 14
+  - 39
+  - 13
+  - 36
+  - 23
+  - 21
+  - 2
+  - 35
+  - 16
+  - 3
+  m_RenderDataMap: {}
+  m_Tag: SeaAtlas
+  m_IsVariant: 0

@@ -1,4 +1,3 @@
-using Photon.Realtime;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,6 +12,8 @@ public class MapType : MonoBehaviour
     private float currentAlpha = 0;
 
     public bool viewMap;
+
+    [SerializeField] Color grayColor;
 
 
     private void Awake()
@@ -96,5 +97,20 @@ public class MapType : MonoBehaviour
             region.GetComponent<SpriteRenderer>().color.b,
             alpha);
 
+    }
+
+    public void MyCountryMap()
+    {
+        viewMap = true;
+
+        for (int i = 0; i < countryManager.regions.Count; i++)
+        {
+            RegionManager region = countryManager.regions[i];
+
+            if (region.currentCountry.country._id != countryManager.currentCountry.country._id)
+            {
+                region.GetComponent<SpriteRenderer>().color = grayColor;
+            }
+        }
     }
 }

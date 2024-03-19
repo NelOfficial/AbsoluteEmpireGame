@@ -11,6 +11,8 @@ public class GameSettings : MonoBehaviour
 	public bool jsonTest;
 	public bool regionSelectionMode;
 
+	public string regionSelectionModeType;
+
 	public List<RegionManager> provincesList = new List<RegionManager>();
 
 	public UnitMovement.BattleInfo currentBattle;
@@ -44,7 +46,10 @@ public class GameSettings : MonoBehaviour
 	public UnitScriptableObject antitankLVL1;
 	public UnitScriptableObject antitankLVL2;
 
-	public BuildingScriptableObject fabric;
+    public UnitScriptableObject cavLVL1;
+    public UnitScriptableObject cavLVL2;
+
+    public BuildingScriptableObject fabric;
 	public BuildingScriptableObject farm;
 	public BuildingScriptableObject chefarm;
 	public BuildingScriptableObject researchLab;
@@ -106,6 +111,7 @@ public class GameSettings : MonoBehaviour
 	public BoolValue playTestingMod;
     public BoolValue playMod;
     public BoolValue loadGame;
+    public BoolValue marchEvent;
 
 	public StringValue editingModString;
 	public StringValue difficultyValue;
@@ -121,8 +127,13 @@ public class GameSettings : MonoBehaviour
 	[Header("Fight settings")]
 	public float fortDebuff = 5;
 
+	public SeaRegion[] _seaRegions;
+	public Color _seaSelectedColor;
+	public Color _seaDefaultColor;
 
-	private void Awake()
+
+
+    private void Awake()
 	{
 		Application.targetFrameRate = 120;
 		onlineGame = isOnlineGame.value;

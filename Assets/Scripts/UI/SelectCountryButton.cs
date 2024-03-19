@@ -54,6 +54,44 @@ public class SelectCountryButton : MonoBehaviour
         m_Editor.OpenCountryEditPanel();
     }
 
+    public void CreateVassal()
+    {
+        ReferencesManager.Instance.countryInfo.countryInfoPanelAdvanced.SetActive(false);
+        ReferencesManager.Instance.gameSettings.regionSelectionMode = true;
+        ReferencesManager.Instance.gameSettings.regionSelectionModeType = "my_country";
+        ReferencesManager.Instance.gameSettings.provincesList.Clear();
+
+        ReferencesManager.Instance.regionUI.createVassalRegionSelectionModeButton.SetActive(true);
+        BackgroundUI_Overlay.Instance.CloseOverlay();
+
+        ReferencesManager.Instance.countryInfo.newVassal = ReferencesManager.Instance.CreateCountry_Component(country_ScriptableObject, ReferencesManager.Instance.countryManager.currentCountry.ideology);
+
+        ReferencesManager.Instance.diplomatyUI.senderWars.Clear();
+        Relationships.Relation senderToReceiver = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(ReferencesManager.Instance.countryManager.currentCountry, ReferencesManager.Instance.countryInfo.newVassal);
+        Relationships.Relation receiverToSender = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(ReferencesManager.Instance.countryInfo.newVassal, ReferencesManager.Instance.countryManager.currentCountry);
+
+        foreach (CountrySettings country in ReferencesManager.Instance.countryManager.countries)
+        {
+            Relationships.Relation relation = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(ReferencesManager.Instance.countryManager.currentCountry, country);
+
+            if (relation.war)
+            {
+                ReferencesManager.Instance.diplomatyUI.senderWars.Add(country);
+            }
+        }
+
+        foreach (CountrySettings _cn in ReferencesManager.Instance.diplomatyUI.senderWars)
+        {
+            ReferencesManager.Instance.countryInfo.newVassal.GetComponent<CountryAIManager>().SendOffer("ќбъ€вить войну", ReferencesManager.Instance.countryInfo.newVassal, _cn);
+        }
+
+        senderToReceiver.vassal = true;
+        receiverToSender.vassal = false;
+
+        senderToReceiver.relationship += 60;
+        receiverToSender.relationship += 60;
+    }
+
     public void OnClick()
     {
         if (!map_editor)

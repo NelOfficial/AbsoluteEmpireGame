@@ -7,7 +7,7 @@ public class BuildingScriptableObject : ScriptableObject
     public string uiTitleEN;
     public string _name;
 
-    public enum BuildType{ GoldProducer, FoodProducer, RecrootsProducer, Other }
+    public enum BuildType{ GoldProducer, FoodProducer, RecrootsProducer, Other, Dockyard}
 
     public BuildType buildType;
 

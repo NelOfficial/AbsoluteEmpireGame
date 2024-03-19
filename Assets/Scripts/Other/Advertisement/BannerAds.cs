@@ -9,7 +9,7 @@ public class BannerAds : MonoBehaviour
 {
     private string message = "";
 
-    private Banner banner;
+    [HideInInspector] public Banner banner;
 
     private void Awake()
     {

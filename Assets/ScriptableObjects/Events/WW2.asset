@@ -132,8 +132,8 @@ MonoBehaviour:
     nameEN: The war is not avoided
     actions:
     - war_to_countries_in_regs;12;268;269
-    - set_res;12;money;12500
-    - add_res;12;money;12500
+    - add_res;12;money;17500
+    - add_res;12;recroots;125000
     - set_ai_level;27;0,1
     rejectUltimatum: 0
   IS_GAME_MAIN_EVENT: 1

@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
+using Photon.Pun.Demo.PunBasics;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class RegionManager : MonoBehaviour
 {
@@ -41,7 +44,7 @@ public class RegionManager : MonoBehaviour
     [SerializeField] int steelAmount;
     [SerializeField] int alluminiumAmount;
     [SerializeField] int rubberAmount;
-    [SerializeField] int OilAmount;
+    public int OilAmount;
 
     [HideInInspector] public int civFactory_Amount;
     [HideInInspector] public int milFactory_Amount;
@@ -66,8 +69,18 @@ public class RegionManager : MonoBehaviour
     [HideInInspector] public Color defaultColor;
 
     public bool capital = false;
+    public bool demilitarized = false;
+
     [HideInInspector] public bool isSelected;
     [HideInInspector] public bool canSelect = true;
+
+    [Header("Fleet settings")]
+    public int _marineBaseLevel = 0;
+    public bool _hasFleet = false;
+
+    public bool _isCoast;
+
+    [HideInInspector] public Fleet _currentFleet;
 
     private Vector3 StartPos;
     private Vector3 PosAfter;
@@ -143,17 +156,73 @@ public class RegionManager : MonoBehaviour
                     }
                     else
                     {
-                        SelectRegion();
+                        if (!ReferencesManager.Instance.gameSettings.regionSelectionMode)
+                        {
+                            SelectRegion();
+                        }
                     }
                     if (ReferencesManager.Instance.gameSettings.regionSelectionMode)
                     {
-                        D_SelectRegion(ReferencesManager.Instance.gameSettings.provincesList);
+                        D_SelectRegion(ReferencesManager.Instance.gameSettings.provincesList, ReferencesManager.Instance.gameSettings.regionSelectionModeType); //my_country other_country;id
                     }
                 }
             }
         }
     }
 
+
+    public void AddClaims()
+    {
+        ReferencesManager.Instance.regionUI.ResetClaims();
+
+        bool canClaim = false;
+
+        foreach (Transform movePoint in currentRegionManager.movePoints)
+        {
+            if (movePoint.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>().currentCountry ==
+                ReferencesManager.Instance.countryManager.currentCountry)
+            {
+                canClaim = true;
+            }
+        }
+
+        if (canClaim)
+        {
+            if (!currentRegionManager.regionClaims.Contains(ReferencesManager.Instance.countryManager.currentCountry.country))
+            {
+                currentRegionManager.regionClaims.Add(ReferencesManager.Instance.countryManager.currentCountry.country);
+            }
+        }
+        else
+        {
+            if (PlayerPrefs.GetInt("languageId") == 0)
+            {
+                WarningManager.Instance.Warn("You don't border this province");
+            }
+            else if (PlayerPrefs.GetInt("languageId") == 1)
+            {
+                WarningManager.Instance.Warn("Вы не граничите с этой провинцией");
+            }
+        }
+
+        for (int i = 0; i < currentRegionManager.regionClaims.Count; i++)
+        {
+            if (currentRegionManager.currentCountry.country._id != currentRegionManager.regionClaims[i]._id)
+            {
+                GameObject spawnedCountryFlag = Instantiate(ReferencesManager.Instance.regionUI.countryFlagPrefab, ReferencesManager.Instance.regionUI.regionClaimsContainer.transform);
+                spawnedCountryFlag.GetComponent<FillCountryFlag>().country = currentRegionManager.regionClaims[i];
+                spawnedCountryFlag.GetComponent<FillCountryFlag>().FillInfo();
+
+                ReferencesManager.Instance.regionUI.regionClaimsContainer.GetComponent<RectTransform>().sizeDelta = new Vector2(ReferencesManager.Instance.regionUI.countryFlagPrefab.GetComponent<RectTransform>().sizeDelta.x * ReferencesManager.Instance.regionUI.regionClaimsContainer.transform.childCount, ReferencesManager.Instance.regionUI.countryFlagPrefab.GetComponent<RectTransform>().sizeDelta.y);
+            }
+        }
+
+        ReferencesManager.Instance.regionUI.UpdateGarrisonUI();
+        ReferencesManager.Instance.regionUI.UpdateBuildingUI();
+        ReferencesManager.Instance.regionUI.UpdateBuildingUI();
+
+        UpdateRegionUI();
+    }
 
     public void Upgrade(int upgradeType)
     {
@@ -335,6 +404,8 @@ public class RegionManager : MonoBehaviour
     {
         if (canSelect)
         {
+            ReferencesManager.Instance.seaRegionManager.DeselectRegions();
+
             Vector2 mainCamera = ReferencesManager.Instance.mainCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(mainCamera, Input.mousePosition);
 
@@ -402,9 +473,9 @@ public class RegionManager : MonoBehaviour
                 }
                 else
                 {
-                    ReferencesManager.Instance.regionUI.armyButton.interactable = true;
+                    ReferencesManager.Instance.regionUI.armyButton.interactable = false;
                     ReferencesManager.Instance.regionUI.buildButton.interactable = true;
-                    ReferencesManager.Instance.regionUI.defenseButton.interactable = true;
+                    ReferencesManager.Instance.regionUI.defenseButton.interactable = !demilitarized;
                     ReferencesManager.Instance.regionUI.regionUpgradeButton.interactable = true;
 
                     ReferencesManager.Instance.regionUI.regionButtonUpgrade.interactable = true;
@@ -413,7 +484,7 @@ public class RegionManager : MonoBehaviour
                     ReferencesManager.Instance.regionUI.moveButton.interactable = true;
                 }
 
-                if (currentRegionManager.hasArmy)
+                if (currentRegionManager.hasArmy && !currentRegionManager.demilitarized)
                 {
                     try
                     {
@@ -424,7 +495,8 @@ public class RegionManager : MonoBehaviour
                             if (unitTransform.gameObject.GetComponent<UnitMovement>().currentCountry ==
                                 ReferencesManager.Instance.countryManager.currentCountry)
                             {
-                                ReferencesManager.Instance.regionUI.armyButton.interactable = true;
+                                ReferencesManager.Instance.regionUI.armyButton.interactable = !demilitarized;
+                                ReferencesManager.Instance.regionUI.defenseButton.interactable = true;
                                 ReferencesManager.Instance.regionUI.moveButton.interactable = true;
                             }
                         }
@@ -511,8 +583,25 @@ public class RegionManager : MonoBehaviour
         }
     }
 
-    public void D_SelectRegion(List<RegionManager> list)
+    public void D_SelectRegion(List<RegionManager> list, string rules)
     {
+        bool onlyMyRegions = false;
+        bool onlyOtherRegions = false;
+        string country_id = "";
+
+        CountrySettings otherCountry;
+
+        if (rules == "my_country")
+        {
+            onlyMyRegions = true;
+        }
+        else if (rules.Split(';')[0] == "other_country")
+        {
+            onlyOtherRegions = true;
+            country_id = rules.Split(';')[1];
+        }
+
+
         if (canSelect)
         {
             Vector2 mainCamera = ReferencesManager.Instance.mainCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
@@ -547,12 +636,39 @@ public class RegionManager : MonoBehaviour
                     }
                 }
 
-
-                list.Add(hit.collider.GetComponent<RegionManager>());
-
-                foreach (RegionManager province in list)
+                if (onlyMyRegions)
                 {
-                    province.GetComponent<SpriteRenderer>().color = ReferencesManager.Instance.gameSettings.greenColor;
+                    if (hit.collider.GetComponent<RegionManager>().currentCountry.country._id != ReferencesManager.Instance.countryManager.currentCountry.country._id)
+                    {
+                        return;
+                    }
+                }
+                else if (onlyOtherRegions)
+                {
+                    if (hit.collider.GetComponent<RegionManager>().currentCountry.country._id != int.Parse(country_id))
+                    {
+                        return;
+                    }
+                }
+
+                if (!list.Contains(hit.collider.GetComponent<RegionManager>()))
+                {
+                    list.Add(hit.collider.GetComponent<RegionManager>());
+
+                    foreach (RegionManager province in list)
+                    {
+                        province.GetComponent<SpriteRenderer>().color = ReferencesManager.Instance.gameSettings.greenColor;
+                    }
+                }
+                else
+                {
+                    list.Remove(hit.collider.GetComponent<RegionManager>());
+                    hit.collider.GetComponent<SpriteRenderer>().color = hit.collider.GetComponent<RegionManager>().currentCountry.country.countryColor;
+
+                    foreach (RegionManager province in list)
+                    {
+                        province.GetComponent<SpriteRenderer>().color = ReferencesManager.Instance.gameSettings.greenColor;
+                    }
                 }
             }
         }
@@ -560,6 +676,8 @@ public class RegionManager : MonoBehaviour
 
     public void SelectRegionNoHit(RegionManager selectedRegion)
     {
+        ReferencesManager.Instance.seaRegionManager.DeselectRegions();
+
         ReferencesManager.Instance.regionUI.regionButtonUpgrade.interactable = true;
         ReferencesManager.Instance.regionUI.armyButtonUpgrade.interactable = true;
         ReferencesManager.Instance.regionUI.defenseButtonUpgrade.interactable = true;
@@ -585,7 +703,7 @@ public class RegionManager : MonoBehaviour
         }
         else
         {
-            ReferencesManager.Instance.regionUI.armyButton.interactable = true;
+            ReferencesManager.Instance.regionUI.armyButton.interactable = !demilitarized;
             ReferencesManager.Instance.regionUI.buildButton.interactable = true;
             ReferencesManager.Instance.regionUI.defenseButton.interactable = true;
             ReferencesManager.Instance.regionUI.regionUpgradeButton.interactable = true;
@@ -745,10 +863,34 @@ public class RegionManager : MonoBehaviour
         {
             if (currentRegionManager.buildings.Count + currentRegionManager.buildingsQueue.Count >= 4)
             {
-                WarningManager.Instance.Warn("Все слоты заняты.");
+                if (PlayerPrefs.GetInt("languageId") == 0)
+                {
+                    WarningManager.Instance.Warn("This province has no coast");
+                }
+                else if (PlayerPrefs.GetInt("languageId") == 1)
+                {
+                    WarningManager.Instance.Warn("There are no free slots.");
+                }
             }
             else
             {
+                if (building.buildType == BuildingScriptableObject.BuildType.Dockyard)
+                {
+                    if (!currentRegionManager._isCoast)
+                    {
+                        if (PlayerPrefs.GetInt("languageId") == 0)
+                        {
+                            WarningManager.Instance.Warn("This province has no coast");
+                        }
+                        else if (PlayerPrefs.GetInt("languageId") == 1)
+                        {
+                            WarningManager.Instance.Warn("У провинции нет побережья");
+                        }
+
+                        return;
+                    }
+                }
+
                 BuildingQueueItem buildingQueueItem = new BuildingQueueItem();
                 buildingQueueItem.building = building;
                 buildingQueueItem.movesLasts = building.moves;

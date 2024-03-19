@@ -42,9 +42,15 @@ public class CountrySettings : MonoBehaviour
     public int startFoodIncome;
     public int recrootsIncome;
 
+    public float fuelIncome;
+
     public int researchPointsIncome;
 
     public int mobilizationLaw;
+
+    [Header("Resources")]
+    public int oil;
+    public float fuel;
 
     public int score = 0;
     public int maxScore = 0;
@@ -74,6 +80,8 @@ public class CountrySettings : MonoBehaviour
     public int BONUS_FARM_INCOME_FOOD;
     public int BONUS_CHEFARM_INCOME_MONEY;
     public int BONUS_CHEFARM_INCOME_FOOD;
+
+    public float BONUS_INCOME_FUEL;
 
     [Header("AI Settings")]
     public float aiAccuracy = 1;
@@ -319,6 +327,8 @@ public class CountrySettings : MonoBehaviour
             food += money / 100 * difficulty_AI_BUFF;
             recroots += money / 100 * difficulty_AI_BUFF;
         }
+
+        UpdateCountryGraphics(this.ideology);
     }
 
     private IEnumerator Capitulation_Co()

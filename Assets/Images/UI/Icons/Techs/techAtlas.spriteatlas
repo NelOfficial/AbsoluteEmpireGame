@@ -51,6 +51,7 @@ SpriteAtlas:
     cachedData: {fileID: 0}
     packedSpriteRenderDataKeys:
     - 44b8e540590fa39458c34e01671c9185: 21300000
+    - e1b528e08407b8a46a8a15344583beea: 21300000
     - e60ecd617fb47b54d96db6b540f8a257: 21300000
     - aa3527e1cb40b294fb0570dd01be5ba6: 21300000
     - 6b1c0552142b5af4eab996ffbf8ce704: 21300000
@@ -60,6 +61,7 @@ SpriteAtlas:
     - 4d3c1a835bb35294c991f545cadcc8fa: 21300000
     - f1365da3bc487504db94fc3ca381682b: 21300000
     - dcf265b3749892d47a6e1d396f11183c: 21300000
+    - 0ac989e3a110f7e4baab138c72e9e4e7: 21300000
     - 4e4bf09423f29a649bb46bf3bfa2613a: 21300000
     - 9bbac4c47cee84d4f97bfa3ef6c8e0b6: 21300000
     - a456ccd4e62936142b4aada15a6abdfa: 21300000
@@ -91,6 +93,7 @@ SpriteAtlas:
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 44b8e540590fa39458c34e01671c9185, type: 3}
+  - {fileID: 21300000, guid: e1b528e08407b8a46a8a15344583beea, type: 3}
   - {fileID: 21300000, guid: e60ecd617fb47b54d96db6b540f8a257, type: 3}
   - {fileID: 21300000, guid: aa3527e1cb40b294fb0570dd01be5ba6, type: 3}
   - {fileID: 21300000, guid: 6b1c0552142b5af4eab996ffbf8ce704, type: 3}
@@ -100,6 +103,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 4d3c1a835bb35294c991f545cadcc8fa, type: 3}
   - {fileID: 21300000, guid: f1365da3bc487504db94fc3ca381682b, type: 3}
   - {fileID: 21300000, guid: dcf265b3749892d47a6e1d396f11183c, type: 3}
+  - {fileID: 21300000, guid: 0ac989e3a110f7e4baab138c72e9e4e7, type: 3}
   - {fileID: 21300000, guid: 4e4bf09423f29a649bb46bf3bfa2613a, type: 3}
   - {fileID: 21300000, guid: 9bbac4c47cee84d4f97bfa3ef6c8e0b6, type: 3}
   - {fileID: 21300000, guid: a456ccd4e62936142b4aada15a6abdfa, type: 3}
@@ -130,6 +134,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 19e37aff3b305ae408a4ed5c784df852, type: 3}
   m_PackedSpriteNamesToIndex:
   - tech_ArmyWeapon
+  - tech_Cav_1
   - tech_Antitank_1
   - tech_TireProduction
   - tech_ArmyTrain
@@ -139,6 +144,7 @@ SpriteAtlas:
   - tech_ArmyTrain3
   - tech_Economy_OilFactory
   - tech_Armored_LightTank
+  - tech_Cav_2
   - tech_Armored_Engine_2
   - tech_MotoArmy2
   - tech_EliteArmy

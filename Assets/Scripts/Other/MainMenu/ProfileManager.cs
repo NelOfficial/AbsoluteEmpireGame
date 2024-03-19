@@ -28,7 +28,7 @@ public class ProfileManager : MonoBehaviour
 
     public string[] accountData;
 
-    private int userId;
+    [HideInInspector] public int userId;
     private string _profileName;
     private string _profilePassword;
     private string _profileEmail;
@@ -45,6 +45,7 @@ public class ProfileManager : MonoBehaviour
 
     public List<int> loadedModificationsIds = new List<int>();
     public List<ModificationPanel.Modification> loadedModifications = new List<ModificationPanel.Modification>();
+    public List<ProfileNotification> loadedNotifications = new List<ProfileNotification>();
 
     [SerializeField] GameObject wallAnimationUI;
     [SerializeField] Button refreshButton;
@@ -71,7 +72,7 @@ public class ProfileManager : MonoBehaviour
         }
         else if (PlayerPrefs.GetInt("languageId") == 0)
         {
-            createModButtonText.text = "Log in for create mods";
+            createModButtonText.text = "Log in to create mods";
         }
 
         if (PlayerPrefs.GetString("LOGGED_IN") == "TRUE")
@@ -522,5 +523,18 @@ public class ProfileManager : MonoBehaviour
             }
         }
         UpdateUI();
+    }
+
+    [System.Serializable]
+    public class ProfileNotification
+    {
+        public int id;
+        public string title;
+
+        [TextArea(1, 100)]
+        public string description;
+
+        public int moderator_id;
+        public string date;
     }
 }
