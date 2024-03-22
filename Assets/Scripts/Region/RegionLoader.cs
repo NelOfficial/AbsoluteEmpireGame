@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 public class RegionLoader : MonoBehaviour
 {
@@ -13,19 +13,13 @@ public class RegionLoader : MonoBehaviour
 
     public bool loaded = false;
 
+    [SerializeField] private string _currentScenarioData;
+    [SerializeField] private StringValue _currentScenarioData_Value;
+
     void Start()
     {
         ReferencesManager.Instance.countryManager.regions.Clear();
-
         ReferencesManager.Instance.countryManager.regions = FindObjectsOfType<RegionManager>().ToList();
-
-        //for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
-        //{
-        //    for (int r = 0; r < ReferencesManager.Instance.countryManager.countries[i].myRegions.Count; r++)
-        //    {
-        //        ReferencesManager.Instance.countryManager.regions.Add(ReferencesManager.Instance.countryManager.countries[i].myRegions[r]);
-        //    }
-        //}
 
         List<int> regionIds = new List<int>();
 
@@ -34,15 +28,13 @@ public class RegionLoader : MonoBehaviour
             regionIds.Add(ReferencesManager.Instance.countryManager.regions[i]._id);
         }
 
-        //for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
-        //{
-        //    if (ReferencesManager.Instance.countryManager.regions[i]._id == 0)
-        //    {
-        //        ReferencesManager.Instance.countryManager.regions[i]._id = regionIds.Max() + 1;
-        //        regionIds.Add(ReferencesManager.Instance.countryManager.regions[i]._id);
-        //    }
-        //}
+        if (!ReferencesManager.Instance.gameSettings.playMod.value &&
+            !ReferencesManager.Instance.gameSettings.playTestingMod.value)
+        {
+            _currentScenarioData = _currentScenarioData_Value.value;
 
+            LoadMod(_currentScenarioData);
+        }
 
         regionsMax = ReferencesManager.Instance.countryManager.regions.Count;
         StartCoroutine(LoadRegions_Co());
@@ -51,6 +43,186 @@ public class RegionLoader : MonoBehaviour
 
         loaded = true;
     }
+
+    private void LoadMod(string modData)
+    {
+        string[] parts = new string[0];
+        string secondPart = "";
+        string value = "";
+
+        string[] mainModDataLines = modData.Split("#REGIONS#")[0].Split(';');
+        string[] regionsDataLines = modData.Split("#REGIONS#")[1].Split(';');
+        string[] countriesDataLines = modData.Split("#COUNTRIES_SETTINGS#")[1].Split(';');
+        string[] eventsIDsDataLines = modData.Split("#EVENTS#")[1].Split(';');
+
+        try
+        {
+            string _line = mainModDataLines[1];
+            parts = _line.Split('[');
+
+            secondPart = parts[1];
+
+            value = secondPart.Remove(secondPart.Length - 1);
+        }
+        catch (System.Exception)
+        {
+            if (ReferencesManager.Instance.gameSettings.developerMode)
+            {
+                Debug.LogError($"ERROR: Mod loader error in value parser");
+            }
+        }
+
+        int isModAllowsGameEvents = int.Parse(value);
+
+        if (isModAllowsGameEvents == 0)
+        {
+            ReferencesManager.Instance.gameSettings.allowGameEvents = false;
+        }
+        else if (isModAllowsGameEvents == 1)
+        {
+            ReferencesManager.Instance.gameSettings.allowGameEvents = true;
+        }
+
+        for (int i = 2; i < mainModDataLines.Length; i++)
+        {
+            string _line = mainModDataLines[i];
+            if (!string.IsNullOrEmpty(_line))
+            {
+                value = ReferencesManager.Instance.countryManager.GetValue(_line);
+
+                bool _hasCountry = ReferencesManager.Instance.countryManager.countries.Any(item => item.country._id == int.Parse(value));
+
+                if (!_hasCountry)
+                {
+                    foreach (CountryScriptableObject countryScriptableObject in ReferencesManager.Instance.globalCountries)
+                    {
+                        if (countryScriptableObject._id == int.Parse(value))
+                        {
+                            ReferencesManager.Instance.CreateCountry(countryScriptableObject, "Неопределено");
+                        }
+                    }
+                }
+            }
+        }
+
+        List<int> countriesInRegionsIDs = new List<int>();
+
+        for (int r = 0; r < regionsDataLines.Length; r++)
+        {
+            try
+            {
+                string _line = regionsDataLines[r];
+                int _value = int.Parse(ReferencesManager.Instance.countryManager.GetValue(_line));
+
+                countriesInRegionsIDs.Add(_value);
+            }
+            catch (System.Exception) { }
+        }
+
+        string regionValue = "";
+
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
+        {
+            try
+            {
+                string _line = regionsDataLines[i];
+                if (!string.IsNullOrEmpty(_line))
+                {
+                    string[] regionIdParts = _line.Split(' ');
+                    regionValue = regionIdParts[0].Remove(0, 7);
+                    int regValue = int.Parse(regionValue);
+                    int regionCountryID = int.Parse(regionIdParts[2]);
+
+                    foreach (RegionManager province in ReferencesManager.Instance.countryManager.regions)
+                    {
+                        if (regValue == province._id)
+                        {
+                            for (int c = 0; c < ReferencesManager.Instance.countryManager.countries.Count; c++)
+                            {
+                                if (regionCountryID == ReferencesManager.Instance.countryManager.countries[c].country._id)
+                                {
+                                    ReferencesManager.Instance.AnnexRegion(province, ReferencesManager.Instance.countryManager.countries[c]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        bool hasCountry = ReferencesManager.Instance.countryManager.countries.Any(item => item.country._id == PlayerPrefs.GetInt("currentCountryIndex"));
+
+        for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
+        {
+            if (hasCountry)
+            {
+                if (ReferencesManager.Instance.countryManager.countries[i].country._id == PlayerPrefs.GetInt("currentCountryIndex"))
+                {
+                    ReferencesManager.Instance.countryManager.currentCountry = ReferencesManager.Instance.countryManager.countries[i];
+                    ReferencesManager.Instance.countryManager.currentCountry.isPlayer = true;
+                }
+            }
+        }
+
+        #region countriesSettings
+
+        if (!ReferencesManager.Instance.countryManager.IsNullOrEmpty(countriesDataLines))
+        {
+            for (int i = 0; i < countriesDataLines.Length; i++)
+            {
+                if (!string.IsNullOrEmpty(countriesDataLines[i]))
+                {
+                    try
+                    {
+                        string new_lineData = ReferencesManager.Instance.countryManager.GetValue(countriesDataLines[i]);
+
+                        if (!string.IsNullOrEmpty(new_lineData))
+                        {
+                            string[] values = new_lineData.Split('|');
+
+                            int countryID = int.Parse(values[0]);
+                            int money = int.Parse(values[1]);
+                            int food = int.Parse(values[2]);
+                            int recroots = int.Parse(values[3]);
+
+                            string ideology = values[4];
+
+                            foreach (CountrySettings country in ReferencesManager.Instance.countryManager.countries)
+                            {
+                                if (country.country._id == countryID)
+                                {
+                                    country.money = money;
+                                    country.food = food;
+                                    country.recroots = recroots;
+
+                                    country.ideology = ideology;
+
+                                    country.UpdateCountryGraphics(country.ideology);
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception except)
+                    {
+
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region events
+
+        
+
+        #endregion
+    }
+
 
     private void UpdateLoadingBar()
     {
@@ -79,7 +251,7 @@ public class RegionLoader : MonoBehaviour
                 region.currentRegionManager = null;
             }
 
-            int random = Random.Range(2000, 12000);
+            int random = UnityEngine.Random.Range(2000, 12000);
 
             region.currentDefenseUnits = ReferencesManager.Instance.gameSettings.currentDefenseUnits_FirstLevel;
 
@@ -87,7 +259,7 @@ public class RegionLoader : MonoBehaviour
             {
                 if (region.capital)
                 {
-                    region.population = Random.Range(100000, 800000);
+                    region.population = UnityEngine.Random.Range(100000, 800000);
                 }
                 else if (!region.capital)
                 {

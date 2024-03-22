@@ -17,6 +17,9 @@ public class OfflineGameSettings : MonoBehaviour
 
     private MainMenu mainMenu;
 
+    [SerializeField] private StringValue _currentScenarioData;
+    [SerializeField] private StringValue _currentDate;
+
     private void Start()
     {
         mainMenu = FindObjectOfType<MainMenu>();
@@ -113,7 +116,9 @@ public class OfflineGameSettings : MonoBehaviour
             }
         }
 
-        //imagePreview.sprite = currentScenario.mapPreview;
+        imagePreview.sprite = currentScenario.mapPreview;
+        _currentScenarioData.value = currentScenario._data;
+        _currentDate.value = currentScenario.date.ToString();
 
         UpdateSelectionCountriesUI();
     }
@@ -136,6 +141,9 @@ public class OfflineGameSettings : MonoBehaviour
         public int id;
         public int date;
         public string _name;
+
+        [TextArea(1, 100)]
+        public string _data;
 
         public Sprite mapPreview;
     }

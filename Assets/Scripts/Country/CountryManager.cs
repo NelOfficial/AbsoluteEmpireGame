@@ -30,10 +30,15 @@ public class CountryManager : MonoBehaviour
     public List<int> countriesInRegionsIDs = new List<int>();
 
     [SerializeField] StringValue currentSaveIndex;
+    [SerializeField] StringValue _currentDate;
 
     private void Start()
     {
         ReferencesManager.Instance.gameSettings.allowGameEvents = true;
+
+        ReferencesManager.Instance.dateManager.currentDate[0] = 1;
+        ReferencesManager.Instance.dateManager.currentDate[1] = 1;
+        ReferencesManager.Instance.dateManager.currentDate[2] = int.Parse(_currentDate.value);
 
         if (ReferencesManager.Instance.gameSettings.onlineGame)
         {
@@ -140,7 +145,7 @@ public class CountryManager : MonoBehaviour
                 LoadMod(PlayerPrefs.GetString($"MODIFICATION_{currentModID}"), currentModID, "saved");
             }
 
-            if (ReferencesManager.Instance.gameSettings.playTestingMod.value == true)
+            if (ReferencesManager.Instance.gameSettings.playTestingMod.value)
             {
                 LoadMod(PlayerPrefs.GetString($"CURRENT_MOD_PLAYTESTING"), 0, "local");
             }
@@ -818,7 +823,7 @@ public class CountryManager : MonoBehaviour
         return (array == null || array.Length == 0);
     }
 
-    private string GetValue(string line)
+    public string GetValue(string line)
     {
         string value = "";
 
