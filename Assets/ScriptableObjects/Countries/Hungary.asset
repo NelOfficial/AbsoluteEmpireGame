@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Hungary
+  m_EditorClassIdentifier: 
+  _id: 14
+  _name: "\u0412\u0435\u043D\u0433\u0440\u0438\u044F"
+  _nameEN: Hungary
+  _uiName: "\u0412\u0435\u043D\u0433\u0440\u0438\u044F"
+  _tag: HUN
+  countryType: 1
+  countryFlag: {fileID: 21300000, guid: 017f7eb91e7a8894da56ed1e25730670, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.28235295, g: 0.4117647, b: 0.2901961, a: 0.5}
+  countryIdeologyColors:
+  - {r: 0.62352943, g: 0.9529412, b: 0.63453937, a: 0.5019608}
+  - {r: 0.28235295, g: 0.4117647, b: 0.2901961, a: 0.5019608}
+  - {r: 0.28235295, g: 0.4117647, b: 0.2901961, a: 0.5019608}
+  - {r: 0.1764706, g: 0.23529412, b: 0.17969605, a: 0.5019608}
+  - {r: 0.16760796, g: 0.38679248, b: 0.103631176, a: 0.5019608}
+  - {r: 0.28235295, g: 0.4117647, b: 0.2901961, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: 017f7eb91e7a8894da56ed1e25730670, type: 3}
+  - {fileID: 21300000, guid: 017f7eb91e7a8894da56ed1e25730670, type: 3}
+  - {fileID: 21300000, guid: aacbe6a0839395a468aea7f36f017578, type: 3}
+  - {fileID: 21300000, guid: 9466c43a9cf22c848b0c22c2899eb38c, type: 3}
+  - {fileID: 21300000, guid: 9466c43a9cf22c848b0c22c2899eb38c, type: 3}
+  - {fileID: 21300000, guid: a04e01817307be14c93024b1132e80ff, type: 3}

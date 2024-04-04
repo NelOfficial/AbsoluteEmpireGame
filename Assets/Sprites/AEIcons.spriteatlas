@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AEIcons
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 3
+      m_CompressionQuality: 100
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: ccd4affc78696544fb10aa8e2e76b79f, type: 3}
+    - {fileID: 2800000, guid: c928a6bbcd3c361479d7906290a18741, type: 3}
+    - {fileID: 2800000, guid: d466ef9eaeff08a42b88681562bac184, type: 3}
+    - {fileID: 2800000, guid: 315e83af4864df14b8d5437881546f36, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - c928a6bbcd3c361479d7906290a18741: 21300000
+    - ccd4affc78696544fb10aa8e2e76b79f: 21300000
+    - d466ef9eaeff08a42b88681562bac184: 21300000
+    - 315e83af4864df14b8d5437881546f36: 21300000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: c928a6bbcd3c361479d7906290a18741, type: 3}
+  - {fileID: 21300000, guid: ccd4affc78696544fb10aa8e2e76b79f, type: 3}
+  - {fileID: 21300000, guid: d466ef9eaeff08a42b88681562bac184, type: 3}
+  - {fileID: 21300000, guid: 315e83af4864df14b8d5437881546f36, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - AbsoluteEmpireBanner_Desc
+  - AbsoluteEmpireBanner
+  - AbsoluteEmpireIconNew
+  - syntaxErrorLogo
+  m_RenderDataMap: {}
+  m_Tag: AEIcons
+  m_IsVariant: 0

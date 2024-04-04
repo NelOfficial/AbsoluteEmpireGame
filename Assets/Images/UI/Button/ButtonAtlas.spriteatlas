@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ButtonAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 3
+      m_CompressionQuality: 100
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 41e955372d6275342821210d0934b723, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - cc449ff0ce2567d45a5235cbe4ffa2d0: 21300000
+    - 0f638a9144d097d47948419d925c3134: 21300000
+    - 670974f1095a04b47997a6cdd8ba2340: 21300000
+    - 5fcd3b621b8b5da4a8446cf1e02e3a4e: 21300000
+    - 0fbd1fc4926c30f47b996034ae5f0f08: 21300000
+    - d0433b459d08f79499a5d65647176d41: 21300000
+    - 24bc8fc5053baa84fb592ea2d7233e8c: 21300000
+    - 108ff616d1738e243b46589b31709ab1: 21300000
+    - d0ca1886d0ece6f449868a4ba6709744: 21300000
+    - 2722a1a71e7551e4abfe70e67d1cf51d: 21300000
+    - 69c8231dc58095f4bb0f1c077f67728d: 21300000
+    - 401275fe4333a53468f6578bcc6e53db: 21300000
+    - 143bd8cfc6cd6aa46b65c805524c028a: 21300000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: cc449ff0ce2567d45a5235cbe4ffa2d0, type: 3}
+  - {fileID: 21300000, guid: 0f638a9144d097d47948419d925c3134, type: 3}
+  - {fileID: 21300000, guid: 670974f1095a04b47997a6cdd8ba2340, type: 3}
+  - {fileID: 21300000, guid: 5fcd3b621b8b5da4a8446cf1e02e3a4e, type: 3}
+  - {fileID: 21300000, guid: 0fbd1fc4926c30f47b996034ae5f0f08, type: 3}
+  - {fileID: 21300000, guid: d0433b459d08f79499a5d65647176d41, type: 3}
+  - {fileID: 21300000, guid: 24bc8fc5053baa84fb592ea2d7233e8c, type: 3}
+  - {fileID: 21300000, guid: 108ff616d1738e243b46589b31709ab1, type: 3}
+  - {fileID: 21300000, guid: d0ca1886d0ece6f449868a4ba6709744, type: 3}
+  - {fileID: 21300000, guid: 2722a1a71e7551e4abfe70e67d1cf51d, type: 3}
+  - {fileID: 21300000, guid: 69c8231dc58095f4bb0f1c077f67728d, type: 3}
+  - {fileID: 21300000, guid: 401275fe4333a53468f6578bcc6e53db, type: 3}
+  - {fileID: 21300000, guid: 143bd8cfc6cd6aa46b65c805524c028a, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - NewButtonDesign_Default
+  - gradientBackground_500x80
+  - ButtonExtendedColorBorders
+  - ButtonExtendedColorRightBorders
+  - NewButtonDesign_Pressed
+  - NewButtonDesign_Highlited
+  - NewButtonDesign_Disabled
+  - gradientButtonExtendedColor_Default
+  - gradientButtonExtendedColor_Dark
+  - gradientButtonExtendedColor
+  - gradientButtonExtendedColor_Light
+  - NewButtonDesign_Pressed2
+  - ButtonExtendedColorLeftBorders
+  m_RenderDataMap: {}
+  m_Tag: ButtonAtlas
+  m_IsVariant: 0

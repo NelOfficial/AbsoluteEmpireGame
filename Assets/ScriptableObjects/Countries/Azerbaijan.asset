@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Azerbaijan
+  m_EditorClassIdentifier: 
+  _id: 52
+  _name: "\u0410\u0437\u0435\u0440\u0431\u0430\u0439\u0434\u0436\u0430\u043D"
+  _nameEN: Azerbaijan
+  _uiName: "\u0410\u0437\u0435\u0440\u0431\u0430\u0439\u0434\u0436\u0430\u043D"
+  _tag: AZE
+  countryType: 1
+  countryFlag: {fileID: 21300000, guid: 16a42c3443057ad4a9e6418acf39fa9e, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.20087217, g: 0.6981132, b: 0.41891184, a: 0.5}
+  countryIdeologyColors:
+  - {r: 0.20392157, g: 0.7019608, b: 0.41960785, a: 0.5019608}
+  - {r: 0.3099858, g: 0.8113208, b: 0.5270994, a: 0.5019608}
+  - {r: 0.14117646, g: 0.5372549, b: 0.48948175, a: 0.5019608}
+  - {r: 0.1764706, g: 0.23529412, b: 0.199315, a: 0.5019608}
+  - {r: 0.27698466, g: 0.5943396, b: 0.42123693, a: 0.5019608}
+  - {r: 0.12156861, g: 0.5568628, b: 0.28873032, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: 16a42c3443057ad4a9e6418acf39fa9e, type: 3}
+  - {fileID: 21300000, guid: 16a42c3443057ad4a9e6418acf39fa9e, type: 3}
+  - {fileID: 21300000, guid: 4de52abc726f5b64e8d7c9b5a0636d28, type: 3}
+  - {fileID: 21300000, guid: b9a8b0edc58ba7c419b639843ad4d2d7, type: 3}
+  - {fileID: 21300000, guid: b9a8b0edc58ba7c419b639843ad4d2d7, type: 3}
+  - {fileID: 21300000, guid: 7544d40ce0081f14e95ac094387f40df, type: 3}

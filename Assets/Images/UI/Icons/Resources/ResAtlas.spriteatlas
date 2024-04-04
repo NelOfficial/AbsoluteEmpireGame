@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ResAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 3
+      m_CompressionQuality: 100
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: d307a7be11a6c724d86d0c891abbfad8, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - bd945cf0db3b7244d82a070c71db14ae: 21300000
+    - 027dec51cc8f23f47a24a1c113112499: 21300000
+    - 5df352c283d7d654ab5bc88f83b6b1a5: 21300000
+    - bea335d2ba4124540ba8fb4fd5d0eb3d: 21300000
+    - 253caff476fbf524699060ce66818745: 21300000
+    - 81ad5355fbd74e34792f06e88ed14d0d: 21300000
+    - 484936764a2007542b3a1f60cfe0fb9b: 21300000
+    - b43ba72767110ba4e8abc8dd278b6e58: 21300000
+    - cd8f7357ca152f24dbc956ddb0a3a9c0: 21300000
+    - a02ec288c48c1cd498192f3e61c7e2ed: 21300000
+    - 36e17baa19bfe714f9e45683a3393c28: 21300000
+    - 89d22d1ca9acdc142890a8ba93fca8b9: 21300000
+    - b2740ddf037e43a42b2b6b533e58e072: 21300000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: bd945cf0db3b7244d82a070c71db14ae, type: 3}
+  - {fileID: 21300000, guid: 027dec51cc8f23f47a24a1c113112499, type: 3}
+  - {fileID: 21300000, guid: 5df352c283d7d654ab5bc88f83b6b1a5, type: 3}
+  - {fileID: 21300000, guid: bea335d2ba4124540ba8fb4fd5d0eb3d, type: 3}
+  - {fileID: 21300000, guid: 253caff476fbf524699060ce66818745, type: 3}
+  - {fileID: 21300000, guid: 81ad5355fbd74e34792f06e88ed14d0d, type: 3}
+  - {fileID: 21300000, guid: 484936764a2007542b3a1f60cfe0fb9b, type: 3}
+  - {fileID: 21300000, guid: b43ba72767110ba4e8abc8dd278b6e58, type: 3}
+  - {fileID: 21300000, guid: cd8f7357ca152f24dbc956ddb0a3a9c0, type: 3}
+  - {fileID: 21300000, guid: a02ec288c48c1cd498192f3e61c7e2ed, type: 3}
+  - {fileID: 21300000, guid: 36e17baa19bfe714f9e45683a3393c28, type: 3}
+  - {fileID: 21300000, guid: 89d22d1ca9acdc142890a8ba93fca8b9, type: 3}
+  - {fileID: 21300000, guid: b2740ddf037e43a42b2b6b533e58e072, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - steek_transparent
+  - al_transparent
+  - economy
+  - moneyDebtIcon256PNG
+  - oil_transparent_white
+  - foodIcon256PNG
+  - oil_white
+  - rubber_transparent
+  - moneyIcon256PNG
+  - moneyIconWhite256PNG
+  - foodIconWhite256PNG
+  - researchPointIcon256PNG
+  - oil_transparent
+  m_RenderDataMap: {}
+  m_Tag: ResAtlas
+  m_IsVariant: 0
