@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Croatia
+  m_EditorClassIdentifier: 
+  _id: 6
+  _name: "\u0425\u043E\u0440\u0432\u0430\u0442\u0438\u044F"
+  _nameEN: Croatia
+  _uiName: "\u0425\u043E\u0440\u0432\u0430\u0442\u0438\u044F"
+  _tag: CRT
+  countryType: 1
+  countryFlag: {fileID: 21300000, guid: 7504314a8bef6dc489369902c480eb5d, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.091224626, g: 0.11509475, b: 0.4716981, a: 0.5}
+  countryIdeologyColors:
+  - {r: 0.18511927, g: 0.21101537, b: 0.6037736, a: 0.5019608}
+  - {r: 0.09411765, g: 0.11764706, b: 0.4745098, a: 0.5019608}
+  - {r: 0, g: 0.13206202, b: 0.3962264, a: 0.5019608}
+  - {r: 0.1764706, g: 0.1778457, b: 0.23529412, a: 0.5019608}
+  - {r: 0.19412921, g: 0.14083304, b: 0.4339623, a: 0.5019608}
+  - {r: 0.42467487, g: 0.24363652, b: 0.7075472, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: 7504314a8bef6dc489369902c480eb5d, type: 3}
+  - {fileID: 21300000, guid: 7504314a8bef6dc489369902c480eb5d, type: 3}
+  - {fileID: 21300000, guid: 31dfcac083d0bdf44835812af8d85b0a, type: 3}
+  - {fileID: 21300000, guid: c4cc5adeafe472d48b7e673c758b77ac, type: 3}
+  - {fileID: 21300000, guid: c4cc5adeafe472d48b7e673c758b77ac, type: 3}
+  - {fileID: 21300000, guid: d278db05ff686534682013a736b06282, type: 3}

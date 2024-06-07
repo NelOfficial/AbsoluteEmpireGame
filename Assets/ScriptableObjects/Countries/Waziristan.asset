@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Waziristan
+  m_EditorClassIdentifier: 
+  _id: 104
+  _name: "\u0412\u0430\u0437\u0438\u0440\u0438\u0441\u0442\u0430\u043D"
+  _nameEN: Waziristan
+  _uiName: "\u0412\u0430\u0437\u0438\u0440\u0438\u0441\u0442\u0430\u043D"
+  _tag: WAZ
+  countryType: 0
+  countryFlag: {fileID: 21300000, guid: 76227bc9414e45f46a5a45e21278ff9f, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.4811321, g: 0.20330364, b: 0.18836774, a: 0.5019608}
+  countryIdeologyColors:
+  - {r: 0.48235294, g: 0.20392157, b: 0.19215687, a: 0.5019608}
+  - {r: 0.48235294, g: 0.20392157, b: 0.19215687, a: 0.5019608}
+  - {r: 0.48235294, g: 0.20392157, b: 0.19215687, a: 0.5019608}
+  - {r: 0.48235294, g: 0.20392157, b: 0.19215687, a: 0.5019608}
+  - {r: 0.48235294, g: 0.20392157, b: 0.19215687, a: 0.5019608}
+  - {r: 0.48235294, g: 0.20392157, b: 0.19215687, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: 1260dbd35173ac4429dd20b1932f5f7c, type: 3}
+  - {fileID: 21300000, guid: 1260dbd35173ac4429dd20b1932f5f7c, type: 3}
+  - {fileID: 21300000, guid: 1260dbd35173ac4429dd20b1932f5f7c, type: 3}
+  - {fileID: 21300000, guid: 1260dbd35173ac4429dd20b1932f5f7c, type: 3}
+  - {fileID: 21300000, guid: 1260dbd35173ac4429dd20b1932f5f7c, type: 3}
+  - {fileID: 21300000, guid: 1260dbd35173ac4429dd20b1932f5f7c, type: 3}

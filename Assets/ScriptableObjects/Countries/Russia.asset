@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Russia
+  m_EditorClassIdentifier: 
+  _id: 49
+  _name: "\u0420\u043E\u0441\u0441\u0438\u044F"
+  _nameEN: Russia
+  _uiName: "\u0420\u043E\u0441\u0441\u0438\u044F"
+  _tag: RUS
+  countryType: 5
+  countryFlag: {fileID: 21300000, guid: 53fd3c41aee1b864aacc9166e538a3c2, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.18773435, g: 0.3773585, b: 0.17621928, a: 0.5}
+  countryIdeologyColors:
+  - {r: 0.1882353, g: 0.38039216, b: 0.1764706, a: 0.5019608}
+  - {r: 0.22135665, g: 0.5188679, b: 0.20314167, a: 0.5019608}
+  - {r: 0.10136631, g: 0.2924528, b: 0.08966714, a: 0.5019608}
+  - {r: 0.17881466, g: 0.23529412, b: 0.1764706, a: 0.5019608}
+  - {r: 0, g: 0.35686275, b: 0, a: 0.5019608}
+  - {r: 0.67058825, g: 0.02745098, b: 0.02745098, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: 53fd3c41aee1b864aacc9166e538a3c2, type: 3}
+  - {fileID: 21300000, guid: 53fd3c41aee1b864aacc9166e538a3c2, type: 3}
+  - {fileID: 21300000, guid: d50cc6646f1ac2b4182b800d8efad168, type: 3}
+  - {fileID: 21300000, guid: 4f2a7e4a1397cb948aca4c673b0ff8eb, type: 3}
+  - {fileID: 21300000, guid: 4f2a7e4a1397cb948aca4c673b0ff8eb, type: 3}
+  - {fileID: 21300000, guid: 423d98db4d886fa46a9ecab744ca0073, type: 3}

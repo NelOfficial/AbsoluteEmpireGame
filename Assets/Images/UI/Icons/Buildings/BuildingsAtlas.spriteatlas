@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BuildingsAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 3
+      m_CompressionQuality: 100
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_IgnorePlatformSupport: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 8a633ccfacbc3494fadf4f368d62a555, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - dc0c6e02d992eb94eb77d688bfeebf67: 21300000
+    - 200262b23008ff24ca67fa7146c5292f: 21300000
+    - 4572cdf2b743c02478e5e5942429460d: 21300000
+    - 8d27c2e33f1f9cc45ba1b493b471a380: 21300000
+    - 7a4bc204c5000834aa0d205c3e2446e0: 21300000
+    - fb603214a79e61e49a9c0f85948b3096: 21300000
+    - f66c5654d85462e47bc262bd456cd3d1: 21300000
+    - 3638c62509103e84982e13b2ad706b9b: 21300000
+    - 8b5ab4856b42aca47b1a5bbb40000e8f: 21300000
+    - 527fdea6292d2db4d94e961a2dd690f2: 21300000
+    - 03f0ee18d42e3944abaa2cd0e613ecf9: 21300000
+    - eac4628881129a642b2477889e9ff141: 21300000
+    - d8872098f98f88c42937bb3b35e72d7b: 21300000
+    - 53c51598829781c499251b7afe59b439: 21300000
+    - 0f44bc6958c455c4f85fa275e8f48b12: 21300000
+    - 269bc38a727daea49a8cf2f07db2d53e: 21300000
+    - 8f68c2aaecbe0d04d9d444922497c9a9: 21300000
+    - 70e331bcb43cdfc409dc3b85f99f5c34: 21300000
+    - ccc5ea2ebae4a70438a105743d91978c: 21300000
+    - 964b542fe49e5654e96be90d94640d43: 21300000
+    - 2e50dc2f4fdce74458de1ba73c4e9c7b: 21300000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: dc0c6e02d992eb94eb77d688bfeebf67, type: 3}
+  - {fileID: 21300000, guid: 200262b23008ff24ca67fa7146c5292f, type: 3}
+  - {fileID: 21300000, guid: 4572cdf2b743c02478e5e5942429460d, type: 3}
+  - {fileID: 21300000, guid: 8d27c2e33f1f9cc45ba1b493b471a380, type: 3}
+  - {fileID: 21300000, guid: 7a4bc204c5000834aa0d205c3e2446e0, type: 3}
+  - {fileID: 21300000, guid: fb603214a79e61e49a9c0f85948b3096, type: 3}
+  - {fileID: 21300000, guid: f66c5654d85462e47bc262bd456cd3d1, type: 3}
+  - {fileID: 21300000, guid: 3638c62509103e84982e13b2ad706b9b, type: 3}
+  - {fileID: 21300000, guid: 8b5ab4856b42aca47b1a5bbb40000e8f, type: 3}
+  - {fileID: 21300000, guid: 527fdea6292d2db4d94e961a2dd690f2, type: 3}
+  - {fileID: 21300000, guid: 03f0ee18d42e3944abaa2cd0e613ecf9, type: 3}
+  - {fileID: 21300000, guid: eac4628881129a642b2477889e9ff141, type: 3}
+  - {fileID: 21300000, guid: d8872098f98f88c42937bb3b35e72d7b, type: 3}
+  - {fileID: 21300000, guid: 53c51598829781c499251b7afe59b439, type: 3}
+  - {fileID: 21300000, guid: 0f44bc6958c455c4f85fa275e8f48b12, type: 3}
+  - {fileID: 21300000, guid: 269bc38a727daea49a8cf2f07db2d53e, type: 3}
+  - {fileID: 21300000, guid: 8f68c2aaecbe0d04d9d444922497c9a9, type: 3}
+  - {fileID: 21300000, guid: 70e331bcb43cdfc409dc3b85f99f5c34, type: 3}
+  - {fileID: 21300000, guid: ccc5ea2ebae4a70438a105743d91978c, type: 3}
+  - {fileID: 21300000, guid: 964b542fe49e5654e96be90d94640d43, type: 3}
+  - {fileID: 21300000, guid: 2e50dc2f4fdce74458de1ba73c4e9c7b, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - b_chefarm
+  - marineBase_transparent_white
+  - researchLabIconBackground
+  - marineBase_transparent
+  - dockyard_transparent
+  - mil_factory_transparent
+  - dockyard_transparent_white
+  - mil_factory
+  - bunker_transparent
+  - FarmIconBackground
+  - infrastructure_256_transparent
+  - oil_factory_transparent
+  - marineBase_transparent@4
+  - buildingSlotIcon16PNG
+  - InfrastructureIconBackground
+  - b_farm
+  - ChemicalFarmIconBackground
+  - civ_factory
+  - research_lab_transparent
+  - dockyardIconBackground
+  - civ_factory_transparent
+  m_RenderDataMap: {}
+  m_Tag: BuildingsAtlas
+  m_IsVariant: 0

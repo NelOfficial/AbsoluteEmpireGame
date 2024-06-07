@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b20012355381043b87131b77542b24, type: 3}
+  m_Name: Dockyard
+  m_EditorClassIdentifier: 
+  uiTitle: "\u0412\u0435\u0440\u0444\u044C"
+  uiTitleEN: Dockyard
+  _name: DOC
+  buildType: 4
+  icon: {fileID: 21300000, guid: 7a4bc204c5000834aa0d205c3e2446e0, type: 3}
+  goldCost: 2200
+  goldIncome: 0
+  foodIncome: 0
+  recrootsIncome: 0
+  researchPointsIncome: 0
+  moves: 20

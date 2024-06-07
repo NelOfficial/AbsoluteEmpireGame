@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b827dd8bde9b9c6438e425c7948232f1, type: 3}
+  m_Name: Balkan_War_2_RES
+  m_EditorClassIdentifier: 
+  id: 16
+  _name: "\u0411\u0443\u0445\u0430\u0440\u0435\u0441\u0442\u0441\u043A\u0438\u0439
+    \u043C\u0438\u0440\u043D\u044B\u0439 \u0434\u043E\u0433\u043E\u0432\u043E\u0440"
+  _nameEN: Bucharest Peace Treaty
+  description: "\u0411\u043E\u043B\u0433\u0430\u0440\u0438\u044F, \u043A\u0430\u043A
+    \u043F\u0440\u043E\u0438\u0433\u0440\u0430\u0432\u0448\u0430\u044F \u0432 \u0432\u043E\u0439\u043D\u0435
+    \u0441\u0442\u043E\u0440\u043E\u043D\u0430, \u0432\u044B\u043D\u0443\u0436\u0434\u0435\u043D\u0430
+    \u0431\u044B\u043B\u0430 \u0443\u0441\u0442\u0443\u043F\u0438\u0442\u044C \u0437\u043D\u0430\u0447\u0438\u0442\u0435\u043B\u044C\u043D\u0443\u044E
+    \u0447\u0430\u0441\u0442\u044C \u0437\u0430\u0445\u0432\u0430\u0447\u0435\u043D\u043D\u044B\u0445
+    \u0432 \u041F\u0435\u0440\u0432\u0443\u044E \u0411\u0430\u043B\u043A\u0430\u043D\u0441\u043A\u0443\u044E
+    \u0432\u043E\u0439\u043D\u0443 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439
+    \u043F\u043E\u0431\u0435\u0434\u0438\u0442\u0435\u043B\u044F\u043C, \u0430 \u0442\u0430\u043A\u0436\u0435
+    \u042E\u0436\u043D\u0443\u044E \u0414\u043E\u0431\u0440\u0443\u0434\u0436\u0443
+    \u0420\u0443\u043C\u044B\u043D\u0438\u0438.\n\n\u0412\u0441\u0435 \u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F
+    \u0434\u043E\u0433\u043E\u0432\u043E\u0440\u0430 \u0431\u044B\u043B\u0438 \u043E\u0431\u0441\u0443\u0436\u0434\u0435\u043D\u044B
+    \u043D\u0430 \u0437\u0430\u0441\u0435\u0434\u0430\u043D\u0438\u044F\u0445 \u043A\u043E\u043C\u0438\u0442\u0435\u0442\u043E\u0432
+    \u0438 \u0437\u0430\u0442\u0435\u043C \u0443\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u044B
+    \u043E\u0431\u0449\u0435\u0439 \u0430\u0441\u0441\u0430\u043C\u0431\u043B\u0435\u0435\u0439
+    \u0434\u0435\u043B\u0435\u0433\u0430\u0442\u043E\u0432.\n"
+  descriptionEN: 'Bulgaria, as the losing side in the war, was forced to cede a significant
+    part of the territories captured in the First Balkan War to the victors, as well
+    as Southern Dobrudja to Romania.
+
+
+    All the provisions of the treaty were
+    discussed at committee meetings and then approved by the general assembly of
+    delegates.'
+  date: 20-8-1913
+  image: {fileID: 21300000, guid: bd1d81ea8483c4f46a0da034ff17efde, type: 3}
+  _checked: 1
+  silentEvent: 0
+  conditions:
+  - country_not_exist;5
+  receivers: 
+  exceptionsReceivers: 
+  aiWillDo_Index: 0
+  buttons:
+  - name: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+    nameEN: Close
+    actions:
+    - annex;30;427;430;431;434;433;432;439;436;435
+    - annex;23;428;429
+    - annex;5;17;18;19;20;21;22;23;166
+    - annex;13;170;169;168;167;163;164;165;3
+    - annex;29;321
+    - peace;30;5
+    - peace;23;5
+    - peace;13;5
+    - peace;1047;5
+    rejectUltimatum: 0
+  IS_GAME_MAIN_EVENT: 1
+  OFFICIAL_SCENARIO_ID: 1
