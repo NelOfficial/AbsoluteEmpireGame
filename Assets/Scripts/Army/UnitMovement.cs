@@ -129,8 +129,9 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    public void AIMoveNoHit(RegionManager defenderRegion, RegionManager attackerRegion)
+    public void AIMoveNoHit(RegionManager defenderRegion)
     {
+        RegionManager attackerRegion = currentProvince;
         if (currentCountry.exist && this != null && attackerRegion != null)
         {
             if (defenderRegion.currentCountry == attackerRegion.currentCountry) // Just move

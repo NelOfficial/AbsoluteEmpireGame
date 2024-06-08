@@ -1155,6 +1155,21 @@ public class RegionManager : MonoBehaviour
         collider.points = simplifiedPoints.ToArray();
     }
 
+    private UnitMovement GetDivision(RegionManager province)
+    {
+        UnitMovement division = new UnitMovement();
+
+        foreach (Transform item in province.transform)
+        {
+            if (item.GetComponent<UnitMovement>())
+            {
+                division = item.GetComponent<UnitMovement>();
+            }
+        }
+
+        return division;
+    }
+
     [System.Serializable]
     public class BuildingQueueItem
     {

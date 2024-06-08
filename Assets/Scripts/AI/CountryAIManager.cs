@@ -1718,6 +1718,19 @@ public class CountryAIManager : MonoBehaviour
             spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.warSprite;
         }
     }
+
+
+    private List<RegionManager> GetNeiboursOfRegion(RegionManager region)
+    {
+        var regions = new List<RegionManager>();
+
+        foreach (var movePoint in region.movePoints)
+        {
+            regions.Add(movePoint.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>());
+        }
+
+        return regions;
+    }
 }
 
 [System.Serializable]

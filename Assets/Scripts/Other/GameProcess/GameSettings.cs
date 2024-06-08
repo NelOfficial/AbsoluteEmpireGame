@@ -67,8 +67,6 @@ public class GameSettings : MonoBehaviour
 	public List<UnitMovement.UnitHealth> currentDefenseUnits_SecondLevel = new List<UnitMovement.UnitHealth>();
 	public List<UnitMovement.UnitHealth> currentDefenseUnits_ThirdLevel = new List<UnitMovement.UnitHealth>();
 
-	private string buttonDesingType;
-
 	[HideInInspector]
 	public DiplomatyUI diplomatyUI;
 
@@ -95,6 +93,8 @@ public class GameSettings : MonoBehaviour
 
 	public int[] mobilizationPercent;
 	public float _regionOpacity;
+
+	public int fuelPerOil = 65;
 
     public enum Language
     {	
