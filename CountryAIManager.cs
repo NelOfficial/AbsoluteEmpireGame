@@ -37,40 +37,40 @@ public class CountryAIManager : MonoBehaviour
 
         country.UpdateCapitulation();
 
-        moneySaving = country.money / 100 * 50; // 50% на сохранение
-        warExpenses = country.money / 100 * 10; // 10% на военные расходы
-        civilExpenses = country.money / 100 * 40; // 70% на стройку
+        moneySaving = country.money / 100 * 50; // 50% РЅР° СЃРѕС…СЂР°РЅРµРЅРёРµ
+        warExpenses = country.money / 100 * 10; // 10% РЅР° РІРѕРµРЅРЅС‹Рµ СЂР°СЃС…РѕРґС‹
+        civilExpenses = country.money / 100 * 40; // 70% РЅР° СЃС‚СЂРѕР№РєСѓ
         buildingExpenses = civilExpenses;
 
-        if (ReferencesManager.Instance.gameSettings.developerMode) Debug.Log($"{country.country._name} Деньги: {country.money} Сберегаем {moneySaving} Военные расходы: {warExpenses} Гражданские расходы: {civilExpenses} Расходы на постройки: {buildingExpenses} Расходы на исследования: {researchingExpenses}");
+        if (ReferencesManager.Instance.gameSettings.developerMode) Debug.Log($"{country.country._name} Р”РµРЅСЊРіРё: {country.money} РЎР±РµСЂРµРіР°РµРј {moneySaving} Р’РѕРµРЅРЅС‹Рµ СЂР°СЃС…РѕРґС‹: {warExpenses} Р“СЂР°Р¶РґР°РЅСЃРєРёРµ СЂР°СЃС…РѕРґС‹: {civilExpenses} Р Р°СЃС…РѕРґС‹ РЅР° РїРѕСЃС‚СЂРѕР№РєРё: {buildingExpenses} Р Р°СЃС…РѕРґС‹ РЅР° РёСЃСЃР»РµРґРѕРІР°РЅРёСЏ: {researchingExpenses}");
 
         if (country.inWar)
         {
             country.money += moneySaving;
-            if (country.ideology == "Демократия")
+            if (country.ideology == "Р”РµРјРѕРєСЂР°С‚РёСЏ")
             {
-                moneySaving = country.money / 100 * 5; // 5% на сохранение
-                warExpenses = country.money / 100 * 70; // 70% на военные расходы во время войны
-                civilExpenses = country.money / 100 * 25; // 25% на стройку во время войны
+                moneySaving = country.money / 100 * 5; // 5% РЅР° СЃРѕС…СЂР°РЅРµРЅРёРµ
+                warExpenses = country.money / 100 * 70; // 70% РЅР° РІРѕРµРЅРЅС‹Рµ СЂР°СЃС…РѕРґС‹ РІРѕ РІСЂРµРјСЏ РІРѕР№РЅС‹
+                civilExpenses = country.money / 100 * 25; // 25% РЅР° СЃС‚СЂРѕР№РєСѓ РІРѕ РІСЂРµРјСЏ РІРѕР№РЅС‹
             }
-            else if (country.ideology == "Монархия" || country.ideology == "Неопределено")
+            else if (country.ideology == "РњРѕРЅР°СЂС…РёСЏ" || country.ideology == "РќРµРѕРїСЂРµРґРµР»РµРЅРѕ")
             {
-                moneySaving = country.money / 100 * 0; // 0% на сохранение
-                warExpenses = country.money / 100 * 65; // 65% на военные расходы во время войны
-                civilExpenses = country.money / 100 * 35; // 35% на стройку во время войны
+                moneySaving = country.money / 100 * 0; // 0% РЅР° СЃРѕС…СЂР°РЅРµРЅРёРµ
+                warExpenses = country.money / 100 * 65; // 65% РЅР° РІРѕРµРЅРЅС‹Рµ СЂР°СЃС…РѕРґС‹ РІРѕ РІСЂРµРјСЏ РІРѕР№РЅС‹
+                civilExpenses = country.money / 100 * 35; // 35% РЅР° СЃС‚СЂРѕР№РєСѓ РІРѕ РІСЂРµРјСЏ РІРѕР№РЅС‹
             }
-            else if (country.ideology == "Коммунизм" || country.ideology == "Фашизм")
+            else if (country.ideology == "РљРѕРјРјСѓРЅРёР·Рј" || country.ideology == "Р¤Р°С€РёР·Рј")
             {
-                moneySaving = country.money / 100 * 3; // 3% на сохранение
-                warExpenses = country.money / 100 * 80; // 80% на военные расходы во время войны
-                civilExpenses = country.money / 100 * 17; // 17% на стройку во время войны
+                moneySaving = country.money / 100 * 3; // 3% РЅР° СЃРѕС…СЂР°РЅРµРЅРёРµ
+                warExpenses = country.money / 100 * 80; // 80% РЅР° РІРѕРµРЅРЅС‹Рµ СЂР°СЃС…РѕРґС‹ РІРѕ РІСЂРµРјСЏ РІРѕР№РЅС‹
+                civilExpenses = country.money / 100 * 17; // 17% РЅР° СЃС‚СЂРѕР№РєСѓ РІРѕ РІСЂРµРјСЏ РІРѕР№РЅС‹
             }
 
         }
 
         //foreach (CountrySettings countryOther in ReferencesManager.Instance.countryManager.countries)
         //{
-        //    if (countryOther.ideology == "Фашизм")
+        //    if (countryOther.ideology == "Р¤Р°С€РёР·Рј")
         //    {
         //        ReferencesManager.Instance.diplomatyUI.
         //            FindCountriesRelation(country, countryOther).relationship = -30;
@@ -79,14 +79,14 @@ public class CountryAIManager : MonoBehaviour
         //    }
         //}
         #region Army
-        // самые опасные регионы (на границе с странами-противниками)
+        // СЃР°РјС‹Рµ РѕРїР°СЃРЅС‹Рµ СЂРµРіРёРѕРЅС‹ (РЅР° РіСЂР°РЅРёС†Рµ СЃ СЃС‚СЂР°РЅР°РјРё-РїСЂРѕС‚РёРІРЅРёРєР°РјРё)
         List<RegionManager> warBorderingRegions = new List<RegionManager>();
-        // регионы 2го плана (соседние с опасными)
+        // СЂРµРіРёРѕРЅС‹ 2РіРѕ РїР»Р°РЅР° (СЃРѕСЃРµРґРЅРёРµ СЃ РѕРїР°СЃРЅС‹РјРё)
         List<RegionManager> dangerousBorderingRegions = new List<RegionManager>();
-        // регионы 3го плана (обычно границы с мирными странами)
+        // СЂРµРіРёРѕРЅС‹ 3РіРѕ РїР»Р°РЅР° (РѕР±С‹С‡РЅРѕ РіСЂР°РЅРёС†С‹ СЃ РјРёСЂРЅС‹РјРё СЃС‚СЂР°РЅР°РјРё)
         List<RegionManager> calmBorderingRegions = new List<RegionManager>();
 
-        // обнаружение опасных регионов
+        // РѕР±РЅР°СЂСѓР¶РµРЅРёРµ РѕРїР°СЃРЅС‹С… СЂРµРіРёРѕРЅРѕРІ
         if (country.myRegions.Count > 10)
         {
             foreach (RegionManager region in country.myRegions)
@@ -94,7 +94,7 @@ public class CountryAIManager : MonoBehaviour
                 foreach (CountrySettings _country in GetBorderingCountiesWithRegion(region))
                 {
                     if (ReferencesManager.Instance.diplomatyUI.
-                        FindCountriesRelation(country, _country).war) // Если граничащая страна воюет с нами
+                        FindCountriesRelation(country, _country).war) // Р•СЃР»Рё РіСЂР°РЅРёС‡Р°С‰Р°СЏ СЃС‚СЂР°РЅР° РІРѕСЋРµС‚ СЃ РЅР°РјРё
                     {
                         if (!warBorderingRegions.Contains(region))
                         {
@@ -112,7 +112,7 @@ public class CountryAIManager : MonoBehaviour
                         }
                     }
                     else if (ReferencesManager.Instance.diplomatyUI.
-                        FindCountriesRelation(country, _country).relationship < 0) // Если граничащая страна имеет с нами плохие отношения
+                        FindCountriesRelation(country, _country).relationship < 0) // Р•СЃР»Рё РіСЂР°РЅРёС‡Р°С‰Р°СЏ СЃС‚СЂР°РЅР° РёРјРµРµС‚ СЃ РЅР°РјРё РїР»РѕС…РёРµ РѕС‚РЅРѕС€РµРЅРёСЏ
                     {
                         if (!dangerousBorderingRegions.Contains(region) && !region._isCoast)
                         {
@@ -121,7 +121,7 @@ public class CountryAIManager : MonoBehaviour
                     }
                     else if (!ReferencesManager.Instance.diplomatyUI.
                         FindCountriesRelation(country, _country).union && !ReferencesManager.Instance.diplomatyUI.
-                        FindCountriesRelation(country, _country).pact) // иначе просто добавляем границу в регионы 3 плана (если нет пакта или альянса)
+                        FindCountriesRelation(country, _country).pact) // РёРЅР°С‡Рµ РїСЂРѕСЃС‚Рѕ РґРѕР±Р°РІР»СЏРµРј РіСЂР°РЅРёС†Сѓ РІ СЂРµРіРёРѕРЅС‹ 3 РїР»Р°РЅР° (РµСЃР»Рё РЅРµС‚ РїР°РєС‚Р° РёР»Рё Р°Р»СЊСЏРЅСЃР°)
                     {
                         foreach (RegionManager reg in GetNeiboursOfRegion(region))
                         {
@@ -149,7 +149,7 @@ public class CountryAIManager : MonoBehaviour
 
         //dangerousBorderingRegions.Add(country.capitalRegion);
 
-        // тут крч движение ненужных армий 
+        // С‚СѓС‚ РєСЂС‡ РґРІРёР¶РµРЅРёРµ РЅРµРЅСѓР¶РЅС‹С… Р°СЂРјРёР№ 
         foreach (RegionManager region in country.myRegions)
         {
             if (region.hasArmy && !warBorderingRegions.Contains(region) && !dangerousBorderingRegions.Contains(region) && !calmBorderingRegions.Contains(region))
@@ -261,7 +261,7 @@ public class CountryAIManager : MonoBehaviour
                             }
                             if (warBorderingRegions.Contains(region) || dangerousBorderingRegions.Contains(region) || calmBorderingRegions.Contains(region))
                             {
-                                // делаем ничего) (абиба лох)
+                                // РґРµР»Р°РµРј РЅРёС‡РµРіРѕ) (Р°Р±РёР±Р° Р»РѕС…)
                             }
                             else
                             {
@@ -318,7 +318,7 @@ public class CountryAIManager : MonoBehaviour
                     if (currentAttackPreference >= 50)
                     {
 
-                        //Debug.Log($"{country.country._name} хочет атаковать в {enemyRegion.name} ({enemyRegion.currentCountry.country._name}) с шансом {currentAttackPreference} ({_winChance})");
+                        //Debug.Log($"{country.country._name} С…РѕС‡РµС‚ Р°С‚Р°РєРѕРІР°С‚СЊ РІ {enemyRegion.name} ({enemyRegion.currentCountry.country._name}) СЃ С€Р°РЅСЃРѕРј {currentAttackPreference} ({_winChance})");
                         foreach (Transform child in warBorderingRegions[i].transform)
                         {
                             if (child.GetComponent<UnitMovement>())
@@ -519,11 +519,11 @@ public class CountryAIManager : MonoBehaviour
                 preferedMP *= 3;
             }
 
-            if (country.ideology == "Коммунизм" || country.ideology == "Фашизм")
+            if (country.ideology == "РљРѕРјРјСѓРЅРёР·Рј" || country.ideology == "Р¤Р°С€РёР·Рј")
             {
                 preferedMP *= Random.Range(2, 5);
             }
-            else if (country.ideology == "Демократия")
+            else if (country.ideology == "Р”РµРјРѕРєСЂР°С‚РёСЏ")
             {
                 preferedMP /= 2;
             }
@@ -537,7 +537,7 @@ public class CountryAIManager : MonoBehaviour
                         if (country.mobilizationLaw + 1 < ReferencesManager.Instance.gameSettings.mobilizationPercent.Length)
                         {
                             ReferencesManager.Instance.SetRecroots(country.mobilizationLaw + 1, country);
-                            //Debug.Log($"{country.country._name} начинает мобилизацию, устанавливая закон {country.mobilizationLaw} | {country.recroots} людей => {preferedMP} людей");
+                            //Debug.Log($"{country.country._name} РЅР°С‡РёРЅР°РµС‚ РјРѕР±РёР»РёР·Р°С†РёСЋ, СѓСЃС‚Р°РЅР°РІР»РёРІР°СЏ Р·Р°РєРѕРЅ {country.mobilizationLaw} | {country.recroots} Р»СЋРґРµР№ => {preferedMP} Р»СЋРґРµР№");
                         }
                     }
                 }
@@ -546,7 +546,7 @@ public class CountryAIManager : MonoBehaviour
                     if (country.mobilizationLaw + 1 < ReferencesManager.Instance.gameSettings.mobilizationPercent.Length)
                     {
                         ReferencesManager.Instance.SetRecroots(country.mobilizationLaw + 1, country);
-                        //Debug.Log($"{country.country._name} начинает мобилизацию, устанавливая закон {country.mobilizationLaw} | {country.recroots} людей => {preferedMP} людей");
+                        //Debug.Log($"{country.country._name} РЅР°С‡РёРЅР°РµС‚ РјРѕР±РёР»РёР·Р°С†РёСЋ, СѓСЃС‚Р°РЅР°РІР»РёРІР°СЏ Р·Р°РєРѕРЅ {country.mobilizationLaw} | {country.recroots} Р»СЋРґРµР№ => {preferedMP} Р»СЋРґРµР№");
                     }
                 }
             }
@@ -649,23 +649,23 @@ public class CountryAIManager : MonoBehaviour
                                 random += 15;
                             }
 
-                            if (countryOther.ideology == "Фашизм" && country.ideology != "Фашизм")
+                            if (countryOther.ideology == "Р¤Р°С€РёР·Рј" && country.ideology != "Р¤Р°С€РёР·Рј")
                             {
                                 random -= Random.Range(60, 100);
                             }
-                            if (country.ideology == "Фашизм" && countryOther.ideology != "Фашизм")
+                            if (country.ideology == "Р¤Р°С€РёР·Рј" && countryOther.ideology != "Р¤Р°С€РёР·Рј")
                             {
                                 random -= Random.Range(60, 100);
                             }
 
-                            if (countryOther.ideology == "Фашизм" && country.ideology == "Фашизм")
+                            if (countryOther.ideology == "Р¤Р°С€РёР·Рј" && country.ideology == "Р¤Р°С€РёР·Рј")
                             {
                                 random += Random.Range(70, 100);
                             }
 
                             if (random >= 50)
                             {
-                                SendOffer("Торговля", country, countryOther);
+                                SendOffer("РўРѕСЂРіРѕРІР»СЏ", country, countryOther);
                             }
                         }
 
@@ -683,23 +683,23 @@ public class CountryAIManager : MonoBehaviour
                                 random -= Random.Range(10, 30);
                             }
 
-                            if (countryOther.ideology == "Фашизм" && country.ideology != "Фашизм")
+                            if (countryOther.ideology == "Р¤Р°С€РёР·Рј" && country.ideology != "Р¤Р°С€РёР·Рј")
                             {
                                 random -= Random.Range(60, 100);
                             }
-                            if (country.ideology == "Фашизм" && countryOther.ideology != "Фашизм")
+                            if (country.ideology == "Р¤Р°С€РёР·Рј" && countryOther.ideology != "Р¤Р°С€РёР·Рј")
                             {
                                 random -= Random.Range(60, 100);
                             }
 
-                            if (countryOther.ideology == "Фашизм" && country.ideology == "Фашизм")
+                            if (countryOther.ideology == "Р¤Р°С€РёР·Рј" && country.ideology == "Р¤Р°С€РёР·Рј")
                             {
                                 random += Random.Range(70, 100);
                             }
 
                             if (random > Random.Range(50, 90))
                             {
-                                SendOffer("Пакт о ненападении", country, countryOther);
+                                SendOffer("РџР°РєС‚ Рѕ РЅРµРЅР°РїР°РґРµРЅРёРё", country, countryOther);
                             }
                         }
 
@@ -717,16 +717,16 @@ public class CountryAIManager : MonoBehaviour
                                 random -= Random.Range(10, 30);
                             }
 
-                            if (countryOther.ideology == "Фашизм" && country.ideology != "Фашизм")
+                            if (countryOther.ideology == "Р¤Р°С€РёР·Рј" && country.ideology != "Р¤Р°С€РёР·Рј")
                             {
                                 random -= Random.Range(60, 100);
                             }
-                            if (country.ideology == "Фашизм" && countryOther.ideology != "Фашизм")
+                            if (country.ideology == "Р¤Р°С€РёР·Рј" && countryOther.ideology != "Р¤Р°С€РёР·Рј")
                             {
                                 random -= Random.Range(60, 100);
                             }
 
-                            if (countryOther.ideology == "Фашизм" && country.ideology == "Фашизм")
+                            if (countryOther.ideology == "Р¤Р°С€РёР·Рј" && country.ideology == "Р¤Р°С€РёР·Рј")
                             {
                                 random += Random.Range(70, 100);
                             }
@@ -734,7 +734,7 @@ public class CountryAIManager : MonoBehaviour
 
                             if (random >= 50)
                             {
-                                SendOffer("Право прохода войск", country, countryOther);
+                                SendOffer("РџСЂР°РІРѕ РїСЂРѕС…РѕРґР° РІРѕР№СЃРє", country, countryOther);
                             }
                         }
 
@@ -753,28 +753,28 @@ public class CountryAIManager : MonoBehaviour
                                 random -= Random.Range(10, 30);
                             }
 
-                            if (countryOther.ideology == "Фашизм" && country.ideology != "Фашизм")
+                            if (countryOther.ideology == "Р¤Р°С€РёР·Рј" && country.ideology != "Р¤Р°С€РёР·Рј")
                             {
                                 random -= Random.Range(60, 100);
                             }
-                            else if (country.ideology == "Фашизм" && countryOther.ideology != "Фашизм")
+                            else if (country.ideology == "Р¤Р°С€РёР·Рј" && countryOther.ideology != "Р¤Р°С€РёР·Рј")
                             {
                                 random -= Random.Range(60, 100);
                             }
 
-                            else if (countryOther.ideology == "Фашизм" && country.ideology == "Фашизм")
+                            else if (countryOther.ideology == "Р¤Р°С€РёР·Рј" && country.ideology == "Р¤Р°С€РёР·Рј")
                             {
                                 random += Random.Range(70, 100);
                             }
 
-                            else if (countryOther.ideology == "Коммунизм" && country.ideology == "Коммунизм")
+                            else if (countryOther.ideology == "РљРѕРјРјСѓРЅРёР·Рј" && country.ideology == "РљРѕРјРјСѓРЅРёР·Рј")
                             {
                                 random += Random.Range(70, 100);
                             }
 
                             else if (random >= 85)
                             {
-                                SendOffer("Союз", country, countryOther);
+                                SendOffer("РЎРѕСЋР·", country, countryOther);
                             }
                         }
                     }
@@ -1412,7 +1412,7 @@ public class CountryAIManager : MonoBehaviour
     {
         float distance = Vector2.Distance(regionA.transform.position, regionB.transform.position);
 
-        if (ReferencesManager.Instance.gameSettings.developerMode) Debug.Log($"Дистанция между {regionA.name} ({regionA.currentCountry.country._name}) и {regionB.name} ({regionB.currentCountry.country._name}) равна {distance}");
+        if (ReferencesManager.Instance.gameSettings.developerMode) Debug.Log($"Р”РёСЃС‚Р°РЅС†РёСЏ РјРµР¶РґСѓ {regionA.name} ({regionA.currentCountry.country._name}) Рё {regionB.name} ({regionB.currentCountry.country._name}) СЂР°РІРЅР° {distance}");
 
         return distance;
     }
@@ -1637,7 +1637,7 @@ public class CountryAIManager : MonoBehaviour
 
                             unitMovement.unitsHealth.Add(newUnitHealth);
 
-                            if (ReferencesManager.Instance.gameSettings.developerMode) Debug.Log($"Добавил {unit.name} для { country.country._uiName } в регионе {region}");
+                            if (ReferencesManager.Instance.gameSettings.developerMode) Debug.Log($"Р”РѕР±Р°РІРёР» {unit.name} РґР»СЏ { country.country._uiName } РІ СЂРµРіРёРѕРЅРµ {region}");
                         }
                     }
                 }
@@ -1765,7 +1765,7 @@ public class CountryAIManager : MonoBehaviour
 
     public void SendOffer(string offer, CountrySettings sender, CountrySettings receiver)
     {
-        if (offer == "Торговля")
+        if (offer == "РўРѕСЂРіРѕРІР»СЏ")
         {
             int relationsRandom = Random.Range(10, 15);
 
@@ -1784,10 +1784,10 @@ public class CountryAIManager : MonoBehaviour
             }
             else if (receiver.isPlayer)
             {
-                SpawnEvent("Торговля", sender, receiver);
+                SpawnEvent("РўРѕСЂРіРѕРІР»СЏ", sender, receiver);
             }
         }
-        else if (offer == "Пакт о ненападении")
+        else if (offer == "РџР°РєС‚ Рѕ РЅРµРЅР°РїР°РґРµРЅРёРё")
         {
             int relationsRandom = Random.Range(10, 15);
 
@@ -1805,10 +1805,10 @@ public class CountryAIManager : MonoBehaviour
             }
             else if (receiver.isPlayer)
             {
-                SpawnEvent("Пакт о ненападении", sender, receiver);
+                SpawnEvent("РџР°РєС‚ Рѕ РЅРµРЅР°РїР°РґРµРЅРёРё", sender, receiver);
             }
         }
-        else if (offer == "Право прохода войск")
+        else if (offer == "РџСЂР°РІРѕ РїСЂРѕС…РѕРґР° РІРѕР№СЃРє")
         {
             int relationsRandom = Random.Range(10, 15);
 
@@ -1826,10 +1826,10 @@ public class CountryAIManager : MonoBehaviour
             }
             else if (receiver.isPlayer)
             {
-                SpawnEvent("Право прохода войск", sender, receiver);
+                SpawnEvent("РџСЂР°РІРѕ РїСЂРѕС…РѕРґР° РІРѕР№СЃРє", sender, receiver);
             }
         }
-        else if (offer == "Объявить войну")
+        else if (offer == "РћР±СЉСЏРІРёС‚СЊ РІРѕР№РЅСѓ")
         {
             Relationships.Relation senderToReceiver = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(sender, receiver);
             Relationships.Relation receiverToSender = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(receiver, sender);
@@ -1859,10 +1859,10 @@ public class CountryAIManager : MonoBehaviour
             }
             else if (receiver.isPlayer)
             {
-                SpawnEvent("Объявить войну", sender, receiver);
+                SpawnEvent("РћР±СЉСЏРІРёС‚СЊ РІРѕР№РЅСѓ", sender, receiver);
             }
         }
-        else if (offer == "Союз")
+        else if (offer == "РЎРѕСЋР·")
         {
             int relationsRandom = Random.Range(40, 70);
 
@@ -1880,7 +1880,7 @@ public class CountryAIManager : MonoBehaviour
             }
             else if (receiver.isPlayer)
             {
-                SpawnEvent("Союз", sender, receiver);
+                SpawnEvent("РЎРѕСЋР·", sender, receiver);
             }
         }
     }
@@ -1900,23 +1900,23 @@ public class CountryAIManager : MonoBehaviour
         spawned.GetComponent<EventItem>().senderImage.sprite = sender.country.countryFlag;
 
 
-        if (offer == "Торговля")
+        if (offer == "РўРѕСЂРіРѕРІР»СЏ")
         {
             spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.tradeSprite;
         }
-        else if (offer == "Объявить войну")
+        else if (offer == "РћР±СЉСЏРІРёС‚СЊ РІРѕР№РЅСѓ")
         {
             spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.warSprite;
         }
-        else if (offer == "Пакт о ненападении")
+        else if (offer == "РџР°РєС‚ Рѕ РЅРµРЅР°РїР°РґРµРЅРёРё")
         {
             spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.pactSprite;
         }
-        else if (offer == "Право прохода войск")
+        else if (offer == "РџСЂР°РІРѕ РїСЂРѕС…РѕРґР° РІРѕР№СЃРє")
         {
             spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.moveSprite;
         }
-        else if (offer == "Объявить войну")
+        else if (offer == "РћР±СЉСЏРІРёС‚СЊ РІРѕР№РЅСѓ")
         {
             spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.warSprite;
         }
