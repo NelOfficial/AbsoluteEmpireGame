@@ -135,6 +135,10 @@ public class CountryAIManager : MonoBehaviour
                             }
                         }
                     }
+                    if (region._isCoast && country.money > 50000 && country.recroots > 20000)
+                    {
+                        calmBorderingRegions.Add(region);
+                    }
                 }
             }
         }
@@ -181,6 +185,13 @@ public class CountryAIManager : MonoBehaviour
                                 }
                                 neighbour_region.hasArmy = true;
                                 region.hasArmy = false;
+                                foreach (UnitHealth unit in division2.unitsHealth)
+                                {
+                                    if (unit.unit.maxFuel > 0)
+                                    {
+                                        unit.fuel -= 50;
+                                    }
+                                }
                             }
                             else if (dangerousBorderingRegions.Contains(neighbour_region))
                             {
@@ -207,6 +218,13 @@ public class CountryAIManager : MonoBehaviour
                                 }
                                 neighbour_region.hasArmy = true;
                                 region.hasArmy = false;
+                                foreach (UnitHealth unit in division2.unitsHealth)
+                                {
+                                    if (unit.unit.maxFuel > 0)
+                                    {
+                                        unit.fuel -= 50;
+                                    }
+                                }
                             }
                             else if (calmBorderingRegions.Contains(neighbour_region))
                             {
@@ -233,6 +251,17 @@ public class CountryAIManager : MonoBehaviour
                                 }
                                 neighbour_region.hasArmy = true;
                                 region.hasArmy = false;
+                                foreach (UnitHealth unit in division2.unitsHealth)
+                                {
+                                    if (unit.unit.maxFuel > 0)
+                                    {
+                                        unit.fuel -= 50;
+                                    }
+                                }
+                            }
+                            if (warBorderingRegions.Contains(region) || dangerousBorderingRegions.Contains(region) || calmBorderingRegions.Contains(region))
+                            {
+                                // делаем ничего) (абиба лох)
                             }
                             else
                             {
