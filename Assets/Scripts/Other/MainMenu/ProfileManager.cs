@@ -82,8 +82,6 @@ public class ProfileManager : MonoBehaviour
             string password = PlayerPrefs.GetString("PASSWORD");
             string nickname = PlayerPrefs.GetString("nickname");
 
-            Debug.Log($"{nickname} | {password}");
-
             StartCoroutine(LoginAccount_Co(nickname, password, true));
         }
         else if (PlayerPrefs.GetString("LOGGED_IN") == "FALSE")

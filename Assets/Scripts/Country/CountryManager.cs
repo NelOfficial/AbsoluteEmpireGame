@@ -179,19 +179,22 @@ public class CountryManager : MonoBehaviour
             country.UpdateCapitulation();
         }
 
-        string[] _tournamentCountries_data = ReferencesManager.Instance.gameSettings._currentTournamentCountries.value.Split(';');
-
-        for (int i = 0; i < _tournamentCountries_data.Length; i++)
+        if (ReferencesManager.Instance.gameSettings._currentGameMode.value == "tournament")
         {
-            if (_tournamentCountries_data[i] != "")
-            {
-                int countryId = int.Parse(_tournamentCountries_data[i]);
+            string[] _tournamentCountries_data = ReferencesManager.Instance.gameSettings._currentTournamentCountries.value.Split(';');
 
-                foreach (CountrySettings country in ReferencesManager.Instance.countryManager.countries)
+            for (int i = 0; i < _tournamentCountries_data.Length; i++)
+            {
+                if (_tournamentCountries_data[i] != "")
                 {
-                    if (country.country._id == countryId)
+                    int countryId = int.Parse(_tournamentCountries_data[i]);
+
+                    foreach (CountrySettings country in ReferencesManager.Instance.countryManager.countries)
                     {
-                        ReferencesManager.Instance.aiManager.DisableAI(country);
+                        if (country.country._id == countryId)
+                        {
+                            ReferencesManager.Instance.aiManager.DisableAI(country);
+                        }
                     }
                 }
             }
@@ -235,6 +238,8 @@ public class CountryManager : MonoBehaviour
         int currentSaveIndex_INT = int.Parse(currentSaveIndex.value);
 
         ReferencesManager.Instance.gameSettings.difficultyValue.value = PlayerPrefs.GetString($"{currentSaveIndex_INT}_DIFFICULTY");
+
+        ReferencesManager.Instance.gameSettings._currentTournamentCountries.value = PlayerPrefs.GetString($"{currentSaveIndex_INT}_TOURNAMENT_COUNTRIES");
 
         try
         {

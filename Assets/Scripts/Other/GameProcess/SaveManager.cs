@@ -82,6 +82,7 @@ public class SaveManager : MonoBehaviour
 
             PlayerPrefs.SetInt($"{saveId}_PLAYER_COUNTRY", ReferencesManager.Instance.countryManager.currentCountry.country._id);
             PlayerPrefs.SetString($"{saveId}_COUNTRIES", _countries);
+            PlayerPrefs.SetString($"{saveId}_TOURNAMENT_COUNTRIES", ReferencesManager.Instance.gameSettings._currentTournamentCountries.value);
 
             for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
             {
