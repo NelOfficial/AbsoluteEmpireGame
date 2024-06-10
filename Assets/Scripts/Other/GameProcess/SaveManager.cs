@@ -176,6 +176,7 @@ public class SaveManager : MonoBehaviour
 
                     int tankLVL1 = 0;
                     int tankLVL2 = 0;
+                    int tankLVL3 = 0;
 
                     int motoLVL1 = 0;
                     int motoLVL2 = 0;
@@ -223,6 +224,10 @@ public class SaveManager : MonoBehaviour
                             {
                                 tankLVL2++;
                             }
+                            else if (unit.level == 3)
+                            {
+                                tankLVL3++;
+                            }
                         }
                         else if (unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
                         {
@@ -264,6 +269,7 @@ public class SaveManager : MonoBehaviour
 
                     PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_TANK_LVL1", tankLVL1);
                     PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_TANK_LVL2", tankLVL2);
+                    PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_TANK_LVL3", tankLVL3);
 
                     PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_MOTO_LVL1", motoLVL1);
                     PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_MOTO_LVL2", motoLVL2);
@@ -363,7 +369,7 @@ public class SaveManager : MonoBehaviour
                     {
                         country_wars += $"{otherCountry.country._id};";
                     }
-                    else if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, otherCountry).vassal)
+                    else if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(otherCountry, country).vassal)
                     {
                         country_vassals += $"{otherCountry.country._id};";
                     }

@@ -166,21 +166,31 @@ public class Army : MonoBehaviour
             }
             else
             {
-                WarningManager.Instance.Warn("В шаблоне дивизии может быть только 10 юнитов.");
+                if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.RU)
+                {
+                    WarningManager.Instance.Warn("В шаблоне дивизии может быть только 10 юнитов.");
+                }
+                else if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.EN)
+                {
+                    WarningManager.Instance.Warn("In division template can be maximum 10 unit.");
+                }
             }
         }
     }
 
     private Transform GetUnitTransform(Transform parent)
     {
+        Transform transform = null;
+
         foreach (Transform child in parent)
         {
             if (child.name == "Unit(Clone)")
             {
-                return child;
+                transform = child;
             }
         }
-        return null;
+
+        return transform;
     }
 
     private bool HasSufficientResources(CountrySettings country, UnitScriptableObject unit)

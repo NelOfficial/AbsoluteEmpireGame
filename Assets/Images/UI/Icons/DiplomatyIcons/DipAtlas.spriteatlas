@@ -50,6 +50,7 @@ SpriteAtlas:
     isAtlasV2: 0
     cachedData: {fileID: 0}
     packedSpriteRenderDataKeys:
+    - d4247f320f2c4f7499acf164e1f22ace: 21300000
     - e31e7ab4d6715644c87ace655780a339: 21300000
     - 089756e46db355940847c8470ac1a2ab: 21300000
     - 906c4025f7ae6504c806e075594b00f8: 21300000
@@ -67,8 +68,10 @@ SpriteAtlas:
     - 9606b19c1fb256b4c826e4fad4d87ce5: 21300000
     - 4b8b0fac95b0c47449cc9b8120a225d4: 21300000
     - 266daebf3e6663f4d9ee3d989f803294: 21300000
+    - 0119edff115aab1449188b7e759aeadc: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: d4247f320f2c4f7499acf164e1f22ace, type: 3}
   - {fileID: 21300000, guid: e31e7ab4d6715644c87ace655780a339, type: 3}
   - {fileID: 21300000, guid: 089756e46db355940847c8470ac1a2ab, type: 3}
   - {fileID: 21300000, guid: 906c4025f7ae6504c806e075594b00f8, type: 3}
@@ -86,7 +89,9 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 9606b19c1fb256b4c826e4fad4d87ce5, type: 3}
   - {fileID: 21300000, guid: 4b8b0fac95b0c47449cc9b8120a225d4, type: 3}
   - {fileID: 21300000, guid: 266daebf3e6663f4d9ee3d989f803294, type: 3}
+  - {fileID: 21300000, guid: 0119edff115aab1449188b7e759aeadc, type: 3}
   m_PackedSpriteNamesToIndex:
+  - outlinebox@3
   - victoryIcon
   - send
   - pactIconWhite256
@@ -104,6 +109,7 @@ SpriteAtlas:
   - movePoint
   - tradeIconWhite256PNG
   - moveRightIconWhite256PNG
+  - outlinebox@3_gradient
   m_RenderDataMap: {}
   m_Tag: DipAtlas
   m_IsVariant: 0

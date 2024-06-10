@@ -906,7 +906,7 @@ public class UnitMovement : MonoBehaviour
                     if (!regionToRetreat.hasArmy)
                     {
                         _movePoints++;
-                        AIMoveNoHit(regionToRetreat, myRegion);
+                        AIMoveNoHit(regionToRetreat);
                         reatreated = true;
                     }
                     else if (regionToRetreat.hasArmy) // ≈сть регион куда отступить, но там есть арми€

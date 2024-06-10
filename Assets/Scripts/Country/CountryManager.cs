@@ -179,6 +179,24 @@ public class CountryManager : MonoBehaviour
             country.UpdateCapitulation();
         }
 
+        string[] _tournamentCountries_data = ReferencesManager.Instance.gameSettings._currentTournamentCountries.value.Split(';');
+
+        for (int i = 0; i < _tournamentCountries_data.Length; i++)
+        {
+            if (_tournamentCountries_data[i] != "")
+            {
+                int countryId = int.Parse(_tournamentCountries_data[i]);
+
+                foreach (CountrySettings country in ReferencesManager.Instance.countryManager.countries)
+                {
+                    if (country.country._id == countryId)
+                    {
+                        ReferencesManager.Instance.aiManager.DisableAI(country);
+                    }
+                }
+            }
+        }
+
         UpdateValuesUI();
         UpdateIncomeValuesUI();
         UpdateCountryInfo();
@@ -456,6 +474,10 @@ public class CountryManager : MonoBehaviour
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_TANK_LVL2"); index++)
                 {
                     ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.tankLVL2, region);
+                }
+                for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_TANK_LVL3"); index++)
+                {
+                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.tankLVL3, region);
                 }
 
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_MOTO_LVL1"); index++)

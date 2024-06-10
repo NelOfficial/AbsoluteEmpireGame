@@ -11,12 +11,13 @@ public class SelectCountryButton : MonoBehaviour
     [SerializeField] TMP_Text countryName;
     [SerializeField] Image countryFlag;
 
-    [SerializeField] GameObject _checkmark;
+    public GameObject _checkmark;
 
     public bool map_editor;
     public bool askOfWar;
 
     private MapEditor m_Editor;
+    
 
     public void UpdateUI()
     {
@@ -130,6 +131,21 @@ public class SelectCountryButton : MonoBehaviour
         }
     }
 
+    public void TournamentCountryToggle()
+    {
+        if (ReferencesManager.Instance.offlineGameSettings._tournamentCountries.Contains(country_ScriptableObject)) // Deselect
+        {
+            _checkmark.SetActive(false);
+            ReferencesManager.Instance.offlineGameSettings._tournamentCountries.Remove(country_ScriptableObject);
+        }
+        else // Select
+        {
+            ReferencesManager.Instance.offlineGameSettings._tournamentCountries.Add(country_ScriptableObject);
+            _checkmark.SetActive(true);
+        }
+
+        ReferencesManager.Instance.offlineGameSettings.CheckConfirmButton();
+    }
 
     public void ToggleSelectionOfCountry()
     {

@@ -69,6 +69,7 @@ SpriteAtlas:
     - 30041388895d15a40902c629bf685698: 21300000
     - bca638d8640ec6d43b11316be8969db0: 21300000
     - bcbf9ac9b24540740b83e2394aafca73: 21300000
+    - 81c1e37babd3ee145b8f7b784d0ab9c7: 21300000
     - 5e8672bdbd1f13944b1d4e8c87e0ced3: 21300000
     - 162935ed9dbb69946a17f6bf34aa3510: 21300000
     - bbcd556e37c702f4a9e1e5f7de17c59c: 21300000
@@ -95,6 +96,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 30041388895d15a40902c629bf685698, type: 3}
   - {fileID: 21300000, guid: bca638d8640ec6d43b11316be8969db0, type: 3}
   - {fileID: 21300000, guid: bcbf9ac9b24540740b83e2394aafca73, type: 3}
+  - {fileID: 21300000, guid: 81c1e37babd3ee145b8f7b784d0ab9c7, type: 3}
   - {fileID: 21300000, guid: 5e8672bdbd1f13944b1d4e8c87e0ced3, type: 3}
   - {fileID: 21300000, guid: 162935ed9dbb69946a17f6bf34aa3510, type: 3}
   - {fileID: 21300000, guid: bbcd556e37c702f4a9e1e5f7de17c59c, type: 3}
@@ -120,6 +122,7 @@ SpriteAtlas:
   - antitank_LVL1PNG128
   - tank_LVL1PNG128
   - soldier_LVL3PNG128
+  - tank_LVL3PNG128
   - motorized_LVL2PNG256
   - EncircledIcon
   - cavalry_LVL1PNG128

@@ -55,10 +55,13 @@ public class AIManager : MonoBehaviour
         progressManager.countryMovePanel.SetActive(false);
     }
 
-    public void DisableAI()
+    private void Start()
     {
-        CountrySettings countryToDisable = ReferencesManager.Instance.diplomatyUI.receiver;
 
+    }
+
+    public void DisableAI(CountrySettings countryToDisable)
+    {
         if (countryToDisable != null)
         {
             AICountries.Remove(countryToDisable);
@@ -66,10 +69,8 @@ public class AIManager : MonoBehaviour
         }
     }
 
-    public void EnableAI()
+    public void EnableAI(CountrySettings countryToEnable)
     {
-        CountrySettings countryToEnable = ReferencesManager.Instance.diplomatyUI.receiver;
-
         if (countryToEnable != null)
         {
             countryToEnable.gameObject.AddComponent<CountryAIManager>();

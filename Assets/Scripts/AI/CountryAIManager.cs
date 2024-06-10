@@ -1,17 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CountryAIManager : MonoBehaviour
 {
     private UnitMovement attackerUnit;
     private UnitMovement defenderUnit;
-
-    private RegionManager attackerRegion;
-    private RegionManager defenderRegion;
-
-    private MovePoint p;
-    private RegionManager enemyRegion;
 
     public TechQueue currentTech;
     public bool researching;
@@ -31,104 +26,175 @@ public class CountryAIManager : MonoBehaviour
 
     public void Process(CountrySettings country)
     {
-        int myRegionsBorderingWithEnemy_Count = 0;
-        int myRegionsBorderingWithEnemyWithDivisions_Count = 0;
-
         country.UpdateCapitulation();
 
-        moneySaving = country.money / 100 * 60; // 5%
-
-        civilExpenses = country.money / 100 * 40; // 70% in peaceful time
+        moneySaving = country.money / 100 * 50; // 50% на сохранение
+        warExpenses = country.money / 100 * 10; // 10% на военные расходы
+        civilExpenses = country.money / 100 * 40; // 70% на стройку
         buildingExpenses = civilExpenses;
 
         if (ReferencesManager.Instance.gameSettings.developerMode) Debug.Log($"{country.country._name} Деньги: {country.money} Сберегаем {moneySaving} Военные расходы: {warExpenses} Гражданские расходы: {civilExpenses} Расходы на постройки: {buildingExpenses} Расходы на исследования: {researchingExpenses}");
 
         if (country.inWar)
         {
-            country.money += moneySaving;
-            warExpenses = country.money / 100 * 70; // 70% in war time
-            civilExpenses = country.money / 100 * 30; // 30% in war time
-        }
-
-        //foreach (CountrySettings countryOther in ReferencesManager.Instance.countryManager.countries)
-        //{
-        //    if (countryOther.ideology == "Фашизм")
-        //    {
-        //        ReferencesManager.Instance.diplomatyUI.
-        //            FindCountriesRelation(country, countryOther).relationship = -30;
-        //        ReferencesManager.Instance.diplomatyUI.
-        //            FindCountriesRelation(countryOther, country).relationship = -30;
-        //    }
-        //}
-
-        List<RegionManager> dangerousBorderingRegions = new List<RegionManager>();
-
-        foreach (RegionManager region in country.myRegions)
-        {
-            foreach (CountrySettings _country in GetBorderingCountiesWithRegion(region))
+            if (country.ideology == "Демократия")
             {
-                if (ReferencesManager.Instance.diplomatyUI.
-                    FindCountriesRelation(country, _country).relationship < 0) // If bordering country not friendly to us
-                {
-                    if (!dangerousBorderingRegions.Contains(region))
-                    {
-                        dangerousBorderingRegions.Add(region);
-                    }
-                }
+                moneySaving = country.money / 100 * 5; // 5% на сохранение
+                warExpenses = country.money / 100 * 70; // 70% на военные расходы во время войны
+                civilExpenses = country.money / 100 * 25; // 25% на стройку во время войны
             }
+            else if (country.ideology == "Монархия" || country.ideology == "Неопределено")
+            {
+                warExpenses = country.money / 100 * 65; // 65% на военные расходы во время войны
+                civilExpenses = country.money / 100 * 35; // 35% на стройку во время войны
+            }
+            else if (country.ideology == "Коммунизм" || country.ideology == "Фашизм")
+            {
+                moneySaving = country.money / 100 * 3; // 3% на сохранение
+                warExpenses = country.money / 100 * 80; // 80% на военные расходы во время войны
+                civilExpenses = country.money / 100 * 17; // 17% на стройку во время войны
+            }
+
         }
 
-        if (country.countryUnits.Count > 0 && country.countryUnits.Count <= dangerousBorderingRegions.Count)
-        {
-            foreach (RegionManager _region in dangerousBorderingRegions)
-            {
-                if (!_region.hasArmy)
-                {
-                    CreateDivisionInRegion(_region, country);
-                }
-            }
-        }
-        else if (country.countryUnits.Count <= 0)
-        {
-            foreach (RegionManager _region in dangerousBorderingRegions)
-            {
-                if (!_region.hasArmy)
-                {
-                    CreateDivisionInRegion(_region, country);
-                }
-            }
-        }
-        //else if (country.countryUnits.Count > 0 && country.countryUnits.Count > dangerousBorderingRegions.Count)
-        //{
-        //    for (int unitIndex = 0; unitIndex < country.countryUnits.Count; unitIndex++)
-        //    {
-        //        foreach (RegionManager _region in dangerousBorderingRegions)
-        //        {
-        //            if (!isDivisionInRegion(country.countryUnits[unitIndex], _region) && !_region.hasArmy)
-        //            {
-        //                country.countryUnits[unitIndex].AIMoveNoHit(GetRoute(_region, country.countryUnits[unitIndex]), country.countryUnits[unitIndex].currentProvince);
-        //            }
-        //        }
-        //    }
-        //}
-
+        #region Army
+        // самые опасные регионы (на границе с странами-противниками)
         List<RegionManager> warBorderingRegions = new List<RegionManager>();
+        // регионы 2го плана (соседние с опасными)
+        List<RegionManager> dangerousBorderingRegions = new List<RegionManager>();
+        // регионы 3го плана (обычно границы с мирными странами)
+        List<RegionManager> calmBorderingRegions = new List<RegionManager>();
 
-        foreach (RegionManager region in country.myRegions)
+        // обнаружение опасных регионов
+        if (country.myRegions.Count > 10)
         {
-            foreach (CountrySettings _country in GetBorderingCountiesWithRegion(region))
+            foreach (RegionManager region in country.myRegions)
             {
-                if (ReferencesManager.Instance.diplomatyUI.
-                    FindCountriesRelation(country, _country).war) // If bordering country at war with us
+                foreach (CountrySettings _country in GetBorderingCountiesWithRegion(region))
                 {
-                    if (!warBorderingRegions.Contains(region))
+                    if (ReferencesManager.Instance.diplomatyUI.
+                        FindCountriesRelation(country, _country).war) // Если граничащая страна воюет с нами
                     {
-                        warBorderingRegions.Add(region);
+                        if (!warBorderingRegions.Contains(region))
+                        {
+                            warBorderingRegions.Add(region);
+                            if (ReferencesManager.Instance.gameSettings.difficultyValue.value
+                                == "INSANE" ||
+                                ReferencesManager.Instance.gameSettings.difficultyValue.value
+                                == "HARDCORE")
+                            {
+                                foreach (RegionManager reg in GetNeiboursOfRegion(region))
+                                {
+                                    if (reg.currentCountry == country && !reg._isCoast)
+                                    {
+                                        dangerousBorderingRegions.Add(reg);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (ReferencesManager.Instance.diplomatyUI.
+                        FindCountriesRelation(country, _country).relationship < 0) // Если граничащая страна имеет с нами плохие отношения
+                    {
+                        if (!dangerousBorderingRegions.Contains(region) && !region._isCoast)
+                        {
+                            dangerousBorderingRegions.Add(region);
+                        }
+                    }
+                    else if (!ReferencesManager.Instance.diplomatyUI.
+                        FindCountriesRelation(country, _country).union && !ReferencesManager.Instance.diplomatyUI.
+                        FindCountriesRelation(country, _country).pact) // иначе просто добавляем границу в регионы 3 плана (если нет пакта или альянса)
+                    {
+                        foreach (RegionManager reg in GetNeiboursOfRegion(region))
+                        {
+                            if (reg.currentCountry != region.currentCountry && reg.hasArmy)
+                            {
+                                dangerousBorderingRegions.Add(region);
+                            }
+                            else
+                            {
+                                calmBorderingRegions.Add(region);
+                            }
+                        }
+                    }
+                    if (region._isCoast && country.money >= 40000 && country.recroots > 20000)
+                    {
+                        calmBorderingRegions.Add(region);
                     }
                 }
             }
         }
+        else
+        {
+            calmBorderingRegions = country.myRegions;
+        }
 
+        // тут крч движение ненужных армий
+        foreach (RegionManager region in country.myRegions)
+        {
+            if (region.hasArmy && !warBorderingRegions.Contains(region) &&
+                !dangerousBorderingRegions.Contains(region) &&
+                !calmBorderingRegions.Contains(region))
+            {
+
+                Transform divisionTransform = null;
+                UnitMovement division = null;
+
+                foreach (Transform child in region.transform)
+                {
+                    if (child.name == "Unit(Clone)")
+                    {
+                        divisionTransform = child;
+
+                        if (divisionTransform.GetComponent<UnitMovement>())
+                        {
+                            division = divisionTransform.GetComponent<UnitMovement>();
+                        }
+                    }
+                }
+
+                try
+                {
+                    if (division != null)
+                    {
+                        if (division._movePoints > 0)
+                        {
+                            foreach (RegionManager neighbour_region in GetNeiboursOfRegion(region))
+                            {
+                                if (!neighbour_region.hasArmy)
+                                {
+                                    if (warBorderingRegions.Contains(neighbour_region))
+                                    {
+                                        division.AIMoveNoHit(neighbour_region);
+                                    }
+                                    else if (dangerousBorderingRegions.Contains(neighbour_region))
+                                    {
+                                        division.AIMoveNoHit(neighbour_region);
+                                    }
+                                    else if (calmBorderingRegions.Contains(neighbour_region))
+                                    {
+                                        division.AIMoveNoHit(neighbour_region);
+                                    }
+                                    if (warBorderingRegions.Contains(region) || dangerousBorderingRegions.Contains(region) || calmBorderingRegions.Contains(region))
+                                    {
+                                        // Do nothing. xd (abiba loser)
+                                    }
+                                    //else
+                                    //{
+                                    //    division.currentCountry.countryUnits.Remove(division); // Remove division from country's list
+                                    //    Destroy(division.gameObject);
+                                    //}
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"Error: Division not found. ({division.IsUnityNull()}) Unity promt: {ex}");
+                }
+            }
+        }
         if (warBorderingRegions.Count > 0)
         {
             for (int i = 0; i < warBorderingRegions.Count; i++)
@@ -137,29 +203,7 @@ public class CountryAIManager : MonoBehaviour
 
                 if (warBorderingRegions[i].hasArmy)
                 {
-                    float _winChance = CountWinChance(warBorderingRegions[i], enemyRegion);
-                    float currentAttackPreference = 0;
-
-                    //if (country.aiAccuracy == 0)
-                    //{
-                    //    currentAttackPreference = 100;
-                    //}
-
-                    //if (_winChance < 50)
-                    //{
-                    //    currentAttackPreference = _winChance / country.aiAccuracy;
-                    //}
-                    //else if (_winChance >= 50)
-                    //{
-                    //    currentAttackPreference = _winChance * country.aiAccuracy;
-                    //}
-
-                    currentAttackPreference = 100;
-
-                    //if (!enemyRegion.currentCountry.isPlayer && enemyRegion.currentCountry.country._tag != "POL")
-                    //{
-                    //    currentAttackPreference += 0.25f;
-                    //}
+                    float currentAttackPreference = 100;
 
                     if (currentAttackPreference >= 50)
                     {
@@ -172,7 +216,7 @@ public class CountryAIManager : MonoBehaviour
                                 UnitMovement division = child.GetComponent<UnitMovement>();
                                 if (division._movePoints > 0)
                                 {
-                                    division.AIMoveNoHit(enemyRegion, warBorderingRegions[i]);
+                                    division.AIMoveNoHit(enemyRegion);
                                 }
                             }
                         }
@@ -190,13 +234,27 @@ public class CountryAIManager : MonoBehaviour
                         {
                             if (!isDivisionFrontlineWithEnemy(country.countryUnits[unitIndex]))
                             {
-                                country.countryUnits[unitIndex].AIMoveNoHit(GetRoute(warBorderingRegions[i], country.countryUnits[unitIndex]), country.countryUnits[unitIndex].currentProvince);
+                                country.countryUnits[unitIndex].AIMoveNoHit(GetRoute(warBorderingRegions[i], country.countryUnits[unitIndex]));
                             }
                         }
                     }
                 }
             }
         }
+
+        if ((country.countryUnits.Count > 0 &&
+            country.countryUnits.Count <= dangerousBorderingRegions.Count)
+            || country.countryUnits.Count <= 0)
+        {
+            foreach (RegionManager _region in dangerousBorderingRegions)
+            {
+                if (!_region.hasArmy)
+                {
+                    CreateDivisionInRegion(_region, country);
+                }
+            }
+        }
+        #endregion
 
         #region Buildings
 
@@ -278,14 +336,16 @@ public class CountryAIManager : MonoBehaviour
             }
         }
 
-        if (country.moneyIncomeUI < 150)
+        #endregion
+
+        #region ArmySecond
+        foreach (RegionManager _region in calmBorderingRegions)
         {
-            if (country.money < 400)
+            if (!_region.hasArmy && (Random.Range(1, 100) == 1))
             {
-                country.money += 1050;
+                CreateDivisionInRegion(_region, country);
             }
         }
-
         #endregion
 
         researchingExpenses = country.money / 100 * 90; // 90% of all country budget
@@ -371,48 +431,6 @@ public class CountryAIManager : MonoBehaviour
                 }
 
                 countryOther.UpdateCapitulation();
-
-                //if (country.countryUnits.Count > 0 && country.countryUnits.Count >= dangerousBorderingRegions.Count)
-                //{
-                //    foreach (UnitMovement division in country.countryUnits)
-                //    {
-                //        for (int i = 0; i < dangerousBorderingRegions.Count;)
-                //        {
-                //            if (!dangerousBorderingRegions[i].hasArmy)
-                //            {
-                //                dangerousBorderingRegions[i].GetComponent<SpriteRenderer>().color = Color.green;
-                //                if (division._movePoints > 0)
-                //                {
-                //                    if (!isDivisionInRegion(division, dangerousBorderingRegions[i]))
-                //                    {
-                //                        List<CountrySettings> borderingCountries = GetBorderingCountiesWithRegion(division.currentProvince);
-                //                        borderingCountries.Distinct();
-
-
-                //                        if (borderingCountries.Count == 1 && borderingCountries.Contains(division.currentCountry))
-                //                        {
-                //                            for (int b = 0; b < borderingCountries.Count; b++)
-                //                            {
-                //                                Debug.Log($"{borderingCountries[b].country._nameEN}");
-                //                            }
-                //                            division.currentProvince.GetComponent<SpriteRenderer>().color = Color.yellow;
-                //                            //division.AIMoveNoHit(GetRoute(dangerousBorderingRegions[i], division), division.currentProvince);
-                //                        }
-                //                    }
-                //                    i++;
-                //                }
-                //                else
-                //                {
-                //                    i++;
-                //                }
-                //            }
-                //            else
-                //            {
-                //                i++;
-                //            }
-                //        }
-                //    }
-                //}
 
                 #region GoodRelations
 
@@ -564,22 +582,22 @@ public class CountryAIManager : MonoBehaviour
                             {
                                 random -= Random.Range(60, 100);
                             }
-                            if (country.ideology == "Фашизм" && countryOther.ideology != "Фашизм")
+                            else if (country.ideology == "Фашизм" && countryOther.ideology != "Фашизм")
                             {
                                 random -= Random.Range(60, 100);
                             }
 
-                            if (countryOther.ideology == "Фашизм" && country.ideology == "Фашизм")
+                            else if (countryOther.ideology == "Фашизм" && country.ideology == "Фашизм")
                             {
                                 random += Random.Range(70, 100);
                             }
 
-                            if (countryOther.ideology == "Коммунизм" && country.ideology == "Коммунизм")
+                            else if (countryOther.ideology == "Коммунизм" && country.ideology == "Коммунизм")
                             {
                                 random += Random.Range(70, 100);
                             }
 
-                            if (random >= 85)
+                            else if (random >= 85)
                             {
                                 SendOffer("Союз", country, countryOther);
                             }
@@ -590,12 +608,37 @@ public class CountryAIManager : MonoBehaviour
                 #endregion
             }
         }
+
         ReferencesManager.Instance.eventsContainer.UpdateEvents();
     }
+    private List<RegionManager> GetNeiboursOfRegion(RegionManager region)
+    {
+        var regions = new List<RegionManager>();
 
+        foreach (var movePoint in region.movePoints)
+        {
+            try
+            {
+                RegionManager _region = null;
+
+                _region = movePoint.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
+
+                if (_region != null)
+                {
+                    regions.Add(_region);
+                }
+            }
+            catch (System.Exception)
+            {
+                Debug.Log($"{movePoint.parent.name} -> {movePoint.name}");
+            }
+        }
+
+        return regions;
+    }
     private List<CountrySettings> GetBorderingCountiesWithRegion(RegionManager region)
     {
-            List<CountrySettings> countries = new List<CountrySettings>();
+        List<CountrySettings> countries = new List<CountrySettings>();
         try
         {
 
@@ -828,7 +871,7 @@ public class CountryAIManager : MonoBehaviour
                         battle.defenderArmor = 0.4f * maxArmor + 0.6f * midArmor;
                     }
                 }
-                catch (System.Exception) {}
+                catch (System.Exception) { }
             }
         }
 
@@ -1149,17 +1192,17 @@ public class CountryAIManager : MonoBehaviour
     {
         int check = region.infrastructure_Amount + 1;
 
-        if (buildingExpenses > 0)
+        if (buildingExpenses >= 200)
         {
-            if (region.currentCountry.money >= 800)
+            if (region.currentCountry.money >= 200)
             {
                 if (check <= 10)
                 {
                     region.infrastructure_Amount++;
-                    region.currentCountry.money -= 800;
+                    region.currentCountry.money -= 200;
                     region.currentCountry.moneyNaturalIncome += 8;
 
-                    buildingExpenses -= 800;
+                    buildingExpenses -= 200;
                 }
             }
 
@@ -1170,37 +1213,6 @@ public class CountryAIManager : MonoBehaviour
                     region.currentCountry.money,
                     region.currentCountry.food,
                     region.currentCountry.recroots);
-            }
-        }
-    }
-
-    private void CreateUnit(CountrySettings country, RegionManager region)
-    {
-        if (ReferencesManager.Instance.gameSettings.onlineGame)
-        {
-            Multiplayer.Instance.CreateUnit(region._id);
-        }
-        else
-        {
-            if (region.currentCountry.country._id == country.country._id)
-            {
-                UnitScriptableObject unit = ReferencesManager.Instance.gameSettings.soldierLVL1;
-
-                if (country.money >= unit.moneyCost && country.recroots >= unit.recrootsCost)
-                {
-                    GameObject spawnedUnit = Instantiate(ReferencesManager.Instance.army.unitPrefab, region.transform);
-                    spawnedUnit.transform.localScale = new Vector3(ReferencesManager.Instance.army.unitPrefab.transform.localScale.x, ReferencesManager.Instance.army.unitPrefab.transform.localScale.y);
-
-                    spawnedUnit.GetComponent<UnitMovement>().currentCountry = country;
-                    spawnedUnit.GetComponent<UnitMovement>().currentProvince = region;
-                    spawnedUnit.GetComponent<UnitMovement>().UpdateInfo();
-                    region.hasArmy = true;
-                    country.countryUnits.Add(spawnedUnit.GetComponent<UnitMovement>());
-
-                    AddUnitToArmy(country, ReferencesManager.Instance.gameSettings.soldierLVL1, region, spawnedUnit.GetComponent<UnitMovement>());
-                }
-
-                region.CheckRegionUnits(region);
             }
         }
     }
@@ -1434,7 +1446,7 @@ public class CountryAIManager : MonoBehaviour
 
                             unitMovement.unitsHealth.Add(newUnitHealth);
 
-                            if (ReferencesManager.Instance.gameSettings.developerMode) Debug.Log($"Добавил {unit.name} для { country.country._uiName } в регионе {region}");
+                            if (ReferencesManager.Instance.gameSettings.developerMode) Debug.Log($"Добавил {unit.name} для {country.country._uiName} в регионе {region}");
                         }
                     }
                 }
@@ -1452,13 +1464,6 @@ public class CountryAIManager : MonoBehaviour
 
                 ReferencesManager.Instance.countryManager.UpdateValuesUI();
                 ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
-
-                //if (unitMovement.unitsHealth.Count <= 0)
-                //{
-                //    ReferencesManager.Instance.regionManager.currentRegionManager.DeselectRegions();
-                //    unitMovement.currentCountry.countryUnits.Remove(unitMovement);
-                //    Destroy(unitMovement.gameObject);
-                //}
             }
         }
     }
@@ -1717,19 +1722,6 @@ public class CountryAIManager : MonoBehaviour
         {
             spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.warSprite;
         }
-    }
-
-
-    private List<RegionManager> GetNeiboursOfRegion(RegionManager region)
-    {
-        var regions = new List<RegionManager>();
-
-        foreach (var movePoint in region.movePoints)
-        {
-            regions.Add(movePoint.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>());
-        }
-
-        return regions;
     }
 }
 

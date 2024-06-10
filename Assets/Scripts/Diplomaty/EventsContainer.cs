@@ -12,7 +12,6 @@ public class EventsContainer : MonoBehaviour
     [SerializeField] GameObject rejectAllButton;
 
     [SerializeField] GameObject container;
-    [SerializeField] GameObject scrollBar;
 
     public void UpdateEvents()
     {
@@ -53,7 +52,6 @@ public class EventsContainer : MonoBehaviour
 
             container.GetComponent<Image>().enabled = true;
             container.GetComponent<Image>().raycastTarget = true;
-            scrollBar.SetActive(true);
         }
         else if (eventItems.Length <= 0)
         {
@@ -62,7 +60,6 @@ public class EventsContainer : MonoBehaviour
 
             container.GetComponent<Image>().enabled = false;
             container.GetComponent<Image>().raycastTarget = false;
-            scrollBar.SetActive(false);
         }
     }
 

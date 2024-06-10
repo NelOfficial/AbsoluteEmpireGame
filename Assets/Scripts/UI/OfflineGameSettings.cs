@@ -6,7 +6,9 @@ using TMPro;
 public class OfflineGameSettings : MonoBehaviour
 {
     [SerializeField] Transform slideContent;
+    [SerializeField] Transform _tournamentCountriesContainer;
     [SerializeField] GameObject selectCountryButtonPrefab;
+    [SerializeField] GameObject selectCountryButtonPrefabWithCheckMark;
     [SerializeField] Image imagePreview;
 
     [SerializeField] int currentMapId;
@@ -19,6 +21,15 @@ public class OfflineGameSettings : MonoBehaviour
 
     [SerializeField] private StringValue _currentScenarioData;
     [SerializeField] private StringValue _currentDate;
+
+    [SerializeField] private Button[] _gameModeButtons;
+
+    [SerializeField] private Color _selectedGameMode_color;
+
+    public List<CountryScriptableObject> _tournamentCountries = new List<CountryScriptableObject>();
+
+    [SerializeField] private Button _tournament_ConfirmButton;
+    [SerializeField] private TMP_Text _tournament_ConfirmButton_Text;
 
     private void Start()
     {
@@ -48,6 +59,79 @@ public class OfflineGameSettings : MonoBehaviour
         mainMenu.ScrollEffect(slideContent.GetComponent<RectTransform>());
     }
 
+    public void UpdateTournamentCountries()
+    {
+        foreach (Transform child in _tournamentCountriesContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        Scenario currentScenario = GetScenario(currentScenarioId);
+
+        for (int i = 0; i < currentScenario.countries.Length; i++)
+        {
+            GameObject spawnedSelectionButton = Instantiate(selectCountryButtonPrefabWithCheckMark, _tournamentCountriesContainer);
+
+            spawnedSelectionButton.transform.localScale = new Vector3(1, 1, 1);
+            spawnedSelectionButton.GetComponent<SelectCountryButton>().country_ScriptableObject = currentScenario.countries[i];
+            spawnedSelectionButton.GetComponent<SelectCountryButton>().UpdateUI();
+            spawnedSelectionButton.GetComponent<SelectCountryButton>()._checkmark.SetActive(_tournamentCountries.Contains(currentScenario.countries[i]));
+
+            spawnedSelectionButton.GetComponent<Button>().onClick.RemoveAllListeners();
+
+            spawnedSelectionButton.GetComponent<Button>().onClick.AddListener(
+                spawnedSelectionButton.GetComponent<SelectCountryButton>().TournamentCountryToggle
+                );
+        }
+    }
+
+    public void CheckConfirmButton()
+    {
+        if (_tournamentCountries.Count >= 4)
+        {
+            _tournament_ConfirmButton.interactable = true;
+
+            string confirmButton_DisplayText = "";
+
+            if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.RU)
+            {
+                confirmButton_DisplayText = "Готово";
+            }
+            else
+            {
+                confirmButton_DisplayText = "Confirm";
+            }
+
+            _tournament_ConfirmButton_Text.text = confirmButton_DisplayText;
+        }
+        else
+        {
+            _tournament_ConfirmButton.interactable = false;
+
+            string confirmButton_DisplayText = "";
+
+            if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.RU)
+            {
+                confirmButton_DisplayText = "Выберите как минимум 4 страны";
+            }
+            else
+            {
+                confirmButton_DisplayText = "Select at least 4 countries";
+            }
+
+            _tournament_ConfirmButton_Text.text = confirmButton_DisplayText;
+        }
+
+        string _tournamentCountries_string = "";
+
+        for (int i = 0; i < _tournamentCountries.Count; i++)
+        {
+            _tournamentCountries_string += $"{_tournamentCountries[i]._id};";
+        }
+
+        ReferencesManager.Instance.gameSettings._currentTournamentCountries.value = _tournamentCountries_string;
+    }
+
     public void RemoveEditorKey()
     {
         ReferencesManager.Instance.gameSettings.editingModString.value = "";
@@ -66,40 +150,6 @@ public class OfflineGameSettings : MonoBehaviour
         }
 
         return result;
-    }
-
-    public void DropdownLocalisation(TMP_Dropdown dropdown)
-    {
-        //string captionText = dropdown.captionText.text;
-        //string finalCaptionText = "";
-
-        //if (PlayerPrefs.GetInt("languageId") == 0)
-        //{
-        //    finalCaptionText = captionText.Split(';')[0];
-        //}
-        //else if (PlayerPrefs.GetInt("languageId") == 1)
-        //{
-        //    finalCaptionText = captionText.Split(';')[1];
-        //}
-
-        //dropdown.captionText.text = finalCaptionText;
-
-        //for (int i = 0; i < dropdown.options.Count; i++)
-        //{
-        //    string optionText = dropdown.options[i].text;
-        //    string finalOptionText = "";
-
-        //    if (PlayerPrefs.GetInt("languageId") == 0)
-        //    {
-        //        finalOptionText = optionText.Split(';')[0];
-        //    }
-        //    else if (PlayerPrefs.GetInt("languageId") == 1)
-        //    {
-        //        finalOptionText = optionText.Split(';')[1];
-        //    }
-
-        //    dropdown.options[i].text = finalOptionText;
-        //}
     }
 
     public void SelectScenario(int id)
@@ -132,6 +182,11 @@ public class OfflineGameSettings : MonoBehaviour
     public void AddTeam(Team _team)
     {
         teams.Add(_team);
+    }
+
+    public void SelectGameMode(string gameMode)
+    {
+        ReferencesManager.Instance.gameSettings._currentGameMode.value = gameMode;
     }
 
     [System.Serializable]

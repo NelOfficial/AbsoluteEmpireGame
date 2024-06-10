@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static ResourcesMarketManager;
 
 public class SellerItemButton : MonoBehaviour
 {
@@ -44,17 +45,20 @@ public class SellerItemButton : MonoBehaviour
                     _currentOrderAmount.text = $"You already buying this ({order._amountOfRes})";
                 }
 
+                _sellerData._currentResAmount = _sellerData._maxResAmount - order._amountOfRes;
                 GetComponent<Button>().targetGraphic.color = _alreadyPurchased;
             }
             else
             {
                 _currentOrderAmount.text = "";
+                _sellerData._currentResAmount = _sellerData._maxResAmount;
                 GetComponent<Button>().targetGraphic.color = _defaultColor;
             }
         }
         else
         {
             _currentOrderAmount.text = "";
+            _sellerData._currentResAmount = _sellerData._maxResAmount;
             GetComponent<Button>().targetGraphic.color = _defaultColor;
         }
 

@@ -5,9 +5,6 @@ using Photon.Pun;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
-using static ResourcesMarketManager;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
-using Unity.VisualScripting;
 
 public class ProgressManager : MonoBehaviour
 {
@@ -70,10 +67,10 @@ public class ProgressManager : MonoBehaviour
 
                 UpdateProduction(ReferencesManager.Instance.countryManager.countries[i]);
 
-                foreach (RegionManager province in ReferencesManager.Instance.countryManager.countries[i].myRegions)
-                {
-                    ReferencesManager.Instance.countryManager.countries[i].oil += province.OilAmount;
-                }
+                //foreach (RegionManager province in ReferencesManager.Instance.countryManager.countries[i].myRegions)
+                //{
+                //    ReferencesManager.Instance.countryManager.countries[i].oil += province.OilAmount;
+                //}
 
                 for (int unitIndex = 0; unitIndex < ReferencesManager.Instance.countryManager.countries[i].countryUnits.Count; unitIndex++)
                 {
@@ -119,6 +116,8 @@ public class ProgressManager : MonoBehaviour
 
         for (int i = 0; i < units.Count; i++)
         {
+            units[i].currentProvince = units[i].transform.parent.GetComponent<RegionManager>();
+
             int motorized = 0;
             units[i]._movePoints = 1;
             units[i].firstMove = true;
@@ -257,7 +256,16 @@ public class ProgressManager : MonoBehaviour
             country.recroots += country.recrootsIncome;
             country.researchPoints += country.researchPointsIncome;
 
-            country.oil = country.oil += total_market_OilIncome;
+            country.oil = 0;
+
+            foreach (RegionManager province in country.myRegions)
+            {
+                country.oil += province.OilAmount;
+            }
+
+            int countryOil = country.oil + total_market_OilIncome;
+
+            country.oil = countryOil;
 
             country.fuelIncome = country.oil * ReferencesManager.Instance.gameSettings.fuelPerOil;
 
@@ -677,16 +685,19 @@ public class ProgressManager : MonoBehaviour
     {
         foreach (CountrySettings country in ReferencesManager.Instance.countryManager.countries)
         {
-            if (country.oil > 0)
+            if (country.country._id != ReferencesManager.Instance.countryManager.currentCountry.country._id)
             {
-                SellerData sellerData = new SellerData();
-                sellerData._seller = country.country;
-                sellerData._resource = GameSettings.Resource.Oil;
-                sellerData._currentResAmount = country.oil;
-                sellerData._maxResAmount = country.oil;
-                sellerData._cost = Random.Range(50, 150);
+                if (country.oil > 0)
+                {
+                    ResourcesMarketManager.SellerData sellerData = new ResourcesMarketManager.SellerData();
+                    sellerData._seller = country.country;
+                    sellerData._resource = GameSettings.Resource.Oil;
+                    sellerData._currentResAmount = country.oil;
+                    sellerData._maxResAmount = country.oil;
+                    sellerData._cost = Random.Range(50, 250);
 
-                ReferencesManager.Instance.resourcesMarketManager._sellers.Add(sellerData);
+                    ReferencesManager.Instance.resourcesMarketManager._sellers.Add(sellerData);
+                }
             }
         }
 

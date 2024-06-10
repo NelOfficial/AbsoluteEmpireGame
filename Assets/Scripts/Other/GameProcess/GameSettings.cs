@@ -25,6 +25,9 @@ public class GameSettings : MonoBehaviour
 
 	public UnitMovement.BattleInfo currentBattle;
 
+	public StringValue _currentGameMode;
+	public StringValue _currentTournamentCountries;
+
     [Header("DEBUG")]
 	public bool _DEBUG_REGIONS_IDS;
 	public GameObject debugText;
@@ -47,6 +50,7 @@ public class GameSettings : MonoBehaviour
 
 	public UnitScriptableObject tankLVL1;
 	public UnitScriptableObject tankLVL2;
+	public UnitScriptableObject tankLVL3;
 
 	public UnitScriptableObject motoLVL1;
 	public UnitScriptableObject motoLVL2;

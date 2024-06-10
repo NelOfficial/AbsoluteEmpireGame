@@ -58,6 +58,9 @@ public class MainMenu : MonoBehaviour
 
         PlayerPrefs.DeleteKey("currentCountryIndex");
         ReferencesManager.Instance.gameSettings._playerCountrySelected.value = "";
+        ReferencesManager.Instance.gameSettings.developerCheats = false;
+
+        DeveloperMode(false);
     }
 
     public void StartTutorial()

@@ -85,11 +85,6 @@ public class RegionManager : MonoBehaviour
     private Vector3 StartPos;
     private Vector3 PosAfter;
 
-    private void Start()
-    {
-        SimplifyCollider(GetComponent<PolygonCollider2D>());
-    }
-
 
     private void OnMouseDown()
     {
@@ -1147,15 +1142,8 @@ public class RegionManager : MonoBehaviour
         polygonCollider.usedByComposite = true;
     }
 
-    void SimplifyCollider(PolygonCollider2D collider)
-    {
-        // Упрощение коллайдера путем уменьшения количества точек
-        List<Vector2> points = new List<Vector2>(collider.points);
-        List<Vector2> simplifiedPoints = PolygonSimplification.Simplify(points, 0.25f);
-        collider.points = simplifiedPoints.ToArray();
-    }
 
-    private UnitMovement GetDivision(RegionManager province)
+    public UnitMovement GetDivision(RegionManager province)
     {
         UnitMovement division = new UnitMovement();
 
@@ -1169,6 +1157,7 @@ public class RegionManager : MonoBehaviour
 
         return division;
     }
+
 
     [System.Serializable]
     public class BuildingQueueItem
