@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 public class GameEventUI : MonoBehaviour
 {
@@ -1034,7 +1033,7 @@ public class GameEventUI : MonoBehaviour
                                 }
                             }
 
-                            countryManager.currentCountry.AddComponent<CountryAIManager>();
+                            countryManager.currentCountry.gameObject.AddComponent<CountryAIManager>();
                             countryManager.currentCountry.isPlayer = false;
                             ReferencesManager.Instance.aiManager.AICountries.Add(countryManager.currentCountry);
 

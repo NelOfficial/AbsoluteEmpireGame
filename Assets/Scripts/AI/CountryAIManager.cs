@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CountryAIManager : MonoBehaviour
@@ -191,7 +190,7 @@ public class CountryAIManager : MonoBehaviour
                 }
                 catch (System.Exception ex)
                 {
-                    Debug.LogError($"Error: Division not found. ({division.IsUnityNull()}) Unity promt: {ex}");
+                    Debug.LogError($"Error: Division not found. ({division}) Unity promt: {ex}");
                 }
             }
         }

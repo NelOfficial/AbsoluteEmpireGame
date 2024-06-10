@@ -182,7 +182,7 @@ public class CountryInfoAdvanced : MonoBehaviour
         foodIncomes[0].text = $"{countryManager.currentCountry.farms * ReferencesManager.Instance.gameSettings.farm.foodIncome}";
         foodIncomes[1].text = $"{countryManager.currentCountry.chemicalFarms * ReferencesManager.Instance.gameSettings.chefarm.foodIncome}";
 
-        expenses[0].text = $"-{countryManager.currentCountry.regionCosts}";
+        expenses[0].text = $"-{countryManager.currentCountry.regionCosts + ReferencesManager.Instance.resourcesMarketManager.CountAllCustomerExpenses(countryManager.currentCountry.country)}";
         expenses[1].text = $"{countryManager.currentCountry.inflation}%";
         expenses[2].text = $"-{countryManager.currentCountry.inflationDebuff}";
 

@@ -1,8 +1,8 @@
 using TMPro;
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine.UI;
+using System.Linq;
 
 public class EventCreatorManager : MonoBehaviour
 {
@@ -185,7 +185,7 @@ public class EventCreatorManager : MonoBehaviour
                     if (!string.IsNullOrEmpty(modEvents[currentModEventIndex].buttons[i].name))
                     {
                         newButton_wc._buttonName = modEvents[currentModEventIndex].buttons[i].name;
-                        newButton_wc._buttonActions = modEvents[currentModEventIndex].buttons[i].actions.ToArrayPooled();
+                        newButton_wc._buttonActions = modEvents[currentModEventIndex].buttons[i].actions.ToArray();
                         newButton_wc._buttonRejectUltimatum = modEvents[currentModEventIndex].buttons[i].rejectUltimatum;
 
                         newButton_wc.SetUp();
@@ -220,7 +220,7 @@ public class EventCreatorManager : MonoBehaviour
         modEvents[currentModEventIndex].description = _eventDescriptionInputfield.text;
         modEvents[currentModEventIndex].date = dateInputfield.text;
         
-        modEvents[currentModEventIndex].conditions = _eventConditionsInputfield.text.Split('\n').ToListPooled();
+        modEvents[currentModEventIndex].conditions = _eventConditionsInputfield.text.Split('\n').ToList();
 
         modEvents[currentModEventIndex].silentEvent = _eventSilentToggle.isOn;
 
@@ -253,7 +253,7 @@ public class EventCreatorManager : MonoBehaviour
         {
             EventScriptableObject.EventButton eventButton = modEvents[currentModEventIndex].buttons[i];
 
-            eventButton.actions = _buttonsContainer.GetChild(i).GetComponent<EventButtonUI>().buttonActions.text.Split('\n').ToListPooled();
+            eventButton.actions = _buttonsContainer.GetChild(i).GetComponent<EventButtonUI>().buttonActions.text.Split('\n').ToList();
             eventButton.name = _buttonsContainer.GetChild(i).GetComponent<EventButtonUI>().buttonName.text;
         }
 
