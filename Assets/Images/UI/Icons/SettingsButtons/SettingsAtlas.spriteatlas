@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SettingsAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 3
+      m_CompressionQuality: 100
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_IgnorePlatformSupport: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: f59d469705678804182cab20d7571b20, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - 65e94ae1f3648cc48a7e239cf2188965: 21300000
+    - 5718bb3266889574abbea88e6f3738af: 21300000
+    - e3e54155d39a8cd409ea2839930d66e8: 21300000
+    - b631ada564c64184eae87f53ed674ba5: 21300000
+    - a4b625b504a93bd49904ae002814060e: 21300000
+    - 61f3d8f93fe2c4444b3957686ca9ba0e: 21300000
+    - 1b8988da2d20819478ff7c49e26d73c8: 21300000
+    - bd0dadda19e50514d9f5f17d1697074f: 21300000
+    - 7c50ed0cd7c85d94fabd86f5fbe8e948: 21300000
+    - 34ba8f1e520b4db4f9c2fe14e77f0643: 21300000
+    - 46dc3bce9c80bad4a9ccae81d4abaab1: 21300000
+    - 91aa6f5fdf3f37d4398da97d2ff67de2: 21300000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 65e94ae1f3648cc48a7e239cf2188965, type: 3}
+  - {fileID: 21300000, guid: 5718bb3266889574abbea88e6f3738af, type: 3}
+  - {fileID: 21300000, guid: e3e54155d39a8cd409ea2839930d66e8, type: 3}
+  - {fileID: 21300000, guid: b631ada564c64184eae87f53ed674ba5, type: 3}
+  - {fileID: 21300000, guid: a4b625b504a93bd49904ae002814060e, type: 3}
+  - {fileID: 21300000, guid: 61f3d8f93fe2c4444b3957686ca9ba0e, type: 3}
+  - {fileID: 21300000, guid: 1b8988da2d20819478ff7c49e26d73c8, type: 3}
+  - {fileID: 21300000, guid: bd0dadda19e50514d9f5f17d1697074f, type: 3}
+  - {fileID: 21300000, guid: 7c50ed0cd7c85d94fabd86f5fbe8e948, type: 3}
+  - {fileID: 21300000, guid: 34ba8f1e520b4db4f9c2fe14e77f0643, type: 3}
+  - {fileID: 21300000, guid: 46dc3bce9c80bad4a9ccae81d4abaab1, type: 3}
+  - {fileID: 21300000, guid: 91aa6f5fdf3f37d4398da97d2ff67de2, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - playIcon
+  - scenarioIconWhite256PNG
+  - playIconWhite
+  - pauseIcon
+  - cameraIconWhite
+  - previousButton
+  - menuIconWhite
+  - nextButton
+  - crosshairIconWhite
+  - saveIconWhite
+  - quitIconWhite
+  - editIconWhite
+  m_RenderDataMap: {}
+  m_Tag: SettingsAtlas
+  m_IsVariant: 0

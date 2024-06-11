@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 617fa2bcca24e1f47897baf9f4729f9a, type: 3}
+  m_Name: TankLVL3
+  m_EditorClassIdentifier: 
+  type: 4
+  icon: {fileID: 21300000, guid: 81c1e37babd3ee145b8f7b784d0ab9c7, type: 3}
+  moneyCost: 700
+  foodCost: 20
+  moneyIncomeCost: 25
+  foodIncomeCost: 10
+  recrootsCost: 500
+  level: 3
+  unlockLevel: 44
+  rank: 1
+  maxFuel: 1800
+  health: 6
+  softAttack: 19
+  hardAttack: 14
+  defense: 5
+  maxEntrenchment: 0
+  armor: 60
+  armorPiercing: 61
+  hardness: 90
+  unitName: HVY_03
