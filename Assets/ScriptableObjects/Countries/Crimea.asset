@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Crimea
+  m_EditorClassIdentifier: 
+  _id: 53
+  _name: "\u041A\u0440\u044B\u043C"
+  _nameEN: Crimea
+  _uiName: "\u041A\u0440\u044B\u043C"
+  _tag: CRI
+  countryType: 1
+  countryFlag: {fileID: 21300000, guid: 817c140af26289745baa250e6fbbcf2b, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.8113208, g: 0.44596434, b: 0.4247953, a: 0.5}
+  countryIdeologyColors:
+  - {r: 0.735849, g: 0.33069995, b: 0.30891773, a: 0.5019608}
+  - {r: 0.8018868, g: 0.4608842, b: 0.44255075, a: 0.5019608}
+  - {r: 0.754717, g: 0.19728859, b: 0.16731933, a: 0.5019608}
+  - {r: 0.23529412, g: 0.1764706, b: 0.1764706, a: 0.5019608}
+  - {r: 0.1684585, g: 0.2863341, b: 0.49056602, a: 0.5019608}
+  - {r: 0.735849, g: 0, b: 0, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: 817c140af26289745baa250e6fbbcf2b, type: 3}
+  - {fileID: 21300000, guid: 817c140af26289745baa250e6fbbcf2b, type: 3}
+  - {fileID: 21300000, guid: e768436f755bb0b48b2fe07b99f33d96, type: 3}
+  - {fileID: 21300000, guid: 53ccdbf6dee2131428156896b8c46242, type: 3}
+  - {fileID: 21300000, guid: 53ccdbf6dee2131428156896b8c46242, type: 3}
+  - {fileID: 21300000, guid: 7ef2abc5643f3434e89429098a3a1b07, type: 3}

@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ArmyAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 3
+      m_CompressionQuality: 100
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_IgnorePlatformSupport: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 2
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 2469a25a0195d554f9a97ca19e35cd68, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - 48914030791bcac47bb47daad3871f8c: 21300000
+    - 45b877a051c367c42827fae1fa44a3ef: 21300000
+    - 44fa4df03424de3439811a500f1f0f74: 21300000
+    - 306f209285e33ef46b479732769a342a: 21300000
+    - f93c090414df6444a9dd56b224fffaa4: 21300000
+    - 7049846453662e24aa26b2c401b4375a: 21300000
+    - 558027f4eaf35f54c979bfff6575c9b5: 21300000
+    - 64111485b1c94bd439d33b46c255e7cf: 21300000
+    - 24795f563bd4060449e2bfe1f13c0850: 21300000
+    - 3cfa22864335ae246b6f79d7e0a6c080: 21300000
+    - 9ba3dbb66cb6f744abfa8234ca7388ed: 21300000
+    - 45c9d007b4e0fe0489f271f1ecfbde92: 21300000
+    - f86b0f27a9ff72947ad62fc386a25779: 21300000
+    - 557f88c7a731435449564359f310a3c5: 21300000
+    - ef2a21386f806be4bbaa34d5a86c1216: 21300000
+    - 30041388895d15a40902c629bf685698: 21300000
+    - bca638d8640ec6d43b11316be8969db0: 21300000
+    - bcbf9ac9b24540740b83e2394aafca73: 21300000
+    - 81c1e37babd3ee145b8f7b784d0ab9c7: 21300000
+    - 5e8672bdbd1f13944b1d4e8c87e0ced3: 21300000
+    - 162935ed9dbb69946a17f6bf34aa3510: 21300000
+    - bbcd556e37c702f4a9e1e5f7de17c59c: 21300000
+    - 5906474fa1f5495448a17f806c36e03a: 21300000
+    - 7cf19a8ff6a01044b819b3fa5a80d1f9: 21300000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 48914030791bcac47bb47daad3871f8c, type: 3}
+  - {fileID: 21300000, guid: 45b877a051c367c42827fae1fa44a3ef, type: 3}
+  - {fileID: 21300000, guid: 44fa4df03424de3439811a500f1f0f74, type: 3}
+  - {fileID: 21300000, guid: 306f209285e33ef46b479732769a342a, type: 3}
+  - {fileID: 21300000, guid: f93c090414df6444a9dd56b224fffaa4, type: 3}
+  - {fileID: 21300000, guid: 7049846453662e24aa26b2c401b4375a, type: 3}
+  - {fileID: 21300000, guid: 558027f4eaf35f54c979bfff6575c9b5, type: 3}
+  - {fileID: 21300000, guid: 64111485b1c94bd439d33b46c255e7cf, type: 3}
+  - {fileID: 21300000, guid: 24795f563bd4060449e2bfe1f13c0850, type: 3}
+  - {fileID: 21300000, guid: 3cfa22864335ae246b6f79d7e0a6c080, type: 3}
+  - {fileID: 21300000, guid: 9ba3dbb66cb6f744abfa8234ca7388ed, type: 3}
+  - {fileID: 21300000, guid: 45c9d007b4e0fe0489f271f1ecfbde92, type: 3}
+  - {fileID: 21300000, guid: f86b0f27a9ff72947ad62fc386a25779, type: 3}
+  - {fileID: 21300000, guid: 557f88c7a731435449564359f310a3c5, type: 3}
+  - {fileID: 21300000, guid: ef2a21386f806be4bbaa34d5a86c1216, type: 3}
+  - {fileID: 21300000, guid: 30041388895d15a40902c629bf685698, type: 3}
+  - {fileID: 21300000, guid: bca638d8640ec6d43b11316be8969db0, type: 3}
+  - {fileID: 21300000, guid: bcbf9ac9b24540740b83e2394aafca73, type: 3}
+  - {fileID: 21300000, guid: 81c1e37babd3ee145b8f7b784d0ab9c7, type: 3}
+  - {fileID: 21300000, guid: 5e8672bdbd1f13944b1d4e8c87e0ced3, type: 3}
+  - {fileID: 21300000, guid: 162935ed9dbb69946a17f6bf34aa3510, type: 3}
+  - {fileID: 21300000, guid: bbcd556e37c702f4a9e1e5f7de17c59c, type: 3}
+  - {fileID: 21300000, guid: 5906474fa1f5495448a17f806c36e03a, type: 3}
+  - {fileID: 21300000, guid: 7cf19a8ff6a01044b819b3fa5a80d1f9, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - timeIcon256PNG
+  - cavalry_LVL2PNG128
+  - artilery_LVL2PNG128
+  - soldier_LVL1PNG128
+  - heavyIcon
+  - defenseIcon256PNG
+  - cavalry_icon128
+  - infantryIcon
+  - EncircledText
+  - artileryIcon
+  - antitank_LVL2PNG128
+  - motorized_LVL1PNG256
+  - regionIcon256PNG
+  - populationIcon256PNG
+  - tank_LVL2PNG128
+  - antitank_LVL1PNG128
+  - tank_LVL1PNG128
+  - soldier_LVL3PNG128
+  - tank_LVL3PNG128
+  - motorized_LVL2PNG256
+  - EncircledIcon
+  - cavalry_LVL1PNG128
+  - soldier_LVL2PNG128
+  - artilery_LVL1PNG128
+  m_RenderDataMap: {}
+  m_Tag: ArmyAtlas
+  m_IsVariant: 0

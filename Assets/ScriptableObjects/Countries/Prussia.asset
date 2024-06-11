@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Prussia
+  m_EditorClassIdentifier: 
+  _id: 71
+  _name: "\u041F\u0440\u0443\u0441\u0441\u0438\u044F"
+  _nameEN: Prussia
+  _uiName: "\u041F\u0440\u0443\u0441\u0441\u0438\u044F"
+  _tag: PRU
+  countryType: 2
+  countryFlag: {fileID: 21300000, guid: 80bdabde5b5acd44aa8e7f3c4b6f4b74, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.38979122, g: 0.35792094, b: 0.41509432, a: 0.5019608}
+  countryIdeologyColors:
+  - {r: 0.3882353, g: 0.35686275, b: 0.41568628, a: 0.5019608}
+  - {r: 0.3882353, g: 0.35686275, b: 0.41568628, a: 0.5019608}
+  - {r: 0.3882353, g: 0.35686275, b: 0.41568628, a: 0.5019608}
+  - {r: 0.3882353, g: 0.35686275, b: 0.41568628, a: 0.5019608}
+  - {r: 0.3882353, g: 0.35686275, b: 0.41568628, a: 0.5019608}
+  - {r: 0.3882353, g: 0.35686275, b: 0.41568628, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: 80bdabde5b5acd44aa8e7f3c4b6f4b74, type: 3}
+  - {fileID: 21300000, guid: 80bdabde5b5acd44aa8e7f3c4b6f4b74, type: 3}
+  - {fileID: 21300000, guid: 80bdabde5b5acd44aa8e7f3c4b6f4b74, type: 3}
+  - {fileID: 21300000, guid: 80bdabde5b5acd44aa8e7f3c4b6f4b74, type: 3}
+  - {fileID: 21300000, guid: 80bdabde5b5acd44aa8e7f3c4b6f4b74, type: 3}
+  - {fileID: 21300000, guid: 80bdabde5b5acd44aa8e7f3c4b6f4b74, type: 3}

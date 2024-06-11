@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: DipAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 3
+      m_CompressionQuality: 100
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_IgnorePlatformSupport: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 0b0a86bddafa60042a8d53916109e5b6, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - d4247f320f2c4f7499acf164e1f22ace: 21300000
+    - e31e7ab4d6715644c87ace655780a339: 21300000
+    - 089756e46db355940847c8470ac1a2ab: 21300000
+    - 906c4025f7ae6504c806e075594b00f8: 21300000
+    - 04922b95a4f47b04cb5f26ebe035eeef: 21300000
+    - 934f02a5bce82f3419fcb2aadfb1eefa: 21300000
+    - 1f7e15b59c160e84696350897a14eed1: 21300000
+    - 2ca17026add95bf4d89c5b9d56814d54: 21300000
+    - 98fd0546ab739564ea85f4738dc87a92: 21300000
+    - 939c8067cbaa1794caf501015f437a3f: 21300000
+    - 9d5dfb8784f5c784b9a89280eafa00c3: 21300000
+    - 2b86d789358bd984abdc9aa29e121226: 21300000
+    - 49f2692a82ea12541b3469898a0f96cb: 21300000
+    - 7068750b538dc4340860e22795e95d6a: 21300000
+    - 1486628c69f152e4e8e0d7b41cc60b0a: 21300000
+    - 9606b19c1fb256b4c826e4fad4d87ce5: 21300000
+    - 4b8b0fac95b0c47449cc9b8120a225d4: 21300000
+    - 266daebf3e6663f4d9ee3d989f803294: 21300000
+    - 0119edff115aab1449188b7e759aeadc: 21300000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: d4247f320f2c4f7499acf164e1f22ace, type: 3}
+  - {fileID: 21300000, guid: e31e7ab4d6715644c87ace655780a339, type: 3}
+  - {fileID: 21300000, guid: 089756e46db355940847c8470ac1a2ab, type: 3}
+  - {fileID: 21300000, guid: 906c4025f7ae6504c806e075594b00f8, type: 3}
+  - {fileID: 21300000, guid: 04922b95a4f47b04cb5f26ebe035eeef, type: 3}
+  - {fileID: 21300000, guid: 934f02a5bce82f3419fcb2aadfb1eefa, type: 3}
+  - {fileID: 21300000, guid: 1f7e15b59c160e84696350897a14eed1, type: 3}
+  - {fileID: 21300000, guid: 2ca17026add95bf4d89c5b9d56814d54, type: 3}
+  - {fileID: 21300000, guid: 98fd0546ab739564ea85f4738dc87a92, type: 3}
+  - {fileID: 21300000, guid: 939c8067cbaa1794caf501015f437a3f, type: 3}
+  - {fileID: 21300000, guid: 9d5dfb8784f5c784b9a89280eafa00c3, type: 3}
+  - {fileID: 21300000, guid: 2b86d789358bd984abdc9aa29e121226, type: 3}
+  - {fileID: 21300000, guid: 49f2692a82ea12541b3469898a0f96cb, type: 3}
+  - {fileID: 21300000, guid: 7068750b538dc4340860e22795e95d6a, type: 3}
+  - {fileID: 21300000, guid: 1486628c69f152e4e8e0d7b41cc60b0a, type: 3}
+  - {fileID: 21300000, guid: 9606b19c1fb256b4c826e4fad4d87ce5, type: 3}
+  - {fileID: 21300000, guid: 4b8b0fac95b0c47449cc9b8120a225d4, type: 3}
+  - {fileID: 21300000, guid: 266daebf3e6663f4d9ee3d989f803294, type: 3}
+  - {fileID: 21300000, guid: 0119edff115aab1449188b7e759aeadc, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - outlinebox@3
+  - victoryIcon
+  - send
+  - pactIconWhite256
+  - tradeIconBordersPNG
+  - moveRightIconBorders256PNG
+  - outlinebox
+  - CapitalIcon
+  - plus
+  - chatIcon256
+  - pactIconBorders256PNG
+  - relationshipsIconWhite256PNG
+  - technologyIconWhite256PNG
+  - demand
+  - serverIcon128PNG
+  - movePoint
+  - tradeIconWhite256PNG
+  - moveRightIconWhite256PNG
+  - outlinebox@3_gradient
+  m_RenderDataMap: {}
+  m_Tag: DipAtlas
+  m_IsVariant: 0

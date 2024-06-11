@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84fc382ab385adc43a814f81f03292b1, type: 3}
+  m_Name: localisation_en
+  m_EditorClassIdentifier: 
+  value: 'update_check_desc:Here you can check for updates. If your version of the
+    game matches the latest one, then you will see a message about it. If your version
+    differs from the latest one, then you will see the innovations and will be able
+    to download the update on the website. The link to the site can be found in the
+    VKontakte group of the game.;
+
+    singleplayer_desc:In this panel you can set
+    up a single-player game without internet connection. On the left in the <color="lightblue">Map
+    tab</color> You can select a map (Currently only Europe is available), and on
+    the right in the <color="lightblue"> Countries tab</color> You can choose <color="green">the
+    country</color> that you will play for.;
+
+    settings_panel:Settings panel.;
+
+    mods_desc:In
+    this panel, you can download and play <color="green">modifications</color> created
+    by <color="lightblue">other players</color>. There is a list of modifications
+    on the left. (In order for mods to appear, you need to click on the button at
+    the bottom). Clicking on the mod on the right will display its description indicating
+    the <color="green">author</color>, to download the modification, click the "Download"
+    button at the bottom. To view the downloaded mods, click the "View saved mods"
+    button. In this tab, you can launch or delete mods.;
+
+    game_settings_desc:This
+    panel contains the <color="green">settings menu</color>. Here you can adjust
+    the color of the sea, turn on the music to your taste or adjust the speed of
+    the camera approach, the speed of the camera movement and the volume of the music.;
+
+    diplomaty_desc:This
+    is a negotiation panel where you can send diplomatic proposals to the country.
+
+
+    -
+    Here you can either send or request an offer.
+
+
+    - The offers are divided
+    into <color=#408E43>Positive</color> and <color=#8C4044>Negative</color>
+
+
+    <color=#408E43>Positive</color>
+    - union, trade, agreements, resources, regions, technologies
+
+
+    <color=#8C4044>Negative</color>
+    - war, termination of contracts
+
+
+    - If you vassalize the country, then all
+    its vassals will become yours
+
+
+    - If you depend on someone, then you may
+    have limited diplomatic actions;'
