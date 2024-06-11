@@ -148,7 +148,8 @@ public class GameSettings : MonoBehaviour
 	[HideInInspector]
 	public Multiplayer multiplayer;
 
-	[SerializeField] BoolValue devMode;
+	[SerializeField] private BoolValue devMode;
+	public BoolValue _regionsDebugMode;
 
 	[Header("Fight settings")]
 	public float fortDebuff = 5;
@@ -180,7 +181,9 @@ public class GameSettings : MonoBehaviour
 		multiplayer = FindObjectOfType<Multiplayer>();
 		countryManager = FindObjectOfType<CountryManager>();
 
-		developerCheats = devMode.value;
+		_DEBUG_REGIONS_IDS = _regionsDebugMode.value;
+
+        developerCheats = devMode.value;
 
 		for (int i = 0; i < technologies.Length; i++)
 		{

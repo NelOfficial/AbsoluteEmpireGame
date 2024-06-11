@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class CountryAIManager : MonoBehaviour
 {
@@ -23,7 +25,7 @@ public class CountryAIManager : MonoBehaviour
         diplomatyUI = FindObjectOfType<DiplomatyUI>();
     }
 
-    public void Process(CountrySettings country)
+    public void Process(CountrySettings country, int mode)
     {
         country.UpdateCapitulation();
 
@@ -605,6 +607,37 @@ public class CountryAIManager : MonoBehaviour
                 }
 
                 #endregion
+
+                if (mode == 1)
+                {
+                    int random = Random.Range(0, 100);
+
+                    if (random >= 98 && ReferencesManager.Instance.aiManager.progressManager.progressIndex >= 10)
+                    {
+                        Relationships.Relation relation = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country);
+
+                        if (countryOther.myRegions.Count > 0)
+                        {
+                            if (!relation.war)
+                            {
+                                if (isCountriesAreNeibours(country, countryOther))
+                                {
+                                    if (country.myRegions.Count / countryOther.myRegions.Count >= 2)
+                                    {
+                                        if (relation.pact)
+                                        {
+                                            SendOffer("Разрыв пакта о ненападении", country, countryOther);
+                                        }
+                                        else
+                                        {
+                                            SendOffer("Объявить войну", country, countryOther);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -1609,6 +1642,24 @@ public class CountryAIManager : MonoBehaviour
                 SpawnEvent("Пакт о ненападении", sender, receiver);
             }
         }
+        else if (offer == "Разрыв пакта о ненападении")
+        {
+            int relationsRandom = Random.Range(10, 15);
+
+            Relationships.Relation senderToReceiver = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(sender, receiver);
+            Relationships.Relation receiverToSender = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(receiver, sender);
+
+            senderToReceiver.pact = false;
+            receiverToSender.pact = false;
+
+            senderToReceiver.relationship -= relationsRandom;
+            receiverToSender.relationship -= relationsRandom;
+
+            if (receiver.isPlayer)
+            {
+                SpawnEvent("Разрыв пакта о ненападении", sender, receiver);
+            }
+        }
         else if (offer == "Право прохода войск")
         {
             int relationsRandom = Random.Range(10, 15);
@@ -1635,30 +1686,28 @@ public class CountryAIManager : MonoBehaviour
             Relationships.Relation senderToReceiver = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(sender, receiver);
             Relationships.Relation receiverToSender = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(receiver, sender);
 
-            if (!receiver.isPlayer)
-            {
-                senderToReceiver.war = true;
-                senderToReceiver.trade = false;
-                senderToReceiver.right = false;
-                senderToReceiver.pact = false;
-                senderToReceiver.union = false;
+            senderToReceiver.war = true;
+            senderToReceiver.trade = false;
+            senderToReceiver.right = false;
+            senderToReceiver.pact = false;
+            senderToReceiver.union = false;
 
-                sender.enemy = receiver;
-                receiver.enemy = sender;
+            sender.enemy = receiver;
+            receiver.enemy = sender;
 
-                sender.inWar = true;
-                receiver.inWar = true;
+            sender.inWar = true;
+            receiver.inWar = true;
 
-                receiverToSender.war = true;
-                receiverToSender.trade = false;
-                receiverToSender.right = false;
-                receiverToSender.pact = false;
-                receiverToSender.union = false;
+            receiverToSender.war = true;
+            receiverToSender.trade = false;
+            receiverToSender.right = false;
+            receiverToSender.pact = false;
+            receiverToSender.union = false;
 
-                senderToReceiver.relationship -= 100;
-                receiverToSender.relationship -= 100;
-            }
-            else if (receiver.isPlayer)
+            senderToReceiver.relationship -= 100;
+            receiverToSender.relationship -= 100;
+
+            if (receiver.isPlayer)
             {
                 SpawnEvent("Объявить войну", sender, receiver);
             }
@@ -1693,7 +1742,6 @@ public class CountryAIManager : MonoBehaviour
         spawned.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
         spawned.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
 
-
         spawned.GetComponent<EventItem>().sender = sender;
         spawned.GetComponent<EventItem>().receiver = receiver;
         spawned.GetComponent<EventItem>().offer = offer;
@@ -1708,6 +1756,7 @@ public class CountryAIManager : MonoBehaviour
         else if (offer == "Объявить войну")
         {
             spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.warSprite;
+            spawned.GetComponent<EventItem>().canDecline = false;
         }
         else if (offer == "Пакт о ненападении")
         {
@@ -1717,10 +1766,29 @@ public class CountryAIManager : MonoBehaviour
         {
             spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.moveSprite;
         }
-        else if (offer == "Объявить войну")
+        else if (offer == "Разрыв пакта о ненападении")
         {
-            spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.warSprite;
+            spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.AntipactSprite;
+            spawned.GetComponent<EventItem>().canDecline = false;
         }
+    }
+
+    private bool isCountriesAreNeibours(CountrySettings countryA, CountrySettings countryB)
+    {
+        bool result = false;
+
+        foreach (RegionManager region in countryA.myRegions)
+        {
+            foreach (CountrySettings _country in GetBorderingCountiesWithRegion(region))
+            {
+                if (_country.country._id == countryB.country._id)
+                {
+                    result = true;
+                }
+            }
+        }
+
+        return result;
     }
 }
 

@@ -71,6 +71,8 @@ public class SaveManager : MonoBehaviour
             PlayerPrefs.SetString($"{saveId}_DATETIME", date_time);
             PlayerPrefs.SetString($"{saveId}_DIFFICULTY", ReferencesManager.Instance.gameSettings.difficultyValue.value);
 
+            PlayerPrefs.SetString($"{saveId}_GAMEMODE", ReferencesManager.Instance.gameSettings._currentGameMode.value);
+
             #region CountrySave
 
             string _countries = "";

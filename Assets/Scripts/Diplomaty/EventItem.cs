@@ -14,6 +14,8 @@ public class EventItem : MonoBehaviour
 
     private EventPanel eventPanel;
 
+    public bool canDecline;
+
     private void Awake()
     {
         eventPanel = FindObjectOfType<EventPanel>();

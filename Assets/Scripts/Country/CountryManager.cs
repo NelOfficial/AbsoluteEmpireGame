@@ -238,6 +238,7 @@ public class CountryManager : MonoBehaviour
         int currentSaveIndex_INT = int.Parse(currentSaveIndex.value);
 
         ReferencesManager.Instance.gameSettings.difficultyValue.value = PlayerPrefs.GetString($"{currentSaveIndex_INT}_DIFFICULTY");
+        ReferencesManager.Instance.gameSettings._currentGameMode.value = PlayerPrefs.GetString($"{currentSaveIndex_INT}_GAMEMODE");
 
         ReferencesManager.Instance.gameSettings._currentTournamentCountries.value = PlayerPrefs.GetString($"{currentSaveIndex_INT}_TOURNAMENT_COUNTRIES");
 

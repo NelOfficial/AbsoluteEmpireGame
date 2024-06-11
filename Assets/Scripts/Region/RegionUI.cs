@@ -73,6 +73,7 @@ public class RegionUI : MonoBehaviour
     public Sprite warSprite;
     public Sprite unionSprite;
     public Sprite pactSprite;
+    public Sprite AntipactSprite;
 
 
     public Image regionInfoCountryFlag;

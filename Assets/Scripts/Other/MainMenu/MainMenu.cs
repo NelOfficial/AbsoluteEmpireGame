@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 public class MainMenu : MonoBehaviour
 {
+    // û
     public GameObject currentRoomMenu;
     public GameObject loadingMenu;
 
@@ -25,6 +26,7 @@ public class MainMenu : MonoBehaviour
     public Sprite[] buttonDesigns;
 
     public BoolValue devMode;
+    public GameObject devmodecheck;
     public StringValue difficultyValue;
 
     public CountryScriptableObject[] globalCountries;
@@ -93,6 +95,11 @@ public class MainMenu : MonoBehaviour
     public void DeveloperMode(bool state)
     {
         devMode.value = state;
+    }
+
+    public void RegionsDebugMode(bool state)
+    {
+        ReferencesManager.Instance.gameSettings._regionsDebugMode.value = state;
     }
 
     public void SetDifficulty(int difficulty)

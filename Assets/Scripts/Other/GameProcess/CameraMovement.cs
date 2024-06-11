@@ -2,6 +2,8 @@ using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEditor;
+using System;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -30,9 +32,10 @@ public class CameraMovement : MonoBehaviour
 
     public List<RegionInfoCanvas> regionInfos = new List<RegionInfoCanvas>();
 
+
     // Update is called once per frame
     void Update()
-    {
+    {      
         // метод определяет нажимает/наводит ли игрок на UI (ДЛЯ ТЕЛЕФОНОВ)
         foreach (Touch touch in Input.touches)
         {

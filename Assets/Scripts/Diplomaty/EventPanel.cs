@@ -14,6 +14,9 @@ public class EventPanel : MonoBehaviour
     private DiplomatyUI diplomatyUI;
     private EventsContainer eventContainer;
 
+    [SerializeField] private Button _confirmButton;
+    [SerializeField] private Button _declineButton;
+
     private void Awake()
     {
         diplomatyUI = FindObjectOfType<DiplomatyUI>();
@@ -23,6 +26,9 @@ public class EventPanel : MonoBehaviour
     public void OpenUI()
     {
         panel.SetActive(true);
+
+        _declineButton.interactable = currentEventItem.canDecline;
+
         countryFlagImage.sprite = currentEventItem.sender.country.countryFlag;
 
         if (PlayerPrefs.GetInt("languageId") == 0)

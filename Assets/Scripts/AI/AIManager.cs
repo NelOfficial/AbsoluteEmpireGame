@@ -7,7 +7,26 @@ public class AIManager : MonoBehaviour
 
     public ProgressManager progressManager;
     public GameObject losePanel;
+
     [SerializeField] private float delay;
+
+    private int mode;
+
+    private void Awake()
+    {
+        if (ReferencesManager.Instance.gameSettings._currentGameMode.value == "historic")
+        {
+            mode = 0;
+        }
+        else if (ReferencesManager.Instance.gameSettings._currentGameMode.value == "nonhistoric")
+        {
+            mode = 1;
+        }
+        else
+        {
+            mode = 0;
+        }
+    }
 
     public void OnNextMove()
     {
@@ -21,7 +40,7 @@ public class AIManager : MonoBehaviour
             var aiManager = countrySettings.GetComponent<CountryAIManager>();
             if (aiManager != null)
             {
-                aiManager.Process(countrySettings);
+                aiManager.Process(countrySettings, mode);
 
                 if (aiManager.currentTech?.tech != null)
                 {
@@ -55,10 +74,7 @@ public class AIManager : MonoBehaviour
         progressManager.countryMovePanel.SetActive(false);
     }
 
-    private void Start()
-    {
-
-    }
+    
 
     public void DisableAI(CountrySettings countryToDisable)
     {
