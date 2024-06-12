@@ -60,8 +60,8 @@ MainMenu.TelegramButton;Telegram;Телеграм;Telegram;Telegram;Telegram
 MainMenu.Settings.Design1;Design 1;Дизайн 1;Design 1;Design 1;Design 1
 MainMenu.Settings.Design2;Design 2;Дизайн 2;Design 2;Design 2;Design 2
 MainMenu.Settings.Design3;Design 3;Дизайн 3;Design 3;Design 3;Design 3
-MainMenu.Settings.UI;UI;Интерфейс;;;
-MainMenu.Settings.VolumeText;Music Volume;Громкость музыки;;;
+MainMenu.Settings.UI;UI;Интерфейс;UI;UI;UI
+MainMenu.Settings.VolumeText;Music Volume;Громкость музыки;Music Volume;Music Volume;Music Volume
 MainMenu.Settings.Language;Language;Язык;Idioma;Língua;Língua
 MainMenu.Settings.Language.English;English language;English language;English language;English language;English language
 MainMenu.Settings.Language.Russian;Русский язык;Русский язык;Русский язык;Русский язык;Русский язык
@@ -77,12 +77,7 @@ MainMenu.ModsList.View;View downloaded modifications;Посмотреть ска
 MainMenu.VersionButton;Current update:;Актуальное обновление:;Actualización actual:;Atualização atual:;Atualização atual:
 MainMenu.Version.Title;Game Version;Версия игры;Versión del juego;Versão do jogo;Versão Do Jogo
 MainMenu.Version.NewVersion;You have the latest version of the game installed;У вас установлена новейшая версия игры;Tienes instalada la Última versión del juego;Você tem a versão mais recente do jogo;Você tem a versão mais recente do jogo instalada
-MainMenu.Version.OldVersion;"Your version is outdated.
-We recommend updating the game!";"Ваша версия устарела.
-Советуем обновить игру!";"Su versión está desactualizada.
-Recomendamos actualizar el juego!";"Sua versão está desatualizada.
-Recomendamos atualizar o jogo!";"Sua versão está desatualizada.
-Recomendamos atualizar o jogo!"
+MainMenu.Version.OldVersion;"Your version is outdated.\\\We recommend updating the game!";"Ваша версия устарела.\\\Советуем обновить игру!";"Su versión está desactualizada.\\\Recomendamos actualizar el juego!";"Sua versão está desatualizada.\\\Recomendamos atualizar o jogo!";"Sua versão está desatualizada.\\\Recomendamos atualizar o jogo!"
 MainMenu.Version.CurrentVersion;Current version:;Текущая версия:;Versión actual:;Versão atual:;Versão atual:
 MainMenu.Loading;Loading...;Идёт загрузка...;Se está cargando...;A carregar...;O download está em andamento...
 MainMenu.Quote1;Russian armies destroy more enemy soldiers and weapons than all the other 25 United Nations states combined... - Franklin Roosevelt;Русские армии уничтожают больше солдат и вооружения противника, чем все остальные 25 государств объединенных наций вместе взятых… - Франклин Рузвельт;Los ejércitos rusos destruyen más soldados y armas enemigas que todos los otros 25 Estados de las Naciones Unidas combinados. - Franklin Roosevelt;Os exércitos russos matam mais soldados e armas do inimigo do que todos os outros 25 estados das Nações Unidas combinados. - Franklin D. Roosevelt;Os exércitos russos destroem mais soldados e armas inimigas do que todos os outros 25 estados das Nações Unidas juntos... - Franklin Roosevelt

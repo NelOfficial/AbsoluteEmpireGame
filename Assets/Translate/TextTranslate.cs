@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
+using System.Runtime.CompilerServices;
 
 public class TextTranslate : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class TextTranslate : MonoBehaviour
     public string KEY;
     private Translate TRANSLATION;
     private string[] local;
-
+    private List<string> newstr;
     private void Start()
     {
         TRANSLATION = ReferencesManager.Instance.gameSettings.translate;
@@ -30,20 +31,30 @@ public class TextTranslate : MonoBehaviour
                 local[i] = local[1];
             }
         }
+        newstr = new List<string>();
+        foreach (string mstr in local)
+        {
+
+            mstr.Replace("\\\\\"", "\\n\"");
+            newstr.Add(mstr);
+        }
+        local = newstr.ToArray();
         SetUp();
     }
 
     public void SetUp()
     {
         int currentLanguage = PlayerPrefs.GetInt("languageId");
-
-        if (this.GetComponent<TMP_Text>())
+        if (local != null)
         {
-            this.GetComponent<TMP_Text>().text = local[currentLanguage + 1];
-        }
-        else if (this.GetComponent<Text>())
-        {
-            this.GetComponent<Text>().text = local[currentLanguage + 1];
+            if (this.GetComponent<TMP_Text>())
+            {
+                this.GetComponent<TMP_Text>().text = local[currentLanguage + 1];
+            }
+            else if (this.GetComponent<Text>())
+            {
+                this.GetComponent<Text>().text = local[currentLanguage + 1];
+            }
         }
     }
 }
