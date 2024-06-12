@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
-using Photon.Realtime;
 
 public class CountrySettings : MonoBehaviour
 {
@@ -19,7 +18,6 @@ public class CountrySettings : MonoBehaviour
 
     public bool isPlayer;
     public bool onlinePlayer;
-    public Player _countryPlayer;
     public string ideology;
 
     public CountryInfoAdvanced.Nation[] formableNations;

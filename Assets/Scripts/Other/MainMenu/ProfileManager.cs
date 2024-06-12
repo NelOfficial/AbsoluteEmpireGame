@@ -1,4 +1,3 @@
-using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -29,7 +28,7 @@ public class ProfileManager : MonoBehaviour
     public string[] accountData;
 
     [HideInInspector] public int userId;
-    private string _profileName;
+    [HideInInspector] public string _profileName;
     private string _profilePassword;
     private string _profileEmail;
     private string _profileRegDate;
@@ -274,7 +273,7 @@ public class ProfileManager : MonoBehaviour
         loginForm.AddField("login", username);
         loginForm.AddField("password", password);
 
-        WWW accountLoginRequest = new WWW("http://absolute-empire.7m.pl/auth/signin.php", loginForm);
+        WWW accountLoginRequest = new WWW("https://absolute-empire.space/auth/signin.php", loginForm);
         yield return accountLoginRequest;
 
         if (accountLoginRequest.isDone)
@@ -326,8 +325,6 @@ public class ProfileManager : MonoBehaviour
 
                     PlayerPrefs.SetString("PASSWORD", $"{_profilePassword}");
                     PlayerPrefs.SetString("nickname", $"{_profileName}");
-
-                    PhotonNetwork.NickName = _profileName;
 
                     ReferencesManager.Instance.mainMenu.UpdateNickname(_profileName);
 

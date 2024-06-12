@@ -1,175 +1,261 @@
-using TMPro;
-using Photon.Pun;
 using UnityEngine;
-using Photon.Realtime;
+using Mirror;
 using System.Collections.Generic;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
-using System.Collections;
+using TMPro;
+using UnityEngine.UI;
 
-public class Launcher : MonoBehaviourPunCallbacks
+public class Launcher : NetworkManager
 {
-    private static Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();
+    public List<PlayerInfo> players = new List<PlayerInfo>();
+    [SerializeField] private CurrentRoomInfo _roomInfoUI;
 
-    public static Launcher Instance;
+    [SerializeField] private TMP_InputField _roomNameInput;
+    [SerializeField] private GameObject _currentRoomInfo_Panel;
+    [SerializeField] private Transform _roomListPanel;
+    [SerializeField] private GameObject _roomPrefab;
 
-    [SerializeField] MainMenu mainMenu;
+    public List<PlayerData> playersData = new List<PlayerData>();
 
-    [SerializeField] TMP_InputField roomNameField;
-    [SerializeField] TMP_Dropdown scenariyDropdown;
+    public List<RoomInfo> rooms = new List<RoomInfo>();
 
-    [SerializeField] Transform roomListContent;
-    [SerializeField] Transform playerListContent;
-    [SerializeField] GameObject roomListPrefab;
-    [SerializeField] GameObject playerListPrefab;
-    [SerializeField] GameObject startGameButton;
+    [HideInInspector] public RoomInfo currentRoom;
 
-    public CountryScriptableObject[] countriesList;
-
-    [SerializeField] BoolValue onlineGameValue;
-
-
-    private void Awake()
+    void RegisterClientHandlers()
     {
-        Instance = this;
-        mainMenu.loadingMenu.SetActive(false);
+        NetworkClient.RegisterHandler<RoomListMessage>(OnRoomListMessage);
+        NetworkClient.RegisterHandler<RoomJoinResponse>(OnRoomJoinResponse);
+    }
 
-        if (!ReferencesManager.Instance.profileManager._LOGGED_IN && PlayerPrefs.GetString("LOGGED_IN") == "FALSE")
+    void OnRoomListMessage(RoomListMessage message)
+    {
+        UpdateRoomList(message.rooms);
+
+        foreach (var room in message.rooms)
         {
-            PhotonNetwork.NickName = "Guest player " + Random.Range(0, 9999);
-            mainMenu.UpdateNickname(PhotonNetwork.NickName);
+            if (room.roomName == _roomNameInput.text) // Assuming this is the room the player joined
+            {
+                foreach (PlayerInfo player in room.players)
+                {
+                    Debug.Log(player);
+                }
+
+                Debug.Log(room.players.Count);
+
+                UpdatePlayerListUI(room.players);
+                break;
+            }
         }
     }
 
-    void Start()
+    void OnRoomJoinResponse(RoomJoinResponse message)
     {
-        PhotonNetwork.AutomaticallySyncScene = true;
-        mainMenu.connectionText.color = Color.cyan;
-        mainMenu.connectionText.text = "Connecting to Master...";
-        PhotonNetwork.ConnectUsingSettings();
+        if (message.success)
+        {
+
+        }
+        else
+        {
+            Debug.LogError($"Failed to join the room. {message}");
+        }
     }
 
-    public override void OnConnectedToMaster()
+    public override void OnStartServer()
     {
-        mainMenu.connectionText.color = Color.yellow;
-        mainMenu.connectionText.text = "Connected to Master";
-        PhotonNetwork.JoinLobby();
+        base.OnStartServer();
+
+        RegisterClientHandlers();
+        NetworkServer.RegisterHandler<CreateRoomMessage>(OnCreateRoom);
+        NetworkServer.RegisterHandler<JoinRoomMessage>(OnJoinRoom);
+        NetworkServer.RegisterHandler<PlayerNameMessage>(OnPlayerName);
     }
 
-    public override void OnJoinedLobby()
+    public override void OnServerConnect(NetworkConnectionToClient conn)
     {
-        mainMenu.connectionText.color = Color.green;
-        mainMenu.connectionText.text = "Joined Lobby";
+        base.OnServerConnect(conn);
+        // Send the list of available rooms to the client
+        if (rooms.Count > 0)
+        {
+            conn.Send(new RoomListMessage { rooms = rooms });
+        }
     }
 
-    public void SetOnlineValue(bool value)
+    public void OnCreateRoom(NetworkConnectionToClient conn, CreateRoomMessage message)
     {
-        onlineGameValue.value = value;
+        Debug.Log("OnCreateRoom called");
+        Debug.Log($"Creating room: {message.roomName} with connectionId: {conn.connectionId}");
+
+        RoomInfo newRoom = new RoomInfo { roomName = message.roomName, hostConnectionId = conn.connectionId, players = new List<PlayerInfo>() };
+        rooms.Add(newRoom);
+        NotifyAllClients();
+
+        JoinRoom(_roomNameInput.text);
+    }
+
+    public void OnJoinRoom(NetworkConnectionToClient conn, JoinRoomMessage message)
+    {
+        Debug.Log("OnJoinRoom called");
+        Debug.Log($"Joining room: {message.roomName} with connectionId: {conn.connectionId}");
+
+        RoomInfo room = rooms.Find(r => r.roomName == message.roomName);
+        if (room.hostConnectionId != 0)
+        {
+            Debug.Log($"Joining room: {message.roomName} with connectionId: {conn.connectionId}");
+
+            PlayerInfo newPlayer = new PlayerInfo
+            {
+                connectionId = conn.connectionId,
+                _playerNickname = "Player " + conn.connectionId.ToString()
+            };
+
+            room.players.Add(newPlayer);
+            conn.Send(new RoomJoinResponse { success = true });
+
+            currentRoom = room;
+
+            NotifyAllClients();
+        }
+        else
+        {
+            Debug.LogError($"Failed to join the room. {room.hostConnectionId}");
+            conn.Send(new RoomJoinResponse { success = false });
+        }
+    }
+
+    public override void OnServerDisconnect(NetworkConnectionToClient conn)
+    {
+        base.OnServerDisconnect(conn);
+        foreach (var room in rooms)
+        {
+            PlayerInfo player = room.players.Find(p => p.connectionId == conn.connectionId);
+            if (player.connectionId != 0)
+            {
+                room.players.Remove(player);
+                NotifyAllClients();
+                break;
+            }
+        }
+    }
+
+    private void NotifyAllClients()
+    {
+        NetworkServer.SendToAll(new RoomListMessage { rooms = rooms });
+    }
+
+    private void OnPlayerName(NetworkConnectionToClient conn, PlayerNameMessage message)
+    {
+        foreach (var room in rooms)
+        {
+            PlayerInfo? player = room.players.Find(p => p.connectionId == conn.connectionId);
+            if (player != null)
+            {
+                player._playerNickname = message.playerName;
+                NotifyAllClients();
+                break;
+            }
+            else
+            {
+                Debug.LogWarning($"Player with connectionId {conn.connectionId} not found in room {room.roomName}");
+            }
+        }
+    }
+
+
+    private void UpdatePlayerListUI(List<PlayerInfo> _players)
+    {
+        if (_roomInfoUI != null)
+        {
+            _roomInfoUI.UpdatePlayerList(_players);
+        }
     }
 
     public void CreateRoom()
     {
-        RoomOptions roomOptions = new RoomOptions();
+        string roomName = _roomNameInput.text;
+        if (!string.IsNullOrEmpty(roomName))
+        {
+            networkAddress = "localhost";
+            StartHost();
 
-        string roomName = roomNameField.text;
-        if (string.IsNullOrWhiteSpace(roomName)) roomName = "Room " + Random.Range(0, 9999);
-
-        string scenariy = scenariyDropdown.options[scenariyDropdown.value].text;
-
-        Hashtable properties = new Hashtable();
-        properties.Add("scen", scenariy);
-        roomOptions.CustomRoomProperties = properties;
-        roomOptions.BroadcastPropsChangeToAll = true;
-
-        ReferencesManager.Instance.chatManager.roomName = roomName;
-        ReferencesManager.Instance.chatManager.ConnectUser();
-        PhotonNetwork.CreateRoom(roomName, roomOptions);
+            // Отправка сообщения о создании комнаты на сервер
+            NetworkClient.Send(new CreateRoomMessage { roomName = roomName });
+        }
     }
 
-    public override void OnJoinedRoom()
+    public void UpdateRoomList(List<RoomInfo> rooms)
     {
-        mainMenu.CloseMenus();
-        mainMenu.currentRoomText.text = PhotonNetwork.CurrentRoom.Name;
-        mainMenu.currentScenariyText.text = PhotonNetwork.CurrentRoom.CustomProperties["scen"].ToString();
-        mainMenu.currentRoomMenu.SetActive(true);
-
-        Player[] players = PhotonNetwork.PlayerList;
-
-        foreach (Transform child in playerListContent)
+        foreach (Transform child in _roomListPanel)
         {
             Destroy(child.gameObject);
         }
 
-        for (int i = 0; i < players.Length; i++)
+        foreach (RoomInfo room in rooms)
         {
-            Instantiate(playerListPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
-        }
+            GameObject roomListItem = Instantiate(_roomPrefab, _roomListPanel);
+            roomListItem.GetComponent<RoomListItem>()._roomName = room.roomName;
+            roomListItem.GetComponent<RoomListItem>().SetUp();
 
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-    }
-
-    public override void OnMasterClientSwitched(Player newMasterClient)
-    {
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-    }
-
-    public void StartGame()
-    {
-        mainMenu.loadingMenu.SetActive(true);
-        PhotonNetwork.LoadLevel(1);
-    }
-
-    public void LeaveRoom()
-    {
-        StartCoroutine(LeaveRoom_Co());
-    }
-
-    private IEnumerator LeaveRoom_Co()
-    {
-        ReferencesManager.Instance.chatManager.DissconectUser();
-
-        PhotonNetwork.LeaveRoom();
-
-        yield break;
-    }
-
-    public void JoinRoom(RoomInfo info)
-    {
-        PhotonNetwork.JoinRoom(info.Name);
-    }
-
-    public override void OnLeftRoom()
-    {
-        mainMenu.OpenMenu(mainMenu.menus[0]);
-    }
-
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
-    {
-        foreach (Transform trans in roomListContent)
-        {
-            Destroy(trans.gameObject);
-        }
-
-        for (int i = 0; i < roomList.Count; i++)
-        {
-            RoomInfo info = roomList[i];
-            if (info.RemovedFromList)
-            {
-                cachedRoomList.Remove(info.Name);
-            }
-            else
-            {
-                cachedRoomList[info.Name] = info;
-            }
-        }
-
-        foreach (KeyValuePair<string, RoomInfo> entry in cachedRoomList)
-        {
-            Instantiate(roomListPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(cachedRoomList[entry.Key]);
+            roomListItem.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room.roomName));
         }
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
+    void JoinRoom(string roomName)
     {
-        Instantiate(playerListPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
+        networkAddress = "localhost";
+        StartClient();
+
+        // Отправка сообщения о присоединении к комнате на сервер
+        NetworkClient.Send(new JoinRoomMessage { roomName = roomName });
+
+        // Get nickname
+        string playerName = PlayerPrefs.GetString("nickname", $"Player{Random.Range(0, 9999)}");
+
+        NetworkClient.Send(new PlayerNameMessage { playerName = playerName });
+
+        _currentRoomInfo_Panel.SetActive(true);
+    }
+
+    public override void OnServerAddPlayer(NetworkConnectionToClient conn)
+    {
+        base.OnServerAddPlayer(conn);
+        Debug.Log("Player added: " + conn.connectionId);
+    }
+
+    public class PlayerInfo
+    {
+        public int connectionId;
+        public string _playerNickname;
+        public int _countryIndex;
+    }
+
+    public struct RoomInfo
+    {
+        public string roomName;
+        public int hostConnectionId;
+        public List<PlayerInfo> players;
+    }
+
+    public struct CreateRoomMessage : NetworkMessage
+    {
+        public string roomName;
+    }
+
+    public struct JoinRoomMessage : NetworkMessage
+    {
+        public string roomName;
+    }
+
+    public struct RoomListMessage : NetworkMessage
+    {
+        public List<RoomInfo> rooms;
+    }
+
+    public struct RoomJoinResponse : NetworkMessage
+    {
+        public bool success;
+    }
+
+    public struct PlayerNameMessage : NetworkMessage
+    {
+        public string playerName;
     }
 }

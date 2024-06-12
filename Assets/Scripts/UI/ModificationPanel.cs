@@ -506,7 +506,7 @@ public class ModificationPanel : MonoBehaviour
 
         WebClient client = new WebClient();
 
-        Stream data = client.OpenRead(@$"http://absolute-empire.7m.pl/media/uploads/mods/{currentLoadedModification.currentScenarioName}/{currentLoadedModification.currentScenarioName}.AEMod");
+        Stream data = client.OpenRead(@$"https://absolute-empire.space/media/uploads/mods/{currentLoadedModification.currentScenarioName}/{currentLoadedModification.currentScenarioName}.AEMod");
         StreamReader reader = new StreamReader(data);
 
         string modData = reader.ReadToEnd();
@@ -547,8 +547,8 @@ public class ModificationPanel : MonoBehaviour
 
             for (int i = 0; i < eventsIDS.Count; i++)
             {
-                string imageUrl = @$"http://absolute-empire.7m.pl/media/uploads/mods/{currentLoadedModification.currentScenarioName}/events/{eventsIDS[i]}/{eventsIDS[i]}.jpg";
-                string textUrl = @$"http://absolute-empire.7m.pl/media/uploads/mods/{currentLoadedModification.currentScenarioName}/events/{eventsIDS[i]}/{eventsIDS[i]}.AEEvent";
+                string imageUrl = @$"https://absolute-empire.space/media/uploads/mods/{currentLoadedModification.currentScenarioName}/events/{eventsIDS[i]}/{eventsIDS[i]}.jpg";
+                string textUrl = @$"https://absolute-empire.space/media/uploads/mods/{currentLoadedModification.currentScenarioName}/events/{eventsIDS[i]}/{eventsIDS[i]}.AEEvent";
 
                 StartCoroutine(CreateEventData_Co(ModPath, eventsIDS[i], imageUrl, textUrl));
             }

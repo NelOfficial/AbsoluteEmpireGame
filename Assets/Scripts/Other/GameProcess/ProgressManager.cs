@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
@@ -349,61 +348,38 @@ public class ProgressManager : MonoBehaviour
 
     public void NextProgress()
     {
-        if (ReferencesManager.Instance.gameSettings.onlineGame)
+        DateProgress();
+
+        UpdateUnitsData();
+
+        ReferencesManager.Instance.regionManager.DeselectRegions();
+
+        if (!ReferencesManager.Instance.gameSettings.spectatorMode)
         {
-            if (PhotonNetwork.CurrentRoom.PlayerCount == multiplayer.m_ReadyPlayers)
-            {
-                this.GetComponent<PhotonView>().RPC("RPC_NextMove", RpcTarget.All);
-
-                for (int i = 0; i < PhotonNetwork.CurrentRoom.Players.Count; i++)
-                {
-                    this.GetComponent<PhotonView>().RPC("RPC_SetReady", RpcTarget.All, PhotonNetwork.CurrentRoom.Players[i].NickName);
-                }
-            }
-            else
-            {
-                if (!this.GetComponent<PhotonView>())
-                {
-                    this.gameObject.AddComponent<PhotonView>().ViewID = 502;
-                }
-                this.GetComponent<PhotonView>().RPC("RPC_SetReady", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName);
-            }
+            ReferencesManager.Instance.countryManager.currentCountry.UpdateCapitulation();
         }
-        else
+
+        UpdateTechnologiesData();
+
+
+        UpdateRegionsInfo();
+
+        ReferencesManager.Instance.aiManager.OnNextMove();
+        progressIndex++;
+
+        UpdateTradesInfo();
+
+        UpdateCountriesEconomy();
+
+        List<RegionInfoCanvas> regionInfoCanvases = FindObjectsOfType<RegionInfoCanvas>().ToList();
+
+        for (int i = 0; i < regionInfoCanvases.Count; i++)
         {
-            DateProgress();
-
-            UpdateUnitsData();
-
-            ReferencesManager.Instance.regionManager.DeselectRegions();
-
-            if (!ReferencesManager.Instance.gameSettings.spectatorMode)
-            {
-                ReferencesManager.Instance.countryManager.currentCountry.UpdateCapitulation();
-            }
-
-            UpdateTechnologiesData();
-
-
-            UpdateRegionsInfo();
-
-            ReferencesManager.Instance.aiManager.OnNextMove();
-            progressIndex++;
-
-            UpdateTradesInfo();
-
-            UpdateCountriesEconomy();
-
-            List<RegionInfoCanvas> regionInfoCanvases = FindObjectsOfType<RegionInfoCanvas>().ToList();
-
-            for (int i = 0; i < regionInfoCanvases.Count; i++)
-            {
-                ReferencesManager.Instance.mainCamera.regionInfos.Remove(regionInfoCanvases[i]);
-                Destroy(regionInfoCanvases[i].gameObject);
-            }
-
-            CheckAutoSave();
+            ReferencesManager.Instance.mainCamera.regionInfos.Remove(regionInfoCanvases[i]);
+            Destroy(regionInfoCanvases[i].gameObject);
         }
+
+        CheckAutoSave();
     }
 
     private void CheckAutoSave()
@@ -426,7 +402,6 @@ public class ProgressManager : MonoBehaviour
         yield break;
     }
 
-    [PunRPC]
     private void RPC_SetReady(string playerNickName)
     {
         foreach (var player in ReferencesManager.Instance.gameSettings.multiplayer.roomPlayers)
@@ -446,173 +421,6 @@ public class ProgressManager : MonoBehaviour
             }
         }
         ReferencesManager.Instance.gameSettings.multiplayer.UpdatePlayerListUI();
-    }
-
-    [PunRPC]
-    private void RPC_NextMove()
-    {
-        ReferencesManager.Instance.dateManager.currentDate[0] += 10;
-
-        ReferencesManager.Instance.dateManager.UpdateUI();
-        ReferencesManager.Instance.dateManager.CheckGameEvents();
-
-        UnitMovement[] units = FindObjectsOfType<UnitMovement>();
-
-        bool hasFuel = false;
-
-        for (int i = 0; i < units.Length; i++)
-        {
-            int motorized = 0;
-            units[i]._movePoints = 1;
-            units[i].firstMove = true;
-
-            for (int unitIndex = 0; unitIndex < units[i].unitsHealth.Count; unitIndex++)
-            {
-                UnitMovement.UnitHealth unit = units[i].unitsHealth[unitIndex];
-
-                if (unit.fuel >= 50)
-                {
-                    hasFuel = true;
-                }
-
-                if (unit.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
-                {
-                    motorized++;
-                }
-            }
-
-            if (motorized >= 6 && hasFuel)
-            {
-                units[i]._movePoints = 2;
-            }
-
-            //CAN BE REMOVED CAUSE OF OPTIMZATON
-            units[i].currentProvince = units[i].transform.parent.GetComponent<RegionManager>();
-        }
-
-        ReferencesManager.Instance.regionManager.DeselectRegions();
-
-        if (ReferencesManager.Instance.technologyManager.currentTech != null && ReferencesManager.Instance.technologyManager.currentTech.tech != null)
-        {
-            if (ReferencesManager.Instance.technologyManager.currentTech != null && ReferencesManager.Instance.technologyManager.currentTech.tech != null)
-            {
-                ReferencesManager.Instance.technologyManager.currentTech.moves--;
-                ReferencesManager.Instance.technologyManager.SetResearchState(true);
-            }
-
-            if (ReferencesManager.Instance.technologyManager.currentTech.moves <= 0)
-            {
-                if (ReferencesManager.Instance.gameSettings.onlineGame)
-                {
-                    for (int i = 0; i < ReferencesManager.Instance.countryManager.currentCountry.countryTechnologies.Count; i++)
-                    {
-                        if (ReferencesManager.Instance.countryManager.currentCountry.countryTechnologies[i] == ReferencesManager.Instance.technologyManager.currentTech.tech)
-                        {
-                            Multiplayer.Instance.AddTechnology(ReferencesManager.Instance.countryManager.currentCountry.country._id, i);
-                        }
-                    }
-                }
-                else
-                {
-                    WarningManager.Instance.Warn($"Успешно исследована технология: {ReferencesManager.Instance.technologyManager.currentTech.tech._name}");
-                    ReferencesManager.Instance.technologyManager.SetResearchState(false);
-                    ReferencesManager.Instance.countryManager.currentCountry.countryTechnologies.Add(ReferencesManager.Instance.technologyManager.currentTech.tech);
-                    ReferencesManager.Instance.technologyManager.currentTech = null;
-                }
-            }
-        }
-
-
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
-        {
-            ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI / 100 * (int)ReferencesManager.Instance.countryManager.countries[i].inflation;
-
-            if (ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI > 0)
-            {
-                if (ReferencesManager.Instance.countryManager.countries[i].money / ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI >= 20)
-                {
-                    ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI / 25 * (int)ReferencesManager.Instance.countryManager.countries[i].inflation;
-                }
-            }
-            else
-            {
-                ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = ReferencesManager.Instance.countryManager.countries[i].moneyIncomeUI / 100 * (int)ReferencesManager.Instance.countryManager.countries[i].inflation;
-            }
-
-            ReferencesManager.Instance.countryManager.countries[i].inflationDebuff = Mathf.Abs(ReferencesManager.Instance.countryManager.countries[i].inflationDebuff);
-
-            Multiplayer.Instance.SetCountryValues(
-                ReferencesManager.Instance.countryManager.countries[i].country._id,
-                ReferencesManager.Instance.countryManager.countries[i].money,
-                ReferencesManager.Instance.countryManager.countries[i].food,
-                ReferencesManager.Instance.countryManager.countries[i].recroots);
-        }
-
-        ReferencesManager.Instance.countryInfo.currentCreditMoves--;
-        ReferencesManager.Instance.countryInfo.CheckCredit();
-
-        foreach (RegionManager region in ReferencesManager.Instance.countryManager.regions)
-        {
-            region.selectedColor.r = region.currentCountry.country.countryColor.r + 0.2f;
-            region.selectedColor.g = region.currentCountry.country.countryColor.g + 0.2f;
-            region.selectedColor.b = region.currentCountry.country.countryColor.b + 0.2f;
-            region.selectedColor.a = 0.5f;
-
-            region.hoverColor.r = region.currentCountry.country.countryColor.r + 0.3f;
-            region.hoverColor.g = region.currentCountry.country.countryColor.g + 0.3f;
-            region.hoverColor.b = region.currentCountry.country.countryColor.b + 0.3f;
-            region.hoverColor.a = 0.5f;
-
-            for (int _i = 0; _i < region.buildingsQueue.Count; _i++)
-            {
-                int buildSpeed = 1;
-
-                if (region.infrastructure_Amount < 4) buildSpeed = 1;
-                else if (region.infrastructure_Amount == 4) buildSpeed = 2;
-                else if (region.infrastructure_Amount == 6) buildSpeed = 3;
-                else if (region.infrastructure_Amount == 8) buildSpeed = 4;
-                else if (region.infrastructure_Amount == 10) buildSpeed = 5;
-
-                region.buildingsQueue[_i].movesLasts -= buildSpeed;
-            }
-
-            CheckQueue(region);
-        }
-
-        ReferencesManager.Instance.aiManager.OnNextMove();
-        progressIndex++;
-
-        foreach (TradeBuff tradeBuff in ReferencesManager.Instance.gameSettings.diplomatyUI.globalTrades)
-        {
-
-            Multiplayer.Instance.SetCountryValues(
-                tradeBuff.sender.country._id,
-                tradeBuff.sender.money,
-                tradeBuff.sender.food,
-                tradeBuff.sender.recroots);
-
-            Multiplayer.Instance.SetCountryValues(
-                tradeBuff.receiver.country._id,
-                tradeBuff.receiver.money,
-                tradeBuff.receiver.food,
-                tradeBuff.receiver.recroots);
-        }
-
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
-        {
-            CountrySettings country = ReferencesManager.Instance.countryManager.countries[i];
-            country.inflationDebuff = Mathf.Abs(country.inflationDebuff);
-
-            country.money += country.moneyIncomeUI;
-            country.moneyNaturalIncome = country.civFactories * ReferencesManager.Instance.gameSettings.fabric.goldIncome;
-            country.moneyIncomeUI = country.moneyNaturalIncome + country.moneyTradeIncome - Mathf.FloorToInt(country.inflationDebuff) - country.regionCosts;
-
-            Multiplayer.Instance.SetCountryValues(country.country._id, country.money, country.food, country.recroots);
-            Multiplayer.Instance.SetCountryIncomeValues(country.country._id, country.moneyNaturalIncome, country.foodNaturalIncome, country.recrootsIncome);
-            Multiplayer.Instance.SetCountryNaturalIncomeValues(country.country._id, country.moneyNaturalIncome, country.foodNaturalIncome);
-        }
-
-        ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
     }
 
     private void CheckQueue(RegionManager region)

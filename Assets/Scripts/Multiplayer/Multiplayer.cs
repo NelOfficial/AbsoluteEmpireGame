@@ -1,15 +1,11 @@
 using TMPro;
 using UnityEngine;
 using System.Collections.Generic;
-using Photon.Pun;
-using Photon.Realtime;
 using System.Linq;
 
 
-public class Multiplayer : MonoBehaviourPunCallbacks
+public class Multiplayer : MonoBehaviour
 {
-    private PhotonView photonView;
-
     [HideInInspector] public static Multiplayer Instance;
     public int m_ReadyPlayers = 0;
 
@@ -27,20 +23,10 @@ public class Multiplayer : MonoBehaviourPunCallbacks
     private void Start()
     {
         Instance = this;
-        photonView = GetComponent<PhotonView>();
 
         _playerListButton.SetActive(ReferencesManager.Instance.gameSettings.onlineGame);
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        UpdatePlayerListUI();
-    }
-
-    public override void OnPlayerLeftRoom(Player otherPlayer)
-    {
-        UpdatePlayerListUI();
-    }
 
     public void UpdatePlayerListUI()
     {
@@ -49,30 +35,29 @@ public class Multiplayer : MonoBehaviourPunCallbacks
             Destroy(child.gameObject);
         }
 
-        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-        {
-            Player player = PhotonNetwork.PlayerList[i];
-            int playerCountryIndex = (int)player.CustomProperties["playerCountryIndex"];
+        //for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        //{
+        //    int playerCountryIndex = (int)player.CustomProperties["playerCountryIndex"];
 
-            GameObject spawnedPlayerListPrefab = Instantiate(ReferencesManager.Instance.gameSettings.playerListPrefab, ReferencesManager.Instance.gameSettings.playersListContent);
-            spawnedPlayerListPrefab.transform.GetChild(0).GetComponent<TMP_Text>().text = player.NickName;
+        //    GameObject spawnedPlayerListPrefab = Instantiate(ReferencesManager.Instance.gameSettings.playerListPrefab, ReferencesManager.Instance.gameSettings.playersListContent);
+        //    spawnedPlayerListPrefab.transform.GetChild(0).GetComponent<TMP_Text>().text = player.NickName;
 
-            spawnedPlayerListPrefab.transform.GetChild(1).GetComponent<FillCountryFlag>().country = ReferencesManager.Instance.countryManager.countries[playerCountryIndex].country;
-            spawnedPlayerListPrefab.transform.GetChild(1).GetComponent<FillCountryFlag>().FillInfo();
-            spawnedPlayerListPrefab.transform.GetChild(1).GetComponent<FillCountryFlag>().InDiplomatyUI = true;
+        //    spawnedPlayerListPrefab.transform.GetChild(1).GetComponent<FillCountryFlag>().country = ReferencesManager.Instance.countryManager.countries[playerCountryIndex].country;
+        //    spawnedPlayerListPrefab.transform.GetChild(1).GetComponent<FillCountryFlag>().FillInfo();
+        //    spawnedPlayerListPrefab.transform.GetChild(1).GetComponent<FillCountryFlag>().InDiplomatyUI = true;
 
-            roomPlayers = FindObjectsOfType<PlayerData>().ToList();
+        //    roomPlayers = FindObjectsOfType<PlayerData>().ToList();
 
-            foreach (var _player in roomPlayers)
-            {
-                if (spawnedPlayerListPrefab.transform.GetChild(0).GetComponent<TMP_Text>().text == _player.currentNickname)
-                {
-                    spawnedPlayerListPrefab.transform.GetChild(2).gameObject.SetActive(_player.readyToMove);
-                }
-            }
+        //    foreach (var _player in roomPlayers)
+        //    {
+        //        if (spawnedPlayerListPrefab.transform.GetChild(0).GetComponent<TMP_Text>().text == _player.currentNickname)
+        //        {
+        //            spawnedPlayerListPrefab.transform.GetChild(2).gameObject.SetActive(_player.readyToMove);
+        //        }
+        //    }
 
-            spawnedPlayerListPrefab.transform.localScale = new Vector3(1, 1, 1);
-        }
+        //    spawnedPlayerListPrefab.transform.localScale = new Vector3(1, 1, 1);
+        //}
     }
 
 
@@ -80,23 +65,16 @@ public class Multiplayer : MonoBehaviourPunCallbacks
 
     public void SetCountryValues(int countryID, int money, int food, int recroots)
     {
-        if (ReferencesManager.Instance.gameSettings.onlineGame)
-            photonView.RPC("RPC_SetCountryValues", RpcTarget.All, countryID, money, food, recroots);
     }
 
     public void SetCountryIncomeValues(int countryID, int moneyIncome, int foodIncome, int recrootsIncome)
     {
-        if (ReferencesManager.Instance.gameSettings.onlineGame)
-            photonView.RPC("RPC_SetCountryIncomeValues", RpcTarget.All, countryID, moneyIncome, foodIncome, recrootsIncome);
     }
 
     public void SetCountryNaturalIncomeValues(int countryID, int moneyIncome, int foodIncome)
     {
-        if (ReferencesManager.Instance.gameSettings.onlineGame)
-            photonView.RPC("RPC_SetCountryNaturalIncomeValues", RpcTarget.All, countryID, moneyIncome, foodIncome);
     }
 
-    [PunRPC]
     private void RPC_SetCountryValues(int countryID, int money, int food, int recroots)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
@@ -112,7 +90,6 @@ public class Multiplayer : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
     private void RPC_SetCountryIncomeValues(int countryID, int moneyIncome, int foodIncome, int recrootsIncome)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
@@ -128,7 +105,6 @@ public class Multiplayer : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
     private void RPC_SetCountryNaturalIncomeValues(int countryID, int moneyIncome, int foodIncome)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
@@ -149,11 +125,8 @@ public class Multiplayer : MonoBehaviourPunCallbacks
 
     public void M_UpdateCountryGraphics(int countryID, string ideology)
     {
-        if (ReferencesManager.Instance.gameSettings.onlineGame)
-            photonView.RPC("RPC_UpdateCountryGraphics", RpcTarget.All, countryID, ideology);
     }
 
-    [PunRPC]
     private void RPC_UpdateCountryGraphics(int countryID, string ideology)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
@@ -208,18 +181,12 @@ public class Multiplayer : MonoBehaviourPunCallbacks
     public void SetRegionValues(int regionID, int population, bool hasArmy, int goldIncome,
         int foodIncome, int civFactory_Amount, int infrastructure_Amount, int farms_Amount, int cheFarms, int regionScore)
     {
-        if (ReferencesManager.Instance.gameSettings.onlineGame)
-            photonView.RPC("RPC_SetRegionValues", RpcTarget.All, regionID, population, hasArmy, goldIncome,
-                foodIncome, civFactory_Amount, infrastructure_Amount, farms_Amount, cheFarms, regionScore);
     }
 
     public void AnnexRegion(int regionID, int newCountryID)
     {
-        if (ReferencesManager.Instance.gameSettings.onlineGame)
-            photonView.RPC("RPC_AnnexRegion", RpcTarget.All, regionID, newCountryID);
     }
 
-    [PunRPC]
     private void RPC_SetRegionValues(int regionID, int population, bool hasArmy, int goldIncome,
         int foodIncome, int civFactory_Amount, int infrastructure_Amount, int farms_Amount, int cheFarms, int regionScore)
     {
@@ -263,7 +230,6 @@ public class Multiplayer : MonoBehaviourPunCallbacks
     }
 
 
-    [PunRPC]
     private void RPC_AnnexRegion(int regionID, int newCountryID)
     {
         foreach (var country in ReferencesManager.Instance.countryManager.countries)
@@ -305,11 +271,8 @@ public class Multiplayer : MonoBehaviourPunCallbacks
 
     public void AddTechnology(int countryID, int technologyID)
     {
-        if (ReferencesManager.Instance.gameSettings.onlineGame)
-            photonView.RPC("RPC_AddTechnology", RpcTarget.All, countryID, technologyID);
     }
 
-    [PunRPC]
     private void RPC_AddTechnology(int countryID, int technologyID)
     {
         foreach (CountrySettings country in ReferencesManager.Instance.countryManager.countries)
@@ -327,25 +290,20 @@ public class Multiplayer : MonoBehaviourPunCallbacks
 
     public void AddUnitToArmy(string unitName, int regionId)
     {
-        photonView.RPC("RPC_AddUnitToArmy", RpcTarget.All, unitName, regionId);
     }
 
     public void CreateUnit(int regionId)
     {
-        photonView.RPC("RPC_CreateUnit", RpcTarget.All, regionId);
     }
 
     public void RemoveUnitFromArmy(string unitName, int regionId)
     {
-        photonView.RPC("RPC_RemoveUnitFromArmy", RpcTarget.All, unitName, regionId);
     }
 
     public void MoveUnit(int fromRegionId, int toRegionId)
     {
-        photonView.RPC("RPC_MoveUnit", RpcTarget.All, fromRegionId, toRegionId);
     }
 
-    [PunRPC]
     private void RPC_RemoveUnitFromArmy(int unitId, int regionId)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
@@ -404,7 +362,6 @@ public class Multiplayer : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
     private void RPC_AddUnitToArmy(string unitName, int regionId)
     {
         UnitScriptableObject unit = ReferencesManager.Instance.gameSettings.soldierLVL1;
@@ -505,7 +462,6 @@ public class Multiplayer : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
     private void RPC_CreateUnit(int regionId)
     {
         UnitScriptableObject unit = ReferencesManager.Instance.gameSettings.soldierLVL1;
@@ -545,7 +501,6 @@ public class Multiplayer : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
     private void RPC_MoveUnit(int fromRegionId, int toRegionId)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
@@ -581,20 +536,17 @@ public class Multiplayer : MonoBehaviourPunCallbacks
 
     public void SendOffer(int senderId, int receiverId, string offer)
     {
-        photonView.RPC("RPC_SendOffer", RpcTarget.All, senderId, receiverId, offer);
     }
 
     public void AcceptOffer(int senderId, int receiverId, string offer)
     {
-        photonView.RPC("RPC_AcceptOffer", RpcTarget.All, senderId, receiverId, offer);
     }
 
-    [PunRPC]
     private void RPC_SendOffer(int senderId, int receiverId, string offer)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
         {
-            int index = (int)PhotonNetwork.LocalPlayer.CustomProperties["playerCountryIndex"];
+            int index = 0; //playercountryindex
 
             Debug.Log(senderId);
             if (ReferencesManager.Instance.countryManager.countries[i].country._id == senderId)
@@ -778,7 +730,6 @@ public class Multiplayer : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
     private void RPC_AcceptOffer(int senderId, int receiverId, string offer)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)

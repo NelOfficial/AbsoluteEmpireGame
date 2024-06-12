@@ -2,7 +2,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using Photon.Pun;
 
 public class Settings : MonoBehaviour
 {
@@ -162,10 +161,6 @@ public class Settings : MonoBehaviour
         ReferencesManager.Instance.gameSettings.playMod.value = false;
         ReferencesManager.Instance.gameSettings.playTestingMod.value = false;
 
-        if (gameSettings.onlineGame)
-        {
-            PhotonNetwork.LeaveRoom();
-        }
         SceneManager.LoadScene(0);
     }
 

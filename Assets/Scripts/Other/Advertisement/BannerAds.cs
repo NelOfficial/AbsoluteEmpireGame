@@ -43,8 +43,6 @@ public class BannerAds : MonoBehaviour
         this.banner.OnImpression += this.HandleImpression;
 
         this.banner.LoadAd(this.CreateAdRequest());
-
-        Debug.Log("Banner is requested");
     }
 
     // Example how to get screen width for request
@@ -69,33 +67,27 @@ public class BannerAds : MonoBehaviour
 
     public void HandleAdLoaded(object sender, EventArgs args)
     {
-        Debug.Log("HandleAdLoaded event received");
         this.banner.Show();
     }
 
     public void HandleAdFailedToLoad(object sender, AdFailureEventArgs args)
     {
-        Debug.Log("HandleAdFailedToLoad event received with message: " + args.Message);
     }
 
     public void HandleLeftApplication(object sender, EventArgs args)
     {
-        Debug.Log("HandleLeftApplication event received");
     }
 
     public void HandleReturnedToApplication(object sender, EventArgs args)
     {
-        Debug.Log("HandleReturnedToApplication event received");
     }
 
     public void HandleAdLeftApplication(object sender, EventArgs args)
     {
-        Debug.Log("HandleAdLeftApplication event received");
     }
 
     public void HandleAdClicked(object sender, EventArgs args)
     {
-        Debug.Log("HandleAdClicked event received");
         if (SceneManager.GetActiveScene().name == "EuropeSceneOffline")
         {
             StartCoroutine(LoadAd_Co());
@@ -115,7 +107,6 @@ public class BannerAds : MonoBehaviour
     public void HandleImpression(object sender, ImpressionData impressionData)
     {
         var data = impressionData == null ? "null" : impressionData.rawData;
-        Debug.Log("HandleImpression event received with data: " + data);
     }
 
     #endregion

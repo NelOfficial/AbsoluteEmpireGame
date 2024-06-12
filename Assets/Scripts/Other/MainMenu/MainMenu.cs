@@ -87,7 +87,6 @@ public class MainMenu : MonoBehaviour
     {
         nicknameText.text = nickname;
         secondNicknameText.text = nickname;
-        Photon.Pun.PhotonNetwork.NickName = nickname;
 
         PlayerPrefs.SetString("nickname", nickname);
     }

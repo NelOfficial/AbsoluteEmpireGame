@@ -29,6 +29,7 @@ public class ReferencesManager : MonoBehaviour
     public ResourcesMarketManager resourcesMarketManager;
 
     public FleetManager fleetManager;
+    public Launcher launcher;
 
     public Transform countriesParent;
     public CountrySettings countrySettingsPrefab;

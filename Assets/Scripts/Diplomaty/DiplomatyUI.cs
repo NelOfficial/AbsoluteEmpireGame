@@ -253,11 +253,11 @@ public class DiplomatyUI : MonoBehaviour
                 acceptationStatePanel.SetActive(true);
                 if (PlayerPrefs.GetInt("languageId") == 0)
                 {
-                    acceptationStateText.text = $"Ваше предложение <b><color=\"blue\">было отправлено</color></b> игроку <b><color=\"yellow\">{receiver._countryPlayer.NickName}</b></color>";
+                    acceptationStateText.text = $"Ваше предложение <b><color=\"blue\">было отправлено</color></b> игроку <b><color=\"yellow\">{receiver}</b></color>";
                 }
                 else if (PlayerPrefs.GetInt("languageId") == 1)
                 {
-                    acceptationStateText.text = $"Your offer <b><color=\"blue\">was sent</color></b>to the player<b><color=\"yellow\">{receiver._countryPlayer.NickName}</b></color>";
+                    acceptationStateText.text = $"Your offer <b><color=\"blue\">was sent</color></b>to the player<b><color=\"yellow\">{receiver}</b></color>";
                 }
             }
         }
