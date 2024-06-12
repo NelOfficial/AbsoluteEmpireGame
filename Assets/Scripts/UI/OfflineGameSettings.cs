@@ -12,7 +12,7 @@ public class OfflineGameSettings : MonoBehaviour
     [SerializeField] Image imagePreview;
 
     [SerializeField] int currentMapId;
-    [SerializeField] int currentScenarioId;
+    public int currentScenarioId;
 
     [SerializeField] Scenario[] scenarios;
     [SerializeField] List<Team> teams = new List<Team>();

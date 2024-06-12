@@ -13,11 +13,20 @@ public class PlayerListItem : NetworkBehaviour
     public Image selectedCountryFlag;
     public TMP_Text nicknameText;
 
-    public int countriesIndex;
+    public int countryIndex;
+
+    [SyncVar(hook = nameof(OnCountryChanged))]
+    public int countryId;
 
     private void OnNameChanged(string oldName, string newName)
     {
         nicknameText.text = newName;
+    }
+
+    private void OnCountryChanged(int oldCountryIndex, int newCountryIndex)
+    {
+        countryId = newCountryIndex;
+        UpdateCountryFlag();
     }
 
     public override void OnStartClient()
@@ -30,14 +39,37 @@ public class PlayerListItem : NetworkBehaviour
         }
     }
 
+    public void ChangeCountry()
+    {
+        if (isLocalPlayer)
+        {
+            CmdSelectCountry();
+        }
+    }
+
     [Command]
     public void CmdSetPlayerName(string name)
     {
         _nickname = name;
     }
 
-    public void SelectCountry(int index)
+    [Command]
+    public void CmdSelectCountry()
     {
+        OfflineGameSettings.Scenario scenario =
+            ReferencesManager.Instance.offlineGameSettings.GetScenario(
+                ReferencesManager.Instance.offlineGameSettings.currentScenarioId);
+
+        if (countryIndex + 1 < scenario.countries.Length)
+        {
+            countryIndex++;
+        }
+        else
+        {
+            countryIndex = 0;
+        }
+
+        countryId = scenario.countries[countryIndex]._id;
     }
 
     public void SetUp()
@@ -46,14 +78,17 @@ public class PlayerListItem : NetworkBehaviour
 
         nicknameText.text = _nickname;
 
-        SelectCountry(0);
+        UpdateCountryFlag();
     }
 
-    public void ChangeCountrySelection()
+    private void UpdateCountryFlag()
     {
-        if (PlayerPrefs.GetString("nickname") == this._nickname)
+        foreach (CountryScriptableObject country in ReferencesManager.Instance.globalCountries)
         {
-            SelectCountry(countriesIndex);
+            if (country._id == countryId)
+            {
+                selectedCountryFlag.sprite = country.countryFlag;
+            }
         }
     }
 }
