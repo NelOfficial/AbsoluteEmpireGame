@@ -78,7 +78,7 @@ public class MainMenu : MonoBehaviour
 
         PlayerPrefs.SetString("FIRST_LOAD", "TRUE");
 
-        quoteText.text = quotes[Random.Range(0, quotes.Length)];
+        quoteText.text = ReferencesManager.Instance.languageManager.GetTranslation($"{quotes[Random.Range(0, quotes.Length)]}");
 
         LoadScene("EuropeSceneOffline");
     }
@@ -239,6 +239,11 @@ public class MainMenu : MonoBehaviour
         for (int i = 0;i < localisationTexts.Length; i++)
         {
             localisationTexts[i].SetUp();
+        }
+        TextTranslate[] localisationTextsNew = FindObjectsOfType<TextTranslate>();
+        for (int i = 0; i < localisationTextsNew.Length; i++)
+        {
+            localisationTextsNew[i].SetUp();
         }
 
         loadingMenu.SetActive(false);

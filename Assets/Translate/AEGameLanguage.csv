@@ -1,0 +1,95 @@
+﻿KEY;EN;RU;ES;PT;BR
+BackButton;Back;Назад;Atrás;Atrás;Voltar
+ConfirmButton;Confirm;Принять;Adoptar;Aceitar;Aceitar
+DoneButton;Done;Готово;Listo;Feito;Feito
+CloseButton;Close;Закрыть;Cerrar;Fechar;Para fechar
+Yes;Yes;Да;Sí;Sim;Sim
+No;No;Нет;No hay;Não;No
+RefreshButton;Refresh;Обновить;Renovar;Renovar;Atualização
+ExitButton;Exit;Выйти;Salir;Sair;Saída
+Info.TitleText;Detailed information;Подробная информация;Información detallada;Informações pormenorizadas;Informações detalhadas
+Info.NoInfo;So far, it's empty (×_×) ;Пока здесь пусто (×_×) ;Hasta ahora, aquí está vacío (×_×) ;Até agora, está vazio (×_×) ;Até o momento, está vazio (×_×) 
+MainMenu.SingleplayerButton;Singleplayer;Одиночная игра;Juego de un solo jugador;Single player;Jogo Single Player
+MainMenu.CreateRoomButton;Create a room;Создать комнату;Crear una habitación;Criar uma sala;Crie uma sala
+MainMenu.RoomsListButton;List of rooms;Список комнат;Lista de habitaciones;Lista de quartos;Lista de quartos
+MainMenu.SettingButton;Settings;Настройки;Ajustes;Sintonização;Configurações
+MainMenu.ExitButton;Quit the game;Выйти из игры;Alzarse;Sair do jogo;Sair do jogo
+MainMenu.ModsListButton;Modifications;Модификации;Modificación;Modificação;Modificações
+MainMenu.Account.LoginButton;Log in;Войти в аккаунт;Iniciar sesión;Entrar na sua conta;Faça login na sua conta
+MainMenu.Account.SiteButton;Website;Сайт игры;Sitio del juego;Site do jogo;O site do jogo
+MainMenu.Account.WarningToLoginText;Log in to create mods;Войдите в аккаунт, чтобы создавать моды :);Inicia sesión para crear mods;Faça login para criar mods;Faça login para criar mods
+MainMenu.Account.CreateModButton;Create mod;Создать мод;Crear mod;Criar um mod;Crie um mod
+MainMenu.Account.MyAccountButton;My profile;Мой профиль;Mi perfil;Meu perfil;Meu perfil
+MainMenu.Account.MyAccount;My account;Мой аккаунт;Mi cuenta;A minha conta;Minha conta
+MainMenu.Account.MyMods;My Mods;Мои модификации;Mis modificaciones;Minhas modificações;Minhas modificações
+MainMenu.Account.Premium;Premium:;Премиум:;Premium:;Premium:;Premium:
+MainMenu.Account.Notifications;Notifications;Уведомления;Notificación;Notificação;Notificações
+MainMenu.Account.MyUnratedMods;My Unrated Mods;Мои модификации на рассмотрении;Mis Mods Sin Calificación;Meus Mods Sem Classificação;My Unrated Mods
+MainMenu.Account.Email;Email:;Почта:;Correo:;Correio:;Mail:
+MainMenu.Account.BanState;Not blocked;Не заблокирован;No bloqueado;Não Bloqueado;Não Bloqueado
+MainMenu.Account.Role.Player;Player;Игрок;Jugador;Jogador;Jogador
+MainMenu.Account.Role.ContentMaker;Content-Maker;Контент-Мейкер;Creador De Contenido;Criador De Conteúdo;Criador De Conteúdo
+MainMenu.Account.Role.Moderator;Moderator;Модератор;Moderador;Moderador;Moderador
+MainMenu.Account.Role.Admin;Administrator;Администратор;Administrador;Administrador;Administrador
+MainMenu.Account.Role.Exp;EXP;опыта;EXP;EXP;EXP
+MainMenu.Account.Role.Level;level;уровень;nivel;nível;nível
+MainMenu.SingleMode.CountriesText;Countries;Страны;Países;País;Países
+MainMenu.SingleMode.DifficultyText;Difficulty;Сложность;Dificultad;Dificuldades;Dificuldade
+MainMenu.SingleMode.Difficulty.Choice.Easy;Easy;Легкая;Vida fácil;Fácil;Fácil
+MainMenu.SingleMode.Difficulty.Choice.Normal;Normal;Нормальная;Normal;Normal;Normal
+MainMenu.SingleMode.Difficulty.Choice.Hard;Hard;Сложная;Compleja;Complexo;Difícil
+MainMenu.SingleMode.Difficulty.Choice.Insane;Insane;Безумная;Loca;Insano;Louco
+MainMenu.SingleMode.Difficulty.Choice.Hardcore;Hardcore;Невыносимая;Insoportable;Insuportável;Insuportável
+MainMenu.SingleMode.ScenarioText;Scenario;Сценарий;Guión;Cenário;O roteiro
+MainMenu.SingleMode.PlayButton;Start;Играть;Jugar;Jogar;Play
+MainMenu.SingleMode.SelectMode;Mode Selection;Выбор режима;Selección de modo;Seleccionar o modo;Seleção De Modo
+MainMenu.SingleMode.MySaves;My saves;Сохранения;Conservación;Conservação;Poupança
+MainMenu.SingleMode.SelectMode.SelectText;Select mode;Выбрать режим;Seleccionar modo;Escolha o modo;Selecione um modo
+MainMenu.SingleMode.SelectMode.Historic;Historical mode;Исторический режим;Régimen histórico;Modo histórico;Modo histórico
+MainMenu.SingleMode.SelectMode.NonHistoric;Alternative mode;Альтернативный режим;Modo alternativo;Modo alternativo;Modo alternativo
+MainMenu.SingleMode.SelectMode.Tournament;Tournament mode;Турнирный режим;Modo torneo;Modo torneio;Modo torneio
+MainMenu.SingleMode.SelectMode.Missions;Missions;Миссии;Misión;Missão;Missões
+MainMenu.CreateRoom.NameText;Room Name:;Имя комнаты:;Nombre de la habitación:;Nome do quarto:;Nome Do Quarto:
+MainMenu.CreateRoom.NamePlaceHolder;Enter a name...;Введите имя...;Introduzca un nombre...;Digite um nome...;Digite um nome...
+MainMenu.CreateRoom.CreateButton;Create;Создать;Crear;Criar;Para criar
+MainMenu.RoomsListText;Rooms;Комнаты;Habitación;Casa;Quartos
+MainMenu.VKButton;VK Group;Группа в ВК;Grupo VK;Grupo VK;Grupo VK
+MainMenu.DiscordButton;Discord;Discord;Discord;Discord;Discord
+MainMenu.YoutubeButton;Youtube;Youtube;Youtube;Youtube;Youtube
+MainMenu.TelegramButton;Telegram;Телеграм;Telegram;Telegram;Telegram
+MainMenu.Settings.Design1;Design 1;Дизайн 1;Design 1;Design 1;Design 1
+MainMenu.Settings.Design2;Design 2;Дизайн 2;Design 2;Design 2;Design 2
+MainMenu.Settings.Design3;Design 3;Дизайн 3;Design 3;Design 3;Design 3
+MainMenu.Settings.UI;UI;Интерфейс;UI;UI;UI
+MainMenu.Settings.VolumeText;Music Volume;Громкость музыки;Music Volume;Music Volume;Music Volume
+MainMenu.Settings.Language;Language;Язык;Idioma;Língua;Língua
+MainMenu.Settings.Language.English;English language;English language;English language;English language;English language
+MainMenu.Settings.Language.Russian;Русский язык;Русский язык;Русский язык;Русский язык;Русский язык
+MainMenu.Settings.Language.Espaniol;Español;Español;Español;Español;Español
+MainMenu.Settings.Language.Portuegesee;Português;Português;Português;Português;Português
+MainMenu.Settings.Language.Brasilian;Português (Brasil);Português (Brasil);Português (Brasil);Português (Brasil);Português (Brasil)
+MainMenu.Settings.AdvancedText;Advanced;Дополнительно;Complementariamente;Adicionalmente;Adicionalmente
+MainMenu.Settings.Advanced.DevMode;Developer mode;Режим разработчика;Modo Desarrollador;Modo Desenvolvedor;Modo Desenvolvedor
+MainMenu.ModsList.OnlineScenariosText;Online scenarios;Онлайн сценарии;Escenarios en línea;Cenários online;Cenários Online
+MainMenu.ModsList.PageText;Page;Страница;Página;Página;Página
+MainMenu.ModsList.Save;Download modification;Скачать модификацию;Descargar modificación;Baixar modificação;Baixe a modificação
+MainMenu.ModsList.View;View downloaded modifications;Посмотреть скачанные модификации;Ver las modificaciones descargadas;Veja as modificações baixadas;Ver modificações baixadas
+MainMenu.VersionButton;Current update:;Актуальное обновление:;Actualización actual:;Atualização atual:;Atualização atual:
+MainMenu.Version.Title;Game Version;Версия игры;Versión del juego;Versão do jogo;Versão Do Jogo
+MainMenu.Version.NewVersion;You have the latest version of the game installed;У вас установлена новейшая версия игры;Tienes instalada la Última versión del juego;Você tem a versão mais recente do jogo;Você tem a versão mais recente do jogo instalada
+MainMenu.Version.OldVersion;"Your version is outdated.\\\We recommend updating the game!";"Ваша версия устарела.\\\Советуем обновить игру!";"Su versión está desactualizada.\\\Recomendamos actualizar el juego!";"Sua versão está desatualizada.\\\Recomendamos atualizar o jogo!";"Sua versão está desatualizada.\\\Recomendamos atualizar o jogo!"
+MainMenu.Version.CurrentVersion;Current version:;Текущая версия:;Versión actual:;Versão atual:;Versão atual:
+MainMenu.Loading;Loading...;Идёт загрузка...;Se está cargando...;A carregar...;O download está em andamento...
+MainMenu.Quote1;Russian armies destroy more enemy soldiers and weapons than all the other 25 United Nations states combined... - Franklin Roosevelt;Русские армии уничтожают больше солдат и вооружения противника, чем все остальные 25 государств объединенных наций вместе взятых… - Франклин Рузвельт;Los ejércitos rusos destruyen más soldados y armas enemigas que todos los otros 25 Estados de las Naciones Unidas combinados. - Franklin Roosevelt;Os exércitos russos matam mais soldados e armas do inimigo do que todos os outros 25 estados das Nações Unidas combinados. - Franklin D. Roosevelt;Os exércitos russos destroem mais soldados e armas inimigas do que todos os outros 25 estados das Nações Unidas juntos... - Franklin Roosevelt
+MainMenu.Quote2;Hitler's crazy ideas were not destined to come true — the course of the war scattered them to dust. - Joseph Stalin;Сумасбродным идеям Гитлера не суждено было сбыться, — ход войны развеял их в прах. - Иосиф Сталин;Las ideas extravagantes de Hitler no estaban destinadas a hacerse realidad: el curso de la guerra las disipó en polvo. - Joseph Stalin;As idéias extravagantes de Hitler não estavam destinadas a se tornar realidade — o curso da guerra as dissipou em pó.  Joseph Stalin;As idéias malucas de Hitler não estavam destinadas a se tornar realidade — o curso da guerra as transformou em pó. - Josef Stalin
+MainMenu.Quote3;The war has been won, but not the peace. - Albert Einstein;Выиграна война, но не мир. - Альберт Эйнштейн;Se gana la guerra pero no la paz. - Albert Einstein;A guerra foi vencida, mas não a paz.  Albert Einstein;A guerra foi ganha, mas não a paz. - Albert Einstein
+MainMenu.Quote4;Together with the Leningraders, all Soviet people and all progressive humanity rejoiced at the great triumph of the city. - Harrison Salisbury;Вместе с ленинградцами великому торжеству города радовались все советские люди, все прогрессивное человечество. - Гаррисон Солсбери;Junto con los leningradenses, todos los soviéticos, toda la humanidad progresista, se regocijaron en el gran triunfo de la ciudad. - Harrison Salisbury;Juntamente com os leningradianos, todos os soviéticos, toda a humanidade progressista, se alegraram com o grande triunfo da cidade. - Harrison Salisbury;Juntamente com os Leningradenses, todo o povo soviético e toda a humanidade progressista se alegraram com o grande triunfo da cidade. - Harrison Salisbury
+MainMenu.Quote5;England was offered a choice between war and dishonor. She chose dishonor and will get war. - Winston Churchill;Англии был предложен выбор между войной и бесчестием. Она выбрала бесчестие и получит войну. - Уинстон Черчилль;A Inglaterra se le ofreció la opción entre la guerra y la deshonra. Ella eligió la deshonra y recibirá la guerra. - Winston Churchill;A Inglaterra foi oferecida uma escolha entre a guerra e a desonra. Ela escolheu a desonra e terá a guerra. - Winston Churchill;Foi oferecida à Inglaterra uma escolha entre a guerra e a desonra. Ela escolheu a desonra e vai ter Guerra. - Winston Churchill
+MainMenu.Quote6;The Russian army has gutted the German war machine. - Winston Churchill;Русская армия выпустила кишки из германской военной машины. - Уинстон Черчилль;El ejército ruso disparó las tripas de la máquina de guerra alemana. - Winston Churchill;O exército russo libertou as tripas da máquina de guerra alemã. - Winston Churchill;O exército russo destruiu a máquina de guerra alemã. - Winston Churchill
+MainMenu.Quote7;The truth is that despite the hardest trials, we have won. - Alexander Chak'ovsky;Истина заключается в том, что, несмотря на тяжелейшие испытания, мы победили. - Александр Чаковский;La verdad es que, a pesar de las pruebas más difíciles, hemos ganado. - Alexander Chakovsky;A verdade é que, apesar das provações mais difíceis, vencemos. - Alexander Chakovsky;A verdade é que, apesar das provas mais duras, vencemos. - Alexandre Chak ' ovsky
+MainMenu.Quote8;The history of wars knows of no other similar enterprise in terms of breadth of conception, grandiosity of scale and skill of execution. - Joseph Stalin;История войн не знает другого подобного предприятия по широте замысла, грандиозности масштабов и мастерству выполнения. - Иосиф Сталин;La historia de las guerras no conoce otra empresa similar en términos de amplitud de diseño, grandiosidad de escala y habilidad de ejecución. - Joseph Stalin;A história das guerras não conhece outro empreendimento semelhante em termos de amplitude de projeto, grandiosidade de escala e habilidade de execução.  Joseph Stalin;A história das guerras não conhece outro empreendimento semelhante em termos de amplitude de concepção, grandiosidade de escala e habilidade de execução. - Josef Stalin
+MainMenu.Quote9;Even when the German troops were already halfway back, it was still talked about as a strategic withdrawal. In fact, this was the end of Hitler. The Nazi bull market ended on the day of the attack on Stalingrad. - Nicholas Darvas;Даже когда немецкие войска были уже на полпути назад, об этом по-прежнему говорили как о стратегическом отходе. Фактически же это был конец Гитлера. Нацистский бычий рынок закончился в день атаки на Сталинград. - Николас Дарвас;Incluso cuando las tropas alemanas ya estaban a mitad de camino, todavía se hablaba de una retirada estratégica. De hecho, fue el fin de Hitler. El mercado alcista nazi terminó el día del ataque a Stalingrado. - Nicholas Darvas;Mesmo quando as tropas alemãs já estavam a meio caminho de volta, isso ainda era falado como uma retirada estratégica. Foi o fim de Hitler. O mercado de Touro nazista terminou no dia do ataque a Stalingrado. - Nicholas Darvas;Mesmo quando as tropas alemãs já estavam na metade do caminho de volta, ainda era falado como uma retirada estratégica. Na verdade, esse foi o fim de Hitler. O mercado de Touros nazista terminou no dia do ataque a Stalingrado. - Nicholas Darvas
+MainMenu.Quote10;I. V. Stalin was extremely intolerant of lateness to his calls. But what to do? The situation in the war does not take into account the characters of the commanders. - Georgy Zhukov;И. В. Сталин был крайне нетерпим к опозданиям на его вызовы. Но что делать? Обстановка на войне не считается с характерами командующих. - Георгий Жуков;J. V. Stalin era extremadamente intolerante a llegar tarde a sus desafíos. Pero, ¿qué hacer? La situación en la guerra no tiene en cuenta los personajes de los comandantes. - George Zhukov;J. V. Stalin era extremamente intolerante a atrasos em seus desafios. Mas o que fazer? A situação na guerra não conta com o caráter dos comandantes. - Georgy Zhukov;I. V. Stalin era extremamente intolerante com o atraso em suas ligações. Mas o que fazer? A situação na guerra não leva em conta os personagens dos comandantes. - Georgy Zhukov
+MainMenu.Quote11;Historically, the victory of fascism is ridiculous and impossible, but I know that the only way to save humanity from destruction is by fighting. - - Dmitri Shostakovich;Исторически победа фашизма нелепа и невозможна, но я знаю, что спасти человечество от гибели можно только сражаясь. - Дмитрий Шостакович;Históricamente, la victoria del fascismo es ridícula e imposible, pero sé que la única manera de salvar a la humanidad de la destrucción es luchando. - Dmitry Shostakovich;Historicamente, a vitória do fascismo é ridícula e impossível, mas eu sei que a única maneira de salvar a humanidade da destruição é lutando. - Dmitry Shostakovich;Historicamente, a vitória do fascismo é ridícula e impossível, mas sei que a única maneira de salvar a humanidade da destruição é lutando. - Dmitry Shostakovich
+MainMenu.Quote12;Under the leadership of Marshal Joseph Stalin, the Russian people showed such an example of love for the motherland, fortitude and self-sacrifice, which the world has never known before. - Franklin Roosevelt;Под руководством маршала Иосифа Сталина русский народ показал такой пример любви к родине, твердости духа и самопожертвования, какого еще не знал мир. - Франклин Рузвельт;Bajo el liderazgo del Mariscal Joseph Stalin, el pueblo ruso mostró un ejemplo de amor por la patria, firmeza de espíritu y sacrificio que el mundo aún no conocía. - Franklin Roosevelt;Sob a direção do marechal Joseph Stalin, o povo russo mostrou um exemplo de amor à pátria, de firmeza de espírito e de auto-sacrifício como o mundo ainda não conheceu. - Franklin Roosevelt;Sob a liderança do Marechal Joseph Stalin, o povo russo mostrou um exemplo de amor à pátria, fortaleza e auto-sacrifício, que o mundo nunca conheceu antes. - Franklin Roosevelt
+MainMenu.Quote13;I have seen soldiers rise up to attack many times. It's not easy to rise to your height when the air is permeated with deadly metal. But they were rising! - Georgy Zhukov;Я много раз видел, как солдаты поднимались в атаку. Это нелегко: подняться в рост, когда смертоносным металлом пронизан воздух. Но они поднимались! - Георгий Жуков;He visto a los soldados subir al ataque muchas veces. No es fácil: subir a la altura cuando el metal mortal penetra en el aire. ¡Pero estaban subiendo! - George Zhukov;Vi muitas vezes os soldados subirem ao ataque. Não é fácil: crescer quando o metal Mortal permeia o ar. Mas eles subiram! - Georgy Zhukov;Já vi soldados se levantarem para atacar muitas vezes. Não é fácil subir à sua altura quando o ar está permeado de metal Mortal. Mas eles estavam subindo! - Georgy Zhukov

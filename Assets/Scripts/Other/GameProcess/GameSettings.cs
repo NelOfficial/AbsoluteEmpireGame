@@ -171,7 +171,8 @@ public class GameSettings : MonoBehaviour
 	[Header("Fleet:")]
 	public FleetScriptableObject SubmarineLVL1;
 
-
+    [Header("Translate")]
+	public Translate translate;
     private void Awake()
 	{
 		Application.targetFrameRate = 9999;

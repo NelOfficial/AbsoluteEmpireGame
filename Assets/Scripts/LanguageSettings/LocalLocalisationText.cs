@@ -17,6 +17,11 @@ public class LocalLocalisationText : MonoBehaviour
     {
         int currentLanguage = PlayerPrefs.GetInt("languageId");
 
+        if (currentLanguage >= 2)
+        {
+            currentLanguage = 0;
+        }
+
         if (this.GetComponent<TMP_Text>())
         {
             this.GetComponent<TMP_Text>().text = localisationText[currentLanguage];

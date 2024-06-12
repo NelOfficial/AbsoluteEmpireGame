@@ -128,14 +128,7 @@ public class ModificationPanel : MonoBehaviour
         wallAnimationUI.SetActive(true);
         refreshButton.interactable = false;
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            refreshButtonText.text = "Loading IDs...";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            refreshButtonText.text = "Загрузка id сценариев...";
-        }
+        refreshButtonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Loading")}";
 
         WWWForm form = new WWWForm();
         form.AddField("maxPosts", maxLoadPostsPerTime + loadedModifications.Count);
@@ -164,19 +157,6 @@ public class ModificationPanel : MonoBehaviour
             catch (Exception) { }
         }
 
-        if (loadedModificationsIds.Count > lastScenarios)
-        {
-            refreshButton.image.color = Color.yellow;
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                refreshButtonText.text = $"{loadedModificationsIds.Count - lastScenarios} new mods | Update";
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                refreshButtonText.text = $"{loadedModificationsIds.Count - lastScenarios} новых модов | Обновить";
-            }
-        }
-
         StartCoroutine(WallUpdate());
     }
 
@@ -193,14 +173,7 @@ public class ModificationPanel : MonoBehaviour
         notifications_wallAnimationUI.SetActive(true);
         notifications_refreshButton.interactable = false;
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            notifications_refreshButtonText.text = $"Loading data...";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            notifications_refreshButtonText.text = $"Загрузка данных...";
-        }
+        notifications_refreshButtonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Loading")}";
 
         WWWForm form = new WWWForm();
         form.AddField("receiver", ReferencesManager.Instance.profileManager.userId);
@@ -249,14 +222,7 @@ public class ModificationPanel : MonoBehaviour
 
         yield return new WaitForSeconds(0.1f);
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            notifications_refreshButtonText.text = $"Обновить";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            notifications_refreshButtonText.text = $"Update";
-        }
+        notifications_refreshButtonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("RefreshButton")}";
     }
 
     private IEnumerator WallUpdate()
@@ -265,14 +231,7 @@ public class ModificationPanel : MonoBehaviour
         updatingFeed = true;
         refreshButton.interactable = false;
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            refreshButtonText.text = $"Loading data...";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            refreshButtonText.text = $"Загрузка данных...";
-        }
+        refreshButtonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Loading")}";
 
         loadedModifications.Clear();
 
@@ -351,14 +310,7 @@ public class ModificationPanel : MonoBehaviour
             wallAnimationUI.SetActive(false);
             refreshButton.interactable = true;
 
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                refreshButtonText.text = $"Load more";
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                refreshButtonText.text = $"Загрузить ещё";
-            }
+            refreshButtonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.LoadMore")}";
         }
         UpdateUI();
     }
@@ -366,7 +318,7 @@ public class ModificationPanel : MonoBehaviour
     public void UpdateModUI()
     {
         modName_TMP.text = currentLoadedModification.currentScenarioName;
-        modDesc_TMP.text = $"{currentLoadedModification.currentScenarioDescription} \nMade by: {currentLoadedModification.currentScenarioAuthorId}";
+        modDesc_TMP.text = $"{currentLoadedModification.currentScenarioDescription} \n{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.MadeBy")}: {currentLoadedModification.currentScenarioAuthorId}";
 
         bool alreadyDownloaded = downloadedModsIds.list.Any(item => item.id == currentLoadedModification.id);
 
@@ -380,25 +332,11 @@ public class ModificationPanel : MonoBehaviour
                     {
                         downloadButton.interactable = true;
 
-                        if (PlayerPrefs.GetInt("languageId") == 0)
-                        {
-                            downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "Download an update of mod";
-                        }
-                        else if (PlayerPrefs.GetInt("languageId") == 1)
-                        {
-                            downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "Скачать обновление";
-                        }
+                        downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.DownloadUpdate")}";
                     }
                     else if (localMod.version >= currentLoadedModification.version)
                     {
-                        if (PlayerPrefs.GetInt("languageId") == 0)
-                        {
-                            downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "Save";
-                        }
-                        else if (PlayerPrefs.GetInt("languageId") == 1)
-                        {
-                            downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "Сохранить";
-                        }
+                        downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.Save")}";
 
                         downloadButton.interactable = false;
                     }
@@ -409,14 +347,7 @@ public class ModificationPanel : MonoBehaviour
         {
             downloadButton.interactable = true;
 
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "Save";
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "Сохранить";
-            }
+            downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.Save")}";
         }
     }
 
@@ -555,7 +486,7 @@ public class ModificationPanel : MonoBehaviour
         }
         catch (Exception)
         {
-            Debug.Log("No events found");
+            Debug.LogError("No events found");
         }
 
         CreateFile(modData, Path.Combine(ModPath, $"{currentLoadedModification.currentScenarioName}.AEMod"));
@@ -635,14 +566,7 @@ public class ModificationPanel : MonoBehaviour
             selectedPage += increment;
         }
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            pageText.text = $"Page {selectedPage + 1} of {maxPage + 1}";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            pageText.text = $"Страница {selectedPage + 1} из {maxPage + 1}";
-        }
+        pageText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.PageText")} {selectedPage + 1}/{maxPage + 1}";
 
         UpdateUI();
     }
@@ -675,14 +599,8 @@ public class ModificationPanel : MonoBehaviour
         int _maxPage = maxPage + 1;
         int _selectedPage = selectedPage + 1;
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            pageText.text = $"Page {_selectedPage} of {_maxPage}";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            pageText.text = $"Страница {_selectedPage} из {_maxPage}";
-        }
+        pageText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.PageText")} {_selectedPage + 1}/{_maxPage + 1}";
+
 
         if (selectedPage < maxPage)
         {

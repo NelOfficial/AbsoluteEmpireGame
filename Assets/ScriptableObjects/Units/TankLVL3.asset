@@ -24,11 +24,11 @@ MonoBehaviour:
   rank: 1
   maxFuel: 1800
   health: 6
-  softAttack: 19
-  hardAttack: 14
+  softAttack: 23
+  hardAttack: 16
   defense: 5
   maxEntrenchment: 0
-  armor: 60
-  armorPiercing: 61
-  hardness: 90
+  armor: 70
+  armorPiercing: 70
+  hardness: 95
   unitName: HVY_03

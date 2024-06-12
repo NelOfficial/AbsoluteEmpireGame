@@ -44,6 +44,8 @@ public class ReferencesManager : MonoBehaviour
 
     public SaveManager saveManager;
 
+    public Interpretate languageManager;
+
     private void Awake()
     {
         Instance = this;
