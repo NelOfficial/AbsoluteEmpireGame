@@ -132,7 +132,7 @@ public class UnitMovement : MonoBehaviour
     public void AIMoveNoHit(RegionManager defenderRegion)
     {
         RegionManager attackerRegion = currentProvince;
-        if (currentCountry.exist && this != null && attackerRegion != null)
+        if (currentCountry.exist && this != null && attackerRegion != null && _movePoints > 0)
         {
             if (defenderRegion.currentCountry == attackerRegion.currentCountry) // Just move
             { // my country
@@ -899,6 +899,7 @@ public class UnitMovement : MonoBehaviour
 
             for (int i = 0; i < nearMyPoints.Count; i++) // Есть куда отступать
             {
+                bool temp = false;
                 if (nearMyPoints.Count > 0)
                 {
                     regionToRetreat = nearMyPoints[i].GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
@@ -908,12 +909,42 @@ public class UnitMovement : MonoBehaviour
                         _movePoints++;
                         AIMoveNoHit(regionToRetreat);
                         reatreated = true;
+                        temp = true;
                     }
                     else if (regionToRetreat.hasArmy) // Есть регион куда отступить, но там есть армия
                     {
-                        this.Destroy();
+                        foreach (RegionManager reg in GetNeiboursOfRegion(regionToRetreat))
+                        {
+                            if (!reg.hasArmy)
+                            {
+                                if (regionToRetreat.GetDivision(regionToRetreat)._movePoints == 0)
+                                {
+                                    regionToRetreat.GetDivision(regionToRetreat)._movePoints++;
+                                }
+                                regionToRetreat.GetDivision(regionToRetreat).AIMoveNoHit(reg);
+                                reatreated = true;
+                                break;
+                            }
+                        }
+                        if (!regionToRetreat.hasArmy)
+                        {
+                            _movePoints++;
+                            AIMoveNoHit(regionToRetreat);
+                            reatreated = true;
+                            temp = true;
+                        }
+                        else
+                        {
+                            this.GetComponent<Animator>().Play("Encircled");
+                            this.Destroy();
+                        }
                     }
                 }
+                if (temp)
+                {
+                    break;
+                }
+
             }
 
             if (nearMyPoints.Count <= 0) // Нет путей
@@ -926,7 +957,31 @@ public class UnitMovement : MonoBehaviour
             myRegion.CheckRegionUnits(myRegion);
         }
     }
+    public List<RegionManager> GetNeiboursOfRegion(RegionManager region)
+    {
+        var regions = new List<RegionManager>();
 
+        foreach (var movePoint in region.movePoints)
+        {
+            try
+            {
+                RegionManager _region = null;
+
+                _region = movePoint.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
+
+                if (_region != null)
+                {
+                    regions.Add(_region);
+                }
+            }
+            catch (System.Exception)
+            {
+                Debug.Log($"{movePoint.parent.name} -> {movePoint.name}");
+            }
+        }
+
+        return regions;
+    }
     public bool Encircled(RegionManager fightRegion)
     {
         bool isEncircled = false;
