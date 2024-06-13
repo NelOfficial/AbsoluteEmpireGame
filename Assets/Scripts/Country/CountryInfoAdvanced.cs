@@ -3,11 +3,9 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class CountryInfoAdvanced : MonoBehaviour
 {
-    private CameraMovement cameraMovement;
     private CountryManager countryManager;
     private RegionManager regionManager;
     private RegionUI regionUI;
@@ -63,7 +61,6 @@ public class CountryInfoAdvanced : MonoBehaviour
 
     private void Awake()
     {
-        cameraMovement = FindObjectOfType<CameraMovement>();
         regionManager = FindObjectOfType<RegionManager>();
         countryManager = FindObjectOfType<CountryManager>();
         regionUI = FindObjectOfType<RegionUI>();
@@ -435,16 +432,7 @@ public class CountryInfoAdvanced : MonoBehaviour
     {
         Army.Template template = new Army.Template();
 
-        string newName = "";
-
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            newName = "New template";
-        }
-        if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            newName = "Новый шаблон";
-        }
+        string newName = ReferencesManager.Instance.languageManager.GetTranslation("NewTemplateText");
 
         int templatesCount = ReferencesManager.Instance.army.templates.Count + 1;
 
@@ -465,14 +453,7 @@ public class CountryInfoAdvanced : MonoBehaviour
         }
         else
         {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                WarningManager.Instance.Warn("The battalion limit has been reached");
-            }
-            if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                WarningManager.Instance.Warn("Достигнут лимит батальонов");
-            }
+            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.BatalionLimit"));
         }
     }
 
