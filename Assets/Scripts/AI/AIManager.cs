@@ -12,7 +12,7 @@ public class AIManager : MonoBehaviour
 
     private int mode;
 
-    private void Awake()
+    private void Start()
     {
         if (ReferencesManager.Instance.gameSettings._currentGameMode.value == "historic")
         {

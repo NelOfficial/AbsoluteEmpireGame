@@ -153,7 +153,7 @@ public class MainMenu : MonoBehaviour
 
         PlayerPrefs.SetString("FIRST_LOAD", "TRUE");
 
-        quoteText.text = quotes[Random.Range(0, quotes.Length)];
+        quoteText.text = ReferencesManager.Instance.languageManager.GetTranslation($"{quotes[Random.Range(0, quotes.Length)]}");
     }
 
     public void LoadScene(string sceneName)

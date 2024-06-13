@@ -141,30 +141,27 @@ public class ProfileManager : MonoBehaviour
 
         for (int i = 0; i < loadedModifications.Count; i++)
         {
-            if (!string.IsNullOrEmpty(loadedModifications[i].currentScenarioData))
+            if (loadedModifications[i].verified == 0)
             {
-                if (loadedModifications[i].verified == 0)
-                {
-                    GameObject _spawnedWall = Instantiate(modItemPrefab, onVerifyWallContrainer);
-                    _spawnedWall.transform.localScale = Vector3.one;
+                GameObject _spawnedWall = Instantiate(modItemPrefab, onVerifyWallContrainer);
+                _spawnedWall.transform.localScale = Vector3.one;
 
-                    _spawnedWall.GetComponent<LocalModButton>().modNameText.text = loadedModifications[i].currentScenarioName;
-                    _spawnedWall.GetComponent<LocalModButton>().id = loadedModifications[i].id;
-                    _spawnedWall.GetComponent<LocalModButton>().version = loadedModifications[i].version;
-                    _spawnedWall.GetComponent<LocalModButton>().modName = loadedModifications[i].currentScenarioName;
-                    _spawnedWall.GetComponent<LocalModButton>().description = loadedModifications[i].currentScenarioDescription;
-                }
-                else
-                {
-                    GameObject spawnedWall = Instantiate(modItemPrefab, wallContrainer);
-                    spawnedWall.transform.localScale = Vector3.one;
+                _spawnedWall.GetComponent<LocalModButton>().modNameText.text = loadedModifications[i].currentScenarioName;
+                _spawnedWall.GetComponent<LocalModButton>().id = loadedModifications[i].id;
+                _spawnedWall.GetComponent<LocalModButton>().version = loadedModifications[i].version;
+                _spawnedWall.GetComponent<LocalModButton>().modName = loadedModifications[i].currentScenarioName;
+                _spawnedWall.GetComponent<LocalModButton>().description = loadedModifications[i].currentScenarioDescription;
+            }
+            else
+            {
+                GameObject spawnedWall = Instantiate(modItemPrefab, wallContrainer);
+                spawnedWall.transform.localScale = Vector3.one;
 
-                    spawnedWall.GetComponent<LocalModButton>().modNameText.text = loadedModifications[i].currentScenarioName;
-                    spawnedWall.GetComponent<LocalModButton>().id = loadedModifications[i].id;
-                    spawnedWall.GetComponent<LocalModButton>().version = loadedModifications[i].version;
-                    spawnedWall.GetComponent<LocalModButton>().modName = loadedModifications[i].currentScenarioName;
-                    spawnedWall.GetComponent<LocalModButton>().description = loadedModifications[i].currentScenarioDescription;
-                }
+                spawnedWall.GetComponent<LocalModButton>().modNameText.text = loadedModifications[i].currentScenarioName;
+                spawnedWall.GetComponent<LocalModButton>().id = loadedModifications[i].id;
+                spawnedWall.GetComponent<LocalModButton>().version = loadedModifications[i].version;
+                spawnedWall.GetComponent<LocalModButton>().modName = loadedModifications[i].currentScenarioName;
+                spawnedWall.GetComponent<LocalModButton>().description = loadedModifications[i].currentScenarioDescription;
             }
         }
     }
@@ -279,7 +276,7 @@ public class ProfileManager : MonoBehaviour
         if (verified) form.AddField("verified", "TRUE");
         else form.AddField("verified", "FALSE");
 
-        WWW getPostRequest = new WWW("http://our-empire.7m.pl/core/getPostsWithAuthor.php", form);
+        WWW getPostRequest = new WWW("https://absolute-empire.space/core/getPostsWithAuthor.php", form);
 
         yield return getPostRequest;
 
@@ -329,7 +326,7 @@ public class ProfileManager : MonoBehaviour
                 form.AddField("id", loadedModificationsIds[i]);
 
                 // делаем запрос на сайт мой и оттуда нам возвращают данные об айдишниках модов
-                WWW getPostRequest = new WWW("http://our-empire.7m.pl/core/getPostById.php", form);
+                WWW getPostRequest = new WWW("https://absolute-empire.space/core/getPostById.php", form);
 
                 yield return getPostRequest;
 

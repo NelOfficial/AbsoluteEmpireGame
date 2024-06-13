@@ -24,6 +24,12 @@ public class UI_CloseButton : MonoBehaviour
 
     public void ClosePanel()
     {
-        _panel.ClosePanel();
+        if (_panel != null)
+        {
+            if (_panel.gameObject.GetComponent<Animator>())
+            {
+                _panel.ClosePanel();
+            }
+        }
     }
 }

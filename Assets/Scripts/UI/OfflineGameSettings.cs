@@ -12,24 +12,24 @@ public class OfflineGameSettings : MonoBehaviour
     [SerializeField] Image imagePreview;
 
     [SerializeField] int currentMapId;
-    public int currentScenarioId;
+    [HideInInspector] public int currentScenarioId;
 
-    [SerializeField] Scenario[] scenarios;
-    [SerializeField] List<Team> teams = new List<Team>();
+    [SerializeField] private Scenario[] scenarios;
+    [SerializeField] private List<Team> teams = new List<Team>();
 
     private MainMenu mainMenu;
 
     [SerializeField] private StringValue _currentScenarioData;
     [SerializeField] private StringValue _currentDate;
 
-    [SerializeField] private Button[] _gameModeButtons;
-
-    [SerializeField] private Color _selectedGameMode_color;
-
-    public List<CountryScriptableObject> _tournamentCountries = new List<CountryScriptableObject>();
+    [HideInInspector] public List<CountryScriptableObject> _tournamentCountries = new List<CountryScriptableObject>();
 
     [SerializeField] private Button _tournament_ConfirmButton;
     [SerializeField] private TMP_Text _tournament_ConfirmButton_Text;
+
+    [SerializeField] private Image[] _gameTypeButtonTargetImages;
+
+    [SerializeField] private Color _gameType_Color_selected;
 
     private void Start()
     {
@@ -169,6 +169,24 @@ public class OfflineGameSettings : MonoBehaviour
     public void SelectGameMode(string gameMode)
     {
         ReferencesManager.Instance.gameSettings._currentGameMode.value = gameMode;
+
+        for (int i = 0; i < _gameTypeButtonTargetImages.Length; i++)
+        {
+            _gameTypeButtonTargetImages[i].color = Color.white;
+        }
+
+        if (gameMode == "historic")
+        {
+            _gameTypeButtonTargetImages[0].color = _gameType_Color_selected;
+        }
+        else if (gameMode == "nonhistoric")
+        {
+            _gameTypeButtonTargetImages[1].color = _gameType_Color_selected;
+        }
+        else if (gameMode == "tournament")
+        {
+            _gameTypeButtonTargetImages[2].color = _gameType_Color_selected;
+        }
     }
 
     [System.Serializable]

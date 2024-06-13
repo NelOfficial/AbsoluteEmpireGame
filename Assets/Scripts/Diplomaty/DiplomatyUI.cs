@@ -115,26 +115,12 @@ public class DiplomatyUI : MonoBehaviour
             diplomatyContainer.SetActive(true);
 
             receiverCountryFlag.sprite = receiver.country.countryFlag;
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                receiverCountryNameText.text = receiver.country._nameEN;
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                receiverCountryNameText.text = receiver.country._name;
-            }
 
+            receiverCountryNameText.text = ReferencesManager.Instance.languageManager.GetTranslation(receiver.country._nameEN);
+
+            senderCountryNameText.text = ReferencesManager.Instance.languageManager.GetTranslation(sender.country._nameEN);
 
             senderCountryFlag.sprite = sender.country.countryFlag;
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                senderCountryNameText.text = sender.country._nameEN;
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                senderCountryNameText.text = sender.country._name;
-            }
-
 
             UpdateDiplomatyUI(sender, receiver);
         }
@@ -183,24 +169,12 @@ public class DiplomatyUI : MonoBehaviour
             diplomatyContainer.SetActive(true);
 
             receiverCountryFlag.sprite = receiver.country.countryFlag;
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                receiverCountryNameText.text = receiver.country._nameEN;
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                receiverCountryNameText.text = receiver.country._name;
-            }
+
+            receiverCountryNameText.text = ReferencesManager.Instance.languageManager.GetTranslation(receiver.country._nameEN);
 
             senderCountryFlag.sprite = sender.country.countryFlag;
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                senderCountryNameText.text = sender.country._nameEN;
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                senderCountryNameText.text = sender.country._name;
-            }
+
+            senderCountryNameText.text = ReferencesManager.Instance.languageManager.GetTranslation(sender.country._nameEN);
 
             UpdateDiplomatyUI(sender, receiver);
         }
@@ -290,24 +264,6 @@ public class DiplomatyUI : MonoBehaviour
                 receiverToSender.relationship -= 100;
 
                 acceptationStatePanel.SetActive(true);
-
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                }
             }
 
             else if (offer == "Заключить мир")
@@ -343,24 +299,6 @@ public class DiplomatyUI : MonoBehaviour
                     receiverToSender.relationship += 25;
 
                     acceptationStatePanel.SetActive(true);
-
-                    string currentLanguage = "";
-
-                    if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        currentLanguage = "EN";
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        currentLanguage = "RU";
-                    }
-
-                    acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                    if (currentLanguage == "EN")
-                    {
-                        acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                    }
                 }
                 else if (random < 50)
                 {
@@ -438,46 +376,12 @@ public class DiplomatyUI : MonoBehaviour
                     ReferencesManager.Instance.CalculateTradeBuff(sender, receiver);
 
                     acceptationStatePanel.SetActive(true);
-                    string currentLanguage = "";
-
-                    if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        currentLanguage = "EN";
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        currentLanguage = "RU";
-                    }
-
-                    acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                    if (currentLanguage == "EN")
-                    {
-                        acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                    }
                 }
                 else if (random < 50)
                 {
                     accept = false;
 
                     acceptationStatePanel.SetActive(true);
-                    string currentLanguage = "";
-
-                    if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        currentLanguage = "EN";
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        currentLanguage = "RU";
-                    }
-
-                    acceptationStateText.text = "Они <b><color=\"red\">отклонили</color></b> ваше предложение";
-
-                    if (currentLanguage == "EN")
-                    {
-                        acceptationStateText.text = "They are <b><color=\"red\">rejected</color></b> your offer";
-                    }
                 }
             }
 
@@ -511,23 +415,6 @@ public class DiplomatyUI : MonoBehaviour
                 }
 
                 acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                }
             }
 
             else if (offer == "Пакт о ненападении")
@@ -563,46 +450,12 @@ public class DiplomatyUI : MonoBehaviour
                     receiverToSender.relationship += 18;
 
                     acceptationStatePanel.SetActive(true);
-                    string currentLanguage = "";
-
-                    if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        currentLanguage = "EN";
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        currentLanguage = "RU";
-                    }
-
-                    acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                    if (currentLanguage == "EN")
-                    {
-                        acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                    }
                 }
                 else if (random < 50)
                 {
                     accept = false;
 
                     acceptationStatePanel.SetActive(true);
-                    string currentLanguage = "";
-
-                    if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        currentLanguage = "EN";
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        currentLanguage = "RU";
-                    }
-
-                    acceptationStateText.text = "Они <b><color=\"red\">отклонили</color></b> ваше предложение";
-
-                    if (currentLanguage == "EN")
-                    {
-                        acceptationStateText.text = "They are <b><color=\"red\">rejected</color></b> your offer";
-                    }
                 }
             }
 
@@ -620,23 +473,6 @@ public class DiplomatyUI : MonoBehaviour
                 receiverToSender.relationship -= 18;
 
                 acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                }
             }
 
             else if (offer == "Союз")
@@ -701,23 +537,6 @@ public class DiplomatyUI : MonoBehaviour
                     receiverToSender.relationship += 60;
 
                     acceptationStatePanel.SetActive(true);
-                    string currentLanguage = "";
-
-                    if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        currentLanguage = "EN";
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        currentLanguage = "RU";
-                    }
-
-                    acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                    if (currentLanguage == "EN")
-                    {
-                        acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                    }
                 }
                 else if (random < 100)
                 {
@@ -758,23 +577,6 @@ public class DiplomatyUI : MonoBehaviour
                 receiverToSender.relationship -= 60;
 
                 acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                }
             }
 
             else if (offer == "Право прохода войск")
@@ -811,23 +613,6 @@ public class DiplomatyUI : MonoBehaviour
                     receiverToSender.relationship += 18;
 
                     acceptationStatePanel.SetActive(true);
-                    string currentLanguage = "";
-
-                    if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        currentLanguage = "EN";
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        currentLanguage = "RU";
-                    }
-
-                    acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                    if (currentLanguage == "EN")
-                    {
-                        acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                    }
                 }
                 else if (random < 50)
                 {
@@ -868,23 +653,6 @@ public class DiplomatyUI : MonoBehaviour
                 receiverToSender.relationship -= 18;
 
                 acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                }
             }
 
             else if (offer == "Сделать вассалом")
@@ -968,23 +736,6 @@ public class DiplomatyUI : MonoBehaviour
                     receiverToSender.relationship += 60;
 
                     acceptationStatePanel.SetActive(true);
-                    string currentLanguage = "";
-
-                    if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        currentLanguage = "EN";
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        currentLanguage = "RU";
-                    }
-
-                    acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                    if (currentLanguage == "EN")
-                    {
-                        acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                    }
                 }
                 else if (random < 100)
                 {
@@ -1034,50 +785,25 @@ public class DiplomatyUI : MonoBehaviour
                     receiverToSender.relationship += 60;
 
                     acceptationStatePanel.SetActive(true);
-                    string currentLanguage = "";
-
-                    if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        currentLanguage = "EN";
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        currentLanguage = "RU";
-                    }
-
-                    acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                    if (currentLanguage == "EN")
-                    {
-                        acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                    }
                 }
                 else if (random < 100)
                 {
                     accept = false;
 
                     acceptationStatePanel.SetActive(true);
-                    string currentLanguage = "";
-
-                    if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        currentLanguage = "EN";
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        currentLanguage = "RU";
-                    }
-
-                    acceptationStateText.text = "Они <b><color=\"red\">отклонили</color></b> ваше предложение";
-
-                    if (currentLanguage == "EN")
-                    {
-                        acceptationStateText.text = "They are <b><color=\"red\">rejected</color></b> your offer";
-                    }
                 }
             }
 
             UpdateDiplomatyUI(sender, receiver);
+
+            if (accept)
+            {
+                acceptationStateText.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Accepted");
+            }
+            else
+            {
+                acceptationStateText.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Declined");
+            }
         }
 
         countryManager.UpdateIncomeValuesUI();
@@ -1096,26 +822,14 @@ public class DiplomatyUI : MonoBehaviour
         {
             if (data[1] == "send")
             {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    textValueField.text = "Send gold";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    textValueField.text = "Отправить золото";
-                }
+                textValueField.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.SendMoney");
+
                 valueSlider.maxValue = sender.money;
             }
             else if (data[1] == "ask")
             {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    textValueField.text = "Ask for gold";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    textValueField.text = "Попросить золото";
-                }
+                textValueField.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.AskMoney");
+
                 valueSlider.maxValue = receiver.money;
             }
         }
@@ -1123,26 +837,14 @@ public class DiplomatyUI : MonoBehaviour
         {
             if (data[1] == "send")
             {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    textValueField.text = "Send food";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    textValueField.text = "Отправить провизию";
-                }
+                textValueField.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.SendFood");
+
                 valueSlider.maxValue = sender.food;
             }
             else if (data[1] == "ask")
             {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    textValueField.text = "Ask for food";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    textValueField.text = "Попросить провизию";
-                }
+                textValueField.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.AskFood");
+
                 valueSlider.maxValue = receiver.food;
             }
         }
@@ -1150,26 +852,14 @@ public class DiplomatyUI : MonoBehaviour
         {
             if (data[1] == "send")
             {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    textValueField.text = "Send recruits";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    textValueField.text = "Отправить рекрутов";
-                }
+                textValueField.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.SendRecruits");
+
                 valueSlider.maxValue = sender.recroots;
             }
             else if (data[1] == "ask")
             {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    textValueField.text = "Ask for recruits";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    textValueField.text = "Попросить рекрутов";
-                }
+                textValueField.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.AskRecruits");
+
                 valueSlider.maxValue = receiver.recroots;
             }
         }
@@ -1267,8 +957,8 @@ public class DiplomatyUI : MonoBehaviour
                 accept = true;
                 sender.food -= value;
                 receiver.food += value;
-                receiverToSender.relationship += value / 2500;
-                senderToReceiver.relationship += value / 2500;
+                receiverToSender.relationship += value / 1000;
+                senderToReceiver.relationship += value / 1000;
             }
             else if (data[1] == "ask")
             {
@@ -1279,8 +969,8 @@ public class DiplomatyUI : MonoBehaviour
                         accept = true;
                         sender.food += value;
                         receiver.food -= value;
-                        receiverToSender.relationship -= value / 2500;
-                        senderToReceiver.relationship -= value / 2500;
+                        receiverToSender.relationship -= value / 1000;
+                        senderToReceiver.relationship -= value / 1000;
                     }
                     else accept = false;
                 }
@@ -1293,8 +983,8 @@ public class DiplomatyUI : MonoBehaviour
                 accept = true;
                 sender.recroots -= value;
                 receiver.recroots += value;
-                receiverToSender.relationship += value / 2000;
-                senderToReceiver.relationship += value / 2000;
+                receiverToSender.relationship += value / 1200;
+                senderToReceiver.relationship += value / 1200;
             }
             else if (data[1] == "ask")
             {
@@ -1305,8 +995,8 @@ public class DiplomatyUI : MonoBehaviour
                         accept = true;
                         sender.recroots += value;
                         receiver.recroots -= value;
-                        receiverToSender.relationship -= value / 2000;
-                        senderToReceiver.relationship -= value / 2000;
+                        receiverToSender.relationship -= value / 1200;
+                        senderToReceiver.relationship -= value / 1200;
                     }
                     else accept = false;
                 }
@@ -1327,52 +1017,27 @@ public class DiplomatyUI : MonoBehaviour
             receiver.food,
             receiver.recroots);
 
-        if (accept)
-        {
-            acceptationStatePanel.SetActive(true);
-            string currentLanguage = "";
-
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                currentLanguage = "EN";
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                currentLanguage = "RU";
-            }
-
-            acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-            if (currentLanguage == "EN")
-            {
-                acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-            }
-        }
-        else
-        {
-            acceptationStatePanel.SetActive(true);
-            string currentLanguage = "";
-
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                currentLanguage = "EN";
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                currentLanguage = "RU";
-            }
-
-            acceptationStateText.text = "Они <b><color=\"red\">отклонили</color></b> ваше предложение";
-
-            if (currentLanguage == "EN")
-            {
-                acceptationStateText.text = "They are <b><color=\"red\">rejected</color></b> your offer";
-            }
-        }
+        ShowResultPanel();
 
         countryManager.UpdateValuesUI();
         offersContent.gameObject.SetActive(true);
         valuePanel.SetActive(false);
+    }
+
+    private void ShowResultPanel()
+    {
+        if (accept)
+        {
+            acceptationStatePanel.SetActive(true);
+
+            acceptationStateText.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Accepted");
+        }
+        else
+        {
+            acceptationStatePanel.SetActive(true);
+
+            acceptationStateText.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Declined");
+        }
     }
 
     public void UpdateAskOfWarsContainer()
@@ -1471,7 +1136,7 @@ public class DiplomatyUI : MonoBehaviour
             //    }
             //}
 
-            if (random >= 50)
+            if (_random >= 50)
             {
                 accept = true;
             }
@@ -1480,53 +1145,7 @@ public class DiplomatyUI : MonoBehaviour
                 accept = false;
             }
 
-            if (accept)
-            {
-                acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                foreach (CountrySettings _country in _selectedCountries)
-                {
-                    AISendOffer("Объявить войну", receiver, _country, false);
-                }
-
-                acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                }
-            }
-            else
-            {
-                acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"red\">отклонили</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"red\">rejected</color></b> your offer";
-                }
-            }
+            ShowResultPanel();
 
             UpdateDiplomatyUI(sender, receiver);
         }
@@ -2107,7 +1726,6 @@ public class DiplomatyUI : MonoBehaviour
 
         yield return new WaitForSeconds(0.1f);
     }
-
 
     public void SetDiploRegionSelectionMode(string type)
     {

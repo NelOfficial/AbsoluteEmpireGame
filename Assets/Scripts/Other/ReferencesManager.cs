@@ -46,9 +46,16 @@ public class ReferencesManager : MonoBehaviour
 
     public Interpretate languageManager;
 
+    public string debugString;
+
     private void Awake()
     {
-        Instance = this.GetComponent<ReferencesManager>();
+        Instance = this;
+
+        foreach (CountryScriptableObject country in globalCountries)
+        {
+            debugString += $"{country._nameEN}\n";
+        }
     }
 
     public void CreateCountry(CountryScriptableObject countryScriptableObject, string ideology)

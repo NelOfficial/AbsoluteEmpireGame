@@ -3,6 +3,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class CountryInfoAdvanced : MonoBehaviour
 {
@@ -194,14 +195,7 @@ public class CountryInfoAdvanced : MonoBehaviour
     {
         if (!ReferencesManager.Instance.gameSettings.spectatorMode)
         {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                countryNameText.text = countryManager.currentCountry.country._nameEN;
-            }
-            if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                countryNameText.text = countryManager.currentCountry.country._uiName;
-            }
+            countryNameText.text = ReferencesManager.Instance.languageManager.GetTranslation(countryManager.currentCountry.country._nameEN);
 
             if (countryManager.currentCountry.ideology != "Неопределено" &&
                 countryManager.currentCountry.ideology != "Неопределённый" &&
@@ -213,65 +207,7 @@ public class CountryInfoAdvanced : MonoBehaviour
                 countryIdeologyText.text = countryManager.currentCountry.ideology;
             }
 
-            if (countryManager.currentCountry.ideology == "Неопределено" || countryManager.currentCountry.ideology == "Неопределённый")
-            {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    countryIdeologyText.text = "Neutral";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    countryIdeologyText.text = countryManager.currentCountry.ideology;
-                }
-            }
-
-            if (countryManager.currentCountry.ideology == "Коммунизм")
-            {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    countryIdeologyText.text = "Communism";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    countryIdeologyText.text = countryManager.currentCountry.ideology;
-                }
-            }
-
-            if (countryManager.currentCountry.ideology == "Демократия")
-            {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    countryIdeologyText.text = "Democracy";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    countryIdeologyText.text = countryManager.currentCountry.ideology;
-                }
-            }
-
-            if (countryManager.currentCountry.ideology == "Фашизм")
-            {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    countryIdeologyText.text = "Fascism";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    countryIdeologyText.text = countryManager.currentCountry.ideology;
-                }
-            }
-
-            if (countryManager.currentCountry.ideology == "Монархия")
-            {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    countryIdeologyText.text = "Monarchy";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    countryIdeologyText.text = countryManager.currentCountry.ideology;
-                }
-            }
+            countryIdeologyText.text = ReferencesManager.Instance.languageManager.GetTranslation(countryManager.currentCountry.ideology);
 
             countryRegionCountText.text = countryManager.currentCountry.myRegions.Count.ToString();
             countryPopulationCountText.text = ReferencesManager.Instance.GoodNumberString(countryManager.currentCountry.population);

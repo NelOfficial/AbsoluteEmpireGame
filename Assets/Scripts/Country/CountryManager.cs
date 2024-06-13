@@ -1073,17 +1073,6 @@ public class CountryManager : MonoBehaviour
 
     public void UpdateCountryInfo()
     {
-        string currentLanguage = "";
-
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            currentLanguage = "EN";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            currentLanguage = "RU";
-        }
-
         if (!ReferencesManager.Instance.gameSettings.spectatorMode)
         {
             foreach (Image countryFlagImage in countryFlagImages)
@@ -1093,18 +1082,7 @@ public class CountryManager : MonoBehaviour
 
             foreach (TMP_Text countryText in countryNameTexts)
             {
-                if (string.IsNullOrEmpty(currentLanguage))
-                {
-                    currentLanguage = "EN";
-                }
-                if (currentLanguage == "EN")
-                {
-                    countryText.text = currentCountry.country._nameEN;
-                }
-                else if (currentLanguage == "RU")
-                {
-                    countryText.text = currentCountry.country._name;
-                }
+                countryText.text = ReferencesManager.Instance.languageManager.GetTranslation(currentCountry.country._nameEN);
             }
         }
     }

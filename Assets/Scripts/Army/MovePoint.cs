@@ -692,15 +692,8 @@ public class MovePoint : MonoBehaviour
 
         ReferencesManager.Instance.regionUI.defenderCountryFlag.sprite = newRegion.currentCountry.country.countryFlag;
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            ReferencesManager.Instance.regionUI.defenderCountryName.text = newRegion.currentCountry.country._nameEN;
-        }
-        if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            ReferencesManager.Instance.regionUI.defenderCountryName.text = newRegion.currentCountry.country._name;
-        }
-
+        ReferencesManager.Instance.regionUI.defenderCountryName.text = ReferencesManager.Instance.languageManager.GetTranslation(newRegion.currentCountry.country._nameEN);
+        
         foreach (Transform child in ReferencesManager.Instance.regionUI.fightPanelDefenderHorizontalGroup.transform)
         {
             Destroy(child.gameObject);
