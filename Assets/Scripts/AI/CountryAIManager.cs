@@ -132,14 +132,6 @@ public class CountryAIManager : MonoBehaviour
                             }
                         }
                     }
-                    else if (ReferencesManager.Instance.diplomatyUI.
-                        FindCountriesRelation(country, _country).relationship < 0) // Если граничащая страна имеет с нами плохие отношения
-                    {
-                        if (!dangerousBorderingRegions.Contains(region) && !region._isCoast)
-                        {
-                            dangerousBorderingRegions.Add(region);
-                        }
-                    }
                     else if (!ReferencesManager.Instance.diplomatyUI.
                         FindCountriesRelation(country, _country).union && !ReferencesManager.Instance.diplomatyUI.
                         FindCountriesRelation(country, _country).pact) // иначе просто добавляем границу в регионы 3 плана (если нет пакта или альянса)
@@ -452,7 +444,7 @@ public class CountryAIManager : MonoBehaviour
         {
             
 
-            if (!_region.hasArmy && (Random.Range(1, (100 / mult)) == 1))
+            if (!_region.hasArmy && (Random.Range(1, (int)(100 / mult)) == 1))
             {
                 CreateDivisionInRegion(_region, country);
             }
@@ -754,7 +746,7 @@ public class CountryAIManager : MonoBehaviour
 
         ReferencesManager.Instance.eventsContainer.UpdateEvents();
     }
-    private List<RegionManager> GetNeiboursOfRegion(RegionManager region)
+    public List<RegionManager> GetNeiboursOfRegion(RegionManager region)
     {
         var regions = new List<RegionManager>();
 
