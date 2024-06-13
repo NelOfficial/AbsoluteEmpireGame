@@ -226,7 +226,7 @@ public class ProfileManager : MonoBehaviour
                     loggedInValue.value = true;
                     PlayerPrefs.SetString("LOGGED_IN", "TRUE");
 
-                    PlayerPrefs.SetString("PASSWORD", $"{_profilePassword}");
+                    PlayerPrefs.SetString("PASSWORD", $"{password}");
                     PlayerPrefs.SetString("nickname", $"{_profileName}");
 
                     ReferencesManager.Instance.mainMenu.UpdateNickname(_profileName);

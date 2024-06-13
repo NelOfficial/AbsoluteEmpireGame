@@ -352,27 +352,29 @@ public class SaveManager : MonoBehaviour
 
                 foreach (CountrySettings otherCountry in ReferencesManager.Instance.countryManager.countries)
                 {
-                    if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, otherCountry).trade)
+                    Relationships.Relation relation = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, otherCountry);
+
+                    if (relation.trade)
                     {
                         country_trades += $"{otherCountry.country._id};";
                     }
-                    else if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, otherCountry).pact)
+                    if (relation.pact)
                     {
                         country_pacts += $"{otherCountry.country._id};";
                     }
-                    else if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, otherCountry).union)
+                    if (relation.union)
                     {
                         country_unions += $"{otherCountry.country._id};";
                     }
-                    else if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, otherCountry).right)
+                    if (relation.right)
                     {
                         country_rights += $"{otherCountry.country._id};";
                     }
-                    else if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, otherCountry).war)
+                    if (relation.war)
                     {
                         country_wars += $"{otherCountry.country._id};";
                     }
-                    else if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(otherCountry, country).vassal)
+                    if (relation.vassal)
                     {
                         country_vassals += $"{otherCountry.country._id};";
                     }

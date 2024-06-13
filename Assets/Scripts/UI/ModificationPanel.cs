@@ -83,7 +83,9 @@ public class ModificationPanel : MonoBehaviour
 
     private void Start()
     {
-        SetPage(0);
+        selectedPage = 0;
+
+        SetPage(selectedPage);
 
         UpdateDownloadedMods();
     }
@@ -140,7 +142,7 @@ public class ModificationPanel : MonoBehaviour
         }
 
         form.AddField("offset", offset);
-        WWW getPostRequest = new WWW("http://our-empire.7m.pl/core/getPosts.php", form);
+        WWW getPostRequest = new WWW("https://absolute-empire.space/core/getPosts.php", form);
 
         yield return getPostRequest;
 
@@ -178,7 +180,7 @@ public class ModificationPanel : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("receiver", ReferencesManager.Instance.profileManager.userId);
 
-        WWW getPostRequest = new WWW("http://our-empire.7m.pl/core/getNotifications.php", form);
+        WWW getPostRequest = new WWW("https://absolute-empire.space/core/getNotifications.php", form);
 
         yield return getPostRequest;
 
@@ -189,7 +191,7 @@ public class ModificationPanel : MonoBehaviour
             WWWForm _form = new WWWForm();
             _form.AddField("id", int.Parse(notificationIds[i]));
 
-            WWW getPostRequestById = new WWW("http://our-empire.7m.pl/core/getNotificationById.php", _form);
+            WWW getPostRequestById = new WWW("https://absolute-empire.space/core/getNotificationById.php", _form);
             yield return getPostRequestById;
 
             string[] request = getPostRequestById.text.Split('\t');
@@ -250,7 +252,7 @@ public class ModificationPanel : MonoBehaviour
                 form.AddField("id", loadedModificationsIds[i]);
 
                 // делаем запрос на сайт мой и оттуда нам возвращают данные об айдишниках модов
-                WWW getPostRequest = new WWW("http://our-empire.7m.pl/core/getPostById.php", form);
+                WWW getPostRequest = new WWW("https://absolute-empire.space/core/getPostById.php", form);
 
                 yield return getPostRequest;
 
@@ -284,7 +286,7 @@ public class ModificationPanel : MonoBehaviour
 
                     //WWWForm authorForm = new WWWForm();
                     //authorForm.AddField("id", request[4]);
-                    //WWW wwwAuthorRequest = new WWW("http://our-empire.7m.pl/core/getAuthorById.php", authorForm);
+                    //WWW wwwAuthorRequest = new WWW("https://absolute-empire.space/core/getAuthorById.php", authorForm);
 
                     //yield return wwwAuthorRequest;
                     //string[] postAuthorValues = wwwAuthorRequest.text.Split('\t');
@@ -311,8 +313,9 @@ public class ModificationPanel : MonoBehaviour
             refreshButton.interactable = true;
 
             refreshButtonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.LoadMore")}";
+
+            UpdateUI();
         }
-        UpdateUI();
     }
 
     public void UpdateModUI()
@@ -575,31 +578,22 @@ public class ModificationPanel : MonoBehaviour
     {
         foreach (Transform child in wallContrainer)
         {
-            if (string.IsNullOrEmpty(child.GetComponentInChildren<TMP_Text>().text))
-            {
-                Destroy(child.gameObject);
-            }
+            Destroy(child.gameObject);
         }
 
         for (int i = 0; i < loadedModifications.Count; i++)
         {
             if (loadedModifications[i].page == selectedPage)
             {
-                if (!string.IsNullOrEmpty(loadedModifications[i].currentScenarioData))
-                {
-                    GameObject spawnedWall = Instantiate(wallItemPrefab, wallContrainer);
-                    spawnedWall.transform.localScale = Vector3.one;
+                GameObject spawnedWall = Instantiate(wallItemPrefab, wallContrainer);
+                spawnedWall.transform.localScale = Vector3.one;
 
-                    spawnedWall.transform.GetChild(0).GetComponent<TMP_Text>().text = loadedModifications[i].currentScenarioName;
-                    spawnedWall.GetComponent<ModButton>().id = loadedModifications[i].id;
-                }
+                spawnedWall.transform.GetChild(0).GetComponent<TMP_Text>().text = loadedModifications[i].currentScenarioName;
+                spawnedWall.GetComponent<ModButton>().id = loadedModifications[i].id;
             }
         }
 
-        int _maxPage = maxPage + 1;
-        int _selectedPage = selectedPage + 1;
-
-        pageText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.PageText")} {_selectedPage + 1}/{_maxPage + 1}";
+        pageText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.PageText")} {selectedPage + 1}/{maxPage + 1}";
 
 
         if (selectedPage < maxPage)

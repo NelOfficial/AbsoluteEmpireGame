@@ -21,6 +21,7 @@ public class AIManager : MonoBehaviour
         else if (ReferencesManager.Instance.gameSettings._currentGameMode.value == "nonhistoric")
         {
             mode = 1;
+            ReferencesManager.Instance.gameSettings.allowGameEvents = false;
         }
         else
         {

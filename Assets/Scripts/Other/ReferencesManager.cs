@@ -48,7 +48,7 @@ public class ReferencesManager : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        Instance = this.GetComponent<ReferencesManager>();
     }
 
     public void CreateCountry(CountryScriptableObject countryScriptableObject, string ideology)
