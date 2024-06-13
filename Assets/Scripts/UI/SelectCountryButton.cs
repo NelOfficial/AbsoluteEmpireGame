@@ -29,7 +29,7 @@ public class SelectCountryButton : MonoBehaviour
         }
         else if (country_ScriptableObject != null)
         {
-            countryName.text = ReferencesManager.Instance.languageManager.GetTranslation($"{country.country._nameEN}");
+            countryName.text = ReferencesManager.Instance.languageManager.GetTranslation($"{country_ScriptableObject._nameEN}");
 
             countryFlag.sprite = country_ScriptableObject.countryFlag;
         }

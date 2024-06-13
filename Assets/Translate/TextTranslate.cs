@@ -17,7 +17,7 @@ public class TextTranslate : MonoBehaviour
 
     private void Start()
     {
-        TRANSLATION = ReferencesManager.Instance.gameSettings.translate;
+        TRANSLATION = ReferencesManager.Instance.languageManager.obj;
 
         foreach (string[] str in TRANSLATION.value)
         {

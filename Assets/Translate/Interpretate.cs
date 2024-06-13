@@ -6,7 +6,7 @@ using UnityEngine.SocialPlatforms;
 public class Interpretate: MonoBehaviour
 {
     [SerializeField] private TextAsset csvFile;
-    [SerializeField] private Translate obj;
+    public Translate obj;
     [SerializeField] private bool DebugLog;
 
     private void Awake()
@@ -73,7 +73,11 @@ public class Interpretate: MonoBehaviour
 
         if (local != null)
         {
-            result = local[currentLanguage + 1];
+            try
+            {
+                result = local[currentLanguage + 1];
+            }
+            catch (System.Exception) { }
         }
 
         return result;

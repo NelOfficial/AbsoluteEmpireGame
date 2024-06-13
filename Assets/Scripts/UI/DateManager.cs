@@ -133,17 +133,7 @@ public class DateManager : MonoBehaviour
 			_localYear++;
 		}
 
-
-		string arg = "";
-
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            arg = gameSettings.monthsDisplayEN[_localMonth];
-        }
-        if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            arg = gameSettings.monthsDisplay[_localMonth];
-        }
+        string arg = ReferencesManager.Instance.languageManager.GetTranslation($"Date.{_localMonth}");
 
         this.dateText.text = string.Format("{0} {1} {2}", _localDay, arg, _localYear);
 		this.currentDate[2] = _localYear;
