@@ -40,6 +40,7 @@ public class CountryInfo : MonoBehaviour
     private void UpdateUI()
     {
         countryNameText.text = ReferencesManager.Instance.languageManager.GetTranslation(country.country._nameEN);
+        countryIdeologyText.text = ReferencesManager.Instance.languageManager.GetTranslation(country.ideology);
 
         if (country.ideology != "Неопределено" &&
             country.ideology != "Неопределённый" &&
@@ -48,7 +49,7 @@ public class CountryInfo : MonoBehaviour
             country.ideology != "Монархия" &&
             country.ideology != "Фашизм")
         {
-            countryIdeologyText.text = ReferencesManager.Instance.languageManager.GetTranslation(country.ideology);
+            countryIdeologyText.text = country.ideology;
         }
 
         countryFlagImage.sprite = country.country.countryFlag;

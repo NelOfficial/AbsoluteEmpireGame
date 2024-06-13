@@ -15,7 +15,7 @@ MonoBehaviour:
   _id: 1008
   _name: "\u0418\u043C\u043F\u0435\u0440\u0438\u044F \u0421\u0435\u0432\u0435\u0440\u043D\u043E\u0433\u043E
     \u041C\u043E\u0440\u044F"
-  _nameEN: The Empire Of The North Sea
+  _nameEN: Empire Of The North Sea
   _uiName: "\u0418\u043C\u043F\u0435\u0440\u0438\u044F \u0421\u0435\u0432\u0435\u0440\u043D\u043E\u0433\u043E
     \u041C\u043E\u0440\u044F"
   _tag: ENS
@@ -23,7 +23,7 @@ MonoBehaviour:
   countryFlag: {fileID: 21300000, guid: 0e658b525948a51428c50476f59404af, type: 3}
   ally: 
   capitulateLimit: 20
-  countryColor: {r: 0.6666667, g: 0.10196078, b: 0.5998585, a: 0.5}
+  countryColor: {r: 0.6666667, g: 0.10196078, b: 0.53529364, a: 0.5019608}
   countryIdeologyColors:
   - {r: 0.9529412, g: 0.62352943, b: 0.8763914, a: 0.5019608}
   - {r: 0.6666667, g: 0.10196078, b: 0.5234857, a: 0.5019608}

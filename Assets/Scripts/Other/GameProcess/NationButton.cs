@@ -16,14 +16,8 @@ public class NationButton : MonoBehaviour
         countryManager = FindObjectOfType<CountryManager>();
 
         countryFlag.sprite = currentNation.country.countryFlag;
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            countryName.text = currentNation.country._nameEN;
-        }
-        if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            countryName.text = currentNation.country._name;
-        }
+
+        countryName.text = ReferencesManager.Instance.languageManager.GetTranslation(currentNation.country._nameEN);
 
         if (countryManager.currentCountry.country._id == currentNation.country._id) // Formed
         {

@@ -31,42 +31,36 @@ public class EventPanel : MonoBehaviour
 
         countryFlagImage.sprite = currentEventItem.sender.country.countryFlag;
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            countryNameText.text = currentEventItem.sender.country._nameEN;
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            countryNameText.text = currentEventItem.sender.country._name;
-        }
+        countryNameText.text = ReferencesManager.Instance.languageManager.GetTranslation(currentEventItem.sender.country._nameEN);
 
         string offer_text = "";
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
+        if (currentEventItem.offer == "Торговля")
         {
-            if (currentEventItem.offer == "Торговля")
-            {
-                offer_text = "Trading";
-            }
-            else if (currentEventItem.offer == "Пакт о ненападении")
-            {
-                offer_text = "Non-agression pact";
-            }
-            else if (currentEventItem.offer == "Право прохода войск")
-            {
-                offer_text = "Right of troops passage";
-            }
-            else if (currentEventItem.offer == "Союз")
-            {
-                offer_text = "Union";
-            }
+            offer_text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Trade");
+        }
+        else if (currentEventItem.offer == "Пакт о ненападении")
+        {
+            offer_text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Pact");
+        }
+        else if (currentEventItem.offer == "Право прохода войск")
+        {
+            offer_text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Right");
+        }
+        else if (currentEventItem.offer == "Союз")
+        {
+            offer_text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Right");
+        }
+        else if (currentEventItem.offer == "Расторгнуть пакт о ненападении")
+        {
+            offer_text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.AntiPact");
+        }
+        else if (currentEventItem.offer == "Объявить войну")
+        {
+            offer_text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.SendWar");
+        }
 
-            offerText.text = $"They offer you {offer_text}";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            offerText.text = currentEventItem.offer;
-        }
+        offerText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.TheyOffersToYou")} {offer_text}";
     }
 
     public void Accept()
