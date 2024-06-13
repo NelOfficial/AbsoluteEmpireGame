@@ -11,7 +11,7 @@ ExitButton;Exit;Выйти;Salir;Sair;Saída
 Error;Error;Ошибка;Error;Erro;Erro
 AreYouSure;Are you sure?;Вы уверены?;¿Está seguro?;Tem a certeza?;Tem certeza?
 Info.TitleText;Detailed information;Подробная информация;Información detallada;Informações pormenorizadas;Informações detalhadas
-Info.NoInfo;So far, it's empty (×_×) ;Пока здесь пусто (×_×) ;Hasta ahora, aquí está vacío (×_×) ;Até agora, está vazio (×_×) ;Até o momento, está vazio (×_×) 
+Info.NoInfo;So far, it's empty (×_×);Пока здесь пусто (×_×);Hasta ahora, aquí está vacío (×_×);Até agora, está vazio (×_×);Até o momento, está vazio (×_×)
 MainMenu.UpdateCheck.Connecting;Connecting...;Подключение...;Conexión...;Ligação...;Conexão...
 MainMenu.UpdateCheck.Checking;Checking for updates...;Проверка обновления...;Comprobación de actualización...;Verificar a actualização...;Verificando atualizações...
 MainMenu.UpdateCheck.NewUpdate;New update;Новое обновление;Nueva actualización;Nova atualização;Nova atualização
@@ -104,13 +104,13 @@ MainMenu.Version.CurrentVersion;Current version:;Текущая версия:;Ve
 MainMenu.Loading;Loading...;Идёт загрузка...;Se está cargando...;A carregar...;O download está em andamento...
 MainMenu.CheckVer;Check update;Проверить обновление;Comprobar actualización;Verificar atualização;Confira a atualização
 MainMenu.Quote1;Russian armies destroy more enemy soldiers and weapons than all the other 25 United Nations states combined... - Franklin Roosevelt;Русские армии уничтожают больше солдат и вооружения противника, чем все остальные 25 государств объединенных наций вместе взятых… - Франклин Рузвельт;Los ejércitos rusos destruyen más soldados y armas enemigas que todos los otros 25 Estados de las Naciones Unidas combinados. - Franklin Roosevelt;Os exércitos russos matam mais soldados e armas do inimigo do que todos os outros 25 estados das Nações Unidas combinados. - Franklin D. Roosevelt;Os exércitos russos destroem mais soldados e armas inimigas do que todos os outros 25 estados das Nações Unidas juntos... - Franklin Roosevelt
-MainMenu.Quote2;Hitler's crazy ideas were not destined to come true — the course of the war scattered them to dust. - Joseph Stalin;Сумасбродным идеям Гитлера не суждено было сбыться, — ход войны развеял их в прах. - Иосиф Сталин;Las ideas extravagantes de Hitler no estaban destinadas a hacerse realidad: el curso de la guerra las disipó en polvo. - Joseph Stalin;As idéias extravagantes de Hitler não estavam destinadas a se tornar realidade — o curso da guerra as dissipou em pó.  Joseph Stalin;As idéias malucas de Hitler não estavam destinadas a se tornar realidade — o curso da guerra as transformou em pó. - Josef Stalin
-MainMenu.Quote3;The war has been won, but not the peace. - Albert Einstein;Выиграна война, но не мир. - Альберт Эйнштейн;Se gana la guerra pero no la paz. - Albert Einstein;A guerra foi vencida, mas não a paz.  Albert Einstein;A guerra foi ganha, mas não a paz. - Albert Einstein
+MainMenu.Quote2;Hitler's crazy ideas were not destined to come true — the course of the war scattered them to dust. - Joseph Stalin;Сумасбродным идеям Гитлера не суждено было сбыться, — ход войны развеял их в прах. - Иосиф Сталин;Las ideas extravagantes de Hitler no estaban destinadas a hacerse realidad: el curso de la guerra las disipó en polvo. - Joseph Stalin;As idéias extravagantes de Hitler não estavam destinadas a se tornar realidade — o curso da guerra as dissipou em pó. Joseph Stalin;As idéias malucas de Hitler não estavam destinadas a se tornar realidade — o curso da guerra as transformou em pó. - Josef Stalin
+MainMenu.Quote3;The war has been won, but not the peace. - Albert Einstein;Выиграна война, но не мир. - Альберт Эйнштейн;Se gana la guerra pero no la paz. - Albert Einstein;A guerra foi vencida, mas não a paz. Albert Einstein;A guerra foi ganha, mas não a paz. - Albert Einstein
 MainMenu.Quote4;Together with the Leningraders, all Soviet people and all progressive humanity rejoiced at the great triumph of the city. - Harrison Salisbury;Вместе с ленинградцами великому торжеству города радовались все советские люди, все прогрессивное человечество. - Гаррисон Солсбери;Junto con los leningradenses, todos los soviéticos, toda la humanidad progresista, se regocijaron en el gran triunfo de la ciudad. - Harrison Salisbury;Juntamente com os leningradianos, todos os soviéticos, toda a humanidade progressista, se alegraram com o grande triunfo da cidade. - Harrison Salisbury;Juntamente com os Leningradenses, todo o povo soviético e toda a humanidade progressista se alegraram com o grande triunfo da cidade. - Harrison Salisbury
 MainMenu.Quote5;England was offered a choice between war and dishonor. She chose dishonor and will get war. - Winston Churchill;Англии был предложен выбор между войной и бесчестием. Она выбрала бесчестие и получит войну. - Уинстон Черчилль;A Inglaterra se le ofreció la opción entre la guerra y la deshonra. Ella eligió la deshonra y recibirá la guerra. - Winston Churchill;A Inglaterra foi oferecida uma escolha entre a guerra e a desonra. Ela escolheu a desonra e terá a guerra. - Winston Churchill;Foi oferecida à Inglaterra uma escolha entre a guerra e a desonra. Ela escolheu a desonra e vai ter Guerra. - Winston Churchill
 MainMenu.Quote6;The Russian army has gutted the German war machine. - Winston Churchill;Русская армия выпустила кишки из германской военной машины. - Уинстон Черчилль;El ejército ruso disparó las tripas de la máquina de guerra alemana. - Winston Churchill;O exército russo libertou as tripas da máquina de guerra alemã. - Winston Churchill;O exército russo destruiu a máquina de guerra alemã. - Winston Churchill
 MainMenu.Quote7;The truth is that despite the hardest trials, we have won. - Alexander Chak'ovsky;Истина заключается в том, что, несмотря на тяжелейшие испытания, мы победили. - Александр Чаковский;La verdad es que, a pesar de las pruebas más difíciles, hemos ganado. - Alexander Chakovsky;A verdade é que, apesar das provações mais difíceis, vencemos. - Alexander Chakovsky;A verdade é que, apesar das provas mais duras, vencemos. - Alexandre Chak ' ovsky
-MainMenu.Quote8;The history of wars knows of no other similar enterprise in terms of breadth of conception, grandiosity of scale and skill of execution. - Joseph Stalin;История войн не знает другого подобного предприятия по широте замысла, грандиозности масштабов и мастерству выполнения. - Иосиф Сталин;La historia de las guerras no conoce otra empresa similar en términos de amplitud de diseño, grandiosidad de escala y habilidad de ejecución. - Joseph Stalin;A história das guerras não conhece outro empreendimento semelhante em termos de amplitude de projeto, grandiosidade de escala e habilidade de execução.  Joseph Stalin;A história das guerras não conhece outro empreendimento semelhante em termos de amplitude de concepção, grandiosidade de escala e habilidade de execução. - Josef Stalin
+MainMenu.Quote8;The history of wars knows of no other similar enterprise in terms of breadth of conception, grandiosity of scale and skill of execution. - Joseph Stalin;История войн не знает другого подобного предприятия по широте замысла, грандиозности масштабов и мастерству выполнения. - Иосиф Сталин;La historia de las guerras no conoce otra empresa similar en términos de amplitud de diseño, grandiosidad de escala y habilidad de ejecución. - Joseph Stalin;A história das guerras não conhece outro empreendimento semelhante em termos de amplitude de projeto, grandiosidade de escala e habilidade de execução. Joseph Stalin;A história das guerras não conhece outro empreendimento semelhante em termos de amplitude de concepção, grandiosidade de escala e habilidade de execução. - Josef Stalin
 MainMenu.Quote9;Even when the German troops were already halfway back, it was still talked about as a strategic withdrawal. In fact, this was the end of Hitler. The Nazi bull market ended on the day of the attack on Stalingrad. - Nicholas Darvas;Даже когда немецкие войска были уже на полпути назад, об этом по-прежнему говорили как о стратегическом отходе. Фактически же это был конец Гитлера. Нацистский бычий рынок закончился в день атаки на Сталинград. - Николас Дарвас;Incluso cuando las tropas alemanas ya estaban a mitad de camino, todavía se hablaba de una retirada estratégica. De hecho, fue el fin de Hitler. El mercado alcista nazi terminó el día del ataque a Stalingrado. - Nicholas Darvas;Mesmo quando as tropas alemãs já estavam a meio caminho de volta, isso ainda era falado como uma retirada estratégica. Foi o fim de Hitler. O mercado de Touro nazista terminou no dia do ataque a Stalingrado. - Nicholas Darvas;Mesmo quando as tropas alemãs já estavam na metade do caminho de volta, ainda era falado como uma retirada estratégica. Na verdade, esse foi o fim de Hitler. O mercado de Touros nazista terminou no dia do ataque a Stalingrado. - Nicholas Darvas
 MainMenu.Quote10;I. V. Stalin was extremely intolerant of lateness to his calls. But what to do? The situation in the war does not take into account the characters of the commanders. - Georgy Zhukov;И. В. Сталин был крайне нетерпим к опозданиям на его вызовы. Но что делать? Обстановка на войне не считается с характерами командующих. - Георгий Жуков;J. V. Stalin era extremadamente intolerante a llegar tarde a sus desafíos. Pero, ¿qué hacer? La situación en la guerra no tiene en cuenta los personajes de los comandantes. - George Zhukov;J. V. Stalin era extremamente intolerante a atrasos em seus desafios. Mas o que fazer? A situação na guerra não conta com o caráter dos comandantes. - Georgy Zhukov;I. V. Stalin era extremamente intolerante com o atraso em suas ligações. Mas o que fazer? A situação na guerra não leva em conta os personagens dos comandantes. - Georgy Zhukov
 MainMenu.Quote11;Historically, the victory of fascism is ridiculous and impossible, but I know that the only way to save humanity from destruction is by fighting. - - Dmitri Shostakovich;Исторически победа фашизма нелепа и невозможна, но я знаю, что спасти человечество от гибели можно только сражаясь. - Дмитрий Шостакович;Históricamente, la victoria del fascismo es ridícula e imposible, pero sé que la única manera de salvar a la humanidad de la destrucción es luchando. - Dmitry Shostakovich;Historicamente, a vitória do fascismo é ridícula e impossível, mas eu sei que a única maneira de salvar a humanidade da destruição é lutando. - Dmitry Shostakovich;Historicamente, a vitória do fascismo é ridícula e impossível, mas sei que a única maneira de salvar a humanidade da destruição é lutando. - Dmitry Shostakovich
@@ -263,6 +263,7 @@ Empire Of The North Sea;Empire Of The North Sea;Империя Северног�
 Фашизм;Fascism;Фашизм;Fascismo;Fascismo;Fascismo
 Монархия;Monarchy;Монархия;Monarquía;Monarquia;Monarquia
 Неопределено;Undefined;Неопределено;Indefinido;Indefinido;Indefinido
+Diplomaty.WarsWithMyParticipation;Wars with your participation;Войны с вашим участием;Guerras con su participación;Guerras com a sua participação;Guerras com sua participação
 Diplomaty.Accepted;"They are <b><color=\""green\"">accepted</color></b> your offer";"Они <b><color=\""green\"">приняли</color></b> ваше предложение";"Han <b><color=\""green\"">aceptado</color></b> tu oferta";"Eles <b><color=\""green\"">aceitaram</color></b> sua oferta";"Eles <b><color=\""green\"">aceitaram</color></b> sua oferta"
 Diplomaty.Declined;"They are <b><color=\""red\"">rejected</color></b> your offer";"Они <b><color=\""red\"">отклонили</color></b> ваше предложение";"Han <b><color=\""red\"">rechazada</color></b> tu oferta.";"Eles <b><color=\""red\"">rejeitaram</color></b> sua oferta";"Eles <b><color=\""red\"">rejeitaram</color></b> sua oferta"
 Diplomaty.SendMoney;Send gold;Отправить золото;enviar oro;Enviar ouro;Enviar ouro
@@ -271,141 +272,106 @@ Diplomaty.SendFood;Send food;Отправить провизию;enviar comida;E
 Diplomaty.AskFood;Ask for food;Попросить провизию;pedir comida;Peça comida;Peça comida
 Diplomaty.SendRecruits;Send recruits;Отправить рекрутов;enviar reclutas;Enviar recrutas;Enviar recrutas
 Diplomaty.AskRecruits;Ask for recruits;Попросить рекрутов;Preguntar por reclutas;Peça recrutas;Peça recrutas
-Diplomaty.SendWar;;Объявить войну;;;
-Diplomaty.Peace;;Заключить мир;;;
-Diplomaty.AskForWar;;Призвать в войну с ...;;;
-Diplomaty.Vassal;;Сделать вассалом;;;
-Diplomaty.FreeVassal;;Освободить вассала;;;
-Diplomaty.Union;;Союз;;;
-Diplomaty.DeUnion;;Расторгнуть союз;;;
-Diplomaty.Trade;;Торговля;;;
-Diplomaty.UnTrade;;Прекратить торговлю;;;
-Diplomaty.Pact;;Пакт о ненападении;;;
-Diplomaty.AntiPact;;Расторгнуть пакт о ненападении;;;
-Diplomaty.Right;;Право прохода войск;;;
-Diplomaty.DeRight;;Расторгнуть право прохода войск;;;
-Diplomaty.TransferRegions;;Передать регионы;;;
-Diplomaty.AskForRegions;;Попросить регионы;;;
-Diplomaty.MoreInfoButton;;Подробнее;;;
-Diplomaty.Title;;Дипломатические действия;;;
-CountryInfo.ProvincesText;;Провинции;;;
-CountryInfo.Population;;Население;;;
-CountryInfo.InternalPoliticsTitle;;Внутренняя политика;;;
-CountryInfo.ChangeIdeoogyButton;;Изменить идеологию государства;;;
-CountryInfo.ChangeMobilisationLaw;;Изменить закон о призыве;;;
-CountryInfo.Mobilisation.0;;Безоружная страна;;;
-CountryInfo.Mobilisation.1;;Добровольческая армия;;;
-CountryInfo.Mobilisation.2;;Частичный призыв;;;
-CountryInfo.Mobilisation.3;;Обязательная служба;;;
-CountryInfo.Mobilisation.4;;Все взрослые проходят службу;;;
-CountryInfo.Mobilisation.5;;Тотальная мобилизация;;;
-CountryInfo.FormCountryButton;;Сформировать страну в ...;;;
-CountryInfo.DivisionsTemplateButton;;Шаблоны дивизий;;;
-CountryInfo.DivisionsTemplateTitle;;Ваши шаблоны дивизий;;;
-CountryInfo.CreateDivisionTemplateButton;;Создать шаблон;;;
-CountryInfo.PoliticalParties;;Партии;;;
-CountryInfo.IncomesTitle;;Доходы;;;
-CountryInfo.ExpensesTitle;;Расходы;;;
-CountryInfo.Expenses.Inflation;;Инфляция;;;
-Settings.GraphicsTitle;;Графика;;;
-Settings.PostProcessing;;Пост эффекты;;;
-Settings.WaterAnimation;;Анимация воды;;;
-Settings.Cities;;Города;;;
-Settings.Borders;;Границы провинций;;;
-Settings.MusicTitle;;Музыка;;;
-Settings.Resume;;Продолжить;;;
-Settings.RestartCamera;;Перезапустить камеру;;;
-Settings.PhotoMode;;Режим фото;;;
-Settings.GameGuide;;Справочник по игре;;;
-Settings.SaveGame;;Сохранить игру;;;
-Settings.Menu;;Меню;;;
-Settings.DeleteAllSaves;;Удалить все сохранения;;;
-Settings.MoreResources;;Дополнительные ресурсы;;;
-Settings.FPSCounter;;Счётчик FPS;;;
-Settings.GameProcess;;Игровой процесс;;;
-Settings.CameraZoom;;Скорость приближения камеры;;;
-Settings.CameraSpeed;;Скорость движения камеры;;;
-Settings.MusicVolume;;Громкость музыки;;;
-Settings.Autosave;;Автосохранение через ... ходов;;;
-Settings.AdvertTitle;;Ресурсы за рекламу;;;
-RegionUI.ClaimButton;;Заявить претензии;;;
-RegionUI.Claims;;Претензии;;;
-RegionUI.ClickToRemove;;Нажмите, чтобы удалить;;;
-RegionUI.Fleet.Remove;;Распустить флотилию;;;
-RegionUI.Fleet.Heal;;Отправить на ремонт;;;
-RegionUI.RemoveDivisionText;;Распустить дивизию?\n\nВсе ресурсы будут возвращены;;;
-RegionUI.Fleet.InStock;;В запасах;;;
-RegionUI.CreateArmyText;;Собрать армию?\n\nЭто будет стоить золота, пищи и рекрутов. В дальнейшем будет тратиться пища и золото на её содержание;;;
-RegionUI.Division.Remove;;Распустить дивизию;;;
-RegionUI.Division.HealButton;;Восстановить здоровье;;;
-RegionUI.Division.HealText;;Восстановиить здоровье батальонам?;;;
-RegionUI.GoldText;;;;;
-RegionUI.FoodText;;;;;
-RegionUI.RecruitsText;;;;;
-TechnologyPanel.Infantry;;;;;
-TechnologyPanel.Art;;;;;
-TechnologyPanel.Heavy;;;;;
-TechnologyPanel.Economic;;;;;
-TechnologyPanel.Close;;;;;
-TechnologyPanel.Research;;;;;
-TechnologyPanel.CancelResearch;;;;;
-TechnologyPanel.Researched;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-;;;;;
-Buildings.Fabric;;;;;
-Buildings.Farm;;;;;
-Buildings.ChemicalFarm;;;;;
-Buildings.ResLab;;;;;
-Buildings.Dockyard;;;;;
-Buildings.Infra;;;;;
-Buildings.Bunker;;;;;
-Buildings.MarineBase;;;;;
+Diplomaty.SendWar;Declare war;Объявить войну;Declarar la guerra;Declarar guerra;Declarar guerra
+Diplomaty.Peace;Peace;Заключить мир;Paz;Paz;Paz
+Diplomaty.AskForWar;Call to war with ...;Призвать в войну с ...;Llamado a la guerra con...;Chame para a guerra com ...;Chame para a guerra com ...
+Diplomaty.Vassal;Make a vassal;Сделать вассалом;hacer un vasallo;Faça um vassalo;Faça um vassalo
+Diplomaty.FreeVassal;Free a vassal;Освободить вассала;Liberar a un vasallo;Liberte um vassalo;Liberte um vassalo
+Diplomaty.Union;Union;Союз;Unión;União;União
+Diplomaty.DeUnion;Dissolve the union;Расторгнуть союз;disolver el sindicato;Dissolver o sindicato;Dissolver o sindicato
+Diplomaty.Trade;Trade;Торговля;Comercio;Troca;Troca
+Diplomaty.UnTrade;Stop trading;Прекратить торговлю;dejar de operar;Pare de negociar;Pare de negociar
+Diplomaty.Pact;Nonaggression pact;Пакт о ненападении;Pacto no agresivo;Pacto de não-agressão;Pacto de não-agressão
+Diplomaty.AntiPact;Terminate the non-aggression pact;Расторгнуть пакт о ненападении;Poner fin al pacto de no agresión;Terminar o pacto de não agressão;Terminar o pacto de não agressão
+Diplomaty.Right;Right of passage for troops;Право прохода войск;Derecho de paso de tropas;Direito de passagem para tropas;Direito de passagem para tropas
+Diplomaty.DeRight;Terminate the right of passage of troops;Расторгнуть право прохода войск;Terminar el derecho de paso de tropas.;Terminar o direito de passagem de tropas;Terminar o direito de passagem de tropas
+Diplomaty.TransferRegions;Transfer regions;Передать регионы;Transferir regiones;Regiões de transferência;Regiões de transferência
+Diplomaty.AskForRegions;Ask for regions;Попросить регионы;Preguntar por regiones;Pergunte por regiões;Pergunte por regiões
+Diplomaty.MoreInfoButton;More details;Подробнее;Más detalles;Mais detalhes;Mais detalhes
+Diplomaty.Title;Diplomatic actions;Дипломатические действия;Acciones diplomáticas;Ações diplomáticas;Ações diplomáticas
+CountryInfo.ProvincesText;Provinces;Провинции;Provincias;Províncias;Províncias
+CountryInfo.Population;Population;Население;Población;População;População
+CountryInfo.InternalPoliticsTitle;Internal politics;Внутренняя политика;Política interna;Política interna;Política interna
+CountryInfo.ChangeIdeoogyButton;Change the ideology of the state;Изменить идеологию государства;Cambiar la ideología del estado.;Mudar a ideologia do estado;Mudar a ideologia do estado
+CountryInfo.ChangeMobilisationLaw;Change the draft law;Изменить закон о призыве;Cambiar el proyecto de ley;Alterar o projeto de lei;Alterar o projeto de lei
+CountryInfo.Mobilisation.0;Unarmed country;Безоружная страна;país desarmado;País desarmado;País desarmado
+CountryInfo.Mobilisation.1;Volunteer Army;Добровольческая армия;ejército voluntario;Exército Voluntário;Exército Voluntário
+CountryInfo.Mobilisation.2;Partial conscription;Частичный призыв;Servicio militar obligatorio parcial;Recrutamento parcial;Recrutamento parcial
+CountryInfo.Mobilisation.3;Mandatory service;Обязательная служба;Servicio obligatorio;Serviço obrigatório;Serviço obrigatório
+CountryInfo.Mobilisation.4;All adults serve;Все взрослые проходят службу;Todos los adultos sirven;Todos os adultos servem;Todos os adultos servem
+CountryInfo.Mobilisation.5;Total mobilization;Тотальная мобилизация;Movilización total;Mobilização total;Mobilização total
+CountryInfo.FormCountryButton;Form a country in...;Сформировать страну в ...;Formar un país en...;Formar um país em...;Formar um país em...
+CountryInfo.DivisionsTemplateButton;Division Templates;Шаблоны дивизий;Plantillas de división;Modelos de divisão;Modelos de divisão
+CountryInfo.DivisionsTemplateTitle;Your division templates;Ваши шаблоны дивизий;Tus plantillas de división;Seus modelos de divisão;Seus modelos de divisão
+CountryInfo.DivisionTemplateTitle;Your division template;Ваш шаблон;Tu plantilla de división;Seu modelo de divisão;Seu modelo de divisão
+CountryInfo.CreateDivisionTemplateButton;Create a template;Создать шаблон;Crear una plantilla;Crie um modelo;Crie um modelo
+CountryInfo.CreateVassalButton;Create vassal;Создать вассала;Crear vasallo;Criar vassalo;Criar vassalo
+CountryInfo.PoliticalParties;Parties;Партии;Fiestas;Festas;Festas
+CountryInfo.IncomesTitle;Income;Доходы;Ingreso;Renda;Renda
+CountryInfo.ExpensesTitle;Expenses;Расходы;Gastos;Despesas;Despesas
+CountryInfo.Expenses.Inflation;Inflation;Инфляция;Inflación;Inflação;Inflação
+Settings.GraphicsTitle;Graphics;Графика;Gráficos;Gráficos;Gráficos
+Settings.PostProcessing;Post effects;Пост эффекты;Efectos posteriores;Pós-efeitos;Pós-efeitos
+Settings.WaterAnimation;Water animation;Анимация воды;Animación de agua;Animação de água;Animação de água
+Settings.Cities;Cities;Города;Ciudades;Cidades;Cidades
+Settings.Borders;Borders;Границы провинций;Fronteras;Fronteiras;Fronteiras
+Settings.MusicTitle;Music;Музыка;Música;Música;Música
+Settings.Resume;Continue;Продолжить;Continuar;Continuar;Continuar
+Settings.RestartCamera;Restart camera;Перезапустить камеру;Reiniciar cámara;Reinicie a câmera;Reinicie a câmera
+Settings.PhotoMode;Photo mode;Режим фото;Modo foto;Modo foto;Modo foto
+Settings.GameGuide;Game Guide;Справочник по игре;Guía de juego;Guia do jogo;Guia do jogo
+Settings.SaveGame;Save the game;Сохранить игру;guarda el juego;Salve o jogo;Salve o jogo
+Settings.Menu;Menu;Меню;Menú;Cardápio;Cardápio
+Settings.DeleteAllSaves;Delete all saves;Удалить все сохранения;Eliminar todos los guardados;Excluir todos os salvamentos;Excluir todos os salvamentos
+Settings.MoreResources;Additional Resources;Дополнительные ресурсы;Recursos adicionales;Recursos adicionais;Recursos adicionais
+Settings.FPSCounter;FPS counter;Счётчик FPS;Contador de FPS;Contador de FPS;Contador de FPS
+Settings.GameProcess;Game process;Игровой процесс;Proceso de juego;Processo de jogo;Processo de jogo
+Settings.CameraZoom;Camera zoom speed;Скорость приближения камеры;Velocidad de zoom de la cámara;Velocidade de zoom da câmera;Velocidade de zoom da câmera
+Settings.CameraSpeed;Camera movement speed;Скорость движения камеры;Velocidad de movimiento de la cámara;Velocidade de movimento da câmera;Velocidade de movimento da câmera
+Settings.MusicVolume;Music volume;Громкость музыки;Volumen de la música;Volume da música;Volume da música
+Settings.Autosave;Autosave after... moves;Автосохранение через ... ходов;Guardado automático después de... movimientos;Salvamento automático após... movimentos;Salvamento automático após... movimentos
+Settings.AdvertTitle;Resources for advertising;Ресурсы за рекламу;Recursos para publicidad;Recursos para publicidade;Recursos para publicidade
+RegionUI.ClaimButton;Make a claim;Заявить претензии;Hacer un reclamo;Faça uma reclamação;Faça uma reclamação
+RegionUI.Claims;Claims;Претензии;Reclamos;Reivindicações;Reivindicações
+RegionUI.ClickToRemove;Click to delete;Нажмите, чтобы удалить;Haga clic para eliminar;Clique para excluir;Clique para excluir
+RegionUI.Fleet.Remove;Disband the flotilla;Распустить флотилию;Disolver la flotilla;Dissolver a flotilha;Dissolver a flotilha
+RegionUI.Fleet.Heal;Send for repair;Отправить на ремонт;enviar a reparar;Enviar para reparo;Enviar para reparo
+RegionUI.RemoveDivisionText;Disband the division?\\\\\\All resources will be returned;Распустить дивизию?\\\\\\Все ресурсы будут возвращены;¿Disolver la división?\\\\\\Todos los recursos serán devueltos;Dissolver a divisão?\\\\\\Todos os recursos serão devolvidos;Dissolver a divisão?\\\\\\Todos os recursos serão devolvidos
+RegionUI.Fleet.InStock;In stock;В запасах;En stock;Em estoque;Em estoque
+RegionUI.CreateFleetText;"Create a flotilla?
+
+This will cost gold and recruits, and in the future food and gold will be spent on its maintenance";"Создать флотилию?
+
+Это будет стоить золота и рекрутов, и в дальнейшем будет тратиться пища и золото на её содержание";"¿Crear una flotilla?
+
+Esto costará oro y reclutas, y en el futuro se gastará comida y oro en su mantenimiento.";"Criar uma flotilha?
+
+Isto custará ouro e recrutas e, no futuro, alimentos e ouro serão gastos na sua manutenção.";"Criar uma flotilha?
+
+Isto custará ouro e recrutas e, no futuro, alimentos e ouro serão gastos na sua manutenção."
+RegionUI.CreateArmyText;Raise an army?\\\\\\It will cost gold, food and recruits. In the future, food and gold will be spent on its maintenance;Собрать армию?\\\\\\Это будет стоить золота, пищи и рекрутов. В дальнейшем будет тратиться пища и золото на её содержание;¿Formar un ejército?\\\\\\Te costará oro, comida y reclutas. En el futuro se gastará comida y oro en su mantenimiento.;Criar um exército?\\\\\\Isso custará ouro, comida e recrutas. No futuro, alimentos e ouro serão gastos na sua manutenção;Criar um exército?\\\\\\Isso custará ouro, comida e recrutas. No futuro, alimentos e ouro serão gastos na sua manutenção
+RegionUI.Division.Remove;Disband the division;Распустить дивизию;Disolver la división;Dissolver a divisão;Dissolver a divisão
+RegionUI.Division.HealButton;Restore health;Восстановить здоровье;Recuperar salud;Restaurar a saúde;Restaurar a saúde
+RegionUI.Division.HealText;Restore the health of the battalions? It will cost;Восстановиить здоровье батальонам? Это будет стоить;¿Restaurar la salud de los batallones? Costara;Restaurar a saúde dos batalhões? Vai custar;Restaurar a saúde dos batalhões? Vai custar
+RegionUI.GoldText;gold;золота;oro;ouro;ouro
+RegionUI.FoodText;provisions;провизии;provisiones;disposições;disposições
+RegionUI.RecruitsText;recruits;рекрутов;reclutas;recrutas;recrutas
+TechnologyPanel.Infantry;Infantry;Пехота;Infantería;Infantaria;Infantaria
+TechnologyPanel.Art;Artillery;Артиллерия;Artillería;Artilharia;Artilharia
+TechnologyPanel.Heavy;Armored vehicles;Бронетехника;Vehículos blindados;Veículos blindados;Veículos blindados
+TechnologyPanel.Economic;Economy;Экономика;Economía;Economia;Economia
+TechnologyPanel.Close;Close technology menu;Закрыть меню технологий;Cerrar menú de tecnología;Fechar menu de tecnologia;Fechar menu de tecnologia
+TechnologyPanel.Research;Explore;Изучить;Explorar;Explorar;Explorar
+TechnologyPanel.CancelResearch;Cancel study;Отменить изучение;Cancelar estudio;Cancelar estudo;Cancelar estudo
+TechnologyPanel.Researched;Studied;Изучено;Estudió;Estudado;Estudado
+Buildings.Fabric;Factory;Фабрика;Fábrica;Fábrica;Fábrica
+Buildings.Farm;Farm;Ферма;Granja;Fazenda;Fazenda
+Buildings.ChemicalFarm;Chemical farm;Химическая ферма;granja quimica;Fazenda química;Fazenda química
+Buildings.ResLab;Research laboratory;Исследовательская лаборатория;Laboratorio de investigación;Laboratório de pesquisas;Laboratório de pesquisas
+Buildings.Dockyard;Shipyards;Верфи;Astilleros;Estaleiros;Estaleiros
+Buildings.Infra;Infrastructure;Инфраструктура;Infraestructura;A infraestrutura;A infraestrutura
+Buildings.Bunker;Strengthening;Укрепление;Fortalecimiento;Reforço;Reforço
+Buildings.MarineBase;Naval base;Морская база;Base naval;Base naval;Base naval
 //города;//города;//города;//города;//города;//города
 Ренн;Rennes;Ренн;Rennes;Rennes;Rennes
 Нант;Nantes;Нант;Nantes;Nantes;Nantes
@@ -868,48 +834,94 @@ Buildings.MarineBase;;;;;
 Кордоба;Cordoba;Кордоба;Córdoba;Córdoba;Córdoba
 Альбасете;Albacete;Альбасете;albacete;Albacete;Albacete
 // технологии;// технологии;// технологии;// технологии;// технологии;// технологии
-Прицельные приспособления;Sights;Прицельные приспособления;;;
-Броня II;Armor II;Броня II;;;
-Броня;Armor;Броня;;;
-Армия;Army;Армия;;;
-Ранняя артиллерия;Early artillery;Ранняя артиллерия;;;
-Улучшенная артиллерия;Improved Artillery;Улучшенная артиллерия;;;
-Производство автомобилей;Automotive production;Производство автомобилей;;;
-Дульный тормоз;Muzzle brake;Дульный тормоз;;;
-Двигатель II;Engine II;Двигатель II;;;
-Двигатель;Engine;Двигатель;;;
-Бронетехника;Armored vehicles;Бронетехника;;;
-Регулярная армия;Regular army;Регулярная армия;;;
-Элитная пехота;Elite infantry;Элитная пехота;;;
-Люлька;Cradle;Люлька;;;
-Щиток;Shield;Щиток;;;
-Моторизированная пехота;Motorized infantry;Моторизированная пехота;;;
-Бронированная мотопехота;Armored motorized infantry;Бронированная мотопехота;;;
-Накатник;Knurl;Накатник;;;
-Нефтеперерабатывающие заводы;Oil refineries;Нефтеперерабатывающие заводы;;;
-Изготовление резины;Rubber manufacturing;Изготовление резины;;;
-Щитовое прикрытие;Shield cover;Щитовое прикрытие;;;
-Синтетический каучук;Synthetic rubber;Синтетический каучук;;;
-Сошники;Openers;Сошники;;;
-Станины;Beds;Станины;;;
-Ствол;Trunk;Ствол;;;
-Лёгкий танк;Light tank;Лёгкий танк;;;
-Средний танк;Medium tank;Средний танк;;;
-Производство шин;Tire production;Производство шин;;;
-Тормоз отката;Rollback brake;Тормоз отката;;;
-Инструкторы армии;Army instructors;Инструкторы армии;;;
-Продвинутые тренировочные полигоны;Advanced training grounds;Продвинутые тренировочные полигоны;;;
-Обучение солдат II;Soldier Training II;Обучение солдат II;;;
-Обучение солдат;Soldier training;Обучение солдат;;;
-Производство грузовиков;Truck production;Производство грузовиков;;;
-Современное снаряжение;Modern equipment;Современное снаряжение;;;
-Усовершенствованное оружие;Advanced Weapons;Усовершенствованное оружие;;;
-Раннее ПТО;Early VET;Раннее ПТО;;;
-Улучшенное ПТО;Improved PTO;Улучшенное ПТО;;;
-Стандартная переработка нефти;Standard oil refining;Стандартная переработка нефти;;;
-Улучшенная переработка нефти;Improved oil refining;Улучшенная переработка нефти;;;
-Кавалерия;Cavalry;Кавалерия;;;
-Улучшенная Кавалерия;Improved Cavalry;Улучшенная Кавалерия;;;
-Броня III;Armor III;Броня III;;;
-Двигатель III;Engine III;Двигатель III;;;
-Тяжелый танк;Heavy tank;Тяжелый танк;;;
+Прицельные приспособления;Sights;Прицельные приспособления;Monumentos;Vistas;Vistas
+Броня II;Armor II;Броня II;Armadura II;Armadura II;Armadura II
+Броня;Armor;Броня;Armadura;armaduras;armaduras
+Армия;Army;Армия;Ejército;Exército;Exército
+Ранняя артиллерия;Early artillery;Ранняя артиллерия;Artillería temprana;Artilharia antiga;Artilharia antiga
+Улучшенная артиллерия;Improved Artillery;Улучшенная артиллерия;Artillería mejorada;Artilharia Melhorada;Artilharia Melhorada
+Производство автомобилей;Automotive production;Производство автомобилей;Producción automotriz;Produção automotiva;Produção automotiva
+Дульный тормоз;Muzzle brake;Дульный тормоз;Freno de boca;Fucinho feio;Fucinho feio
+Двигатель II;Engine II;Двигатель II;Motor II;Motor II;Motor II
+Двигатель;Engine;Двигатель;Motor;Motor;Motor
+Бронетехника;Armored vehicles;Бронетехника;Vehículos blindados;Veículos blindados;Veículos blindados
+Регулярная армия;Regular army;Регулярная армия;Ejército regular;Exército regular;Exército regular
+Элитная пехота;Elite infantry;Элитная пехота;Infantería de élite;Infantaria de elite;Infantaria de elite
+Люлька;Cradle;Люлька;Cuna;Berço;Berço
+Щиток;Shield;Щиток;Blindaje;Escudo;Escudo
+Моторизированная пехота;Motorized infantry;Моторизированная пехота;Infantería motorizada;Infantaria motorizada;Infantaria motorizada
+Бронированная мотопехота;Armored motorized infantry;Бронированная мотопехота;Infantería motorizada blindada;Infantaria motorizada blindada;Infantaria motorizada blindada
+Накатник;Knurl;Накатник;Acordonar;serrilhado;serrilhado
+Нефтеперерабатывающие заводы;Oil refineries;Нефтеперерабатывающие заводы;Refinerías de petroleo;Refinarias de petróleo;Refinarias de petróleo
+Изготовление резины;Rubber manufacturing;Изготовление резины;Fabricación de caucho;Fabricação de borracha;Fabricação de borracha
+Щитовое прикрытие;Shield cover;Щитовое прикрытие;Cubierta protectora;Capa de escudo;Capa de escudo
+Синтетический каучук;Synthetic rubber;Синтетический каучук;Caucho sintético;Borracha sintética;Borracha sintética
+Сошники;Openers;Сошники;Abridores;Abridores;Abridores
+Станины;Beds;Станины;Camas;Camas;Camas
+Ствол;Trunk;Ствол;Trompa;Porta-malas;Porta-malas
+Лёгкий танк;Light tank;Лёгкий танк;tanque ligero;Tanque leve;Tanque leve
+Средний танк;Medium tank;Средний танк;Tanque mediano;Tanque médio;Tanque médio
+Производство шин;Tire production;Производство шин;Producción de neumáticos;Produção de pneus;Produção de pneus
+Тормоз отката;Rollback brake;Тормоз отката;freno de retroceso;Freio de reversão;Freio de reversão
+Инструкторы армии;Army instructors;Инструкторы армии;instructores del ejército;Instrutores do exército;Instrutores do exército
+Продвинутые тренировочные полигоны;Advanced training grounds;Продвинутые тренировочные полигоны;Campos de entrenamiento avanzado;Campos de treinamento avançado;Campos de treinamento avançado
+Обучение солдат II;Soldier Training II;Обучение солдат II;Entrenamiento de soldados II;Treinamento de Soldados II;Treinamento de Soldados II
+Обучение солдат;Soldier training;Обучение солдат;Entrenamiento de soldados;Treinamento de soldado;Treinamento de soldado
+Производство грузовиков;Truck production;Производство грузовиков;producción de camiones;Produção de caminhões;Produção de caminhões
+Современное снаряжение;Modern equipment;Современное снаряжение;Equipo moderno;Equipamento moderno;Equipamento moderno
+Усовершенствованное оружие;Advanced Weapons;Усовершенствованное оружие;Armas avanzadas;Armas Avançadas;Armas Avançadas
+Раннее ПТО;Early VET;Раннее ПТО;FP temprana;EFP precoce;EFP precoce
+Улучшенное ПТО;Improved PTO;Улучшенное ПТО;Toma de fuerza mejorada;Tomada de força melhorada;Tomada de força melhorada
+Стандартная переработка нефти;Standard oil refining;Стандартная переработка нефти;Refinación de petróleo estándar;Refino de petróleo padrão;Refino de petróleo padrão
+Улучшенная переработка нефти;Improved oil refining;Улучшенная переработка нефти;Refinación de petróleo mejorada;Melhor refino de petróleo;Melhor refino de petróleo
+Кавалерия;Cavalry;Кавалерия;Caballería;Cavalaria;Cavalaria
+Улучшенная Кавалерия;Improved Cavalry;Улучшенная Кавалерия;Caballería mejorada;Cavalaria Melhorada;Cavalaria Melhorada
+Броня III;Armor III;Броня III;Armadura III;Armadura III;Armadura III
+Двигатель III;Engine III;Двигатель III;Motor III;Motor III;Motor III
+Тяжелый танк;Heavy tank;Тяжелый танк;Tanque pesado;Tanque pesado;Tanque pesado
+NumberGoodiser.thounsand;K;тыс.;mil;milhar;milhar
+NumberGoodiser.million;M;млн.;millón;milhão;M
+NumberGoodiser.billion;B;млрд.;MM;Bil;Bil
+Date.0;January;Январь;Enero;Janeiro;Janeiro
+Date.1;February;Февраль;Febrero;Fevereiro;Fevereiro
+Date.2;March;Март;Marzo;Marchar;Marchar
+Date.3;April;Апрель;Abril;abril;abril
+Date.4;May;Май;Puede;Poderia;Poderia
+Date.5;June;Июнь;Junio;Junho;Junho
+Date.6;July;Июль;Julio;Julho;Julho
+Date.7;August;Август;Agosto;Agosto;Agosto
+Date.8;September;Сентябрь;Septiembre;Setembro;Setembro
+Date.9;October;Октябрь;Octubre;Outubro;Outubro
+Date.10;November;Ноябрь;Noviembre;novembro;novembro
+Date.11;December;Декабрь;Diciembre;dezembro;dezembro
+Diplomaty.AcceptAll;Accept all;Принять все;Acepta todo;Aceite tudo;Aceite tudo
+Diplomaty.DeclineAll;Decline all;Отклонить все;Rechazar todo;Rejeitar tudo;Rejeitar tudo
+Diplomaty.TheyOffersToYou;They offer to you;Они предлагают вам;te ofrecen;Eles oferecem a você;Eles oferecem a você
+Diplomaty.NewOffer;New offer;Новое предложение;Nueva oferta;Nova oferta;Nova oferta
+NewTemplateText;New template;Новый шаблон;Nueva plantilla;Novo modelo;Novo modelo
+Warn.BatalionLimit;Battalion limit reached;Достигнут лимит батальонов;Límite de batallón alcanzado;Limite do batalhão atingido;Limite do batalhão atingido
+Diplomaty.Accept;Accept;Принять;Aceptar;Aceitar;Aceitar
+Diplomaty.Decline;Reject;Отклонить;Rechazar;Rejeitar;Rejeitar
+VerifyBreakBuildingText;Destroy a building;Разрушить здание;Destruir un edificio;Destruir um edifício;Destruir um edifício
+FightUI.Victory;Victory;Победа;Victoria;Vitória;Vitória
+FightUI.Defeat;Defeat;Поражение;Fracaso;Derrota;Derrota
+FightUI.Attack;Attack;Атаковать;Ataque;Ataque;Ataque
+FightUI.AttackerLoss;Attacker losses;Потери атакующего;Pérdidas del atacante;Perdas do atacante;Perdas do atacante
+FightUI.AttackerGains;Attacker acquisitions;Приобретения атакующего;Adquisiciones de atacantes;Aquisições de invasores;Aquisições de invasores
+FightUI.DefenderLoss;Defender losses;Потери защищающегося;Pérdidas de defensores;Perdas do defensor;Perdas do defensor
+FightUI.DefenderGains;Acquisitions of the defender;Приобретения защищающегося;Adquisiciones del defensor.;Aquisições do defensor;Aquisições do defensor
+FightUI.AnnexRegion;Capture a region;Захватить регион;Capturar una región;Capturar uma região;Capturar uma região
+LosePanelTitle;You lose;Вы проиграли;Tú pierdes;Você perdeu;Você perdeu
+LosePanelText;Your country has capitulated!;Ваша страна капитулировала!;¡Tu país ha capitulado!;Seu país capitulou!;Seu país capitulou!
+EnterNumberPlaceholder;Enter the number...;Введите число...;Introduzca el número...;Digite o número...;Digite o número...
+MarketTitle;Resource Market;Рынок ресурсов;Mercado de recursos;Mercado de Recursos;Mercado de Recursos
+Market.Oil;Oil;Нефть;Aceite;Óleo;Óleo
+Market.Steel;Steel;Сталь;Acero;Aço;Aço
+Market.Alluminum;Aluminum;Аллюминий;Aluminio;Alumínio;Alumínio
+Market.Rubber;Rubber;Резина;Goma;Borracha;Borracha
+Market.AlreadyPurchasing;You are already buying this;Вы уже покупаете это;Ya estas comprando esto;Você já está comprando isso;Você já está comprando isso
+Market.PurchaseTitle;Purchasing resources;Покупка ресурсов;Compra de recursos;Compra de recursos;Compra de recursos
+Market.Buy;Buy;Купить;Comprar;Comprar;Comprar
+EnterTextPlaceholder;Enter text...;Введите текст...;Ingrese texto...;Digite o texto...;Digite o texto...
+Market.PurchaseDesc;Enter the quantity you wish to buy;Введите количество, которое Вы желаете купить;Ingrese la cantidad que desea comprar;Insira a quantidade que deseja comprar;Insira a quantidade que deseja comprar
+AutosavingText;Autosaving...;Идёт автосохранение...;Autoguardado en progreso...;Salvamento automático em andamento...;Salvamento automático em andamento...

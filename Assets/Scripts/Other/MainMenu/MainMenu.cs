@@ -235,11 +235,11 @@ public class MainMenu : MonoBehaviour
 
         loadingMenu.SetActive(true);
 
-        LocalLocalisationText[] localisationTexts = FindObjectsOfType<LocalLocalisationText>();
-        for (int i = 0;i < localisationTexts.Length; i++)
-        {
-            localisationTexts[i].SetUp();
-        }
+        //LocalLocalisationText[] localisationTexts = FindObjectsOfType<LocalLocalisationText>();
+        //for (int i = 0;i < localisationTexts.Length; i++)
+        //{
+        //    localisationTexts[i].SetUp();
+        //}
         TextTranslate[] localisationTextsNew = FindObjectsOfType<TextTranslate>();
         for (int i = 0; i < localisationTextsNew.Length; i++)
         {

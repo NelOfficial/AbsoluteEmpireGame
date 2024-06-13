@@ -27,13 +27,13 @@ public class TextTranslate : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < local.Length; i++)
-        {
-            if (local[i] == "null" || local[i] == "")
-            {
-                local[i] = local[1];
-            }
-        }
+        //for (int i = 0; i < local.Length; i++)
+        //{
+        //    if (local[i] == "null" || local[i] == "")
+        //    {
+        //        local[i] = local[1];
+        //    }
+        //}
 
         newstr = new List<string>();
 
