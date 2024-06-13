@@ -24,16 +24,7 @@ public class NavyAddButton : MonoBehaviour
     {
         _button.interactable = ReferencesManager.Instance.countryManager.currentCountry._fleet.Contains(_fleetObject._equipment);
 
-        string displayText = "";
-
-        if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.EN)
-        {
-            displayText = "In stockpiles:";
-        }
-        else if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.RU)
-        {
-            displayText = "В запасах:";
-        }
+        string displayText = ReferencesManager.Instance.languageManager.GetTranslation("RegionUI.Fleet.InStock");
 
         _amountText.text = $"{displayText} {GetAmount(_fleetObject._equipment)}";
     }

@@ -23,26 +23,14 @@ public class SelectCountryButton : MonoBehaviour
     {
         if (country != null)
         {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                countryName.text = country.country._nameEN;
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                countryName.text = country.country._name;
-            }
+            countryName.text = ReferencesManager.Instance.languageManager.GetTranslation($"{country.country._nameEN}");
+
             countryFlag.sprite = country.country.countryFlag;
         }
         else if (country_ScriptableObject != null)
         {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                countryName.text = country_ScriptableObject._nameEN;
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                countryName.text = country_ScriptableObject._name;
-            }
+            countryName.text = ReferencesManager.Instance.languageManager.GetTranslation($"{country.country._nameEN}");
+
             countryFlag.sprite = country_ScriptableObject.countryFlag;
         }
     }
