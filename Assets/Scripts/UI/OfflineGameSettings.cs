@@ -12,7 +12,7 @@ public class OfflineGameSettings : MonoBehaviour
     [SerializeField] Image imagePreview;
 
     [SerializeField] int currentMapId;
-    [SerializeField] int currentScenarioId;
+    public int currentScenarioId;
 
     [SerializeField] Scenario[] scenarios;
     [SerializeField] List<Team> teams = new List<Team>();
@@ -91,16 +91,7 @@ public class OfflineGameSettings : MonoBehaviour
         {
             _tournament_ConfirmButton.interactable = true;
 
-            string confirmButton_DisplayText = "";
-
-            if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.RU)
-            {
-                confirmButton_DisplayText = "Готово";
-            }
-            else
-            {
-                confirmButton_DisplayText = "Confirm";
-            }
+            string confirmButton_DisplayText = $"{ReferencesManager.Instance.languageManager.GetTranslation("ConfirmButton")}";
 
             _tournament_ConfirmButton_Text.text = confirmButton_DisplayText;
         }
@@ -108,16 +99,7 @@ public class OfflineGameSettings : MonoBehaviour
         {
             _tournament_ConfirmButton.interactable = false;
 
-            string confirmButton_DisplayText = "";
-
-            if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.RU)
-            {
-                confirmButton_DisplayText = "Выберите как минимум 4 страны";
-            }
-            else
-            {
-                confirmButton_DisplayText = "Select at least 4 countries";
-            }
+            string confirmButton_DisplayText = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.SingleMode.Tournament.LimitCountries")}";
 
             _tournament_ConfirmButton_Text.text = confirmButton_DisplayText;
         }

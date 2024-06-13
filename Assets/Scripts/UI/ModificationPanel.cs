@@ -83,7 +83,9 @@ public class ModificationPanel : MonoBehaviour
 
     private void Start()
     {
-        SetPage(0);
+        selectedPage = 0;
+
+        SetPage(selectedPage);
 
         UpdateDownloadedMods();
     }
@@ -128,14 +130,7 @@ public class ModificationPanel : MonoBehaviour
         wallAnimationUI.SetActive(true);
         refreshButton.interactable = false;
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            refreshButtonText.text = "Loading IDs...";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            refreshButtonText.text = "Загрузка id сценариев...";
-        }
+        refreshButtonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Loading")}";
 
         WWWForm form = new WWWForm();
         form.AddField("maxPosts", maxLoadPostsPerTime + loadedModifications.Count);
@@ -147,7 +142,7 @@ public class ModificationPanel : MonoBehaviour
         }
 
         form.AddField("offset", offset);
-        WWW getPostRequest = new WWW("http://our-empire.7m.pl/core/getPosts.php", form);
+        WWW getPostRequest = new WWW("https://absolute-empire.space/core/getPosts.php", form);
 
         yield return getPostRequest;
 
@@ -162,19 +157,6 @@ public class ModificationPanel : MonoBehaviour
                 loadedModificationsIds.Add(int.Parse(request[i]));
             }
             catch (Exception) { }
-        }
-
-        if (loadedModificationsIds.Count > lastScenarios)
-        {
-            refreshButton.image.color = Color.yellow;
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                refreshButtonText.text = $"{loadedModificationsIds.Count - lastScenarios} new mods | Update";
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                refreshButtonText.text = $"{loadedModificationsIds.Count - lastScenarios} новых модов | Обновить";
-            }
         }
 
         StartCoroutine(WallUpdate());
@@ -193,19 +175,12 @@ public class ModificationPanel : MonoBehaviour
         notifications_wallAnimationUI.SetActive(true);
         notifications_refreshButton.interactable = false;
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            notifications_refreshButtonText.text = $"Loading data...";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            notifications_refreshButtonText.text = $"Загрузка данных...";
-        }
+        notifications_refreshButtonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Loading")}";
 
         WWWForm form = new WWWForm();
         form.AddField("receiver", ReferencesManager.Instance.profileManager.userId);
 
-        WWW getPostRequest = new WWW("http://our-empire.7m.pl/core/getNotifications.php", form);
+        WWW getPostRequest = new WWW("https://absolute-empire.space/core/getNotifications.php", form);
 
         yield return getPostRequest;
 
@@ -216,7 +191,7 @@ public class ModificationPanel : MonoBehaviour
             WWWForm _form = new WWWForm();
             _form.AddField("id", int.Parse(notificationIds[i]));
 
-            WWW getPostRequestById = new WWW("http://our-empire.7m.pl/core/getNotificationById.php", _form);
+            WWW getPostRequestById = new WWW("https://absolute-empire.space/core/getNotificationById.php", _form);
             yield return getPostRequestById;
 
             string[] request = getPostRequestById.text.Split('\t');
@@ -249,14 +224,7 @@ public class ModificationPanel : MonoBehaviour
 
         yield return new WaitForSeconds(0.1f);
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            notifications_refreshButtonText.text = $"Обновить";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            notifications_refreshButtonText.text = $"Update";
-        }
+        notifications_refreshButtonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("RefreshButton")}";
     }
 
     private IEnumerator WallUpdate()
@@ -265,14 +233,7 @@ public class ModificationPanel : MonoBehaviour
         updatingFeed = true;
         refreshButton.interactable = false;
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            refreshButtonText.text = $"Loading data...";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            refreshButtonText.text = $"Загрузка данных...";
-        }
+        refreshButtonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Loading")}";
 
         loadedModifications.Clear();
 
@@ -291,7 +252,7 @@ public class ModificationPanel : MonoBehaviour
                 form.AddField("id", loadedModificationsIds[i]);
 
                 // делаем запрос на сайт мой и оттуда нам возвращают данные об айдишниках модов
-                WWW getPostRequest = new WWW("http://our-empire.7m.pl/core/getPostById.php", form);
+                WWW getPostRequest = new WWW("https://absolute-empire.space/core/getPostById.php", form);
 
                 yield return getPostRequest;
 
@@ -325,7 +286,7 @@ public class ModificationPanel : MonoBehaviour
 
                     //WWWForm authorForm = new WWWForm();
                     //authorForm.AddField("id", request[4]);
-                    //WWW wwwAuthorRequest = new WWW("http://our-empire.7m.pl/core/getAuthorById.php", authorForm);
+                    //WWW wwwAuthorRequest = new WWW("https://absolute-empire.space/core/getAuthorById.php", authorForm);
 
                     //yield return wwwAuthorRequest;
                     //string[] postAuthorValues = wwwAuthorRequest.text.Split('\t');
@@ -351,22 +312,16 @@ public class ModificationPanel : MonoBehaviour
             wallAnimationUI.SetActive(false);
             refreshButton.interactable = true;
 
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                refreshButtonText.text = $"Load more";
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                refreshButtonText.text = $"Загрузить ещё";
-            }
+            refreshButtonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.LoadMore")}";
+
+            UpdateUI();
         }
-        UpdateUI();
     }
 
     public void UpdateModUI()
     {
         modName_TMP.text = currentLoadedModification.currentScenarioName;
-        modDesc_TMP.text = $"{currentLoadedModification.currentScenarioDescription} \nMade by: {currentLoadedModification.currentScenarioAuthorId}";
+        modDesc_TMP.text = $"{currentLoadedModification.currentScenarioDescription} \n{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.MadeBy")}: {currentLoadedModification.currentScenarioAuthorId}";
 
         bool alreadyDownloaded = downloadedModsIds.list.Any(item => item.id == currentLoadedModification.id);
 
@@ -380,25 +335,11 @@ public class ModificationPanel : MonoBehaviour
                     {
                         downloadButton.interactable = true;
 
-                        if (PlayerPrefs.GetInt("languageId") == 0)
-                        {
-                            downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "Download an update of mod";
-                        }
-                        else if (PlayerPrefs.GetInt("languageId") == 1)
-                        {
-                            downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "Скачать обновление";
-                        }
+                        downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.DownloadUpdate")}";
                     }
                     else if (localMod.version >= currentLoadedModification.version)
                     {
-                        if (PlayerPrefs.GetInt("languageId") == 0)
-                        {
-                            downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "Save";
-                        }
-                        else if (PlayerPrefs.GetInt("languageId") == 1)
-                        {
-                            downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "Сохранить";
-                        }
+                        downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.Save")}";
 
                         downloadButton.interactable = false;
                     }
@@ -409,14 +350,7 @@ public class ModificationPanel : MonoBehaviour
         {
             downloadButton.interactable = true;
 
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "Save";
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "Сохранить";
-            }
+            downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.Save")}";
         }
     }
 
@@ -506,7 +440,7 @@ public class ModificationPanel : MonoBehaviour
 
         WebClient client = new WebClient();
 
-        Stream data = client.OpenRead(@$"http://absolute-empire.7m.pl/media/uploads/mods/{currentLoadedModification.currentScenarioName}/{currentLoadedModification.currentScenarioName}.AEMod");
+        Stream data = client.OpenRead(@$"https://absolute-empire.space/media/uploads/mods/{currentLoadedModification.currentScenarioName}/{currentLoadedModification.currentScenarioName}.AEMod");
         StreamReader reader = new StreamReader(data);
 
         string modData = reader.ReadToEnd();
@@ -547,15 +481,15 @@ public class ModificationPanel : MonoBehaviour
 
             for (int i = 0; i < eventsIDS.Count; i++)
             {
-                string imageUrl = @$"http://absolute-empire.7m.pl/media/uploads/mods/{currentLoadedModification.currentScenarioName}/events/{eventsIDS[i]}/{eventsIDS[i]}.jpg";
-                string textUrl = @$"http://absolute-empire.7m.pl/media/uploads/mods/{currentLoadedModification.currentScenarioName}/events/{eventsIDS[i]}/{eventsIDS[i]}.AEEvent";
+                string imageUrl = @$"https://absolute-empire.space/media/uploads/mods/{currentLoadedModification.currentScenarioName}/events/{eventsIDS[i]}/{eventsIDS[i]}.jpg";
+                string textUrl = @$"https://absolute-empire.space/media/uploads/mods/{currentLoadedModification.currentScenarioName}/events/{eventsIDS[i]}/{eventsIDS[i]}.AEEvent";
 
                 StartCoroutine(CreateEventData_Co(ModPath, eventsIDS[i], imageUrl, textUrl));
             }
         }
         catch (Exception)
         {
-            Debug.Log("No events found");
+            Debug.LogError("No events found");
         }
 
         CreateFile(modData, Path.Combine(ModPath, $"{currentLoadedModification.currentScenarioName}.AEMod"));
@@ -635,14 +569,7 @@ public class ModificationPanel : MonoBehaviour
             selectedPage += increment;
         }
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            pageText.text = $"Page {selectedPage + 1} of {maxPage + 1}";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            pageText.text = $"Страница {selectedPage + 1} из {maxPage + 1}";
-        }
+        pageText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.PageText")} {selectedPage + 1}/{maxPage + 1}";
 
         UpdateUI();
     }
@@ -651,38 +578,23 @@ public class ModificationPanel : MonoBehaviour
     {
         foreach (Transform child in wallContrainer)
         {
-            if (string.IsNullOrEmpty(child.GetComponentInChildren<TMP_Text>().text))
-            {
-                Destroy(child.gameObject);
-            }
+            Destroy(child.gameObject);
         }
 
         for (int i = 0; i < loadedModifications.Count; i++)
         {
             if (loadedModifications[i].page == selectedPage)
             {
-                if (!string.IsNullOrEmpty(loadedModifications[i].currentScenarioData))
-                {
-                    GameObject spawnedWall = Instantiate(wallItemPrefab, wallContrainer);
-                    spawnedWall.transform.localScale = Vector3.one;
+                GameObject spawnedWall = Instantiate(wallItemPrefab, wallContrainer);
+                spawnedWall.transform.localScale = Vector3.one;
 
-                    spawnedWall.transform.GetChild(0).GetComponent<TMP_Text>().text = loadedModifications[i].currentScenarioName;
-                    spawnedWall.GetComponent<ModButton>().id = loadedModifications[i].id;
-                }
+                spawnedWall.transform.GetChild(0).GetComponent<TMP_Text>().text = loadedModifications[i].currentScenarioName;
+                spawnedWall.GetComponent<ModButton>().id = loadedModifications[i].id;
             }
         }
 
-        int _maxPage = maxPage + 1;
-        int _selectedPage = selectedPage + 1;
+        pageText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.PageText")} {selectedPage + 1}/{maxPage + 1}";
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            pageText.text = $"Page {_selectedPage} of {_maxPage}";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            pageText.text = $"Страница {_selectedPage} из {_maxPage}";
-        }
 
         if (selectedPage < maxPage)
         {

@@ -1,175 +1,91 @@
-using TMPro;
-using Photon.Pun;
 using UnityEngine;
-using Photon.Realtime;
+using Mirror;
 using System.Collections.Generic;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
-using System.Collections;
+using TMPro;
+using UnityEngine.UI;
 
-public class Launcher : MonoBehaviourPunCallbacks
+public class Launcher : NetworkManager
 {
-    private static Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();
+    public List<PlayerInfo> players = new List<PlayerInfo>();
+    [SerializeField] private CurrentRoomInfo _roomInfoUI;
 
-    public static Launcher Instance;
+    [SerializeField] private TMP_InputField _roomNameInput;
+    [SerializeField] private GameObject _currentRoomInfo_Panel;
+    [SerializeField] private Transform _roomListPanel;
+    [SerializeField] private GameObject _roomPrefab;
 
-    [SerializeField] MainMenu mainMenu;
+    public List<PlayerData> playersData = new List<PlayerData>();
 
-    [SerializeField] TMP_InputField roomNameField;
-    [SerializeField] TMP_Dropdown scenariyDropdown;
+    public List<RoomInfo> rooms = new List<RoomInfo>();
 
-    [SerializeField] Transform roomListContent;
-    [SerializeField] Transform playerListContent;
-    [SerializeField] GameObject roomListPrefab;
-    [SerializeField] GameObject playerListPrefab;
-    [SerializeField] GameObject startGameButton;
+    [HideInInspector] public RoomInfo currentRoom;
 
-    public CountryScriptableObject[] countriesList;
-
-    [SerializeField] BoolValue onlineGameValue;
-
-
-    private void Awake()
+    public override void OnServerConnect(NetworkConnectionToClient conn)
     {
-        Instance = this;
-        mainMenu.loadingMenu.SetActive(false);
+        base.OnServerConnect(conn);
+        UpdatePlayerListUI();
+    }
 
-        if (!ReferencesManager.Instance.profileManager._LOGGED_IN && PlayerPrefs.GetString("LOGGED_IN") == "FALSE")
+    public override void OnServerDisconnect(NetworkConnectionToClient conn)
+    {
+        base.OnServerDisconnect(conn);
+        PlayerInfo player = players.Find(p => p.connectionId == conn.connectionId);
+        if (player != null)
         {
-            PhotonNetwork.NickName = "Guest player " + Random.Range(0, 9999);
-            mainMenu.UpdateNickname(PhotonNetwork.NickName);
+            players.Remove(player);
         }
+        UpdatePlayerListUI();
     }
 
-    void Start()
+    public override void OnServerAddPlayer(NetworkConnectionToClient conn)
     {
-        PhotonNetwork.AutomaticallySyncScene = true;
-        mainMenu.connectionText.color = Color.cyan;
-        mainMenu.connectionText.text = "Connecting to Master...";
-        PhotonNetwork.ConnectUsingSettings();
+        base.OnServerAddPlayer(conn);
+
+        // ѕолучение ника из сохраненных данных или по умолчанию
+        string playerName = PlayerPrefs.GetString("nickname", $"Guest{1, 9999}");
+
+        // —оздание и добавление нового игрока
+        PlayerInfo newPlayer = new PlayerInfo
+        {
+            connectionId = conn.connectionId,
+            _playerNickname = playerName
+        };
+
+        players.Add(newPlayer);
+        Debug.Log("Player added: " + playerName);
+        UpdatePlayerListUI();
     }
 
-    public override void OnConnectedToMaster()
+    private void UpdatePlayerListUI()
     {
-        mainMenu.connectionText.color = Color.yellow;
-        mainMenu.connectionText.text = "Connected to Master";
-        PhotonNetwork.JoinLobby();
-    }
-
-    public override void OnJoinedLobby()
-    {
-        mainMenu.connectionText.color = Color.green;
-        mainMenu.connectionText.text = "Joined Lobby";
-    }
-
-    public void SetOnlineValue(bool value)
-    {
-        onlineGameValue.value = value;
+        if (_roomInfoUI != null)
+        {
+            _roomInfoUI.UpdatePlayerList(players);
+        }
     }
 
     public void CreateRoom()
     {
-        RoomOptions roomOptions = new RoomOptions();
-
-        string roomName = roomNameField.text;
-        if (string.IsNullOrWhiteSpace(roomName)) roomName = "Room " + Random.Range(0, 9999);
-
-        string scenariy = scenariyDropdown.options[scenariyDropdown.value].text;
-
-        Hashtable properties = new Hashtable();
-        properties.Add("scen", scenariy);
-        roomOptions.CustomRoomProperties = properties;
-        roomOptions.BroadcastPropsChangeToAll = true;
-
-        ReferencesManager.Instance.chatManager.roomName = roomName;
-        ReferencesManager.Instance.chatManager.ConnectUser();
-        PhotonNetwork.CreateRoom(roomName, roomOptions);
-    }
-
-    public override void OnJoinedRoom()
-    {
-        mainMenu.CloseMenus();
-        mainMenu.currentRoomText.text = PhotonNetwork.CurrentRoom.Name;
-        mainMenu.currentScenariyText.text = PhotonNetwork.CurrentRoom.CustomProperties["scen"].ToString();
-        mainMenu.currentRoomMenu.SetActive(true);
-
-        Player[] players = PhotonNetwork.PlayerList;
-
-        foreach (Transform child in playerListContent)
+        string roomName = _roomNameInput.text;
+        if (!string.IsNullOrEmpty(roomName))
         {
-            Destroy(child.gameObject);
-        }
+            StartHost();
 
-        for (int i = 0; i < players.Length; i++)
-        {
-            Instantiate(playerListPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(players[i]);
-        }
-
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-    }
-
-    public override void OnMasterClientSwitched(Player newMasterClient)
-    {
-        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-    }
-
-    public void StartGame()
-    {
-        mainMenu.loadingMenu.SetActive(true);
-        PhotonNetwork.LoadLevel(1);
-    }
-
-    public void LeaveRoom()
-    {
-        StartCoroutine(LeaveRoom_Co());
-    }
-
-    private IEnumerator LeaveRoom_Co()
-    {
-        ReferencesManager.Instance.chatManager.DissconectUser();
-
-        PhotonNetwork.LeaveRoom();
-
-        yield break;
-    }
-
-    public void JoinRoom(RoomInfo info)
-    {
-        PhotonNetwork.JoinRoom(info.Name);
-    }
-
-    public override void OnLeftRoom()
-    {
-        mainMenu.OpenMenu(mainMenu.menus[0]);
-    }
-
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
-    {
-        foreach (Transform trans in roomListContent)
-        {
-            Destroy(trans.gameObject);
-        }
-
-        for (int i = 0; i < roomList.Count; i++)
-        {
-            RoomInfo info = roomList[i];
-            if (info.RemovedFromList)
-            {
-                cachedRoomList.Remove(info.Name);
-            }
-            else
-            {
-                cachedRoomList[info.Name] = info;
-            }
-        }
-
-        foreach (KeyValuePair<string, RoomInfo> entry in cachedRoomList)
-        {
-            Instantiate(roomListPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(cachedRoomList[entry.Key]);
+            _currentRoomInfo_Panel.SetActive(true);
         }
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
+    public class PlayerInfo
     {
-        Instantiate(playerListPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
+        public int connectionId;
+        public string _playerNickname;
+        public int _countryID;
+    }
+
+    public struct RoomInfo
+    {
+        public string roomName;
+        public int hostConnectionId;
+        public List<PlayerInfo> players;
     }
 }

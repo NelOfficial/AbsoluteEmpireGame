@@ -1,10 +1,9 @@
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Photon.Pun;
 
 
-public class RoomManager : MonoBehaviourPunCallbacks
+public class RoomManager : MonoBehaviour
 {
     public static RoomManager Instance;
     private CountryManager countryManager;
@@ -22,23 +21,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
         Instance = this;
     }
 
-    public override void OnEnable()
-    {
-        base.OnEnable();
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    public override void OnDisable()
-    {
-        base.OnDisable();
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         if (scene.buildIndex == 1)
         {
-            GameObject player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"), Vector3.zero, Quaternion.identity);
+            //GameObject player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"), Vector3.zero, Quaternion.identity);
         }
     }
 }

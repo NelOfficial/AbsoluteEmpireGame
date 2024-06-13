@@ -9,7 +9,6 @@ using System.IO;
 using System;
 using System.Text;
 using UnityEngine.Networking;
-using Photon.Realtime;
 
 
 public class MapEditor : MonoBehaviour
@@ -1032,7 +1031,7 @@ public class MapEditor : MonoBehaviour
         form.AddField("filename", filename);
         form.AddField("fileextension", fileextension);
 
-        WWW www = new WWW("http://absolute-empire.7m.pl/uploadFile.php", form);
+        WWW www = new WWW("https://absolute-empire.space/uploadFile.php", form);
 
         yield return www;
 

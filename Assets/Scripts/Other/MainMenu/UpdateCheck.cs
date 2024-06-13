@@ -56,14 +56,8 @@ namespace UpgradeSystem
             request.disposeDownloadHandlerOnDispose = true;
             request.timeout = 10;
 
-            if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                buttonText.text = "Подключение к серверу...";
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                buttonText.text = "Connecting to the server...";
-            }
+            buttonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.UpdateCheck.Connecting")}";
+
             buttonImage.color = Color.yellow;
 
             yield return request.Send();
@@ -72,14 +66,7 @@ namespace UpgradeSystem
             {
                 isAlreadyCheckedForUpdates = true;
 
-                if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    buttonText.text = "Проверка обновления...";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    buttonText.text = "Checking updates...";
-                }
+                buttonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.UpdateCheck.Checking")}";
 
                 buttonImage.color = Color.cyan;
                 yield return new WaitForSeconds(1f);
@@ -90,52 +77,23 @@ namespace UpgradeSystem
 
                     if (!string.IsNullOrEmpty(latestGameData.Version) && !Application.version.Equals(latestGameData.Version))
                     {
-                        // new update is available
-                        if (PlayerPrefs.GetInt("languageId") == 1)
-                        {
-                            buttonText.text = $"Новое обновление: <color=\"white\">{latestGameData.Version}</color>";
-                            uiDescriptionText.text = latestGameData.DescriptionRU;
-                        }
-                        else if (PlayerPrefs.GetInt("languageId") == 0)
-                        {
-                            buttonText.text = $"New update: <color=\"white\">{latestGameData.Version}</color>";
-                            uiDescriptionText.text = latestGameData.DescriptionEN;
-                        }
+                        buttonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.UpdateCheck.NewUpdate")} <color=\"white\">{latestGameData.Version}</color>";
+                        uiDescriptionText.text = "";
 
                         buttonImage.color = Color.cyan;
                     }
                     else if(!string.IsNullOrEmpty(latestGameData.Version) && Application.version.Equals(latestGameData.Version))
                     {
-                        if (PlayerPrefs.GetInt("languageId") == 1)
-                        {
-                            uiDescriptionText.text = $"У Вас установлена самая последняя версия игры.\n\nТекущая версия игры: <color=\"white\">{latestGameData.Version}</color>";
-                        }
-                        else if (PlayerPrefs.GetInt("languageId") == 0)
-                        {
-                            uiDescriptionText.text = $"You have the latest version of the game installed.\n\nCurrent game version: <color=\"white\">{latestGameData.Version}</color>";
-                        }
+                        uiDescriptionText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Version.NewVersion")}.\n<color=\"white\">{latestGameData.Version}</color>";
 
-                        if (PlayerPrefs.GetInt("languageId") == 1)
-                        {
-                            buttonText.text = $"Актуальное обновление: <color=\"white\">{latestGameData.Version}</color>";
-                        }
-                        else if (PlayerPrefs.GetInt("languageId") == 0)
-                        {
-                            buttonText.text = $"Current version: <color=\"white\">{latestGameData.Version}</color>";
-                        }
+                        buttonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.VersionButton")} <color=\"white\">{latestGameData.Version}</color>";
                         buttonImage.color = Color.green;
                     }
                 }
                 else
                 {
-                    if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        buttonText.text = "Произошла ошибка";
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        buttonText.text = "An error has occurred";
-                    }
+                    buttonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("Error")}";
+
                     buttonImage.color = Color.red;
                     Debug.LogError("An Error just occured by loading game version. Check the json url server and try again");
                 }

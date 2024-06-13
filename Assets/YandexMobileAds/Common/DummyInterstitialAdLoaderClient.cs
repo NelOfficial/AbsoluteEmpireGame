@@ -24,17 +24,17 @@ namespace YandexMobileAds.Common
 
         public DummyInterstitialAdLoaderClient()
         {
-            Debug.Log(TAG + MethodBase.GetCurrentMethod().Name);
+            //Debug.Log(TAG + MethodBase.GetCurrentMethod().Name);
         }
 
         public void CancelLoading()
         {
-            Debug.Log(TAG + MethodBase.GetCurrentMethod().Name);
+            //Debug.Log(TAG + MethodBase.GetCurrentMethod().Name);
         }
 
         public void LoadAd(AdRequestConfiguration configuration)
         {
-            Debug.Log(TAG + MethodBase.GetCurrentMethod().Name);
+            //Debug.Log(TAG + MethodBase.GetCurrentMethod().Name);
 
             if (OnAdLoaded != null)
             {

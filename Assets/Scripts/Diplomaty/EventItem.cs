@@ -14,7 +14,7 @@ public class EventItem : MonoBehaviour
 
     private EventPanel eventPanel;
 
-    public bool canDecline;
+    public bool canDecline = true;
 
     private void Awake()
     {

@@ -29,6 +29,7 @@ public class ReferencesManager : MonoBehaviour
     public ResourcesMarketManager resourcesMarketManager;
 
     public FleetManager fleetManager;
+    public Launcher launcher;
 
     public Transform countriesParent;
     public CountrySettings countrySettingsPrefab;
@@ -43,9 +44,11 @@ public class ReferencesManager : MonoBehaviour
 
     public SaveManager saveManager;
 
+    public Interpretate languageManager;
+
     private void Awake()
     {
-        Instance = this;
+        Instance = this.GetComponent<ReferencesManager>();
     }
 
     public void CreateCountry(CountryScriptableObject countryScriptableObject, string ideology)

@@ -42,14 +42,12 @@ public class InterstitialAds : MonoBehaviour
         }
 
         this.interstitialAdLoader.LoadAd(this.CreateAdRequest(adUnitId));
-        this.DisplayMessage("Interstitial is requested");
     }
 
     public void ShowInterstitial()
     {
         if (this.interstitial == null)
         {
-            this.DisplayMessage("Interstitial is not ready yet");
             return;
         }
 

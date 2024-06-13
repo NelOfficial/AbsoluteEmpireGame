@@ -161,10 +161,15 @@ public class EventPanel : MonoBehaviour
     public void RejectAll()
     {
         StartCoroutine(eventContainer.CheckEventsDelay());
+
         for (int i = 0; i < eventContainer.eventItems.Length; i++)
         {
-            RejectForce(eventContainer.eventItems[i]);
+            if (eventContainer.eventItems[i].canDecline)
+            {
+                RejectForce(eventContainer.eventItems[i]);
+            }
         }
+
         eventContainer.UpdateEvents();
     }
 

@@ -1,36 +1,24 @@
-using UnityEngine;
-using Photon.Realtime;
-using Photon.Pun;
+using Mirror;
 
-public class PlayerData : MonoBehaviour
+public class PlayerData : NetworkBehaviour
 {
-    public Player player;
-
     public string currentNickname;
     public int countryIndex;
     public bool readyToMove;
+
+    public int _connectionID;
+
     public CountrySettings country;
 
-    private GameSettings gameSettings;
-    private CountryManager countryManager;
 
     private void Awake()
     {
-        gameSettings = FindObjectOfType<GameSettings>();
-        countryManager = FindObjectOfType<CountryManager>();
-        currentNickname = GetComponent<PhotonView>().Owner.NickName;
+        ReferencesManager.Instance.launcher.playersData.Add(this);
 
-        gameSettings.multiplayer.roomPlayers.Add(this);
-        player = GetComponent<PhotonView>().Owner;
+        //string _name = gameObject.name;
 
-        int playerCountryIndex = (int)this.GetComponent<PhotonView>().Owner.CustomProperties["playerCountryIndex"];
-        countryIndex = playerCountryIndex;
-        country = countryManager.countries[countryIndex];
+        //string[] _nameData = _name.Split('=');
 
-        country.isPlayer = true;
-        country.onlinePlayer = true;
-        country._countryPlayer = player;
-
-        Debug.Log($"{currentNickname} {playerCountryIndex}");
+        //_connectionID = int.Parse(_nameData[1].Trim(']'));
     }
 }

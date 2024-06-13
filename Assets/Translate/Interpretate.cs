@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 public class Interpretate: MonoBehaviour
 {
@@ -21,7 +21,9 @@ public class Interpretate: MonoBehaviour
 
                 obj.value.Add(values);
             }
+
             obj.value.Add(new string[] { "", "Перевод не найден :(", "No translate :(", "No translate :(", "No translate :(", "No translate :(" });
+
             if (DebugLog)
             {
                 foreach (string[] str in obj.value)
@@ -31,5 +33,49 @@ public class Interpretate: MonoBehaviour
                 }
             }
         }
+    }
+
+    public string GetTranslation(string KEY)
+    {
+        int currentLanguage = PlayerPrefs.GetInt("languageId");
+
+        List<string[]> TRANSLATION = ReferencesManager.Instance.gameSettings.translate.value;
+
+        string[] local = new string[0];
+        List<string> newstr;
+
+        foreach (string[] str in TRANSLATION)
+        {
+            if (KEY == str[0])
+            {
+                local = str;
+            }
+        }
+
+        for (int i = 0; i < local.Length; i++)
+        {
+            if (local[i] == "null" || local[i] == "")
+            {
+                local[i] = local[1];
+            }
+        }
+        newstr = new List<string>();
+
+        foreach (string mstr in local)
+        {
+            mstr.Replace("\\\\\"", "\\n\"");
+            newstr.Add(mstr);
+        }
+
+        local = newstr.ToArray();
+
+        string result = string.Empty;
+
+        if (local != null)
+        {
+            result = local[currentLanguage + 1];
+        }
+
+        return result;
     }
 }

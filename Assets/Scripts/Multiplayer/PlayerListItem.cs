@@ -1,99 +1,93 @@
+using Mirror;
 using TMPro;
-using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Realtime;
-using ExitGames.Client.Photon;
 
-public class PlayerListItem : MonoBehaviourPunCallbacks
+public class PlayerListItem : NetworkBehaviour
 {
-    private Player player;
     private Launcher launcher;
 
+    [SyncVar(hook = nameof(OnNameChanged))]
     public string _nickname;
 
     public Image selectedCountryFlag;
     public TMP_Text nicknameText;
 
-    public int countriesIndex;
+    public int countryIndex;
 
-    Hashtable playerProperties = new Hashtable();
+    [SyncVar(hook = nameof(OnCountryChanged))]
+    public int countryId;
 
-    public void SelectCountry(int index)
+    private void OnNameChanged(string oldName, string newName)
     {
-        playerProperties["playerCountryIndex"] = index;
-        PhotonNetwork.SetPlayerCustomProperties(playerProperties);
+        nicknameText.text = newName;
     }
 
-    public void SetUp(Player _player)
+    private void OnCountryChanged(int oldCountryIndex, int newCountryIndex)
     {
-        launcher = FindObjectOfType<Launcher>();
-
-        player = _player;
-        _nickname = player.NickName;
-        nicknameText.text = _nickname;
-
-        playerProperties["playerNickname"] = _nickname;
-
-        SelectCountry(0);
-        UpdatePlayerCountry(_player);
+        countryId = newCountryIndex;
+        UpdateCountryFlag();
     }
 
-    public void ChangeCountrySelection()
+    public override void OnStartClient()
     {
-        if (PlayerPrefs.GetString("nickname") == this._nickname)
+        base.OnStartClient();
+
+        if (isLocalPlayer)
         {
-            SelectCountry(countriesIndex);
+            CmdSetPlayerName(PlayerPrefs.GetString("nickname"));
         }
     }
 
-    public override void OnPlayerLeftRoom(Player otherPlayer)
+    public void ChangeCountry()
     {
-        if (player == otherPlayer)
+        if (isLocalPlayer)
         {
-            Destroy(gameObject);
+            CmdSelectCountry();
         }
     }
 
-    public override void OnLeftRoom()
+    [Command]
+    public void CmdSetPlayerName(string name)
     {
-        Destroy(gameObject);
+        _nickname = name;
     }
 
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    [Command]
+    public void CmdSelectCountry()
     {
-        if (player == targetPlayer)
+        OfflineGameSettings.Scenario scenario =
+            ReferencesManager.Instance.offlineGameSettings.GetScenario(
+                ReferencesManager.Instance.offlineGameSettings.currentScenarioId);
+
+        if (countryIndex + 1 < scenario.countries.Length)
         {
-            countriesIndex++;
-            int k = countriesIndex + 1;
-            if (k > launcher.countriesList.Length)
-            {
-                countriesIndex = 0;
-            }
-
-            selectedCountryFlag.sprite = launcher.countriesList[countriesIndex].countryFlag;
-
-            UpdatePlayerCountry(targetPlayer);
-        }
-    }
-
-    private void UpdatePlayerCountry(Player _player)
-    {
-        if (_player.CustomProperties.ContainsKey("playerCountryIndex"))
-        {
-            selectedCountryFlag.sprite = launcher.countriesList[(int)_player.CustomProperties["playerCountryIndex"]].countryFlag;
-            playerProperties["playerCountryIndex"] = _player.CustomProperties["playerCountryIndex"];
+            countryIndex++;
         }
         else
         {
-            int randomCountry = Random.Range(0, launcher.countriesList.Length);
+            countryIndex = 0;
+        }
 
-            foreach (Player playerItem in PhotonNetwork.PlayerList)
+        countryId = scenario.countries[countryIndex]._id;
+    }
+
+    public void SetUp()
+    {
+        launcher = FindObjectOfType<Launcher>();
+
+        nicknameText.text = _nickname;
+
+        UpdateCountryFlag();
+    }
+
+    private void UpdateCountryFlag()
+    {
+        foreach (CountryScriptableObject country in ReferencesManager.Instance.globalCountries)
+        {
+            if (country._id == countryId)
             {
-                if (playerItem.CustomProperties.ContainsKey("playerCountryIndex") && (int)playerItem.CustomProperties["playerCountryIndex"] != randomCountry)
-                {
-                    playerProperties["playerCountryIndex"] = randomCountry;
-                }
+                selectedCountryFlag.sprite = country.countryFlag;
             }
         }
     }

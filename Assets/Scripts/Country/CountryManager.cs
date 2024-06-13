@@ -1,5 +1,4 @@
 using TMPro;
-using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -53,11 +52,6 @@ public class CountryManager : MonoBehaviour
             ReferencesManager.Instance.gameSettings.playMod.value = false;
             ReferencesManager.Instance.gameSettings.playTestingMod.value = false;
             ReferencesManager.Instance.gameSettings.loadGame.value = false;
-
-            currentCountry = countries[(int)PhotonNetwork.LocalPlayer.CustomProperties["playerCountryIndex"]];
-            currentCountry.isPlayer = true;
-
-            playerNickname = PhotonNetwork.LocalPlayer.NickName;
 
             currentCountry.country._name = $"{currentCountry.country._uiName} ({playerNickname})";
 

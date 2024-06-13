@@ -78,7 +78,7 @@ public class MainMenu : MonoBehaviour
 
         PlayerPrefs.SetString("FIRST_LOAD", "TRUE");
 
-        quoteText.text = quotes[Random.Range(0, quotes.Length)];
+        quoteText.text = ReferencesManager.Instance.languageManager.GetTranslation($"{quotes[Random.Range(0, quotes.Length)]}");
 
         LoadScene("EuropeSceneOffline");
     }
@@ -87,7 +87,6 @@ public class MainMenu : MonoBehaviour
     {
         nicknameText.text = nickname;
         secondNicknameText.text = nickname;
-        Photon.Pun.PhotonNetwork.NickName = nickname;
 
         PlayerPrefs.SetString("nickname", nickname);
     }

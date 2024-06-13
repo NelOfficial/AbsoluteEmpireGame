@@ -1,4 +1,3 @@
-using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -29,7 +28,7 @@ public class ProfileManager : MonoBehaviour
     public string[] accountData;
 
     [HideInInspector] public int userId;
-    private string _profileName;
+    [HideInInspector] public string _profileName;
     private string _profilePassword;
     private string _profileEmail;
     private string _profileRegDate;
@@ -66,15 +65,6 @@ public class ProfileManager : MonoBehaviour
     {
         createModButton.interactable = false;
 
-        if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            createModButtonText.text = "Войдите в аккаунт, чтобы создавать моды";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            createModButtonText.text = "Log in to create mods";
-        }
-
         if (PlayerPrefs.GetString("LOGGED_IN") == "TRUE")
         {
             loggedInValue.value = true;
@@ -92,103 +82,46 @@ public class ProfileManager : MonoBehaviour
 
     public void UpdateUI()
     {
-        if (PlayerPrefs.GetInt("languageId") == 1)
+        playerProgressExp.text = $"{currentExp} / 100 {ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.Role.Exp")}";
+        playerLevel.text = $"{currentLvl}/{maxLevels} {ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.Role.Level")}";
+
+
+        if (isPremium == 0)
         {
-            playerProgressExp.text = $"{currentExp} / 100 опыта";
-            playerLevel.text = $"{currentLvl}/{maxLevels} уровень";
+            acountStatusTexts[0].text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.Premium")}: <color=red>{ReferencesManager.Instance.languageManager.GetTranslation("No")}</color>";
         }
-        else if (PlayerPrefs.GetInt("languageId") == 0)
+        else if (isPremium == 1)
         {
-            playerProgressExp.text = $"{currentExp} / 100 exp";
-            playerLevel.text = $"{currentLvl}/{maxLevels} level";
+            acountStatusTexts[0].text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.Premium")}: <color=green>{ReferencesManager.Instance.languageManager.GetTranslation("Yes")}</color>";
         }
 
-        if (PlayerPrefs.GetInt("languageId") == 1)
+        if (isBanned == 0)
         {
-            if (isPremium == 0)
-            {
-                acountStatusTexts[0].text = $"Премиум: <color=red>Нет</color>";
-            }
-            else if (isPremium == 1)
-            {
-                acountStatusTexts[0].text = $"Премиум: <color=green>Да</color>";
-            }
+            acountStatusTexts[1].text = $"<color=green>{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.BanState")}</color>";
         }
-        else if (PlayerPrefs.GetInt("languageId") == 0)
+        else if (isBanned == 1)
         {
-            if (isPremium == 0)
-            {
-                acountStatusTexts[0].text = $"Premium: <color=red>No</color>";
-            }
-            else if (isPremium == 1)
-            {
-                acountStatusTexts[0].text = $"Premium: <color=green>Yes</color>";
-            }
+            acountStatusTexts[1].text = $"<color=red>{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.BanState.True")}</color>";
         }
 
-        if (PlayerPrefs.GetInt("languageId") == 1)
+        if (_profileStatus == "default")
         {
-            if (isBanned == 0)
-            {
-                acountStatusTexts[1].text = $"<color=green>Не заблокирован</color>";
-            }
-            else if (isBanned == 1)
-            {
-                acountStatusTexts[1].text = $"<color=red>Заблокирован</color>";
-            }
+            acountStatusTexts[2].text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.Role.Player")}";
         }
-        else if (PlayerPrefs.GetInt("languageId") == 0)
+        else if (_profileStatus == "yt")
         {
-            if (isBanned == 0)
-            {
-                acountStatusTexts[1].text = $"<color=green>Not banned</color>";
-            }
-            else if (isBanned == 1)
-            {
-                acountStatusTexts[1].text = $"<color=red>Banned</color>";
-            }
+            acountStatusTexts[2].text = $"<color=red>{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.Role.ContentMaker")}</color>";
+        }
+        else if (_profileStatus == "admin")
+        {
+            acountStatusTexts[2].text = $"<color=green>{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.Role.Admin")}</color>";
+        }
+        else if (_profileStatus == "moderator")
+        {
+            acountStatusTexts[2].text = $"<color=lightblue>{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.Role.Moderator")}</color>";
         }
 
-        if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            if (_profileStatus == "default")
-            {
-                acountStatusTexts[2].text = $"Игрок";
-            }
-            else if (_profileStatus == "yt")
-            {
-                acountStatusTexts[2].text = $"<color=red>Контент-мейкер</color>";
-            }
-            else if (_profileStatus == "admin")
-            {
-                acountStatusTexts[2].text = $"<color=green>Администратор</color>";
-            }
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            if (_profileStatus == "default")
-            {
-                acountStatusTexts[2].text = $"Player";
-            }
-            else if (_profileStatus == "yt")
-            {
-                acountStatusTexts[2].text = $"<color=red>Content-Maker</color>";
-            }
-            else if (_profileStatus == "admin")
-            {
-                acountStatusTexts[2].text = $"<color=green>Administrator</color>";
-            }
-        }
-
-        if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            acountStatusTexts[3].text = $"Почта: {_profileEmail}";
-
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            acountStatusTexts[3].text = $"Email: {_profileEmail}";
-        }
+        acountStatusTexts[3].text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.Email")}: {_profileEmail}";
 
         foreach (Transform child in wallContrainer)
         {
@@ -238,28 +171,6 @@ public class ProfileManager : MonoBehaviour
 
     public void LoginAccount()
     {
-        if (string.IsNullOrEmpty(login_AccountNameInputField.text))
-        {
-            if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                login_MessageText.text = "Логин не может быть пустым.";
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                login_MessageText.text = "The login cannot be empty.";
-            }
-        }
-        if (string.IsNullOrEmpty(login_AccountPasswordInputField.text))
-        {
-            if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                login_MessageText.text = "Пароль не может быть пустым.";
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                login_MessageText.text = "The password cannot be empty.";
-            }
-        }
         if (!string.IsNullOrEmpty(login_AccountNameInputField.text) && !string.IsNullOrEmpty(login_AccountPasswordInputField.text))
         {
             StartCoroutine(LoginAccount_Co(login_AccountNameInputField.text, login_AccountPasswordInputField.text, false));
@@ -274,35 +185,26 @@ public class ProfileManager : MonoBehaviour
         loginForm.AddField("login", username);
         loginForm.AddField("password", password);
 
-        WWW accountLoginRequest = new WWW("http://absolute-empire.7m.pl/auth/signin.php", loginForm);
+        WWW accountLoginRequest = new WWW("https://absolute-empire.space/auth/signin.php", loginForm);
         yield return accountLoginRequest;
 
         if (accountLoginRequest.isDone)
         {
-            if (accountLoginRequest.text == "Неправильный логин или пароль.")
+            if (accountLoginRequest.text == "AUTH_ERROR.INCORRECT_DATA")
             {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    login_MessageText.text = "Incorrect username or password.";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    login_MessageText.text = "Неправильный логин или пароль.";
-                }
+                login_MessageText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("AUTH_ERROR.INCORRECT_DATA")}";
             }
-            if (accountLoginRequest.text == "Такого аккаунта не существует.")
+            else if (accountLoginRequest.text == "AUTH_ERROR.ACCOUNT_NOT_EXIST")
             {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    login_MessageText.text = "There is no such account.";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    login_MessageText.text = "Такого аккаунта не существует.";
-                }
+                login_MessageText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("AUTH_ERROR.ACCOUNT_NOT_EXIST")}";
+            }
+            else if (accountLoginRequest.text == "AUTH_ERROR.NO_HASHED_PASSWORD")
+            {
+                login_MessageText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("AUTH_ERROR.NO_HASHED_PASSWORD")}";
             }
 
-            if (accountLoginRequest.text != "Неправильный логин или пароль." && accountLoginRequest.text != "Такого аккаунта не существует.")
+            if (accountLoginRequest.text != "AUTH_ERROR.INCORRECT_DATA" && accountLoginRequest.text != "AUTH_ERROR.ACCOUNT_NOT_EXIST" &&
+                accountLoginRequest.text != "AUTH_ERROR.NO_HASHED_PASSWORD")
             {
                 accountData = accountLoginRequest.text.Split('\t');
 
@@ -324,10 +226,8 @@ public class ProfileManager : MonoBehaviour
                     loggedInValue.value = true;
                     PlayerPrefs.SetString("LOGGED_IN", "TRUE");
 
-                    PlayerPrefs.SetString("PASSWORD", $"{_profilePassword}");
+                    PlayerPrefs.SetString("PASSWORD", $"{password}");
                     PlayerPrefs.SetString("nickname", $"{_profileName}");
-
-                    PhotonNetwork.NickName = _profileName;
 
                     ReferencesManager.Instance.mainMenu.UpdateNickname(_profileName);
 
@@ -335,27 +235,10 @@ public class ProfileManager : MonoBehaviour
                     profileButton.SetActive(true);
 
                     createModButton.interactable = true;
-                    if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        createModButtonText.text = "Создать мод";
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        createModButtonText.text = "Create mod";
-                    }
                 }
                 catch (System.Exception)
                 {
-                    Debug.Log(accountLoginRequest.text);
-
-                    if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        login_MessageText.text = $"Произошла ошибка. \n {accountLoginRequest.text}";
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        login_MessageText.text = $"Error: \n {accountLoginRequest.text}";
-                    }
+                    login_MessageText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("Error")}: \n {accountLoginRequest.text}";
                 }
             }
 
@@ -378,7 +261,6 @@ public class ProfileManager : MonoBehaviour
         PlayerPrefs.DeleteKey("nickname");
 
         createModButton.interactable = false;
-        createModButtonText.text = "Войдите в аккаунт, чтобы создавать моды";
 
         UpdateUI();
     }
@@ -389,14 +271,7 @@ public class ProfileManager : MonoBehaviour
         wallAnimationUI.SetActive(true);
         refreshButton.interactable = false;
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            refreshButtonText.text = "Loading IDs...";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            refreshButtonText.text = "Загрузка id сценариев...";
-        }
+        refreshButtonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Loading")}";
 
         WWWForm form = new WWWForm();
         form.AddField("authorName", _profileName);
@@ -424,8 +299,6 @@ public class ProfileManager : MonoBehaviour
             }
         }
 
-        //yield return new WaitForSeconds(5f);
-        //StartCoroutine(GetIds(false));
         StartCoroutine(WallUpdate(verified));
     }
 
@@ -441,17 +314,6 @@ public class ProfileManager : MonoBehaviour
         {
             wallAnimationUISecond.SetActive(true);
             refreshButtonSecond.interactable = false;
-        }
-
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            refreshButtonText.text = $"Loading data...";
-            refreshButtonTextSecond.text = $"Loading data...";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            refreshButtonText.text = $"Загрузка данных...";
-            refreshButtonTextSecond.text = $"Загрузка данных...";
         }
 
         loadedModifications.Clear();
@@ -509,16 +371,8 @@ public class ProfileManager : MonoBehaviour
             refreshButton.interactable = true;
             refreshButtonSecond.interactable = true;
 
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                refreshButtonText.text = $"Update";
-                refreshButtonTextSecond.text = $"Update";
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                refreshButtonText.text = $"Обновить";
-                refreshButtonTextSecond.text = $"Обновить";
-            }
+            refreshButtonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("RefreshButton")}";
+            refreshButtonTextSecond.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("RefreshButton")}";
         }
         UpdateUI();
     }

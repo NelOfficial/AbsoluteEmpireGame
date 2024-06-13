@@ -1,22 +1,24 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
-using System.Runtime.CompilerServices;
 
 public class TextTranslate : MonoBehaviour
 {
-    [Header("Ключ")]
+    [Header("Key")]
     [TextArea(1, 100)]
     public string KEY;
+
     private Translate TRANSLATION;
+
     private string[] local;
+
     private List<string> newstr;
+
     private void Start()
     {
         TRANSLATION = ReferencesManager.Instance.gameSettings.translate;
-        //local = TRANSLATION.value[TRANSLATION.value.Count];
+
         foreach (string[] str in TRANSLATION.value)
         {
             if (KEY == str[0])
@@ -24,6 +26,7 @@ public class TextTranslate : MonoBehaviour
                 local = str;
             }
         }
+
         for (int i = 0; i < local.Length; i++)
         {
             if (local[i] == "null" || local[i] == "")
@@ -31,10 +34,11 @@ public class TextTranslate : MonoBehaviour
                 local[i] = local[1];
             }
         }
+
         newstr = new List<string>();
+
         foreach (string mstr in local)
         {
-
             mstr.Replace("\\\\\"", "\\n\"");
             newstr.Add(mstr);
         }
