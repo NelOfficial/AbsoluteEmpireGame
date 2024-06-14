@@ -699,7 +699,7 @@ public class MapEditor : MonoBehaviour
             publishRequiestForm.AddField("data", currentModText);
             publishRequiestForm.AddField("author_id", PlayerPrefs.GetString("nickname"));
 
-            WWW publishRequiest = new WWW("http://our-empire.7m.pl/core/publishMod.php", publishRequiestForm);
+            WWW publishRequiest = new WWW("https://absolute-empire.space/core/publishMod.php", publishRequiestForm);
 
             yield return publishRequiest;
 

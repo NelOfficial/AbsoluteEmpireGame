@@ -136,7 +136,7 @@ public class LocalModButton : MonoBehaviour
 
     //    WebClient client = new WebClient();
 
-    //    Stream data = client.OpenRead(@$"http://absolute-empire.7m.pl/media/uploads/mods/{modName}/{modName}.AEMod");
+    //    Stream data = client.OpenRead(@$"https://absolute-empire.space/media/uploads/mods/{modName}/{modName}.AEMod");
     //    StreamReader reader = new StreamReader(data);
 
     //    string modData = reader.ReadToEnd();
@@ -171,8 +171,8 @@ public class LocalModButton : MonoBehaviour
 
     //        for (int i = 0; i < eventsIDS.Count; i++)
     //        {
-    //            string imageUrl = @$"http://absolute-empire.7m.pl/media/uploads/mods/{modName}/events/{eventsIDS[i]}/{eventsIDS[i]}.jpg";
-    //            string textUrl = @$"http://absolute-empire.7m.pl/media/uploads/mods/{modName}/events/{eventsIDS[i]}/{eventsIDS[i]}.AEEvent";
+    //            string imageUrl = @$"https://absolute-empire.space/media/uploads/mods/{modName}/events/{eventsIDS[i]}/{eventsIDS[i]}.jpg";
+    //            string textUrl = @$"https://absolute-empire.space/media/uploads/mods/{modName}/events/{eventsIDS[i]}/{eventsIDS[i]}.AEEvent";
 
     //            StartCoroutine(CreateEventData_Co(ModPath, eventsIDS[i], imageUrl, textUrl));
     //        }
@@ -221,7 +221,7 @@ public class LocalModButton : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("id", id);
 
-        UnityWebRequest removeMod_request = UnityWebRequest.Post("http://our-empire.7m.pl/core/remove_mod.php", form);
+        UnityWebRequest removeMod_request = UnityWebRequest.Post("https://absolute-empire.space/core/remove_mod.php", form);
         yield return removeMod_request.SendWebRequest();
 
         if (!removeMod_request.isHttpError || !removeMod_request.isNetworkError || !removeMod_request.isNetworkError)
