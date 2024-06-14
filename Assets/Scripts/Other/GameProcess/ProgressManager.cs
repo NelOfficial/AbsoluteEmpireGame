@@ -175,14 +175,8 @@ public class ProgressManager : MonoBehaviour
 
             if (ReferencesManager.Instance.technologyManager.currentTech.moves <= 0)
             {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    WarningManager.Instance.Warn($"{ReferencesManager.Instance.technologyManager.currentTech.tech._nameEN} was successfully researched");
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    WarningManager.Instance.Warn($"Успешно исследована технология: {ReferencesManager.Instance.technologyManager.currentTech.tech._name}");
-                }
+                WarningManager.Instance.Warn($"{ReferencesManager.Instance.languageManager.GetTranslation("Warn.technology")}: {ReferencesManager.Instance.technologyManager.currentTech.tech._name}");
+
                 ReferencesManager.Instance.countryManager.currentCountry.BONUS_INCOME_FUEL += ReferencesManager.Instance.technologyManager.currentTech.tech.oilBonus;
                 ReferencesManager.Instance.technologyManager.SetResearchState(false);
 
@@ -448,14 +442,7 @@ public class ProgressManager : MonoBehaviour
 
             if (productionItemQueue._currentProgress >= productionItemQueue._equipment._productionCost)
             {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    WarningManager.Instance.Warn($"{productionItemQueue._equipment._nameEN} was successfully produced");
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    WarningManager.Instance.Warn($"Успешно завершено производство: {productionItemQueue._equipment._name}");
-                }
+                WarningManager.Instance.Warn($"{ReferencesManager.Instance.languageManager.GetTranslation("Warn.Produced")}: {productionItemQueue._equipment._name}");
 
                 productionItemQueue._owner._fleet.Add(productionItemQueue._equipment);
                 country._prodQueue.Remove(productionItemQueue);

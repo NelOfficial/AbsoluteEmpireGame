@@ -26,27 +26,11 @@ public class SaveItem : MonoBehaviour
 
     public void UpdateUI()
     {
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            saveNameText.text = $"Save {saveID}";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            saveNameText.text = $"Сохранение {saveID}";
-        }
+        saveNameText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("SaveText")} {saveID}";
 
         dateTimeText.text = date;
 
-        string _displayScenarioName = "";
-
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            _displayScenarioName = $"Scenario: {scenarioName}";
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            _displayScenarioName = $"Сценарий: {scenarioName}";
-        }
+        string _displayScenarioName = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.SingleMode.ScenarioText")}: {scenarioName}";
 
         scenarioText.text = _displayScenarioName;
 

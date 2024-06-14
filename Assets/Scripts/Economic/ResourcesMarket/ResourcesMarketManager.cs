@@ -99,15 +99,8 @@ public class ResourcesMarketManager : MonoBehaviour
     }
 
     private void UpdatePriceText(int amount)
-    { 
-        if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.RU)
-        {
-            _totalPrice.text = $"Вы будете платить каждый ход: {CountPrice(amount, _currentSeller._cost)}";
-        }
-        else
-        {
-            _totalPrice.text = $"You will pay every turn: {CountPrice(amount, _currentSeller._cost)}";
-        }
+    {
+        _totalPrice.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("Market.YouWillPay")}: {CountPrice(amount, _currentSeller._cost)}";
 
         MarketOrder playerOrder = GetPlayerOrder(_currentSeller._seller, _currentSeller._resource);
 
@@ -117,14 +110,7 @@ public class ResourcesMarketManager : MonoBehaviour
             {
                 if (CountPrice(amount, _currentSeller._cost) <= playerOrder._cost)
                 {
-                    if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.RU)
-                    {
-                        _totalPrice.text = $"Вы делаете покупку меньше прежней, поэтому вам возвращаются за ход: {playerOrder._cost - CountPrice(amount, _currentSeller._cost)}";
-                    }
-                    else
-                    {
-                        _totalPrice.text = $"You make a purchase smaller than the previous one, so you get a refund for the turn: {playerOrder._cost - CountPrice(amount, _currentSeller._cost)}";
-                    }
+                    _totalPrice.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("Market.Refund")}: {playerOrder._cost - CountPrice(amount, _currentSeller._cost)}";
                 }
             }
         }

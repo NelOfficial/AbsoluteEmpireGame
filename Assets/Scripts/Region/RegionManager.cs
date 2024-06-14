@@ -195,14 +195,7 @@ public class RegionManager : MonoBehaviour
         }
         else
         {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                WarningManager.Instance.Warn("You don't border this province");
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                WarningManager.Instance.Warn("Вы не граничите с этой провинцией");
-            }
+            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoBorder"));
         }
 
         for (int i = 0; i < currentRegionManager.regionClaims.Count; i++)
@@ -907,14 +900,7 @@ public class RegionManager : MonoBehaviour
         {
             if (currentRegionManager.buildings.Count + currentRegionManager.buildingsQueue.Count >= 4)
             {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    WarningManager.Instance.Warn("There are no free slots");
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    WarningManager.Instance.Warn("Нет доступных слотов");
-                }
+                WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoSlots"));
             }
             else
             {
@@ -922,14 +908,7 @@ public class RegionManager : MonoBehaviour
                 {
                     if (!currentRegionManager._isCoast)
                     {
-                        if (PlayerPrefs.GetInt("languageId") == 0)
-                        {
-                            WarningManager.Instance.Warn("This province has no coast");
-                        }
-                        else if (PlayerPrefs.GetInt("languageId") == 1)
-                        {
-                            WarningManager.Instance.Warn("У провинции нет побережья");
-                        }
+                        WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoCoast"));
 
                         return;
                     }
@@ -1204,14 +1183,7 @@ public class RegionManager : MonoBehaviour
                 }
                 else
                 {
-                    if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        WarningManager.Instance.Warn("Not enough money");
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        WarningManager.Instance.Warn("Недостаточно золота");
-                    }
+                    WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoMoney"));
                 }
             }
         }
@@ -1284,14 +1256,7 @@ public class RegionManager : MonoBehaviour
 
                 if (!result)
                 {
-                    if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        WarningManager.Instance.Warn("This province has no coast");
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        WarningManager.Instance.Warn("У провинции нет побережья");
-                    }
+                    WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoCoast"));
                 }
             }
 

@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: 4
   _name: "\u0411\u043E\u0441\u043D\u0438\u044F \u0438 \u0413\u0435\u0440\u0446\u0435\u0433\u043E\u0432\u0438\u043D\u0430"
-  _nameEN: BosniaHerzegovina
+  _nameEN: Bosnia Herzegovina
   _uiName: "\u0411\u043E\u0441\u043D\u0438\u044F \u0438 \u0413\u0435\u0440\u0446\u0435\u0433\u043E\u0432\u0438\u043D\u0430"
   _tag: BAH
   countryType: 0
   countryFlag: {fileID: 21300000, guid: 993752001fad6454eb7b1c4dc91d555b, type: 3}
   ally: 
   capitulateLimit: 20
-  countryColor: {r: 0.8679245, g: 0.8322141, b: 0.27429688, a: 0.5}
+  countryColor: {r: 0.87058824, g: 0.8352941, b: 0.27450982, a: 0.5019608}
   countryIdeologyColors:
   - {r: 0.9150943, g: 0.90616494, b: 0.25467247, a: 0.5019608}
   - {r: 0.87058824, g: 0.8352941, b: 0.27450982, a: 0.5019608}

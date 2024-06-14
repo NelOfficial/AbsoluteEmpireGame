@@ -248,42 +248,18 @@ public class ReferencesManager : MonoBehaviour
     {
         string result = "";
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
+        if (integer < 1000000)
         {
-            if (integer < 1000000)
-            {
-                float resultInteger = integer / 1000;
-                result = $"{resultInteger}K";
-            }
-        }
-
-        if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            if (integer < 1000000)
-            {
-                float resultInteger = integer / 1000;
-                result = $"{resultInteger} тыс.";
-            }
+            float resultInteger = integer / 1000;
+            result = $"{resultInteger}{languageManager.GetTranslation("NumberGoodiser.thounsand")}";
         }
 
         //Millions
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
+        if (integer > 1000000)
         {
-            if (integer > 1000000)
-            {
-                float resultInteger = integer / 1000000;
-                result = $"{resultInteger}M";
-            }
-        }
-
-        if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            if (integer > 1000000)
-            {
-                float resultInteger = integer / 1000000;
-                result = $"{resultInteger} млн.";
-            }
+            float resultInteger = integer / 1000000;
+            result = $"{resultInteger}{languageManager.GetTranslation("NumberGoodiser.million")}";
         }
 
         return result;

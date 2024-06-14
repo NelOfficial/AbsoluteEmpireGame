@@ -132,14 +132,7 @@ public class TechnologyManager : MonoBehaviour
                 spawnedNeededTech.transform.SetParent(neededTechsGrid);
                 spawnedNeededTech.transform.localScale = new Vector3(1, 1, 1);
 
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    spawnedNeededTech.text = selectedTechnology.techsNeeded[i]._nameEN;
-                }
-                if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    spawnedNeededTech.text = selectedTechnology.techsNeeded[i]._name;
-                }
+                spawnedNeededTech.text = ReferencesManager.Instance.languageManager.GetTranslation(selectedTechnology.techsNeeded[i]._name);
 
                 if (Researched(selectedTechnology.techsNeeded[i]))
                 {
@@ -157,16 +150,8 @@ public class TechnologyManager : MonoBehaviour
             neededTechsPanel.SetActive(false);
         }
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            techName.text = selectedTechnology._nameEN;
-            techDescription.text = selectedTechnology.descriptionEN;
-        }
-        if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            techName.text = selectedTechnology._name;
-            techDescription.text = selectedTechnology.description;
-        }
+        techName.text = ReferencesManager.Instance.languageManager.GetTranslation(selectedTechnology._name);
+        techDescription.text = ReferencesManager.Instance.languageManager.GetTranslation($"{selectedTechnology._name}.desc");
 
         if (selectedTechnology.moneyCost >= 5000)
         {
@@ -251,14 +236,7 @@ public class TechnologyManager : MonoBehaviour
         }
         else
         {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                WarningManager.Instance.Warn("You are already researching the technology.");
-            }
-            if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                WarningManager.Instance.Warn("Вы уже исследуете технологию.");
-            }
+            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.technologyAlready"));
         }
 
         Multiplayer.Instance.SetCountryValues(
@@ -327,25 +305,13 @@ public class TechnologyManager : MonoBehaviour
         if (Researched(selectedTechnology))
         {
             recearchButton.interactable = false;
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                recearchButtonText.text = "Researched";
-            }
-            if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                recearchButtonText.text = "Изучено";
-            }
+            recearchButtonText.text = ReferencesManager.Instance.languageManager.GetTranslation("TechnologyPanel.Researched");
+
         }
         else
         {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                recearchButtonText.text = "Research";
-            }
-            if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                recearchButtonText.text = "Изучить технологию";
-            }
+            recearchButtonText.text = ReferencesManager.Instance.languageManager.GetTranslation("TechnologyPanel.Research");
+
         }
     }
 

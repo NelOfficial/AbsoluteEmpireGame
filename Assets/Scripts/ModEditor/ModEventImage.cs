@@ -49,14 +49,7 @@ public class ModEventImage : MonoBehaviour
             {
                 _eventUploadImageTip.SetActive(true);
 
-                if (PlayerPrefs.GetInt("languageId") == 0) // ENG
-                {
-                    _eventUploadImageTipText.text = "Click here to upload your image";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1) // RUS
-                {
-                    _eventUploadImageTipText.text = "Нажмите здесь, чтобы загрузить картинку";
-                }
+                _eventUploadImageTipText.text = ReferencesManager.Instance.languageManager.GetTranslation("Editor.PictureHint");
             }
         }
         else // Has image
@@ -106,14 +99,7 @@ public class ModEventImage : MonoBehaviour
         }
         else
         {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                WarningManager.Instance.Warn("Enter mod name.");
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                WarningManager.Instance.Warn("Введите имя мода.");
-            }
+            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.EnterModName"));
         }
     }
 

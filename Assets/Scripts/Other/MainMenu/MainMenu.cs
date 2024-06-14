@@ -53,7 +53,7 @@ public class MainMenu : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("buttonDesign"))
         {
-            SetButtonsDesign(PlayerPrefs.GetInt("buttonDesign"));
+            PlayerPrefs.DeleteKey("buttonDesign");
         }
 
         SetLanguage(PlayerPrefs.GetInt("languageId"));
@@ -243,14 +243,5 @@ public class MainMenu : MonoBehaviour
 
         loadingMenu.SetActive(false);
         PlayerPrefs.SetInt("languageId", id);
-    }
-
-    public void SetButtonsDesign(int data)
-    {
-        for (int i = 0; i < buttons.Length; i++)
-        {
-            buttons[i].targetImage.sprite = buttonDesigns[data];
-            PlayerPrefs.SetInt("buttonDesign", data);
-        }
     }
 }

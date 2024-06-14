@@ -57,14 +57,7 @@ public class FleetManager : MonoBehaviour
         }
         else
         {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                WarningManager.Instance.Warn("Maximum of 10 ships.");
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                WarningManager.Instance.Warn("Максимум 10 кораблей.");
-            }
+            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.FleetLimit"));
         }
     }
 

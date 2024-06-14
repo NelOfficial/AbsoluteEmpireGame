@@ -40,13 +40,6 @@ public class CountryManager : MonoBehaviour
         ReferencesManager.Instance.dateManager.currentDate[2] = int.Parse(_currentDate.value);
         ReferencesManager.Instance.dateManager.UpdateUI();
 
-        City[] cities = FindObjectsOfType<City>();
-
-        for (int i = 0; i < cities.Length; i++)
-        {
-            cities[i].SetUp();
-        }
-
         if (ReferencesManager.Instance.gameSettings.onlineGame)
         {
             ReferencesManager.Instance.gameSettings.playMod.value = false;

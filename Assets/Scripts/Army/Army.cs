@@ -166,14 +166,7 @@ public class Army : MonoBehaviour
             }
             else
             {
-                if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.RU)
-                {
-                    WarningManager.Instance.Warn("В шаблоне дивизии может быть только 10 юнитов.");
-                }
-                else if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.EN)
-                {
-                    WarningManager.Instance.Warn("In division template can be maximum 10 unit.");
-                }
+                WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.ArmyLimit"));
             }
         }
     }
@@ -223,11 +216,11 @@ public class Army : MonoBehaviour
     {
         if (country.money < unit.moneyCost)
         {
-            WarningManager.Instance.Warn(PlayerPrefs.GetInt("languageId") == 0 ? "Not enough money." : "Недостаточно денег.");
+            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoMoney"));
         }
         else if (country.recroots < unit.recrootsCost)
         {
-            WarningManager.Instance.Warn(PlayerPrefs.GetInt("languageId") == 0 ? "Not enough recruits." : "Недостаточно рекрутов.");
+            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoRecruits"));
         }
     }
 
@@ -290,10 +283,6 @@ public class Army : MonoBehaviour
         ReferencesManager.Instance.countryManager.UpdateValuesUI();
         UpdateDivisionUI();
         ReferencesManager.Instance.regionManager.UpdateRegionUI();
-        if (showWarning)
-        {
-            WarningManager.Instance.Warn("Unit added to army.");
-        }
     }
 
     public void ReCreateArmyUI()
@@ -362,14 +351,7 @@ public class Army : MonoBehaviour
         money = Mathf.FloorToInt(money);
         food = Mathf.FloorToInt(food);
 
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            _healHP_description.text = $"Restore health to {countOfBatalions} battalions?\r\n It will cost {recruits} recruits, {money} gold and {food} provisions";
-        }
-        if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            _healHP_description.text = $"Восстановить здоровье {countOfBatalions} батальонам?\r\nЭто будет стоить {recruits} рекрутов, {money} золота и {food} провизии";
-        }
+        _healHP_description.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("RegionUI.Division.HealText")} {recruits} {ReferencesManager.Instance.languageManager.GetTranslation("RegionUI.RecruitsText")}, {money} {ReferencesManager.Instance.languageManager.GetTranslation("RegionUI.GoldText")}, {food} {ReferencesManager.Instance.languageManager.GetTranslation("RegionUI.FoodText")}";
     }
 
     public void CountResourcesToHeal()
@@ -418,14 +400,7 @@ public class Army : MonoBehaviour
         }
         else
         {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                WarningManager.Instance.Warn("You don't have enough resources.");
-            }
-            if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                WarningManager.Instance.Warn("Недостаточно ресурсов.");
-            }
+            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NotEnoughtResources"));
         }
 
         UpdateDivisionUI();

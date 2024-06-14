@@ -27,3 +27,4 @@ MonoBehaviour:
   optional: 0
   techsNeeded:
   - {fileID: 11400000, guid: 3ef90a41045f7854fad2c07fce30d0e7, type: 2}
+  oilBonus: 0

@@ -725,7 +725,7 @@ public class MapEditor : MonoBehaviour
             updateRequiestForm.AddField("data", currentModText);
             updateRequiestForm.AddField("author_id", PlayerPrefs.GetString("nickname"));
 
-            WWW uploadRequiest = new WWW("http://our-empire.7m.pl/core/updateMod.php", updateRequiestForm);
+            WWW uploadRequiest = new WWW("https://absolute-empire.space/core/updateMod.php", updateRequiestForm);
 
             yield return uploadRequiest;
 
@@ -749,25 +749,11 @@ public class MapEditor : MonoBehaviour
     {
         if (string.IsNullOrEmpty(nameInputField.text))
         {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                WarningManager.Instance.Warn("Enter mod name.");
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                WarningManager.Instance.Warn("¬ведите им€ мода.");
-            }
+            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.EnterModName"));
         }
         if (string.IsNullOrEmpty(currentModText))
         {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                WarningManager.Instance.Warn("Save the mod first.");
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                WarningManager.Instance.Warn("—начала сохраните мод.");
-            }
+            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.SaveModAtFirst"));
         }
         else if (!string.IsNullOrEmpty(currentModText) && !string.IsNullOrEmpty(nameInputField.text))
         {
@@ -1323,14 +1309,7 @@ public class MapEditor : MonoBehaviour
         }
         else
         {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                WarningManager.Instance.Warn("Enter mod name.");
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                WarningManager.Instance.Warn("¬ведите им€ мода.");
-            }
+            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.EnterModName"));
         }
     }
 

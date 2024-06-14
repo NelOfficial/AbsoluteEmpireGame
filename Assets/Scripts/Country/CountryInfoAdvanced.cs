@@ -137,8 +137,6 @@ public class CountryInfoAdvanced : MonoBehaviour
         countryManager.currentCountry.money += 1000;
         countryManager.currentCountry.moneyIncomeUI -= 100;
 
-        WarningManager.Instance.Warn("Вы взяли в долг 1000 золота на 10 ходов.");
-
         Multiplayer.Instance.SetCountryValues(
             countryManager.currentCountry.country._id,
             countryManager.currentCountry.money,

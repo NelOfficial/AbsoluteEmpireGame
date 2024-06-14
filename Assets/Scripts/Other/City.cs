@@ -3,47 +3,29 @@ using UnityEngine;
 
 public class City : MonoBehaviour
 {
-    private TMP_Text m_Text;
+    public CenturyLocalise[] centuryLocalises;
 
-    [Header("1910")]
-    public LocalisableString _1910_name;
-
-    [Header("1936")]
-    public LocalisableString _1936_name;
-
-    [System.Serializable]
-    public class LocalisableString
+    public string GetKey()
     {
-        public string EN;
-        public string RU;
+        string key = "";
+
+        for (int i = 0; i < centuryLocalises.Length; i++)
+        {
+            if (ReferencesManager.Instance.dateManager.currentDate[2] >= centuryLocalises[i].yearMin &&
+                ReferencesManager.Instance.dateManager.currentDate[2] < centuryLocalises[i].yearMax)
+            {
+                key = centuryLocalises[i]._key;
+            }
+        }
+
+        return key;
     }
 
-    public void SetUp()
+    [System.Serializable]
+    public class CenturyLocalise
     {
-        m_Text = this.transform.GetComponentInChildren<TMP_Text>();
-
-        if (ReferencesManager.Instance.dateManager.currentDate[2] >= 1910 &&
-            ReferencesManager.Instance.dateManager.currentDate[2] < 1936)
-        {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                m_Text.text = _1910_name.EN;
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                m_Text.text = _1910_name.RU;
-            }
-        }
-        else if (ReferencesManager.Instance.dateManager.currentDate[2] >= 1936)
-        {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                m_Text.text = _1936_name.EN;
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                m_Text.text = _1936_name.RU;
-            }
-        }
+        public int yearMin;
+        public int yearMax;
+        public string _key;
     }
 }

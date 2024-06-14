@@ -30,26 +30,14 @@ public class OfferButton : MonoBehaviour
             {
                 if (diplomatyUI.FindCountriesRelation(sender, receiver).war) // War
                 {
-                    if (currentLanguage == 0)
-                    {
-                        text.text = "Peace";
-                    }
-                    else if (currentLanguage == 1)
-                    {
-                        text.text = "Заключить мир";
-                    }
+                    text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Peace");
+
                     data = "Заключить мир";
                 }
                 else if (!diplomatyUI.FindCountriesRelation(sender, receiver).war) // Peace
                 {
-                    if (currentLanguage == 0)
-                    {
-                        text.text = "Declare war";
-                    }
-                    else if (currentLanguage == 1)
-                    {
-                        text.text = "Объявить войну";
-                    }
+                    text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.SendWar");
+
                     data = "Объявить войну";
                 }
             }
@@ -57,26 +45,14 @@ public class OfferButton : MonoBehaviour
             {
                 if (diplomatyUI.FindCountriesRelation(sender, receiver).trade) // Distrade
                 {
-                    if (currentLanguage == 0)
-                    {
-                        text.text = "Terminate trading";
-                    }
-                    else if (currentLanguage == 1)
-                    {
-                        text.text = "Прекратить торговлю";
-                    }
+                    text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.UnTrade");
+
                     data = "Прекратить торговлю";
                 }
                 else if (!diplomatyUI.FindCountriesRelation(sender, receiver).trade) // Go trade
                 {
-                    if (currentLanguage == 0)
-                    {
-                        text.text = "Trading";
-                    }
-                    else if (currentLanguage == 1)
-                    {
-                        text.text = "Торговля";
-                    }
+                    text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Trade");
+
                     data = "Торговля";
                 }
                 if (diplomatyUI.FindCountriesRelation(sender, receiver).war) // War
@@ -92,26 +68,14 @@ public class OfferButton : MonoBehaviour
             {
                 if (diplomatyUI.FindCountriesRelation(sender, receiver).pact) // Dispact
                 {
-                    if (currentLanguage == 0)
-                    {
-                        text.text = "Terminate non-aggression pact";
-                    }
-                    else if (currentLanguage == 1)
-                    {
-                        text.text = "Расторгнуть пакт о ненападении";
-                    }
+                    text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.AntiPact");
+
                     data = "Расторгнуть пакт о ненападении";
                 }
                 else if (!diplomatyUI.FindCountriesRelation(sender, receiver).pact) // Gopact
                 {
-                    if (currentLanguage == 0)
-                    {
-                        text.text = "Non-aggression pact";
-                    }
-                    else if (currentLanguage == 1)
-                    {
-                        text.text = "Пакт о ненападении";
-                    }
+                    text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Pact");
+
                     data = "Пакт о ненападении";
                 }
                 if (diplomatyUI.FindCountriesRelation(sender, receiver).war) // War
@@ -127,26 +91,14 @@ public class OfferButton : MonoBehaviour
             {
                 if (diplomatyUI.FindCountriesRelation(sender, receiver).union) // Disunion
                 {
-                    if (currentLanguage == 0)
-                    {
-                        text.text = "Terminate alliance";
-                    }
-                    else if (currentLanguage == 1)
-                    {
-                        text.text = "Расторгнуть союз";
-                    }
+                    text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.DeUnion");
+
                     data = "Расторгнуть союз";
                 }
                 else if (!diplomatyUI.FindCountriesRelation(sender, receiver).union) // Union
                 {
-                    if (currentLanguage == 0)
-                    {
-                        text.text = "Alliance";
-                    }
-                    else if (currentLanguage == 1)
-                    {
-                        text.text = "Союз";
-                    }
+                    text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Union");
+
                     data = "Союз";
                 }
                 if (diplomatyUI.FindCountriesRelation(sender, receiver).war) // War
@@ -162,26 +114,14 @@ public class OfferButton : MonoBehaviour
             {
                 if (!diplomatyUI.FindCountriesRelation(sender, receiver).right) // Disright
                 {
-                    if (currentLanguage == 0)
-                    {
-                        text.text = "Right of passage of troops";
-                    }
-                    else if (currentLanguage == 1)
-                    {
-                        text.text = "Право прохода войск";
-                    }
+                    text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Right");
+
                     data = "Право прохода войск";
                 }
                 else if (diplomatyUI.FindCountriesRelation(sender, receiver).right) // Right
                 {
-                    if (currentLanguage == 0)
-                    {
-                        text.text = "Terminate right of passage of troops";
-                    }
-                    else if (currentLanguage == 1)
-                    {
-                        text.text = "Расторгнуть право прохода войск";
-                    }
+                    text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.DeRight");
+
                     data = "Расторгнуть право прохода войск";
                 }
                 if (diplomatyUI.FindCountriesRelation(sender, receiver).war) // War
@@ -195,28 +135,16 @@ public class OfferButton : MonoBehaviour
             }
             else if (dataType == "Vassal")
             {
-                if (diplomatyUI.FindCountriesRelation(sender, receiver).vassal) // War
+                if (diplomatyUI.FindCountriesRelation(sender, receiver).vassal) // Vassal
                 {
-                    if (currentLanguage == 0)
-                    {
-                        text.text = "Release the vassal";
-                    }
-                    else if (currentLanguage == 1)
-                    {
-                        text.text = "Освободить вассала";
-                    }
+                    text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.FreeVassal");
+
                     data = "Освободить вассала";
                 }
-                else if (!diplomatyUI.FindCountriesRelation(sender, receiver).vassal) // Peace
+                else if (!diplomatyUI.FindCountriesRelation(sender, receiver).vassal) // FreeVassal
                 {
-                    if (currentLanguage == 0)
-                    {
-                        text.text = "Make a vassal";
-                    }
-                    else if (currentLanguage == 1)
-                    {
-                        text.text = "Сделать вассалом";
-                    }
+                    text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Vassal");
+
                     data = "Сделать вассалом";
                 }
                 if (diplomatyUI.FindCountriesRelation(sender, receiver).war) // War
@@ -265,69 +193,27 @@ public class OfferButton : MonoBehaviour
 
             if (data == "Отправить золото")
             {
-                if (currentLanguage == 0)
-                {
-                    text.text = "Send money";
-                }
-                else if (currentLanguage == 1)
-                {
-                    text.text = "Отправить золото";
-                }
+                text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.SendMoney");
             }
             else if (data == "Попросить золото")
             {
-                if (currentLanguage == 0)
-                {
-                    text.text = "Ask money";
-                }
-                else if (currentLanguage == 1)
-                {
-                    text.text = "Попросить золото";
-                }
+                text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.AskMoney");
             }
             else if (data == "Отправить провизию")
             {
-                if (currentLanguage == 0)
-                {
-                    text.text = "Send food";
-                }
-                else if (currentLanguage == 1)
-                {
-                    text.text = "Отправить провизию";
-                }
+                text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.SendFood");
             }
             else if (data == "Попросить провизию")
             {
-                if (currentLanguage == 0)
-                {
-                    text.text = "Ask food";
-                }
-                else if (currentLanguage == 1)
-                {
-                    text.text = "Попросить провизию";
-                }
+                text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.AskFood");
             }
             else if (data == "Отправить рекрутов")
             {
-                if (currentLanguage == 0)
-                {
-                    text.text = "Send recruits";
-                }
-                else if (currentLanguage == 1)
-                {
-                    text.text = "Отправить рекрутов";
-                }
+                text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.SendRecruits");
             }
             else if (data == "Попросить рекрутов")
             {
-                if (currentLanguage == 0)
-                {
-                    text.text = "Ask recruits";
-                }
-                else if (currentLanguage == 1)
-                {
-                    text.text = "Попросить рекрутов";
-                }
+                text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.AskRecruits");
             }
         }
         catch (System.Exception) { }

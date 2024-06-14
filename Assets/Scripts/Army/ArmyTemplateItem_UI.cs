@@ -55,14 +55,7 @@ public class ArmyTemplateItem_UI : MonoBehaviour
             }
             else
             {
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    WarningManager.Instance.Warn("There can only be 10 units in a division template.");
-                }
-                if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    WarningManager.Instance.Warn("В шаблоне дивизии может быть только 10 юнитов.");
-                }
+                WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.ArmyLimit"));
             }
         }
 

@@ -257,51 +257,24 @@ public class RegionUI : MonoBehaviour
                         }
                         else
                         {
-                            if (PlayerPrefs.GetInt("languageId") == 0)
-                            {
-                                WarningManager.Instance.Warn("Not enough recruits");
-                            }
-                            else if (PlayerPrefs.GetInt("languageId") == 1)
-                            {
-                                WarningManager.Instance.Warn(ReferencesManager.Instance.gameSettings.NO_RECROOTS);
-                            }
+                            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoRecruits"));
                         }
                     }
                     else
                     {
-                        if (PlayerPrefs.GetInt("languageId") == 0)
-                        {
-                            WarningManager.Instance.Warn("Not enough food");
-                        }
-                        else if (PlayerPrefs.GetInt("languageId") == 1)
-                        {
-                            WarningManager.Instance.Warn("Недостаточно провизии");
-                        }
+                        WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoFood"));
+
                     }
                 }
                 else
                 {
-                    if (PlayerPrefs.GetInt("languageId") == 0)
-                    {
-                        WarningManager.Instance.Warn("Not enough gold");
-                    }
-                    else if (PlayerPrefs.GetInt("languageId") == 1)
-                    {
-                        WarningManager.Instance.Warn(ReferencesManager.Instance.gameSettings.NO_GOLD);
-                    }
+                    WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoMoney"));
                 }
             }
         }
         else
         {
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                WarningManager.Instance.Warn("The province is demilitarized");
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                WarningManager.Instance.Warn("Провинция демилитаризована");
-            }
+            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.Demil"));
         }
     }
 
@@ -336,14 +309,7 @@ public class RegionUI : MonoBehaviour
                     }
                     else
                     {
-                        if (PlayerPrefs.GetInt("languageId") == 0)
-                        {
-                            WarningManager.Instance.Warn("You don't have any ships in stock.");
-                        }
-                        else if (PlayerPrefs.GetInt("languageId") == 1)
-                        {
-                            WarningManager.Instance.Warn("У Вас нет кораблей в запасах.");
-                        }
+                        WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoShips"));
                     }
                 }
 
@@ -356,14 +322,7 @@ public class RegionUI : MonoBehaviour
             }
             else
             {
-                if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.EN)
-                {
-                    WarningManager.Instance.Warn("The province does not have a naval base.");
-                }
-                else if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.RU)
-                {
-                    WarningManager.Instance.Warn("У провинции нет морской базы.");
-                }
+                WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoMarineBase"));
             }
         }
     }
@@ -446,7 +405,7 @@ public class RegionUI : MonoBehaviour
             }
             else
             {
-                WarningManager.Instance.Warn(ReferencesManager.Instance.gameSettings.NO_MOVEPOINTS);
+                WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoMovePoints"));
             }
         }
     }
