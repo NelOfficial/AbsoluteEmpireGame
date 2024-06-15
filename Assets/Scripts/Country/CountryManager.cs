@@ -552,13 +552,9 @@ public class CountryManager : MonoBehaviour
     private void LoadMod(string _modname, int modID, string pathType)
     {
         int currentModID = modID;
-
         string modName = _modname;
         string modData = "";
-
         string path = "";
-
-        string eventPartPath = "";
 
         if (pathType == "local")
         {
@@ -569,82 +565,77 @@ public class CountryManager : MonoBehaviour
             path = Path.Combine(Application.persistentDataPath, "savedMods", $"{modName}", $"{modName}.AEMod");
         }
 
-        StreamReader reader = new StreamReader(path);
+        using (StreamReader reader = new StreamReader(path))
+        {
+            modData = reader.ReadToEnd();
+        }
 
-        modData = reader.ReadToEnd();
-
-        reader.Close();
-
-        string[] mainModDataLines = modData.Split("#REGIONS#")[0].Split(';');
-        string[] regionsDataLines = modData.Split("#REGIONS#")[1].Split(';');
-        string[] countriesDataLines = modData.Split("#COUNTRIES_SETTINGS#")[1].Split(';');
-        string[] eventsIDsDataLines = modData.Split("#EVENTS#")[1].Split(';');
+        string[] sections = modData.Split(new[] { "#REGIONS#", "#COUNTRIES_SETTINGS#", "#EVENTS#" }, StringSplitOptions.None);
+        string[] mainModDataLines = sections[0].Split(';');
+        string[] regionsDataLines = sections[1].Split(';');
+        string[] countriesDataLines = sections[2].Split(';');
+        string[] eventsIDsDataLines = sections.Length > 3 ? sections[3].Split(';') : Array.Empty<string>();
 
         try
         {
             string _line = mainModDataLines[1];
-            parts = _line.Split('[');
+            string[] parts = _line.Split('[');
+            string secondPart = parts[1];
+            string value = secondPart.Remove(secondPart.Length - 1);
 
-            secondPart = parts[1];
-
-            value = secondPart.Remove(secondPart.Length - 1);
+            int isModAllowsGameEvents = int.Parse(value);
+            ReferencesManager.Instance.gameSettings.allowGameEvents = isModAllowsGameEvents == 1;
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             if (ReferencesManager.Instance.gameSettings.developerMode)
             {
-                Debug.LogError($"ERROR: Mod loader error in value parser (CountryManager.cs)");
+                Debug.LogError("ERROR: Mod loader error in value parser (CountryManager.cs)");
             }
         }
 
-        int isModAllowsGameEvents = int.Parse(value);
-
-        if (isModAllowsGameEvents == 0)
-        {
-            ReferencesManager.Instance.gameSettings.allowGameEvents = false;
-        }
-        else if (isModAllowsGameEvents == 1)
-        {
-            ReferencesManager.Instance.gameSettings.allowGameEvents = true;
-        }
+        HashSet<int> existingCountryIds = new HashSet<int>(
+            ReferencesManager.Instance.countryManager.countries.Select(c => c.country._id));
+        HashSet<int> globalCountryIds = new HashSet<int>(
+            ReferencesManager.Instance.globalCountries.Select(gc => gc._id));
 
         for (int i = 2; i < mainModDataLines.Length; i++)
         {
             string _line = mainModDataLines[i];
             if (!string.IsNullOrEmpty(_line))
             {
-                value = GetValue(_line);
+                string value = GetValue(_line);
+                int countryId = int.Parse(value);
 
-                bool _hasCountry = countries.Any(item => item.country._id == int.Parse(value));
-
-                if (!_hasCountry)
+                if (!existingCountryIds.Contains(countryId) && globalCountryIds.Contains(countryId))
                 {
-                    foreach (CountryScriptableObject countryScriptableObject in ReferencesManager.Instance.globalCountries)
+                    var countryScriptableObject = ReferencesManager.Instance.globalCountries
+                        .FirstOrDefault(gc => gc._id == countryId);
+
+                    if (countryScriptableObject != null)
                     {
-                        if (countryScriptableObject._id == int.Parse(value))
-                        {
-                            ReferencesManager.Instance.CreateCountry(countryScriptableObject, "Неопределено");
-                        }
+                        ReferencesManager.Instance.CreateCountry(countryScriptableObject, "Неопределено");
                     }
                 }
             }
         }
 
-        for (int r = 0; r < regionsDataLines.Length; r++)
+        List<int> countriesInRegionsIDs = new List<int>();
+        foreach (var _line in regionsDataLines)
         {
             try
             {
-                string _line = regionsDataLines[r];
-                int value = int.Parse(GetValue(_line));
-
-                countriesInRegionsIDs.Add(value);
+                if (!string.IsNullOrEmpty(_line))
+                {
+                    int value = int.Parse(GetValue(_line));
+                    countriesInRegionsIDs.Add(value);
+                }
             }
-            catch (System.Exception) {}
+            catch (Exception) { }
         }
 
         List<RegionLoader.ModRegionData> regionModIDs = new List<RegionLoader.ModRegionData>();
-
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count + 2; i++)
+        for (int i = 0; i < Math.Min(regionsDataLines.Length, ReferencesManager.Instance.countryManager.regions.Count + 2); i++)
         {
             try
             {
@@ -652,278 +643,145 @@ public class CountryManager : MonoBehaviour
                 if (!string.IsNullOrEmpty(_line))
                 {
                     string[] regionIdParts = _line.Split(' ');
-                    regionValue = regionIdParts[0].Remove(0, 7);
-                    int regValue = int.Parse(regionValue);
+                    int regValue = int.Parse(regionIdParts[0].Remove(0, 7));
                     int regionCountryID = int.Parse(regionIdParts[2]);
 
-                    RegionLoader.ModRegionData modRegionData = new RegionLoader.ModRegionData();
-
-                    modRegionData.countryID = regionCountryID;
-                    modRegionData.regionId = regValue;
-
-                    regionModIDs.Add(modRegionData);
+                    regionModIDs.Add(new RegionLoader.ModRegionData
+                    {
+                        countryID = regionCountryID,
+                        regionId = regValue
+                    });
                 }
             }
             catch (Exception) { }
         }
 
-        foreach (RegionLoader.ModRegionData regValue in regionModIDs)
+        var regionDict = ReferencesManager.Instance.countryManager.regions
+            .ToDictionary(r => r._id, r => r);
+        var countryDict = ReferencesManager.Instance.countryManager.countries
+            .ToDictionary(c => c.country._id, c => c);
+
+        foreach (var regValue in regionModIDs)
         {
-            foreach (RegionManager province in ReferencesManager.Instance.countryManager.regions)
+            if (regionDict.TryGetValue(regValue.regionId, out var province) &&
+                countryDict.TryGetValue(regValue.countryID, out var country))
             {
-                if (regValue.regionId == province._id)
-                {
-                    for (int c = 0; c < ReferencesManager.Instance.countryManager.countries.Count; c++)
-                    {
-                        if (regValue.countryID == ReferencesManager.Instance.countryManager.countries[c].country._id)
-                        {
-                            ReferencesManager.Instance.AnnexRegion(province, ReferencesManager.Instance.countryManager.countries[c]);
-                        }
-                    }
-                }
+                ReferencesManager.Instance.AnnexRegion(province, country);
             }
         }
 
-        bool hasCountry = countries.Any(item => item.country._id == int.Parse(ReferencesManager.Instance.gameSettings._playerCountrySelected.value));
-
-        for (int i = 0; i < countries.Count; i++)
+        int selectedCountryId = int.Parse(ReferencesManager.Instance.gameSettings._playerCountrySelected.value);
+        if (countryDict.TryGetValue(selectedCountryId, out var selectedCountry))
         {
-            if (hasCountry)
-            {
-                if (countries[i].country._id == int.Parse(ReferencesManager.Instance.gameSettings._playerCountrySelected.value))
-                {
-                    currentCountry = countries[i];
-                    currentCountry.isPlayer = true;
-                }
-            }
+            ReferencesManager.Instance.countryManager.currentCountry = selectedCountry;
+            ReferencesManager.Instance.countryManager.currentCountry.isPlayer = true;
         }
-
-        #region countriesSettings
 
         if (!IsNullOrEmpty(countriesDataLines))
         {
-            for (int i = 0; i < countriesDataLines.Length; i++)
+            foreach (var _line in countriesDataLines)
             {
-                if (!string.IsNullOrEmpty(countriesDataLines[i]))
+                if (!string.IsNullOrEmpty(_line))
                 {
                     try
                     {
-                        string new_lineData = GetValue(countriesDataLines[i]);
-
+                        string new_lineData = GetValue(_line);
                         if (!string.IsNullOrEmpty(new_lineData))
                         {
                             string[] values = new_lineData.Split('|');
 
                             int countryID = int.Parse(values[0]);
-                            int money = int.Parse(values[1]);
-                            int food = int.Parse(values[2]);
-                            int recroots = int.Parse(values[3]);
-
-                            string ideology = values[4];
-
-                            foreach (CountrySettings country in countries)
+                            if (countryDict.TryGetValue(countryID, out var country))
                             {
-                                if (country.country._id == countryID)
-                                {
-                                    country.money = money;
-                                    country.food = food;
-                                    country.recroots = recroots;
+                                country.money = int.Parse(values[1]);
+                                country.food = int.Parse(values[2]);
+                                country.recroots = int.Parse(values[3]);
+                                country.ideology = values[4];
 
-                                    country.ideology = ideology;
-
-                                    country.UpdateCountryGraphics(country.ideology);
-                                }
+                                country.UpdateCountryGraphics(country.ideology);
                             }
                         }
                     }
-                    catch (Exception except)
-                    {
-                        
-                    }
+                    catch (Exception) { }
                 }
             }
         }
 
-        #endregion
-
-        #region events
-
         List<int> eventsIDs = new List<int>();
-
         if (!IsNullOrEmpty(eventsIDsDataLines))
         {
-            foreach (string eventData in eventsIDsDataLines)
+            foreach (var eventData in eventsIDsDataLines)
             {
-                if (!string.IsNullOrEmpty(eventData) && !string.IsNullOrWhiteSpace(eventData))
+                if (!string.IsNullOrEmpty(eventData))
                 {
                     eventsIDs.Add(int.Parse(eventData));
                 }
             }
         }
 
-        foreach (int eventId in eventsIDs)
+        foreach (var eventId in eventsIDs)
         {
-            string eventPath = "";
+            string eventPath = Path.Combine(Application.persistentDataPath, pathType == "local" ? "localMods" : "savedMods", $"{modName}", "events", $"{eventId}", $"{eventId}.AEEvent");
 
-            if (pathType == "local")
-            {
-                eventPath = Path.Combine(Application.persistentDataPath, "localMods", $"{modName}", "events", $"{eventId}", $"{eventId}.AEEvent");
-            }
-            else if (pathType == "saved")
-            {
-                eventPath = Path.Combine(Application.persistentDataPath, "savedMods", $"{modName}", "events", $"{eventId}", $"{eventId}.AEEvent");
-            }
+            if (!File.Exists(eventPath)) continue;
 
             string eventData = "";
-
-            EventScriptableObject _event = new EventScriptableObject();
-
-            StreamReader _reader = new StreamReader(eventPath);
-            eventData = _reader.ReadToEnd();
+            using (StreamReader _reader = new StreamReader(eventPath))
+            {
+                eventData = _reader.ReadToEnd();
+            }
 
             string[] eventLines = eventData.Split(';');
 
-            int _localEvent_ID = 0;
-            string _localEvent_Name = "";
-            string _localEvent_Description = "";
-            string _localEvent_Date = "";
-            string _localEvent_silentEvent = "";
-
-            List<int> _localEvent_receivers = new List<int>();
-            List<int> _localEvent_receiversBlacklist = new List<int>();
-
-            bool _localEvent_silentEventBoolean = false;
-            string[] _localEvent_conditions;
-            string _localEvent_imagePath = "";
-
-
-            _localEvent_ID = int.Parse(GetValue(eventLines[0]));
-            _localEvent_Name = GetValue(eventLines[1]);
-            _localEvent_Description = GetValue(eventLines[2]);
-            _localEvent_Date = GetValue(eventLines[3]);
-            _localEvent_silentEvent = GetValue(eventLines[4]);
-
-            string[] receiversString = GetValue(eventLines[5]).Split('-');
-            string[] receiversBlacklistString = GetValue(eventLines[6]).Split('-');
-
-            try
+            EventScriptableObject _event = new EventScriptableObject
             {
-                for (int i = 0; i < receiversString.Length; i++)
-                {
-                    if (!string.IsNullOrEmpty(receiversString[i]))
-                    {
-                        _localEvent_receivers.Add(int.Parse(receiversString[i]));
-                    }
-                }
-            }
-            catch (Exception) { }
+                id = int.Parse(GetValue(eventLines[0])),
+                _name = GetValue(eventLines[1]),
+                name = GetValue(eventLines[1]),
+                _nameEN = GetValue(eventLines[1]),
+                description = GetValue(eventLines[2]),
+                descriptionEN = GetValue(eventLines[2]),
+                date = GetValue(eventLines[3]),
+                silentEvent = GetValue(eventLines[4]) == "1",
+                receivers = GetValue(eventLines[5]).Split('-').Where(x => !string.IsNullOrEmpty(x)).Select(int.Parse).ToList(),
+                exceptionsReceivers = GetValue(eventLines[6]).Split('-').Where(x => !string.IsNullOrEmpty(x)).Select(int.Parse).ToList(),
+                conditions = GetValue(eventLines[7]).Split('@').ToList()
+            };
 
-            try
-            {
-                for (int i = 0; i < receiversBlacklistString.Length; i++)
-                {
-                    if (!string.IsNullOrEmpty(receiversBlacklistString[i]))
-                    {
-                        _localEvent_receiversBlacklist.Add(int.Parse(receiversBlacklistString[i]));
-                    }
-                }
-            }
-            catch (Exception) { }
-
-            _localEvent_conditions = GetValue(eventLines[7]).Split('@');
-
-            if (pathType == "local")
-            {
-                _localEvent_imagePath = $"{Application.persistentDataPath}/localMods/{modName}/events/{_localEvent_ID}/{_localEvent_ID}.jpg";
-            }
-            else if (pathType == "saved")
-            {
-                _localEvent_imagePath = $"{Application.persistentDataPath}/savedMods/{modName}/events/{_localEvent_ID}/{_localEvent_ID}.jpg";
-            }
-
-            if (_localEvent_silentEvent == "0") _localEvent_silentEventBoolean = false;
-            else if (_localEvent_silentEvent == "1") _localEvent_silentEventBoolean = true;
-
-            string[] conditionsData = eventData.Split("conditions:");
-            string[] conditionsLines = conditionsData[1].Split(';');
-
-            for (int c = 0; c < conditionsLines.Length; c++)
-            {
-                string[] conditions = conditionsLines[c].Split('@');
-
-                for (int cd = 0; cd < conditions.Length; cd++)
-                {
-                    if (!string.IsNullOrEmpty(conditions[cd]))
-                    {
-                        conditions[cd] = conditions[cd].Replace('-', ';');
-                    }
-                }
-
-                conditions = conditions.Where(x => !string.IsNullOrEmpty(x)).ToArray();
-                _event.conditions = conditions.ToList();
-            }
-
-            #region EventButton
-
-            string[] buttonsData = eventData.Split("buttons:");
-            string[] buttonsLines = buttonsData[1].Split(';');
-
-            for (int i = 0; i < buttonsLines.Length - 1; i++)
-            {
-                EventScriptableObject.EventButton newButton = new EventScriptableObject.EventButton();
-                string[] buttonData = buttonsLines[i].Split('|');
-
-                newButton.name = buttonData[0];
-                newButton.nameEN = buttonData[0];
-
-                if (buttonData[2] == "0") newButton.rejectUltimatum = false;
-                else if (buttonData[2] == "1") newButton.rejectUltimatum = true;
-
-                string[] actions = buttonData[1].Split('@');
-
-                for (int a = 0; a < actions.Length; a++)
-                {
-                    if (!string.IsNullOrEmpty(actions[a]))
-                    {
-                        actions[a] = actions[a].Replace('-', ';');
-                    }
-                }
-
-                actions = actions.Where(x => !string.IsNullOrEmpty(x)).ToArray();
-                newButton.actions = actions.ToList();
-
-                _event.buttons.Add(newButton);
-            }
-
-            #endregion
-
-            reader.Close();
-
-            _event.name = _localEvent_Name;
-
-            _event.id = _localEvent_ID;
-            _event._name = _localEvent_Name;
-            _event._nameEN = _localEvent_Name;
-            _event.description = _localEvent_Description;
-            _event.descriptionEN = _localEvent_Description;
-            _event.date = _localEvent_Date;
-            _event.receivers = _localEvent_receivers;
-            _event.exceptionsReceivers = _localEvent_receiversBlacklist;
-
+            string _localEvent_imagePath = Path.Combine(Application.persistentDataPath, pathType == "local" ? "localMods" : "savedMods", $"{modName}", "events", $"{_event.id}", $"{_event.id}.jpg");
             if (File.Exists(_localEvent_imagePath))
             {
                 Texture2D finalTexture = NativeGallery.LoadImageAtPath(_localEvent_imagePath);
-
                 _event.image = Sprite.Create(finalTexture, new Rect(0, 0, finalTexture.width, finalTexture.height), Vector2.zero);
             }
 
-            _event.silentEvent = _localEvent_silentEventBoolean;
-            _event.conditions = _localEvent_conditions.ToList();
+            var conditionsData = eventData.Split(new[] { "conditions:" }, StringSplitOptions.None);
+            if (conditionsData.Length > 1)
+            {
+                _event.conditions = conditionsData[1].Split(';').SelectMany(c => c.Split('@').Select(cd => cd.Replace('-', ';'))).Where(x => !string.IsNullOrEmpty(x)).ToList();
+            }
+
+            var buttonsData = eventData.Split(new[] { "buttons:" }, StringSplitOptions.None);
+            if (buttonsData.Length > 1)
+            {
+                var buttonsLines = buttonsData[1].Split(';');
+                for (int i = 0; i < buttonsLines.Length - 1; i++)
+                {
+                    var buttonData = buttonsLines[i].Split('|');
+                    var newButton = new EventScriptableObject.EventButton
+                    {
+                        name = buttonData[0],
+                        nameEN = buttonData[0],
+                        rejectUltimatum = buttonData[2] == "1",
+                        actions = buttonData[1].Split('@').Select(a => a.Replace('-', ';')).Where(x => !string.IsNullOrEmpty(x)).ToList()
+                    };
+
+                    _event.buttons.Add(newButton);
+                }
+            }
 
             ReferencesManager.Instance.gameSettings.gameEvents.Add(_event);
         }
-
-        #endregion
     }
 
     public bool IsNullOrEmpty(Array array)
