@@ -101,8 +101,6 @@ public class GameEventUI : MonoBehaviour
 
                 spawnedButton.GetComponent<EventButtonUI>().buttonIndex = i;
 
-                Debug.Log(PlayerPrefs.GetInt("languageId"));
-
 
                 if (PlayerPrefs.GetInt("languageId") == 1)
                 {

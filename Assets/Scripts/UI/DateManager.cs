@@ -133,7 +133,7 @@ public class DateManager : MonoBehaviour
 			_localYear++;
 		}
 
-        string arg = ReferencesManager.Instance.languageManager.GetTranslation($"Date.{_localMonth}");
+        string arg = ReferencesManager.Instance.languageManager.GetTranslation($"Date.{_localMonth - 1}");
 
         this.dateText.text = string.Format("{0} {1} {2}", _localDay, arg, _localYear);
 		this.currentDate[2] = _localYear;

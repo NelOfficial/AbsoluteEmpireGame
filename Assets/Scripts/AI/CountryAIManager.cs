@@ -82,7 +82,7 @@ public class CountryAIManager : MonoBehaviour
         List<RegionManager> fourthBorderingRegions = new List<RegionManager>();
 
         // обнаружение опасных регионов
-        if (country.myRegions.Count > 10)
+        if (country.myRegions.Count >= 1)
         {
             foreach (RegionManager region in country.myRegions)
             {
@@ -195,7 +195,7 @@ public class CountryAIManager : MonoBehaviour
                         {
                             if (warBorderingRegions.Contains(neighbour_region))
                             {
-                                division.AIMoveNoHit(neighbour_region);
+                                division.AIMoveNoHit(neighbour_region, division);
                                 break;
                             }
                         }
@@ -207,7 +207,7 @@ public class CountryAIManager : MonoBehaviour
                         {
                             if (warBorderingRegions.Contains(neighbour_region) || dangerousBorderingRegions.Contains(neighbour_region))
                             {
-                                division.AIMoveNoHit(neighbour_region);
+                                division.AIMoveNoHit(neighbour_region, division);
                                 break;
                             }
                         }
@@ -219,7 +219,7 @@ public class CountryAIManager : MonoBehaviour
                         {
                             if (warBorderingRegions.Contains(neighbour_region) || dangerousBorderingRegions.Contains(neighbour_region) || calmBorderingRegions.Contains(neighbour_region))
                             {
-                                division.AIMoveNoHit(neighbour_region);
+                                division.AIMoveNoHit(neighbour_region, division);
                                 break;
                             }
                         }
@@ -317,7 +317,7 @@ public class CountryAIManager : MonoBehaviour
                                 UnitMovement division = child.GetComponent<UnitMovement>();
                                 if (division._movePoints > 0)
                                 {
-                                    division.AIMoveNoHit(enemyRegion);
+                                    division.AIMoveNoHit(enemyRegion, division);
                                 }
                             }
                         }
@@ -335,7 +335,7 @@ public class CountryAIManager : MonoBehaviour
                         {
                             if (!isDivisionFrontlineWithEnemy(country.countryUnits[unitIndex]))
                             {
-                                country.countryUnits[unitIndex].AIMoveNoHit(GetRoute(warBorderingRegions[i], country.countryUnits[unitIndex]));
+                                country.countryUnits[unitIndex].AIMoveNoHit(GetRoute(warBorderingRegions[i], country.countryUnits[unitIndex]), country.countryUnits[unitIndex]);
                             }
                         }
                     }

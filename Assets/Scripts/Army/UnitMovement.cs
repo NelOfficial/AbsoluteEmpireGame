@@ -129,16 +129,17 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    public void AIMoveNoHit(RegionManager defenderRegion)
+    public void AIMoveNoHit(RegionManager defenderRegion, UnitMovement division)
     {
         RegionManager attackerRegion = currentProvince;
-        if (currentCountry.exist && this != null && attackerRegion != null && _movePoints > 0)
+        if (currentCountry.exist && division != null && attackerRegion != null && _movePoints > 0)
         {
             if (defenderRegion.currentCountry == attackerRegion.currentCountry) // Just move
             { // my country
-                this._movePoints--;
-                this.firstMove = false;
-                MoveUnit(defenderRegion, attackerRegion);
+                division._movePoints--;
+                division.firstMove = false;
+
+                MoveUnit(defenderRegion, attackerRegion, division);
 
                 attackerRegion.hasArmy = false;
                 defenderRegion.hasArmy = true;
@@ -150,8 +151,6 @@ public class UnitMovement : MonoBehaviour
                         unit.fuel -= 50;
                     }
                 }
-
-                this.currentProvince = defenderRegion;
             }
             else
             {
@@ -162,10 +161,10 @@ public class UnitMovement : MonoBehaviour
                     {
                         if (realtion.war) // War
                         {
-                            this._movePoints--;
-                            this.firstMove = false;
+                            division._movePoints--;
+                            division.firstMove = false;
 
-                            Fight(defenderRegion, attackerRegion);
+                            Fight(defenderRegion, attackerRegion, division);
 
                             foreach (UnitHealth unit in unitsHealth)
                             {
@@ -174,9 +173,9 @@ public class UnitMovement : MonoBehaviour
                         }
                         else if (realtion.right)
                         {
-                            this._movePoints--;
-                            this.firstMove = false;
-                            MoveUnit(defenderRegion, attackerRegion);
+                            division._movePoints--;
+                            division.firstMove = false;
+                            MoveUnit(defenderRegion, attackerRegion, division);
                             attackerRegion.hasArmy = false;
                             defenderRegion.hasArmy = true;
 
@@ -185,7 +184,7 @@ public class UnitMovement : MonoBehaviour
                                 unit.fuel -= 50;
                             }
 
-                            this.currentProvince = defenderRegion;
+                            division.currentProvince = defenderRegion;
                         }
                         else if (!realtion.right)
                         {
@@ -197,7 +196,7 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    private void MoveUnit(RegionManager regionTo, RegionManager oldRegion)
+    private void MoveUnit(RegionManager regionTo, RegionManager oldRegion, UnitMovement division)
     {
         if (ReferencesManager.Instance.gameSettings.onlineGame)
         {
@@ -207,18 +206,20 @@ public class UnitMovement : MonoBehaviour
         {
             oldRegion.hasArmy = false;
 
-            this.transform.position = regionTo.transform.position;
+            division.transform.position = regionTo.transform.position;
             UpdateInfo();
 
-            this.transform.SetParent(regionTo.transform);
+            division.transform.SetParent(regionTo.transform);
 
             RegionManager newRegion = regionTo;
 
             newRegion.hasArmy = true;
+
+            division.currentProvince = newRegion;
         }
     }
 
-    private void Fight(RegionManager fightRegion, RegionManager oldRegion)
+    private void Fight(RegionManager fightRegion, RegionManager oldRegion, UnitMovement division)
     {
         UnitMovement.BattleInfo battle = new UnitMovement.BattleInfo();
 
@@ -228,13 +229,7 @@ public class UnitMovement : MonoBehaviour
         battle.attacker_BONUS_ATTACK = 100;
         battle.attacker_BONUS_DEFENCE = 100;
 
-        try
-        {
-            attackerUnit = oldRegion.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
-        }
-        catch (System.Exception)
-        {
-        }
+        attackerUnit = division;
 
         if (attackerUnit != null)
         {
@@ -612,12 +607,13 @@ public class UnitMovement : MonoBehaviour
                 {
                     if (child.GetComponent<UnitMovement>())
                     {
-                        UnitMovement division = child.GetComponent<UnitMovement>();
-                        division.Retreat();
+                        UnitMovement _division = child.GetComponent<UnitMovement>();
+                        _division.Retreat(_division);
+                        break;
                     }
                 }
 
-                MoveUnit(fightRegion, oldRegion);
+                MoveUnit(fightRegion, oldRegion, attackerUnit);
 
                 CountrySettings newOwner = new CountrySettings();
 
@@ -875,17 +871,18 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    public void Retreat()
+    public void Retreat(UnitMovement division)
     {
         RegionManager regionToRetreat;
-        RegionManager myRegion = transform.parent.GetComponent<RegionManager>();
+        RegionManager myRegion = division.transform.parent.GetComponent<RegionManager>();
         MovePoint _point;
 
         if (myRegion.hasArmy)
         {
-            bool reatreated = false;
+            bool _retreated = false;
 
             List<Transform> nearMyPoints = new List<Transform>();
+            List<RegionManager> nearRegionsWithArmy = new List<RegionManager>();
 
             for (int i = 0; i < myRegion.movePoints.Count; i++)
             {
@@ -893,63 +890,59 @@ public class UnitMovement : MonoBehaviour
 
                 if (_point.regionTo.GetComponent<RegionManager>().currentCountry == myRegion.currentCountry)
                 {
-                    nearMyPoints.Add(_point.transform);
+                    if (!_point.regionTo.GetComponent<RegionManager>().hasArmy)
+                    {
+                        nearMyPoints.Add(_point.transform);
+                    }
+                    else
+                    {
+                        nearRegionsWithArmy.Add(_point.regionTo.GetComponent<RegionManager>());
+                    }
                 }
             }
 
-            for (int i = 0; i < nearMyPoints.Count; i++) // Есть куда отступать
+            if (nearMyPoints.Count > 0)
             {
-                bool temp = false;
-                if (nearMyPoints.Count > 0)
+                for (int i = 0; i < nearMyPoints.Count; i++) // Есть куда отступать
                 {
+                    bool temp = false;
                     regionToRetreat = nearMyPoints[i].GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
 
                     if (!regionToRetreat.hasArmy)
                     {
-                        _movePoints++;
-                        AIMoveNoHit(regionToRetreat);
-                        reatreated = true;
+                        if (division._movePoints <= 0)
+                        {
+                            division._movePoints++;
+                        }
+
+                        AIMoveNoHit(regionToRetreat, division);
+                        _retreated = true;
                         temp = true;
                     }
-                    else if (regionToRetreat.hasArmy) // Есть регион куда отступить, но там есть армия
+
+                    if (temp)
                     {
-                        foreach (RegionManager reg in GetNeiboursOfRegion(regionToRetreat))
-                        {
-                            if (!reg.hasArmy)
-                            {
-                                if (regionToRetreat.GetDivision(regionToRetreat)._movePoints == 0)
-                                {
-                                    regionToRetreat.GetDivision(regionToRetreat)._movePoints++;
-                                }
-                                regionToRetreat.GetDivision(regionToRetreat).AIMoveNoHit(reg);
-                                reatreated = true;
-                                break;
-                            }
-                        }
-                        if (!regionToRetreat.hasArmy)
-                        {
-                            _movePoints++;
-                            AIMoveNoHit(regionToRetreat);
-                            reatreated = true;
-                            temp = true;
-                        }
-                        else
-                        {
-                            this.GetComponent<Animator>().Play("Encircled");
-                            this.Destroy();
-                        }
+                        break;
                     }
                 }
-                if (temp)
-                {
-                    break;
-                }
-
             }
-
-            if (nearMyPoints.Count <= 0) // Нет путей
+            //else if (nearRegionsWithArmy.Count > 0 && nearMyPoints.Count < 0)
+            //{
+            //    foreach (var province in nearRegionsWithArmy)
+            //    {
+            //        UnitMovement divisionInOtherReg = province.GetDivision(province);
+            //        divisionInOtherReg.Retreat(divisionInOtherReg);
+            //    }
+            //}
+            else if (nearMyPoints.Count <= 0) // Нет путей вообще (Фактически котел на 1 провинцию)
             {
-                this.GetComponent<Animator>().Play("Encircled");
+                foreach (Transform child in division.currentProvince.transform)
+                {
+                    if (child.gameObject.GetComponent<UnitMovement>())
+                    {
+                        child.gameObject.GetComponent<Animator>().Play("Encircled");
+                    }
+                }
             }
         }
         else

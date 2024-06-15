@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static ResourcesMarketManager;
 
 public class SellerItemButton : MonoBehaviour
 {
@@ -21,14 +20,7 @@ public class SellerItemButton : MonoBehaviour
         _countryFlag.country = _sellerData._seller;
         _countryFlag.FillInfo();
 
-        if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.EN)
-        {
-            _countryName.text = $"{_sellerData._seller._nameEN}";
-        }
-        else
-        {
-            _countryName.text = $"{_sellerData._seller._name}";
-        }
+        _countryName.text = $"{ReferencesManager.Instance.languageManager.GetTranslation(_sellerData._seller._nameEN)}";
 
         ResourcesMarketManager.MarketOrder order = ReferencesManager.Instance.resourcesMarketManager.GetPlayerOrder(_sellerData._seller, _sellerData._resource);
 
@@ -36,14 +28,7 @@ public class SellerItemButton : MonoBehaviour
         {
             if (order._amountOfRes > 0)
             {
-                if (ReferencesManager.Instance.gameSettings._language == GameSettings.Language.RU)
-                {
-                    _currentOrderAmount.text = $"Вы уже покупаете это ({order._amountOfRes})";
-                }
-                else
-                {
-                    _currentOrderAmount.text = $"You already buying this ({order._amountOfRes})";
-                }
+                _currentOrderAmount.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("Market.AlreadyPurchasing")} ({order._amountOfRes})";
 
                 _sellerData._currentResAmount = _sellerData._maxResAmount - order._amountOfRes;
                 GetComponent<Button>().targetGraphic.color = _alreadyPurchased;

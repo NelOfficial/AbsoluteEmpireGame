@@ -31,10 +31,7 @@ public class RegionLoader : MonoBehaviour
                 province.population = UnityEngine.Random.Range(1000, 70000);
             }
 
-            if (province.currentDefenseUnits == null)
-            {
-                province.currentDefenseUnits = ReferencesManager.Instance.gameSettings.currentDefenseUnits_FirstLevel;
-            }
+            province.currentDefenseUnits = ReferencesManager.Instance.gameSettings.currentDefenseUnits_FirstLevel;
         }
 
         if (SceneManager.GetActiveScene().buildIndex != 2)
