@@ -978,7 +978,7 @@ public class MovePoint : MonoBehaviour
                 if (child.GetComponent<UnitMovement>())
                 {
                     UnitMovement division = child.GetComponent<UnitMovement>();
-                    division.Retreat(division);
+                    division.Retreat(division, false);
                 }
             }
         }
