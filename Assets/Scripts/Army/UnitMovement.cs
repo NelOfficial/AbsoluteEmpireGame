@@ -878,9 +878,8 @@ public class UnitMovement : MonoBehaviour
         {
             recursionregs = new List<RegionManager>();
         }
-        RegionManager regionToRetreat;
+
         RegionManager myRegion = division.transform.parent.GetComponent<RegionManager>();
-        MovePoint _point;
 
         if (recursionregs.Contains(myRegion))
         {
@@ -889,7 +888,6 @@ public class UnitMovement : MonoBehaviour
         recursionregs.Add(myRegion);
         if (myRegion.hasArmy)
         {
-            bool _retreated = false;
             List<RegionManager> regions = new List<RegionManager>();
             foreach (RegionManager reg in GetNeiboursOfRegion(myRegion))
             {
@@ -909,7 +907,7 @@ public class UnitMovement : MonoBehaviour
             }
             foreach (RegionManager reg in regions)
             {
-                if (reg.GetDivision(reg).Retreat(reg.GetDivision(reg), true))
+                if (reg.GetDivision(reg).Retreat(reg.GetDivision(reg), true) && !reg.hasArmy)
                 {
                     myRegion.GetDivision(myRegion)._movePoints = 1;
                     AIMoveNoHit(reg, myRegion.GetDivision(myRegion));
