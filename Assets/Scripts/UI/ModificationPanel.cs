@@ -100,17 +100,26 @@ public class ModificationPanel : MonoBehaviour
         {
             loadedModsIds = loadedModsIds_data.Split(';');
 
-            for (int i = 0; i < loadedModsIds.Length; i++)
+            if (loadedModsIds.Length > 0)
             {
-                string modName = PlayerPrefs.GetString($"MODIFICATION_{int.Parse(loadedModsIds[i].Split('_')[0])}");
-
-                if (Directory.Exists(Path.Combine(Application.persistentDataPath, "savedMods", $"{modName}")))
+                for (int i = 0; i < loadedModsIds.Length; i++)
                 {
-                    ModListValue.LocalSavedModification mod = new ModListValue.LocalSavedModification();
-                    mod.id = int.Parse(loadedModsIds[i].Split('_')[0]);
-                    mod.version = int.Parse(loadedModsIds[i].Split('_')[1]);
+                    string modIdValue = loadedModsIds[i].Split('_')[0];
+                    string modVerValue = loadedModsIds[i].Split('_')[1];
 
-                    downloadedModsIds.list.Add(mod);
+                    int.TryParse(modIdValue, out int modId);
+                    int.TryParse(modVerValue, out int modVersion);
+
+                    string modName = PlayerPrefs.GetString($"MODIFICATION_{modId}");
+
+                    if (Directory.Exists(Path.Combine(Application.persistentDataPath, "savedMods", $"{modName}")))
+                    {
+                        ModListValue.LocalSavedModification mod = new ModListValue.LocalSavedModification();
+                        mod.id = modId;
+                        mod.version = modVersion;
+
+                        downloadedModsIds.list.Add(mod);
+                    }
                 }
             }
         }
@@ -335,11 +344,11 @@ public class ModificationPanel : MonoBehaviour
                     {
                         downloadButton.interactable = true;
 
-                        downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.DownloadUpdate")}";
+                        downloadButton.transform.GetComponentInChildren<TMP_Text>().text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.DownloadUpdate")}";
                     }
                     else if (localMod.version >= currentLoadedModification.version)
                     {
-                        downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.Save")}";
+                        downloadButton.transform.GetComponentInChildren<TMP_Text>().text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.Save")}";
 
                         downloadButton.interactable = false;
                     }
@@ -350,7 +359,7 @@ public class ModificationPanel : MonoBehaviour
         {
             downloadButton.interactable = true;
 
-            downloadButton.transform.GetChild(2).GetComponent<TMP_Text>().text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.Save")}";
+            downloadButton.transform.GetComponentInChildren<TMP_Text>().text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.Save")}";
         }
     }
 

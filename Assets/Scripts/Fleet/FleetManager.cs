@@ -14,6 +14,8 @@ public class FleetManager : MonoBehaviour
     [SerializeField] private GameObject _shipUIPrefab;
     [SerializeField] private GameObject _addShipButton;
 
+    [SerializeField] private Color _seaRegionHighlight_color;
+
 
     public void CreateFleet()
     {
@@ -21,16 +23,7 @@ public class FleetManager : MonoBehaviour
 
         province._hasFleet = true;
 
-        Vector2 moveDirection = DetermineMoveDirection(province);
-
-        if (moveDirection != Vector2.zero)
-        {
-            SpawnShipAtEdge(moveDirection, province);
-        }
-        else
-        {
-            Debug.Log("Все стороны заняты");
-        }
+        SpawnFleet(province);
     }
 
     public void AddUnitToFleet(Fleet fleet, FleetScriptableObject unit)
@@ -87,54 +80,20 @@ public class FleetManager : MonoBehaviour
         }
     }
 
-    private Vector2 DetermineMoveDirection(RegionManager province)
+    private void SpawnFleet(RegionManager province)
     {
-        Vector2 position = province.transform.position;
-
-        bool hasNeighborLeft = CheckForRegionManager(position + Vector2.left * checkDistance);
-        bool hasNeighborRight = CheckForRegionManager(position + Vector2.right * checkDistance);
-        bool hasNeighborUp = CheckForRegionManager(position + Vector2.up * checkDistance);
-        bool hasNeighborDown = CheckForRegionManager(position + Vector2.down * checkDistance);
-
-        if (!hasNeighborLeft) return Vector2.left;
-        if (!hasNeighborRight) return Vector2.right;
-        if (!hasNeighborUp) return Vector2.up;
-        if (!hasNeighborDown) return Vector2.down;
-
-        return Vector2.zero; // Если все стороны заняты
-    }
-
-    private bool CheckForRegionManager(Vector2 checkPosition)
-    {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(checkPosition, 0.1f, layerMask);
-        foreach (Collider2D collider in colliders)
-        {
-            if (collider.gameObject != gameObject && collider.GetComponent<RegionManager>() != null)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void SpawnShipAtEdge(Vector2 direction, RegionManager province)
-    {
-        Vector2 newPosition = (Vector2)transform.position + direction * (checkDistance - shoreOffset);
-
-        GameObject spawnedFleet = Instantiate(fleetPrefab, newPosition, Quaternion.identity, province.transform);
+        GameObject spawnedFleet = Instantiate(fleetPrefab, province.transform);
 
         spawnedFleet.GetComponent<Fleet>()._onBase = true;
         spawnedFleet.GetComponent<Fleet>()._currentProvince = province;
         spawnedFleet.GetComponent<Fleet>()._owner = province.currentCountry;
-
+        spawnedFleet.GetComponent<Fleet>().visible = false;
         spawnedFleet.GetComponent<Fleet>().SetUp();
 
         province._currentFleet = spawnedFleet.GetComponent<Fleet>();
 
         AddUnitToFleet(spawnedFleet.GetComponent<Fleet>(), province.currentCountry._fleet[Random.Range(0, province.currentCountry._fleet.Count)]._fleet_Equipment);
     }
-
-
 
     public void UpdateFleetUI()
     {
@@ -187,6 +146,16 @@ public class FleetManager : MonoBehaviour
             {
                 Destroy(child.gameObject);
             }
+        }
+    }
+
+    public void SendFleetToSea()
+    {
+        ReferencesManager.Instance.regionUI.CloseAllUI();
+
+        foreach (SeaMovePoint movePoint in ReferencesManager.Instance.regionManager.currentRegionManager._seaPoints)
+        {
+
         }
     }
 }

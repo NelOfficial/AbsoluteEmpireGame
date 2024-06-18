@@ -17,16 +17,15 @@ public class UnitScriptableObject : ScriptableObject
     public Sprite icon;
 
     [Header("Cost")]
-    public int moneyCost;
-    public int foodCost;
-    public int moneyIncomeCost;
-    public int foodIncomeCost;
-    public int recrootsCost;
+    public short moneyCost;
+    public short foodCost;
+    public short moneyIncomeCost;
+    public short foodIncomeCost;
+    public short recrootsCost;
 
     [Header("Info")]
-    public int level;
-    public int unlockLevel;
-    public int rank;
+    public short level;
+    public short unlockLevel;
     public float maxFuel;
 
     [Header("Battle parameters")]

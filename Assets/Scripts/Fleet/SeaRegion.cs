@@ -20,7 +20,8 @@ public class SeaRegion : MonoBehaviour
     [Space(10f)]
     [Header("RegionArmy")]
     public List<SeaMovePoint> _movePoints = new List<SeaMovePoint>();
-    public bool hasFleet;
+
+    public List<Fleet> _fleets = new List<Fleet>();
 
     private Vector3 StartPos;
     private Vector3 PosAfter;
@@ -165,4 +166,6 @@ public class SeaRegion : MonoBehaviour
             region._currentSeaRegion = null;
         }
     }
+
+
 }

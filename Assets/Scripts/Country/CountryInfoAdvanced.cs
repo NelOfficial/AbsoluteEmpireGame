@@ -468,23 +468,12 @@ public class CountryInfoAdvanced : MonoBehaviour
             {
                 bool countryExists = ReferencesManager.Instance.countryManager.countries.Any(item => item.country._id == _country._id && item.exist == true);
 
-                if (!countryExists)
-                {
-                    GameObject spawnedCountryItem = Instantiate(countryListItem, countriesPanel);
-                    spawnedCountryItem.GetComponent<SelectCountryButton>().country_ScriptableObject = _country;
-                    spawnedCountryItem.GetComponent<SelectCountryButton>().UpdateUI();
+                GameObject spawnedCountryItem = Instantiate(countryListItem, countriesPanel);
+                spawnedCountryItem.GetComponent<SelectCountryButton>().country_ScriptableObject = _country;
+                spawnedCountryItem.GetComponent<SelectCountryButton>().UpdateUI();
+                spawnedCountryItem.GetComponent<Button>().interactable = !countryExists;
 
-                    spawnedCountryItem.GetComponent<Button>().onClick.AddListener(spawnedCountryItem.GetComponent<SelectCountryButton>().CreateVassal);
-                }
-                else if (countryExists)
-                {
-                    GameObject spawnedCountryItem = Instantiate(countryListItem, countriesPanel);
-                    spawnedCountryItem.GetComponent<SelectCountryButton>().country_ScriptableObject = _country;
-                    spawnedCountryItem.GetComponent<SelectCountryButton>().UpdateUI();
-                    spawnedCountryItem.GetComponent<Button>().interactable = false;
-
-                    spawnedCountryItem.GetComponent<Button>().onClick.AddListener(spawnedCountryItem.GetComponent<SelectCountryButton>().CreateVassal);
-                }
+                spawnedCountryItem.GetComponent<Button>().onClick.AddListener(spawnedCountryItem.GetComponent<SelectCountryButton>().CreateVassal);
             }
         }
     }

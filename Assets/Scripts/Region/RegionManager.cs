@@ -62,7 +62,7 @@ public class RegionManager : MonoBehaviour
 
     [Header("Building")]
     public List<BuildingScriptableObject> buildings = new List<BuildingScriptableObject>();
-    [HideInInspector] public List<BuildingQueueItem> buildingsQueue = new List<BuildingQueueItem>();
+    public List<BuildingQueueItem> buildingsQueue = new List<BuildingQueueItem>();
 
     [HideInInspector] public Color hoverColor;
     [HideInInspector] public Color selectedColor;
@@ -81,6 +81,7 @@ public class RegionManager : MonoBehaviour
     public bool _isCoast;
 
     [HideInInspector] public Fleet _currentFleet;
+    public List<SeaMovePoint> _seaPoints = new List<SeaMovePoint>();
 
     private Vector3 StartPos;
     private Vector3 PosAfter;
@@ -816,6 +817,7 @@ public class RegionManager : MonoBehaviour
                 else
                 {
                     Destroy(unitTransform.gameObject);
+                    region.hasArmy = false;
                 }
             }
         }

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using static GameSettings;
 
 public class CountryAIManager : MonoBehaviour
 {
@@ -480,22 +478,16 @@ public class CountryAIManager : MonoBehaviour
 
         if (country.myRegions.Count > 0 && ReferencesManager.Instance.dateManager.currentDate[0] > 1)
         {
-            float preferedMP = country.myRegions.Count * Random.Range(2700, 4500);
-
-            preferedMP *= country.aiAccuracy;
+            float preferedMP = country.myRegions.Count * Random.Range(2700, 10000);
 
             if (country.inWar)
             {
-                preferedMP *= 3;
+                preferedMP *= 5;
             }
 
             if (country.ideology == "Коммунизм" || country.ideology == "Фашизм")
             {
                 preferedMP *= Random.Range(2, 5);
-            }
-            else if (country.ideology == "Демократия")
-            {
-                preferedMP /= 2;
             }
 
             if (country.recroots <= preferedMP)

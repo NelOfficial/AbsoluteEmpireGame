@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using System;
@@ -7,10 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class RegionLoader : MonoBehaviour
 {
-    private float regionsMax;
-    private float regionsCompleted;
-    private float regionsDeleted;
-
     public bool loaded = false;
 
     [HideInInspector] public string _currentScenarioData;
@@ -46,7 +41,6 @@ public class RegionLoader : MonoBehaviour
             }
         }
 
-        regionsMax = ReferencesManager.Instance.countryManager.regions.Count;
         ReferencesManager.Instance.mainCamera.Map_MoveTouch_IsAllowed = true;
 
         loaded = true;
@@ -62,16 +56,21 @@ public class RegionLoader : MonoBehaviour
         string[] mainModDataLines = sections[0].Split(';');
         string[] regionsDataLines = sections[1].Split(';');
         string[] countriesDataLines = sections[2].Split(';');
-        // string[] eventsIDsDataLines = sections[3].Split(';'); // Не используется
 
+        LoadScenario(mainModDataLines);
+        LoadCountries(mainModDataLines);
+        var regionModIDs = ParseRegionData(regionsDataLines);
+        UpdateRegions(regionModIDs);
+        SetSelectedCountry();
+        UpdateCountriesData(countriesDataLines);
+    }
+
+    private void LoadScenario(string[] mainModDataLines)
+    {
         try
         {
-            string _line = mainModDataLines[1];
-            string[] parts = _line.Split('[');
-            string secondPart = parts[1];
-            string value = secondPart.Remove(secondPart.Length - 1);
-
-            string scenarioID = mainModDataLines[0].Split('[')[1].Remove(mainModDataLines[0].Split('[')[1].Length - 1);
+            string scenarioID = ExtractID(mainModDataLines[0]);
+            string value = ExtractID(mainModDataLines[1]);
 
             _currentScenarioId = int.Parse(scenarioID);
 
@@ -89,17 +88,20 @@ public class RegionLoader : MonoBehaviour
 
             ReferencesManager.Instance.gameSettings.allowGameEvents = int.Parse(value) == 1;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             if (ReferencesManager.Instance.gameSettings.developerMode)
             {
-                Debug.LogError("ERROR: Mod loader error in value parser");
+                Debug.LogError($"ERROR: Mod loader error in value parser: {ex.Message}");
             }
         }
+    }
 
-        HashSet<int> existingCountryIds = new HashSet<int>(
+    private void LoadCountries(string[] mainModDataLines)
+    {
+        var existingCountryIds = new HashSet<int>(
             ReferencesManager.Instance.countryManager.countries.Select(c => c.country._id));
-        HashSet<int> globalCountryIds = new HashSet<int>(
+        var globalCountryIds = new HashSet<int>(
             ReferencesManager.Instance.globalCountries.Select(gc => gc._id));
 
         for (int i = 2; i < mainModDataLines.Length; i++)
@@ -107,8 +109,7 @@ public class RegionLoader : MonoBehaviour
             string _line = mainModDataLines[i];
             if (!string.IsNullOrEmpty(_line))
             {
-                string value = ReferencesManager.Instance.countryManager.GetValue(_line);
-                int countryId = int.Parse(value);
+                int countryId = int.Parse(ReferencesManager.Instance.countryManager.GetValue(_line));
 
                 if (!existingCountryIds.Contains(countryId) && globalCountryIds.Contains(countryId))
                 {
@@ -122,29 +123,35 @@ public class RegionLoader : MonoBehaviour
                 }
             }
         }
+    }
 
-        List<ModRegionData> regionModIDs = new List<ModRegionData>();
+    private List<ModRegionData> ParseRegionData(string[] regionsDataLines)
+    {
+        var regionModIDs = new List<ModRegionData>();
 
         foreach (var _line in regionsDataLines)
         {
-            try
+            if (!string.IsNullOrEmpty(_line))
             {
-                if (!string.IsNullOrEmpty(_line))
-                {
-                    string[] regionIdParts = _line.Split(' ');
-                    int regValue = int.Parse(regionIdParts[0].Remove(0, 7));
-                    int regionCountryID = int.Parse(regionIdParts[2]);
+                string[] regionIdParts = _line.Split(' ');
+                if (regionIdParts.Length < 3) continue;
 
-                    regionModIDs.Add(new ModRegionData
-                    {
-                        countryID = regionCountryID,
-                        regionId = regValue
-                    });
-                }
+                int regValue = int.Parse(regionIdParts[0].Substring(7));
+                int regionCountryID = int.Parse(regionIdParts[2]);
+
+                regionModIDs.Add(new ModRegionData
+                {
+                    countryID = regionCountryID,
+                    regionId = regValue
+                });
             }
-            catch (Exception) { }
         }
 
+        return regionModIDs;
+    }
+
+    private void UpdateRegions(List<ModRegionData> regionModIDs)
+    {
         var regionDict = ReferencesManager.Instance.countryManager.regions
             .ToDictionary(r => r._id, r => r);
 
@@ -159,44 +166,58 @@ public class RegionLoader : MonoBehaviour
                 ReferencesManager.Instance.AnnexRegion(province, country);
             }
         }
+    }
 
+    private void SetSelectedCountry()
+    {
         int selectedCountryId = int.Parse(ReferencesManager.Instance.gameSettings._playerCountrySelected.value);
+        var countryDict = ReferencesManager.Instance.countryManager.countries
+            .ToDictionary(c => c.country._id, c => c);
+
         if (countryDict.TryGetValue(selectedCountryId, out var selectedCountry))
         {
             ReferencesManager.Instance.countryManager.currentCountry = selectedCountry;
             ReferencesManager.Instance.countryManager.currentCountry.isPlayer = true;
         }
+    }
 
-        if (!ReferencesManager.Instance.countryManager.IsNullOrEmpty(countriesDataLines))
+    private void UpdateCountriesData(string[] countriesDataLines)
+    {
+        var countryDict = ReferencesManager.Instance.countryManager.countries
+            .ToDictionary(c => c.country._id, c => c);
+
+        foreach (var _line in countriesDataLines)
         {
-            foreach (var _line in countriesDataLines)
+            if (!string.IsNullOrEmpty(_line))
             {
-                if (!string.IsNullOrEmpty(_line))
+                try
                 {
-                    try
+                    string new_lineData = ReferencesManager.Instance.countryManager.GetValue(_line);
+
+                    if (!string.IsNullOrEmpty(new_lineData))
                     {
-                        string new_lineData = ReferencesManager.Instance.countryManager.GetValue(_line);
+                        string[] values = new_lineData.Split('|');
 
-                        if (!string.IsNullOrEmpty(new_lineData))
+                        int countryID = int.Parse(values[0]);
+                        if (countryDict.TryGetValue(countryID, out var country))
                         {
-                            string[] values = new_lineData.Split('|');
+                            country.money = int.Parse(values[1]);
+                            country.food = int.Parse(values[2]);
+                            country.recroots = int.Parse(values[3]);
+                            country.ideology = values[4];
 
-                            int countryID = int.Parse(values[0]);
-                            if (countryDict.TryGetValue(countryID, out var country))
-                            {
-                                country.money = int.Parse(values[1]);
-                                country.food = int.Parse(values[2]);
-                                country.recroots = int.Parse(values[3]);
-                                country.ideology = values[4];
-
-                                country.UpdateCountryGraphics(country.ideology);
-                            }
+                            country.UpdateCountryGraphics(country.ideology);
                         }
                     }
-                    catch (Exception) { }
                 }
+                catch (Exception) { }
             }
         }
+    }
+
+    private string ExtractID(string line)
+    {
+        return line.Split('[')[1].TrimEnd(']');
     }
 
     [System.Serializable]

@@ -98,9 +98,9 @@ MonoBehaviour:
     war. The Nazis took full advantage of their chances and strengthened their army
     so much that it was able to completely defeat France from May 10 to the beginning
     of June 20, 1940.'
-  date: 1-1-1936
+  date: 1-1-1939
   image: {fileID: 21300000, guid: 41d98b5d45970904691cdb4f17871a88, type: 3}
-  _checked: 0
+  _checked: 1
   silentEvent: 0
   conditions:
   - country_not_exist;11

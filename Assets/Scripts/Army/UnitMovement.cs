@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
-using UnityEditor.Profiling.Memory.Experimental;
 
 public class UnitMovement : MonoBehaviour
 {
@@ -609,7 +608,7 @@ public class UnitMovement : MonoBehaviour
                     if (child.GetComponent<UnitMovement>())
                     {
                         UnitMovement _division = child.GetComponent<UnitMovement>();
-                        _division.Retreat(_division, false);
+                        _division.Retreat(_division);
                         break;
                     }
                 }
@@ -871,56 +870,85 @@ public class UnitMovement : MonoBehaviour
             canMoveState.SetActive(false);
         }
     }
-    private static List<RegionManager> recursionregs;
-    public bool Retreat(UnitMovement division, bool recursion)
+
+    public void Retreat(UnitMovement division)
     {
-        if (!recursion)
-        {
-            recursionregs = new List<RegionManager>();
-        }
-
+        RegionManager regionToRetreat;
         RegionManager myRegion = division.transform.parent.GetComponent<RegionManager>();
+        MovePoint _point;
 
-        if (recursionregs.Contains(myRegion))
-        {
-            return false;
-        }
-        recursionregs.Add(myRegion);
         if (myRegion.hasArmy)
         {
-            List<RegionManager> regions = new List<RegionManager>();
-            foreach (RegionManager reg in GetNeiboursOfRegion(myRegion))
+            bool _retreated = false;
+
+            List<Transform> nearMyPoints = new List<Transform>();
+            List<RegionManager> nearRegionsWithArmy = new List<RegionManager>();
+
+            for (int i = 0; i < myRegion.movePoints.Count; i++)
             {
-                if (reg.currentCountry == myRegion.currentCountry)
+                _point = myRegion.movePoints[i].GetComponent<MovePoint>();
+
+                if (_point.regionTo.GetComponent<RegionManager>().currentCountry == myRegion.currentCountry)
                 {
-                    regions.Add(reg);
+                    if (!_point.regionTo.GetComponent<RegionManager>().hasArmy)
+                    {
+                        nearMyPoints.Add(_point.transform);
+                    }
+                    else
+                    {
+                        nearRegionsWithArmy.Add(_point.regionTo.GetComponent<RegionManager>());
+                    }
                 }
             }
-            foreach (RegionManager reg in regions)
+
+            if (nearMyPoints.Count > 0)
             {
-                if (!reg.hasArmy)
+                for (int i = 0; i < nearMyPoints.Count; i++) // Есть куда отступать
                 {
-                    myRegion.GetDivision(myRegion)._movePoints = 1;
-                    AIMoveNoHit(reg, myRegion.GetDivision(myRegion));
-                    return true;
+                    bool temp = false;
+                    regionToRetreat = nearMyPoints[i].GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
+
+                    if (!regionToRetreat.hasArmy)
+                    {
+                        if (division._movePoints <= 0)
+                        {
+                            division._movePoints++;
+                        }
+
+                        AIMoveNoHit(regionToRetreat, division);
+                        _retreated = true;
+                        temp = true;
+                    }
+
+                    if (temp)
+                    {
+                        break;
+                    }
                 }
             }
-            foreach (RegionManager reg in regions)
+            //else if (nearRegionsWithArmy.Count > 0 && nearMyPoints.Count < 0)
+            //{
+            //    foreach (var province in nearRegionsWithArmy)
+            //    {
+            //        UnitMovement divisionInOtherReg = province.GetDivision(province);
+            //        divisionInOtherReg.Retreat(divisionInOtherReg);
+            //    }
+            //}
+            else if (nearMyPoints.Count <= 0) // Нет путей вообще (Фактически котел на 1 провинцию)
             {
-                if (reg.GetDivision(reg).Retreat(reg.GetDivision(reg), true) && !reg.hasArmy)
+                foreach (Transform child in division.currentProvince.transform)
                 {
-                    myRegion.GetDivision(myRegion)._movePoints = 1;
-                    AIMoveNoHit(reg, myRegion.GetDivision(myRegion));
-                    return true;
+                    if (child.gameObject.GetComponent<UnitMovement>())
+                    {
+                        child.gameObject.GetComponent<Animator>().Play("Encircled");
+                    }
                 }
             }
         }
-        if (!recursion)
+        else
         {
-            GetComponent<Animator>().enabled = true;
-            GetComponent<Animator>().Play("Encircled");
+            myRegion.CheckRegionUnits(myRegion);
         }
-        return false;
     }
     public List<RegionManager> GetNeiboursOfRegion(RegionManager region)
     {

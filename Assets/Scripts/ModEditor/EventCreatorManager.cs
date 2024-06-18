@@ -222,8 +222,6 @@ public class EventCreatorManager : MonoBehaviour
         
         modEvents[currentModEventIndex].conditions = _eventConditionsInputfield.text.Split('\n').ToList();
 
-        modEvents[currentModEventIndex].silentEvent = _eventSilentToggle.isOn;
-
         List<int> receiversList = new List<int>();
         List<int> receiversBlackList = new List<int>();
 

@@ -7,7 +7,7 @@ public class UnitUI : MonoBehaviour
     public Image unitHealthBar;
     public Image fuelBar;
     public GameObject fuelSlider;
-    public GameObject unitWorldObject;
+    public UnitMovement division;
 
     public int id;
     public float health;
@@ -22,10 +22,8 @@ public class UnitUI : MonoBehaviour
 
     public void UpdateUI()
     {
-        if (unitWorldObject != null)
+        if (division != null)
         {
-            UnitMovement division = unitWorldObject.GetComponent<UnitMovement>();
-
             for (int i = 0; i < division.unitsHealth.Count; i++)
             {
                 if (division.unitsHealth[i]._id == id)
@@ -48,7 +46,8 @@ public class UnitUI : MonoBehaviour
         }
         else
         {
-            health = 0;
+            fuelSlider.gameObject.SetActive(false);
+            unitHealthBar.gameObject.SetActive(false);
         }
     }
 
@@ -65,53 +64,32 @@ public class UnitUI : MonoBehaviour
         }
         else
         {
-            Transform unitTransform = ReferencesManager.Instance.regionManager.currentRegionManager.transform.Find("Unit(Clone)");
-            UnitMovement division = unitTransform.GetComponent<UnitMovement>();
-
-            UnitMovement.UnitHealth batalion = new UnitMovement.UnitHealth();
-
             for (int i = 0; i < division.unitsHealth.Count; i++)
             {
-                if (division.unitsHealth[i]._id == id)
+                if (division.unitsHealth[i]._id == id && division.unitsHealth[i].unit == currentUnit)
                 {
-                    batalion = division.unitsHealth[i];
+                    division.unitsHealth.Remove(division.unitsHealth[i]);
+
+                    ReferencesManager.Instance.countryManager.currentCountry.recroots += Mathf.CeilToInt(currentUnit.recrootsCost * 0.7f);
+                    ReferencesManager.Instance.countryManager.currentCountry.moneyNaturalIncome += currentUnit.moneyIncomeCost;
+                    ReferencesManager.Instance.countryManager.currentCountry.foodNaturalIncome += currentUnit.foodIncomeCost;
                 }
             }
-
-            if (division.unitsHealth.Count - 1 > 0)
-            {
-                for (int i = 0; i < division.unitsHealth.Count; i++)
-                {
-                    if (division.unitsHealth[i]._id == batalion._id)
-                    {
-                        division.unitsHealth.Remove(batalion);
-                    }
-                }
-
-                ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
-            }
-
-            if (division.unitsHealth.Count - 1 <= 0)
-            {
-                ReferencesManager.Instance.regionManager.currentRegionManager.DeselectRegions();
-                ReferencesManager.Instance.regionUI.CloseAllUI();
-                division.currentCountry.countryUnits.Remove(division);
-                Destroy(division.gameObject);
-            }
-
-            ReferencesManager.Instance.countryManager.currentCountry.recroots += Mathf.CeilToInt(batalion.unit.recrootsCost * 0.7f);
-            ReferencesManager.Instance.countryManager.currentCountry.moneyNaturalIncome += batalion.unit.moneyIncomeCost;
-            ReferencesManager.Instance.countryManager.currentCountry.foodNaturalIncome += batalion.unit.foodIncomeCost;
 
             ReferencesManager.Instance.countryManager.UpdateValuesUI();
             ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
+
+
+            ReferencesManager.Instance.regionUI.UpdateDivisionUnitsIDs(division);
+
+            ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
         }
     }
 
     public void SetUnit(UnitScriptableObject unit, UnitMovement movement, UnitMovement.UnitHealth unitHealth)
     {
         currentUnit = unit;
-        unitWorldObject = movement.gameObject;
+        division = movement;
         id = unitHealth._id;
         health = unitHealth.health;
         fuel = unitHealth.fuel;

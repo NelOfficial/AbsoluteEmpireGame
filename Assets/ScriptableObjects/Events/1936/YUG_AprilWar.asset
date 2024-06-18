@@ -106,5 +106,11 @@ MonoBehaviour:
     - war;5;5538
     - war;14;5548
     - war;29;5538
+    - war;12;38
+    - war;17;38
+    - war;5;38
+    - war;14;38
+    - war;29;38
     rejectUltimatum: 0
   IS_GAME_MAIN_EVENT: 1
+  OFFICIAL_SCENARIO_ID: 0

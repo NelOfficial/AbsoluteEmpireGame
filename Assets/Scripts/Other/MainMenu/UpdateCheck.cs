@@ -78,7 +78,7 @@ namespace UpgradeSystem
                     if (!string.IsNullOrEmpty(latestGameData.Version) && !Application.version.Equals(latestGameData.Version))
                     {
                         buttonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.UpdateCheck.NewUpdate")} <color=\"white\">{latestGameData.Version}</color>";
-                        uiDescriptionText.text = "";
+                        uiDescriptionText.text = ReferencesManager.Instance.languageManager.GetTranslation("UpdateCheck.NewUpdateFound");
 
                         buttonImage.color = Color.cyan;
                     }

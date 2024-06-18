@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,10 +27,6 @@ public class RegionUI : MonoBehaviour
     public TMP_Text _upgradeMarineBaseCost_Text;
 
     [SerializeField] GameObject settingsPanel;
-    public GameObject regionsLoadingPanel;
-    public Image regionsLoadingBarInner;
-    public TMP_Text regionsLoadingProgressText;
-    public TMP_Text regionsLoadingMainText;
     public GameObject[] tabs;
     [SerializeField] GameObject[] unitShopTabs;
     public GameObject[] verifyPanels;
@@ -74,7 +69,6 @@ public class RegionUI : MonoBehaviour
     public Sprite unionSprite;
     public Sprite pactSprite;
     public Sprite AntipactSprite;
-
 
     public Image regionInfoCountryFlag;
 
@@ -184,10 +178,14 @@ public class RegionUI : MonoBehaviour
         List<RegionInfoCanvas> regionInfoCanvases = new List<RegionInfoCanvas>();
         regionInfoCanvases = FindObjectsOfType<RegionInfoCanvas>().ToList();
 
-        for (int i = 0; i < regionInfoCanvases.Count; i++)
+        if (regionInfoCanvases.Count > 0)
         {
-            Destroy(ReferencesManager.Instance.mainCamera.regionInfos[i].gameObject);
+            for (int i = 0; i < regionInfoCanvases.Count; i++)
+            {
+                Destroy(ReferencesManager.Instance.mainCamera.regionInfos[i].gameObject);
+            }
         }
+
         ReferencesManager.Instance.mainCamera.regionInfos.Distinct();
 
         if (tab.name == "BuildingContainer")
@@ -358,14 +356,6 @@ public class RegionUI : MonoBehaviour
         UISoundEffect.Instance.PlayAudio(paper_01);
     }
 
-    public void ToggleColliders(bool state)
-    {
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
-        {
-            ReferencesManager.Instance.countryManager.regions[i].GetComponent<PolygonCollider2D>().enabled = state;
-        }
-    }
-
     public void MoveUnitMode()
     {
         if (ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy)
@@ -426,8 +416,6 @@ public class RegionUI : MonoBehaviour
             Destroy(movePoints[i].gameObject.GetComponent<SpriteRenderer>());
         }
 
-        ToggleColliders(true);
-
         if (playSound)
         {
             UISoundEffect.Instance.PlayAudio(click_01);
@@ -446,86 +434,95 @@ public class RegionUI : MonoBehaviour
 
     public void UpdateUnitsUI(bool checkUnits)
     {
-        StartCoroutine(UpdateUnitsUI_Co(checkUnits));
-    }
+        armyHorizontalAnimationUI.SetActive(true);
 
-    public void CreateUnitUI(Sprite unitIcon, UnitScriptableObject unit, UnitMovement division)
-    {
-        if (division.unitsHealth.Count > 0)
+        foreach (Transform child in ReferencesManager.Instance.army.armyHorizontalGroup.transform)
         {
-            GameObject spawnedUIButton = Instantiate(ReferencesManager.Instance.army.unitUIPrefab, ReferencesManager.Instance.army.armyHorizontalGroup.transform);
-            spawnedUIButton.GetComponent<UnitUI>().unitIcon.sprite = unitIcon;
-            spawnedUIButton.GetComponent<UnitUI>().currentUnit = unit;
-            spawnedUIButton.GetComponent<UnitUI>().unitWorldObject = division.gameObject;
-            spawnedUIButton.GetComponent<UnitUI>().UpdateUI();
-
-            if (division.unitsHealth.Count != ReferencesManager.Instance.army.maxUnits)
+            if (child.gameObject.GetComponent<UnitUI>())
             {
-                addArmyButton.gameObject.SetActive(true);
-                ReferencesManager.Instance.army.addArmyButton.transform.SetAsLastSibling();
-            }
-            else
-            {
-                ReferencesManager.Instance.army.addArmyButton.transform.SetAsLastSibling();
-                ReferencesManager.Instance.army.addArmyButton.SetActive(false);
+                Destroy(child.gameObject);
             }
         }
-    }
 
-    public void CreateFightUnitUI(UnitScriptableObject unit, GameObject panel, UnitMovement division)
-    {
-        Sprite unitIcon = unit.icon;
+        unitUIs.Clear();
 
-        GameObject spawnedUnitUI = Instantiate(ReferencesManager.Instance.army.unitUnclikableUIPrefab, panel.transform);
+        UnitMovement division = ReferencesManager.Instance.regionManager.currentRegionManager.GetDivision(ReferencesManager.Instance.regionManager.currentRegionManager);
 
-        if (unit.type == UnitScriptableObject.Type.SOLDIER)
-        {
-            spawnedUnitUI.transform.SetAsFirstSibling();
-        }
-        if (unit.type == UnitScriptableObject.Type.ARTILERY)
-        {
-            spawnedUnitUI.transform.SetAsLastSibling();
-        }
-        if (unit.type == UnitScriptableObject.Type.TANK)
-        {
-            spawnedUnitUI.transform.SetAsLastSibling();
-        }
-
-        spawnedUnitUI.GetComponent<UnitUI>().unitIcon.sprite = unitIcon;
-        spawnedUnitUI.GetComponent<UnitUI>().currentUnit = unit;
-        
         if (division != null)
         {
-            spawnedUnitUI.GetComponent<UnitUI>().unitWorldObject = division.gameObject;
+            foreach (UnitMovement.UnitHealth unit in division.unitsHealth)
+            {
+                GameObject spawnedUIButton = Instantiate(ReferencesManager.Instance.army.unitUIPrefab, ReferencesManager.Instance.army.armyHorizontalGroup.transform);
+                spawnedUIButton.GetComponent<UnitUI>().unitIcon.sprite = unit.unit.icon;
+                spawnedUIButton.GetComponent<UnitUI>().currentUnit = unit.unit;
+                spawnedUIButton.GetComponent<UnitUI>().division = division;
+                spawnedUIButton.GetComponent<UnitUI>().id = unit._id;
+                spawnedUIButton.GetComponent<UnitUI>().UpdateUI();
+
+                if (division.unitsHealth.Count >= ReferencesManager.Instance.army.maxUnits)
+                {
+                    addArmyButton.gameObject.SetActive(false);
+                }
+                else
+                {
+                    ReferencesManager.Instance.army.addArmyButton.SetActive(true);
+                }
+
+                ReferencesManager.Instance.army.addArmyButton.transform.SetAsLastSibling();
+            }
+
+            if (division.unitsHealth.Count <= 0 && checkUnits)
+            {
+                ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy = false;
+                division.unitsHealth.Clear();
+                armyContainer.SetActive(false);
+                unitShop.SetActive(false);
+                Destroy(division.gameObject);
+            }
         }
-        spawnedUnitUI.GetComponent<UnitUI>().GetComponent<UnitUI>().UpdateUI();
+
+        armyHorizontalAnimationUI.SetActive(false);
     }
 
-    public void UpdateFightUnitsUI(Transform panel, UnitMovement division)
+    public void UpdateDivisionUnitsIDs(UnitMovement division)
     {
-        try
+        foreach (UnitMovement.UnitHealth batalion in division.unitsHealth)
         {
-            foreach (Transform child in panel)
-            {
-                unitUIs.Add(child.GetComponent<UnitUI>());
-            }
-            unitUIs.RemoveAll(item => item == null);
+            batalion._id = Random.Range(1, 9999);
+        }
+    }
 
-            if (division.unitsHealth.Count > 0 && unitUIs.Count > 0)
+    public void UpdateFightUnitsUI(Transform panel, UnitMovement division, RegionManager fightRegion)
+    {
+        if (division == null)
+        {
+            fightRegion.currentDefenseUnits = ReferencesManager.Instance.gameSettings.currentDefenseUnits_FirstLevel;
+
+            foreach (UnitMovement.UnitHealth batalion in fightRegion.currentDefenseUnits)
             {
-                for (int i = 0; i < division.unitsHealth.Count; i++)
+                GameObject spawnedUIButton = Instantiate(ReferencesManager.Instance.army.unitUnclikableUIPrefab, panel);
+                spawnedUIButton.GetComponent<UnitUI>().unitIcon.sprite = batalion.unit.icon;
+                spawnedUIButton.GetComponent<UnitUI>().currentUnit = batalion.unit;
+                spawnedUIButton.GetComponent<UnitUI>().division = null;
+                spawnedUIButton.GetComponent<UnitUI>().id = batalion._id;
+                spawnedUIButton.GetComponent<UnitUI>().UpdateUI();
+            }
+        }
+        else
+        {
+            if (division.unitsHealth.Count > 0)
+            {
+                foreach (UnitMovement.UnitHealth batalion in division.unitsHealth)
                 {
-                    division.unitsHealth[i]._id = i;
-                    if (unitUIs[i] != null)
-                    {
-                        unitUIs[i].id = division.unitsHealth[i]._id;
-                        unitUIs[i].unitWorldObject = division.gameObject;
-                        unitUIs[i].UpdateUI();
-                    }
+                    GameObject spawnedUIButton = Instantiate(ReferencesManager.Instance.army.unitUnclikableUIPrefab, panel);
+                    spawnedUIButton.GetComponent<UnitUI>().unitIcon.sprite = batalion.unit.icon;
+                    spawnedUIButton.GetComponent<UnitUI>().currentUnit = batalion.unit;
+                    spawnedUIButton.GetComponent<UnitUI>().division = division;
+                    spawnedUIButton.GetComponent<UnitUI>().id = batalion._id;
+                    spawnedUIButton.GetComponent<UnitUI>().UpdateUI();
                 }
             }
         }
-        catch (System.Exception) { }
     }
 
     public void FightProceed(float winChance, RegionManager fightRegion, RaycastHit2D hit, UnitMovement unitMovement)
@@ -537,80 +534,12 @@ public class RegionUI : MonoBehaviour
 
     public void ConfirmResult()
     {
-        ToggleColliders(true);
         if (winChance >= 50)
         {
             currentMovePoint.MoveUnit(hit, true, actionRegion.transform, false);
         }
 
         ReferencesManager.Instance.regionManager.SelectRegionNoHit(actionRegion);
-    }
-
-
-    private IEnumerator UpdateUnitsUI_Co(bool checkUnits)
-    {
-        armyHorizontalAnimationUI.SetActive(true);
-        foreach (Transform child in ReferencesManager.Instance.army.armyHorizontalGroup.transform)
-        {
-            if (child.gameObject.GetComponent<UnitUI>())
-            {
-                Destroy(child.gameObject);
-            }
-        }
-        yield return new WaitForSeconds(0.000001f);
-        unitUIs.Clear();
-        //yield return new WaitForSeconds(0f);
-
-        if (ReferencesManager.Instance.regionManager != null && ReferencesManager.Instance.regionManager.currentRegionManager != null && ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy)
-        {
-            if (ReferencesManager.Instance.regionManager.currentRegionManager.transform.Find("Unit(Clone)"))
-            {
-                UnitMovement unitMovement = ReferencesManager.Instance.regionManager.currentRegionManager.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
-
-                if (unitMovement != null)
-                {
-                    foreach (UnitMovement.UnitHealth unit in unitMovement.unitsHealth)
-                    {
-                        CreateUnitUI(unit.unit.icon, unit.unit, unitMovement);
-                    }
-
-                    if (unitMovement.unitsHealth.Count <= 0 && checkUnits)
-                    {
-                        ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy = false;
-                        unitMovement.unitsHealth.Clear();
-                        armyContainer.SetActive(false);
-                        unitShop.SetActive(false);
-                    }
-                }
-
-                try
-                {
-                    foreach (Transform child in ReferencesManager.Instance.army.armyHorizontalGroup.transform)
-                    {
-                        unitUIs.Add(child.GetComponent<UnitUI>());
-                    }
-                    unitUIs.RemoveAll(item => item == null);
-
-                    if (unitMovement.unitsHealth.Count > 0 && unitUIs.Count > 0)
-                    {
-                        for (int i = 0; i < unitMovement.unitsHealth.Count; i++)
-                        {
-                            unitMovement.unitsHealth[i]._id = i;
-                            if (unitUIs[i] != null)
-                            {
-                                unitUIs[i].id = unitMovement.unitsHealth[i]._id;
-                                unitUIs[i].unitWorldObject = unitMovement.gameObject;
-                                unitUIs[i].UpdateUI();
-                            }
-                        }
-                    }
-                }
-                catch (System.Exception) {}
-            }
-        }
-
-        armyHorizontalAnimationUI.SetActive(false);
-        yield break;
     }
 
 
@@ -644,14 +573,7 @@ public class RegionUI : MonoBehaviour
     private void Victory()
     {
         resultPanel.SetActive(true);
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            resultText.text = "Victory";
-        }
-        if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            resultText.text = "Победа";
-        }
+        resultText.text = ReferencesManager.Instance.languageManager.GetTranslation("FightUI.Victory");
         resultPanelColor.GetComponent<Image>().color = victoryColor;
 
         annexButton.SetActive(true);
@@ -666,14 +588,7 @@ public class RegionUI : MonoBehaviour
     private void Defeat()
     {
         resultPanel.SetActive(true);
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            resultText.text = "Defeat";
-        }
-        if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            resultText.text = "Поражение";
-        }
+        resultText.text = ReferencesManager.Instance.languageManager.GetTranslation("FightUI.Defeat");
         resultPanelColor.GetComponent<Image>().color = defeatColor;
 
         annexButton.SetActive(false);
@@ -717,36 +632,31 @@ public class RegionUI : MonoBehaviour
     {
         if (actionRegion.currentCountry.myRegions.Count <= 1) // Country Capitulated
         {
-            for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
+            foreach (CountrySettings country in ReferencesManager.Instance.countryManager.countries)
             {
-                for (int v = 0; v < ReferencesManager.Instance.countryManager.countries[i].GetComponent<Relationships>().relationship.Count; v++)
+                Relationships.Relation relation = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, actionRegion.currentCountry);
+
+                relation.relationship = 0;
+                relation.right = false;
+                relation.union = false;
+                relation.pact = false;
+                relation.war = false;
+                relation.trade = false;
+                relation.vassal = false;
+
+                for (int i = 0; i < ReferencesManager.Instance.diplomatyUI.globalTrades.Count; i++)
                 {
-                    if (ReferencesManager.Instance.countryManager.countries[i].GetComponent<Relationships>().relationship[v].country == actionRegion.currentCountry)
+                    if (ReferencesManager.Instance.diplomatyUI.globalTrades[i].sender == actionRegion.currentCountry && ReferencesManager.Instance.diplomatyUI.globalTrades[i].receiver == country)
                     {
-                        ReferencesManager.Instance.countryManager.countries[i].GetComponent<Relationships>().relationship[v].pact = false;
-                        ReferencesManager.Instance.countryManager.countries[i].GetComponent<Relationships>().relationship[v].right = false;
-                        ReferencesManager.Instance.countryManager.countries[i].GetComponent<Relationships>().relationship[v].union = false;
-                        ReferencesManager.Instance.countryManager.countries[i].GetComponent<Relationships>().relationship[v].war = false;
-                        ReferencesManager.Instance.countryManager.countries[i].GetComponent<Relationships>().relationship[v].vassal = false;
-                        ReferencesManager.Instance.countryManager.countries[i].GetComponent<Relationships>().relationship[v].trade = false;
+                        TradeBuff trade = ReferencesManager.Instance.diplomatyUI.globalTrades[i];
 
-                        CountrySettings receiver = ReferencesManager.Instance.countryManager.countries[i].GetComponent<Relationships>().relationship[v].country;
+                        actionRegion.currentCountry.moneyTradeIncome -= trade.senderMoneyTrade;
+                        actionRegion.currentCountry.foodTradeIncome -= trade.senderFoodTrade;
 
-                        for (int tradeIndex = 0; tradeIndex < ReferencesManager.Instance.diplomatyUI.globalTrades.Count; tradeIndex++)
-                        {
-                            if (ReferencesManager.Instance.diplomatyUI.globalTrades[i].sender == receiver && ReferencesManager.Instance.diplomatyUI.globalTrades[i].receiver == ReferencesManager.Instance.countryManager.countries[i])
-                            {
-                                TradeBuff trade = ReferencesManager.Instance.diplomatyUI.globalTrades[i];
+                        relation.country.moneyTradeIncome -= trade.receiverMoneyTrade;
+                        relation.country.foodTradeIncome -= trade.receiverFoodTradee;
 
-                                ReferencesManager.Instance.diplomatyUI.globalTrades[i].sender.moneyTradeIncome -= trade.senderMoneyTrade;
-                                ReferencesManager.Instance.diplomatyUI.globalTrades[i].sender.foodNaturalIncome -= trade.senderFoodTrade;
-
-                                receiver.moneyTradeIncome -= trade.receiverMoneyTrade;
-                                receiver.foodNaturalIncome -= trade.receiverFoodTradee;
-
-                                ReferencesManager.Instance.diplomatyUI.globalTrades.Remove(trade);
-                            }
-                        }
+                        ReferencesManager.Instance.diplomatyUI.globalTrades.Remove(trade);
                     }
                 }
             }
@@ -788,7 +698,6 @@ public class RegionUI : MonoBehaviour
             {
                 GameObject spawnedQueuePrefab = Instantiate(buildingQueueUIPrefab, buildingUIContent);
 
-                spawnedQueuePrefab.GetComponent<BuildingQueueItem>().buildingQueueItem = buildingQueueItem;
                 spawnedQueuePrefab.GetComponent<BuildingQueueItem>().buildingQueueItem = buildingQueueItem;
 
                 if (buildingQueueItem.building.buildType == BuildingScriptableObject.BuildType.GoldProducer)
@@ -868,11 +777,6 @@ public class RegionUI : MonoBehaviour
         {
             buttons[i].targetImage.sprite = buttonDesigns[data];
         }
-    }
-
-    public void ScrollEffect(RectTransform rectTransform)
-    {
-        rectTransform.position = new Vector3(rectTransform.position.x, -rectTransform.sizeDelta.y * 1.5f, 0);
     }
 
     public void ResetClaims()

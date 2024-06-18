@@ -237,15 +237,16 @@ public class Army : MonoBehaviour
 
     public void RemoveUnitFromDivision(UnitMovement.UnitHealth batalion, UnitMovement division, bool checkDivisionOnDestroy)
     {
-        if (division.unitsHealth.Remove(batalion))
-        {
-            var country = ReferencesManager.Instance.countryManager.currentCountry;
-            country.recroots += Mathf.CeilToInt(batalion.unit.recrootsCost * 0.7f);
-            country.moneyNaturalIncome += batalion.unit.moneyIncomeCost;
-            country.foodNaturalIncome += batalion.unit.foodIncomeCost;
+        division.unitsHealth.Remove(batalion);
 
-            UpdateAllUIs(checkDivisionOnDestroy);
-        }
+        var country = division.currentCountry;
+        country.recroots += Mathf.CeilToInt(batalion.unit.recrootsCost * 0.7f);
+        country.moneyNaturalIncome += batalion.unit.moneyIncomeCost;
+        country.foodNaturalIncome += batalion.unit.foodIncomeCost;
+
+        ReferencesManager.Instance.regionUI.UpdateUnitsUI(false);
+        ReferencesManager.Instance.countryManager.UpdateValuesUI();
+        ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
     }
 
     public void CreateUnit_NoCheck(RegionManager region)

@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BackgroundUI_Overlay : MonoBehaviour
 {
@@ -27,5 +29,19 @@ public class BackgroundUI_Overlay : MonoBehaviour
 
         currentPanel = _currentPanel;
         currentPanel.SetActive(true);
+    }
+
+    public void InteractableFix()
+    {
+        StartCoroutine(Interactable_Co());
+    }
+
+    private IEnumerator Interactable_Co()
+    {
+        overlay.GetComponent<Button>().interactable = false;
+        yield return new WaitForSeconds(0.2f);
+
+        overlay.GetComponent<Button>().interactable = true;
+        yield break;
     }
 }

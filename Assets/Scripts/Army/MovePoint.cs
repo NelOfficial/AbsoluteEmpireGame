@@ -79,7 +79,6 @@ public class MovePoint : MonoBehaviour
                 ReferencesManager.Instance.regionManager.moveMode = false;
                 ReferencesManager.Instance.regionUI.barContent.SetActive(true);
 
-                ReferencesManager.Instance.regionUI.ToggleColliders(true);
                 ReferencesManager.Instance.regionUI.DeMoveUnitMode(false);
             }
             else
@@ -128,20 +127,14 @@ public class MovePoint : MonoBehaviour
                             ReferencesManager.Instance.regionManager.moveMode = false;
                             ReferencesManager.Instance.regionUI.barContent.SetActive(true);
 
-                            ReferencesManager.Instance.regionUI.ToggleColliders(true);
                             ReferencesManager.Instance.regionUI.DeMoveUnitMode(false);
                         }
                         else if (!realtion.right)
                         {
-                            ReferencesManager.Instance.diplomatyUI.OpenUINoClick(realtion.country.country._id);
-
-                            ReferencesManager.Instance.regionManager.moveMode = false;
-                            ReferencesManager.Instance.regionUI.barContent.SetActive(true);
-
-                            ReferencesManager.Instance.regionUI.ToggleColliders(true);
                             ReferencesManager.Instance.regionUI.DeMoveUnitMode(false);
+                            ReferencesManager.Instance.regionManager.moveMode = false;
 
-                            ReferencesManager.Instance.regionManager.SelectRegionNoHit(attackerUnit.currentProvince);
+                            ReferencesManager.Instance.diplomatyUI.OpenUINoClick(realtion.country.country._id);
                         }
                     }
                 }
@@ -708,12 +701,6 @@ public class MovePoint : MonoBehaviour
 
         foreach (UnitMovement.UnitHealth unit in battle.enemyUnits)
         {
-            try
-            {
-                ReferencesManager.Instance.regionUI.CreateFightUnitUI(unit.unit, ReferencesManager.Instance.regionUI.fightPanelDefenderHorizontalGroup, battle.defenderDivision);
-            }
-            catch (System.Exception) {}
-
             if (unit.unit.type == UnitScriptableObject.Type.SOLDIER)
             {
                 battle.enemyInfantry++;
@@ -735,8 +722,14 @@ public class MovePoint : MonoBehaviour
                 battle.enemyCavlry++;
             }
         }
-        ReferencesManager.Instance.regionUI.UpdateFightUnitsUI(ReferencesManager.Instance.regionUI.fightPanelAttackerHorizontalGroup.transform, battle.attackerDivision);
-        ReferencesManager.Instance.regionUI.UpdateFightUnitsUI(ReferencesManager.Instance.regionUI.fightPanelDefenderHorizontalGroup.transform, battle.defenderDivision);
+
+        ReferencesManager.Instance.regionUI.UpdateFightUnitsUI(ReferencesManager.Instance.regionUI.fightPanelAttackerHorizontalGroup.transform,
+            battle.attackerDivision,
+            battle.attackerRegion);
+
+        ReferencesManager.Instance.regionUI.UpdateFightUnitsUI(ReferencesManager.Instance.regionUI.fightPanelDefenderHorizontalGroup.transform,
+            battle.defenderDivision,
+            battle.fightRegion);
 
 
         if (battle.motoInfantry >= 6 || battle.myHeavy >= 6 || battle.myCavlry >= 6)
@@ -978,7 +971,7 @@ public class MovePoint : MonoBehaviour
                 if (child.GetComponent<UnitMovement>())
                 {
                     UnitMovement division = child.GetComponent<UnitMovement>();
-                    division.Retreat(division, false);
+                    division.Retreat(division);
                 }
             }
         }
@@ -1053,7 +1046,6 @@ public class MovePoint : MonoBehaviour
         attackerUnit._movePoints--;
 
         attackerUnit.UpdateInfo();
-        ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
     }
 
 
@@ -1061,8 +1053,6 @@ public class MovePoint : MonoBehaviour
     {
         foreach (UnitMovement.UnitHealth unit in battle.myUnits)
         {
-            ReferencesManager.Instance.regionUI.CreateFightUnitUI(unit.unit, ReferencesManager.Instance.regionUI.fightPanelAttackerHorizontalGroup, battle.attackerDivision);
-
             if (unit.unit.type == UnitScriptableObject.Type.SOLDIER)
             {
                 battle.myInfantry++;
@@ -1084,10 +1074,6 @@ public class MovePoint : MonoBehaviour
                 battle.myHeavy++;
             }
         }
-
-        ReferencesManager.Instance.regionUI.UpdateFightUnitsUI(ReferencesManager.Instance.regionUI.fightPanelAttackerHorizontalGroup.transform, battle.attackerDivision);
-        ReferencesManager.Instance.regionUI.UpdateFightUnitsUI(ReferencesManager.Instance.regionUI.fightPanelDefenderHorizontalGroup.transform, battle.defenderDivision);
-
     }
 
     private void PlayMoveSFX(UnitMovement.BattleInfo battle)

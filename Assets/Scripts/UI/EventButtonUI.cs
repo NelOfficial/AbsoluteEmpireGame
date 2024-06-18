@@ -29,8 +29,6 @@ public class EventButtonUI : MonoBehaviour
             {
                 buttonActions.text += _buttonActions[i];
             }
-
-            buttonRejectUltimatumToggle.isOn = _buttonRejectUltimatum;
         }
         else
         {

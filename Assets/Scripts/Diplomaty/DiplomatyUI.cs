@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 
+
 public class DiplomatyUI : MonoBehaviour
 {
     public int senderId;
@@ -135,38 +136,34 @@ public class DiplomatyUI : MonoBehaviour
 
     public void OpenUINoClick(int _receiverId)
     {
-        countryManager = FindObjectOfType<CountryManager>();
         DestroyChildrens();
 
         UISoundEffect.Instance.PlayAudio(regionUI.paper_01);
 
-        BackgroundUI_Overlay.Instance.OpenOverlay(diplomatyContainer);
+        diplomatyContainer.SetActive(true);
 
         acceptationStatePanel.SetActive(false);
         receiverInfo.SetActive(false);
 
-        senderId = countryManager.currentCountry.country._id;
+        senderId = ReferencesManager.Instance.countryManager.currentCountry.country._id;
         receiverId = _receiverId;
 
         regionManager.DeselectRegions();
 
         if (senderId != receiverId)
         {
-            for (int i = 0; i < countryManager.countries.Count; i++)
+            for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
             {
-                if (countryManager.countries[i].country._id == senderId)
+                if (ReferencesManager.Instance.countryManager.countries[i].country._id == senderId)
                 {
-                    sender = countryManager.countries[i];
+                    sender = ReferencesManager.Instance.countryManager.countries[i];
                 }
 
-                else if (countryManager.countries[i].country._id == receiverId)
+                else if (ReferencesManager.Instance.countryManager.countries[i].country._id == receiverId)
                 {
-                    receiver = countryManager.countries[i];
+                    receiver = ReferencesManager.Instance.countryManager.countries[i];
                 }
             }
-
-
-            diplomatyContainer.SetActive(true);
 
             receiverCountryFlag.sprite = receiver.country.countryFlag;
 
@@ -177,6 +174,9 @@ public class DiplomatyUI : MonoBehaviour
             senderCountryNameText.text = ReferencesManager.Instance.languageManager.GetTranslation(sender.country._nameEN);
 
             UpdateDiplomatyUI(sender, receiver);
+
+            BackgroundUI_Overlay.Instance.InteractableFix();
+            BackgroundUI_Overlay.Instance.OpenOverlay(diplomatyContainer);
         }
         else
         {
@@ -241,6 +241,8 @@ public class DiplomatyUI : MonoBehaviour
             {
                 Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
                 Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
+
+                accept = true;
 
                 senderToReceiver.war = true;
                 senderToReceiver.trade = false;
@@ -904,14 +906,22 @@ public class DiplomatyUI : MonoBehaviour
 
     public void LinkInputFieldToSlider()
     {
-        valueField.text = valueSlider.value.ToString();
-        value = int.Parse(valueField.text);
+        try
+        {
+            valueField.text = valueSlider.value.ToString();
+            value = int.Parse(valueField.text);
+        }
+        catch (System.Exception) { }
     }
 
     public void LinkSliderToInputField()
     {
-        valueSlider.value = int.Parse(valueField.text);
-        value = (int)valueSlider.value;
+        try
+        {
+            valueSlider.value = int.Parse(valueField.text);
+            value = (int)valueSlider.value;
+        }
+        catch (System.Exception) { }
     }
 
     public void ApplyValue()
@@ -1030,13 +1040,15 @@ public class DiplomatyUI : MonoBehaviour
         {
             acceptationStatePanel.SetActive(true);
 
-            acceptationStateText.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Accepted");
+            string text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Accepted");
+            acceptationStateText.text = text;
         }
         else
         {
             acceptationStatePanel.SetActive(true);
 
-            acceptationStateText.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Declined");
+            string _text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Declined");
+            acceptationStateText.text = _text;
         }
     }
 

@@ -16,10 +16,18 @@ public class Fleet : MonoBehaviour
     [SerializeField] private Image _owner_flag;
     [SerializeField] private SpriteRenderer _icon;
 
+    [HideInInspector] public bool visible;
+
+    [SerializeField] private GameObject _renderer;
+
+    [HideInInspector] public int _movePoints;
+
 
     public void SetUp()
     {
         _owner_flag.sprite = _owner.country.countryFlag;
+
+        _renderer.SetActive(visible);
     }
 
 

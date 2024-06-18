@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiTitle: "\u0418\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u0441\u043A\u0430\u044F
     \u043B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F"
-  uiTitleEN: "\u0418\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u0441\u043A\u0430\u044F
-    \u043B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F"
+  uiTitleEN: ResLab
   _name: REL
   buildType: 3
   icon: {fileID: 21300000, guid: ccc5ea2ebae4a70438a105743d91978c, type: 3}

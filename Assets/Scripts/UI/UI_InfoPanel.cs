@@ -7,15 +7,11 @@ public class UI_InfoPanel : MonoBehaviour
     [SerializeField] GameObject infoPanel;
     [SerializeField] RectTransform infoPanelContent;
 
-    private MainMenu mainMenu;
-    private RegionUI regionUI;
-    private static UI_InfoPanel Instance;
+    public static UI_InfoPanel Instance;
 
     private void Awake()
     {
         Instance = this;
-        mainMenu = FindObjectOfType<MainMenu>();
-        regionUI = FindObjectOfType<RegionUI>();
     }
 
     public void ShowPanel(string text)
@@ -57,15 +53,6 @@ public class UI_InfoPanel : MonoBehaviour
                     infoPanelText.text = localisation_parts[i].Split(":")[1];
                 }
             }
-        }
-
-        if (mainMenu != null)
-        {
-            mainMenu.ScrollEffect(infoPanelContent);
-        }
-        else
-        {
-            regionUI.ScrollEffect(infoPanelContent);
         }
     }
 }
