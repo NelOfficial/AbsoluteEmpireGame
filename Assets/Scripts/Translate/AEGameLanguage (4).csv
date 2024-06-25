@@ -1,0 +1,1059 @@
+﻿KEY;EN;RU;ES;PT;BR
+CancelButton;Cancel;Отменить;Cancelar;Anular;Cancelar
+BackButton;Back;Назад;Atrás;Atrás;Voltar
+ConfirmButton;Confirm;Принять;Adoptar;Aceitar;Aceitar
+DoneButton;Done;Готово;Listo;Feito;Feito
+CloseButton;Close;Закрыть;Cerrar;Fechar;Para fechar
+Yes;Yes;Да;Sí;Sim;Sim
+No;No;Нет;No hay;Não;No
+RefreshButton;Refresh;Обновить;Renovar;Renovar;Atualização
+ExitButton;Exit;Выйти;Salir;Sair;Saída
+Error;Error;Ошибка;Error;Erro;Erro
+AreYouSure;Are you sure?;Вы уверены?;¿Está seguro?;Tem a certeza?;Tem certeza?
+Info.TitleText;Detailed information;Подробная информация;Información detallada;Informações pormenorizadas;Informações detalhadas
+Info.NoInfo;So far, it's empty (×_×) ;Пока здесь пусто (×_×) ;Hasta ahora, aquí está vacío (×_×) ;Até agora, está vazio (×_×) ;Até o momento, está vazio (×_×) 
+MainMenu.UpdateCheck.Connecting;Connecting...;Подключение...;Conexión...;Ligação...;Conexão...
+MainMenu.UpdateCheck.Checking;Checking for updates...;Проверка обновления...;Comprobación de actualización...;Verificar a actualização...;Verificando atualizações...
+MainMenu.UpdateCheck.NewUpdate;New update;Новое обновление;Nueva actualización;Nova atualização;Nova atualização
+MainMenu.SingleplayerButton;Singleplayer;Одиночная игра;Juego de un solo jugador;Single player;Jogo Single Player
+MainMenu.CreateRoomButton;Create a room;Создать комнату;Crear una habitación;Criar uma sala;Crie uma sala
+MainMenu.RoomsListButton;List of rooms;Список комнат;Lista de habitaciones;Lista de quartos;Lista de quartos
+MainMenu.SettingButton;Settings;Настройки;Ajustes;Sintonização;Configurações
+MainMenu.ExitButton;Quit the game;Выйти из игры;Alzarse;Sair do jogo;Sair do jogo
+MainMenu.Multiplayer;Multiplayer;Multijugador;Multijogador;Multiplayer
+MainMenu.News;News;Новости;Novedad;Notícia;Notícias
+MainMenu.News.ButtonAction;Proceed;Перейти;Proceder;Prosseguir;Prosseguir
+MainMenu.ExitGameDesc;Quit Absolute Empire?;Выйти из Absolute Empire?;¿Abandonar Absolute Empire?;Sair do Absolute Empire?;Quit Absolute Empire?
+MainMenu.ModsListButton;Modifications;Модификации;Modificación;Modificação;Modificações
+MainMenu.Account.LoginButton;Log in;Войти в аккаунт;Iniciar sesión;Entrar na sua conta;Faça login na sua conta
+MainMenu.Account.SiteButton;Website;Сайт игры;Sitio del juego;Site do jogo;O site do jogo
+MainMenu.Account.WarningToLoginText;Log in to create mods;Войдите в аккаунт, чтобы создавать моды :);Inicia sesión para crear mods;Faça login para criar mods;Faça login para criar mods
+MainMenu.Account.CreateModButton;Create mod;Создать мод;Crear mod;Criar um mod;Crie um mod
+MainMenu.Account.MyAccountButton;My profile;Мой профиль;Mi perfil;Meu perfil;Meu perfil
+MainMenu.Account.MyAccount;My account;Мой аккаунт;Mi cuenta;A minha conta;Minha conta
+MainMenu.Account.MyMods;My Mods;Мои модификации;Mis modificaciones;Minhas modificações;Minhas modificações
+MainMenu.Account.Premium;Premium:;Премиум:;Premium:;Premium:;Premium:
+MainMenu.Account.Notifications;Notifications;Уведомления;Notificación;Notificação;Notificações
+MainMenu.Account.MyUnratedMods;My Unrated Mods;Мои модификации на рассмотрении;Mis Mods Sin Calificación;Meus Mods Sem Classificação;My Unrated Mods
+MainMenu.Account.LogOut;Logout;Выйти;Cerrar sesión;Sair;Logout
+MainMenu.Account.LoginText;Login;Логин;Inicio de sesión;Login;Login
+MainMenu.Account.LoginPlaceholder;Enter login...;Введите логин...;Introduzca su nombre de usuario...;Digite seu login...;Digite seu nome de usuário...
+MainMenu.Account.PasswordText;Password;Пароль;Contraseña;Senha;Senha
+MainMenu.Account.PasswordPlaceholder;Enter password...;Введите пароль...;Introduzca su contraseña...;Digite a senha...;Digite a senha...
+MainMenu.Account.Email;Email:;Почта:;Correo:;Correio:;Mail:
+MainMenu.Account.BanState;Not blocked;Не заблокирован;No bloqueado;Não Bloqueado;Não Bloqueado
+MainMenu.Account.BanState.True;Blocked;Заблокирован;Bloqueado;Bloqueado;Bloqueado
+MainMenu.Account.Role.Player;Player;Игрок;Jugador;Jogador;Jogador
+MainMenu.Account.Role.ContentMaker;Content-Maker;Контент-Мейкер;Creador De Contenido;Criador De Conteúdo;Criador De Conteúdo
+MainMenu.Account.Role.Moderator;Moderator;Модератор;Moderador;Moderador;Moderador
+MainMenu.Account.Role.Admin;Administrator;Администратор;Administrador;Administrador;Administrador
+MainMenu.Account.Role.Exp;EXP;опыта;EXP;EXP;EXP
+MainMenu.Account.Role.Level;level;уровень;nivel;nível;nível
+MainMenu.SingleMode.CountriesText;Countries;Страны;Países;País;Países
+MainMenu.SingleMode.DifficultyText;Difficulty;Сложность;Dificultad;Dificuldades;Dificuldade
+MainMenu.SingleMode.Difficulty.Choice.Easy;Easy;Легкая;Vida fácil;Fácil;Fácil
+MainMenu.SingleMode.Difficulty.Choice.Normal;Normal;Нормальная;Normal;Normal;Normal
+MainMenu.SingleMode.Difficulty.Choice.Hard;Hard;Сложная;Compleja;Complexo;Difícil
+MainMenu.SingleMode.Difficulty.Choice.Insane;Insane;Безумная;Loca;Insano;Louco
+MainMenu.SingleMode.Difficulty.Choice.Hardcore;Hardcore;Невыносимая;Insoportable;Insuportável;Insuportável
+MainMenu.SingleMode.ScenarioText;Scenario;Сценарий;Guión;Cenário;O roteiro
+MainMenu.SingleMode.PlayButton;Play;Играть;Jugar;Jogar;Play
+MainMenu.SingleMode.SelectMode;Mode Selection;Выбор режима;Selección de modo;Seleccionar o modo;Seleção De Modo
+MainMenu.SingleMode.MySaves;My saves;Сохранения;Conservación;Conservação;Poupança
+MainMenu.SingleMode.SelectMode.SelectText;Select mode;Выбрать режим;Seleccionar modo;Escolha o modo;Selecione um modo
+MainMenu.SingleMode.SelectMode.Historic;Historical mode;Исторический режим;Régimen histórico;Modo histórico;Modo histórico
+MainMenu.SingleMode.SelectMode.NonHistoric;Alternative mode;Альтернативный режим;Modo alternativo;Modo alternativo;Modo alternativo
+MainMenu.SingleMode.SelectMode.Tournament;Tournament mode;Турнирный режим;Modo torneo;Modo torneio;Modo torneio
+MainMenu.SingleMode.SelectMode.Missions;Missions;Миссии;Misión;Missão;Missões
+MainMenu.SingleMode.Tournament.LimitCountries;Select at least 4 countries;Выберите как минимум 4 страны;Seleccione al menos 4 países;Selecione pelo menos 4 países;Selecione pelo menos 4 países
+MainMenu.SingleMode.Tournament.Title;Select countries for the tournament;Выберите страны для участия в турнире;Seleccionar países para el torneo;Países selecionados para o torneio;Selecione os países para o torneio
+MainMenu.CreateRoom.NameText;Room Name:;Имя комнаты:;Nombre de la habitación:;Nome do quarto:;Nome Do Quarto:
+MainMenu.CreateRoom.NamePlaceHolder;Enter a name...;Введите имя...;Introduzca un nombre...;Digite um nome...;Digite um nome...
+MainMenu.CreateRoom.CreateButton;Create;Создать;Crear;Criar;Para criar
+MainMenu.RoomsListText;Rooms;Комнаты;Habitación;Casa;Quartos
+MainMenu.VKButton;VK Group;Группа в ВК;Grupo VK;Grupo VK;Grupo VK
+MainMenu.DiscordButton;Discord;Discord;Discord;Discord;Discord
+MainMenu.YoutubeButton;Youtube;Youtube;Youtube;Youtube;Youtube
+MainMenu.TelegramButton;Telegram;Телеграм;Telegram;Telegram;Telegram
+MainMenu.Settings.Design1;Design 1;Дизайн 1;Design 1;Design 1;Design 1
+MainMenu.Settings.Design2;Design 2;Дизайн 2;Design 2;Design 2;Design 2
+MainMenu.Settings.Design3;Design 3;Дизайн 3;Design 3;Design 3;Design 3
+MainMenu.Settings.Language;Language;Язык;Idioma;Língua;Língua
+MainMenu.Settings.Language.English;English language;English language;English language;English language;English language
+MainMenu.Settings.Language.Russian;Русский язык;Русский язык;Русский язык;Русский язык;Русский язык
+MainMenu.Settings.Language.Espaniol;Español;Español;Español;Español;Español
+MainMenu.Settings.Language.Portuegesee;Português;Português;Português;Português;Português
+MainMenu.Settings.Language.Brasilian;Português (Brasil);Português (Brasil);Português (Brasil);Português (Brasil);Português (Brasil)
+MainMenu.Settings.AdvancedText;Advanced;Дополнительно;Complementariamente;Adicionalmente;Adicionalmente
+MainMenu.Settings.Advanced.DevMode;Developer mode;Режим разработчика;Modo Desarrollador;Modo Desenvolvedor;Modo Desenvolvedor
+MainMenu.ModsList.OnlineScenariosText;Online scenarios;Онлайн сценарии;Escenarios en línea;Cenários online;Cenários Online
+MainMenu.ModsList.PageText;Page;Страница;Página;Página;Página
+MainMenu.ModsList.Save;Download modification;Скачать модификацию;Descargar modificación;Baixar modificação;Baixe a modificação
+MainMenu.ModsList.MadeBy;Made by;Сделано;Hecho por;Feito por;Feito por
+MainMenu.ModsList.LoadMore;Load more;Загрузить ещё;Cargar más;Carregar mais;Carregar mais
+MainMenu.ModsList.DownloadUpdate;Download an update;Скачать обновление;Descargar actualización;Baixar atualização;Baixe a atualização
+MainMenu.ModsList.LocalMods;Downloaded modifications;Скачанные модификации;Modificaciones descargadas;Modificações baixadas;Modificações baixadas
+MainMenu.ModsList.View;View downloaded modifications;Посмотреть скачанные модификации;Ver las modificaciones descargadas;Veja as modificações baixadas;Ver modificações baixadas
+MainMenu.VersionButton;Current update:;Актуальное обновление:;Actualización actual:;Atualização atual:;Atualização atual:
+MainMenu.Version.Title;Game Version;Версия игры;Versión del juego;Versão do jogo;Versão Do Jogo
+MainMenu.Version.NewVersion;You have the latest version of the game installed;У вас установлена новейшая версия игры;Tienes instalada la Última versión del juego;Você tem a versão mais recente do jogo;Você tem a versão mais recente do jogo instalada
+MainMenu.Version.OldVersion;"Your version is outdated.
+We recommend updating the game!";"Ваша версия устарела.
+Советуем обновить игру!";"Su versión está desactualizada.
+Recomendamos actualizar el juego!";"Sua versão está desatualizada.
+Recomendamos atualizar o jogo!";"Sua versão está desatualizada.
+Recomendamos atualizar o jogo!"
+MainMenu.Version.CurrentVersion;Current version:;Текущая версия:;Versión actual:;Versão atual:;Versão atual:
+MainMenu.Loading;Loading...;Идёт загрузка...;Se está cargando...;A carregar...;O download está em andamento...
+MainMenu.CheckVer;Check update;Проверить обновление;Comprobar actualización;Verificar atualização;Confira a atualização
+MainMenu.Quote1;Russian armies destroy more enemy soldiers and weapons than all the other 25 United Nations states combined... - Franklin Roosevelt;Русские армии уничтожают больше солдат и вооружения противника, чем все остальные 25 государств объединенных наций вместе взятых… - Франклин Рузвельт;Los ejércitos rusos destruyen más soldados y armas enemigas que todos los otros 25 Estados de las Naciones Unidas combinados. - Franklin Roosevelt;Os exércitos russos matam mais soldados e armas do inimigo do que todos os outros 25 estados das Nações Unidas combinados. - Franklin D. Roosevelt;Os exércitos russos destroem mais soldados e armas inimigas do que todos os outros 25 estados das Nações Unidas juntos... - Franklin Roosevelt
+MainMenu.Quote2;Hitler's crazy ideas were not destined to come true — the course of the war scattered them to dust. - Joseph Stalin;Сумасбродным идеям Гитлера не суждено было сбыться, — ход войны развеял их в прах. - Иосиф Сталин;Las ideas extravagantes de Hitler no estaban destinadas a hacerse realidad: el curso de la guerra las disipó en polvo. - Joseph Stalin;As idéias extravagantes de Hitler não estavam destinadas a se tornar realidade — o curso da guerra as dissipou em pó.  Joseph Stalin;As idéias malucas de Hitler não estavam destinadas a se tornar realidade — o curso da guerra as transformou em pó. - Josef Stalin
+MainMenu.Quote3;The war has been won, but not the peace. - Albert Einstein;Выиграна война, но не мир. - Альберт Эйнштейн;Se gana la guerra pero no la paz. - Albert Einstein;A guerra foi vencida, mas não a paz.  Albert Einstein;A guerra foi ganha, mas não a paz. - Albert Einstein
+MainMenu.Quote4;Together with the Leningraders, all Soviet people and all progressive humanity rejoiced at the great triumph of the city. - Harrison Salisbury;Вместе с ленинградцами великому торжеству города радовались все советские люди, все прогрессивное человечество. - Гаррисон Солсбери;Junto con los leningradenses, todos los soviéticos, toda la humanidad progresista, se regocijaron en el gran triunfo de la ciudad. - Harrison Salisbury;Juntamente com os leningradianos, todos os soviéticos, toda a humanidade progressista, se alegraram com o grande triunfo da cidade. - Harrison Salisbury;Juntamente com os Leningradenses, todo o povo soviético e toda a humanidade progressista se alegraram com o grande triunfo da cidade. - Harrison Salisbury
+MainMenu.Quote5;England was offered a choice between war and dishonor. She chose dishonor and will get war. - Winston Churchill;Англии был предложен выбор между войной и бесчестием. Она выбрала бесчестие и получит войну. - Уинстон Черчилль;A Inglaterra se le ofreció la opción entre la guerra y la deshonra. Ella eligió la deshonra y recibirá la guerra. - Winston Churchill;A Inglaterra foi oferecida uma escolha entre a guerra e a desonra. Ela escolheu a desonra e terá a guerra. - Winston Churchill;Foi oferecida à Inglaterra uma escolha entre a guerra e a desonra. Ela escolheu a desonra e vai ter Guerra. - Winston Churchill
+MainMenu.Quote6;The Russian army has gutted the German war machine. - Winston Churchill;Русская армия выпустила кишки из германской военной машины. - Уинстон Черчилль;El ejército ruso disparó las tripas de la máquina de guerra alemana. - Winston Churchill;O exército russo libertou as tripas da máquina de guerra alemã. - Winston Churchill;O exército russo destruiu a máquina de guerra alemã. - Winston Churchill
+MainMenu.Quote7;The truth is that despite the hardest trials, we have won. - Alexander Chak'ovsky;Истина заключается в том, что, несмотря на тяжелейшие испытания, мы победили. - Александр Чаковский;La verdad es que, a pesar de las pruebas más difíciles, hemos ganado. - Alexander Chakovsky;A verdade é que, apesar das provações mais difíceis, vencemos. - Alexander Chakovsky;A verdade é que, apesar das provas mais duras, vencemos. - Alexandre Chak ' ovsky
+MainMenu.Quote8;The history of wars knows of no other similar enterprise in terms of breadth of conception, grandiosity of scale and skill of execution. - Joseph Stalin;История войн не знает другого подобного предприятия по широте замысла, грандиозности масштабов и мастерству выполнения. - Иосиф Сталин;La historia de las guerras no conoce otra empresa similar en términos de amplitud de diseño, grandiosidad de escala y habilidad de ejecución. - Joseph Stalin;A história das guerras não conhece outro empreendimento semelhante em termos de amplitude de projeto, grandiosidade de escala e habilidade de execução.  Joseph Stalin;A história das guerras não conhece outro empreendimento semelhante em termos de amplitude de concepção, grandiosidade de escala e habilidade de execução. - Josef Stalin
+MainMenu.Quote9;Even when the German troops were already halfway back, it was still talked about as a strategic withdrawal. In fact, this was the end of Hitler. The Nazi bull market ended on the day of the attack on Stalingrad. - Nicholas Darvas;Даже когда немецкие войска были уже на полпути назад, об этом по-прежнему говорили как о стратегическом отходе. Фактически же это был конец Гитлера. Нацистский бычий рынок закончился в день атаки на Сталинград. - Николас Дарвас;Incluso cuando las tropas alemanas ya estaban a mitad de camino, todavía se hablaba de una retirada estratégica. De hecho, fue el fin de Hitler. El mercado alcista nazi terminó el día del ataque a Stalingrado. - Nicholas Darvas;Mesmo quando as tropas alemãs já estavam a meio caminho de volta, isso ainda era falado como uma retirada estratégica. Foi o fim de Hitler. O mercado de Touro nazista terminou no dia do ataque a Stalingrado. - Nicholas Darvas;Mesmo quando as tropas alemãs já estavam na metade do caminho de volta, ainda era falado como uma retirada estratégica. Na verdade, esse foi o fim de Hitler. O mercado de Touros nazista terminou no dia do ataque a Stalingrado. - Nicholas Darvas
+MainMenu.Quote10;I. V. Stalin was extremely intolerant of lateness to his calls. But what to do? The situation in the war does not take into account the characters of the commanders. - Georgy Zhukov;И. В. Сталин был крайне нетерпим к опозданиям на его вызовы. Но что делать? Обстановка на войне не считается с характерами командующих. - Георгий Жуков;J. V. Stalin era extremadamente intolerante a llegar tarde a sus desafíos. Pero, ¿qué hacer? La situación en la guerra no tiene en cuenta los personajes de los comandantes. - George Zhukov;J. V. Stalin era extremamente intolerante a atrasos em seus desafios. Mas o que fazer? A situação na guerra não conta com o caráter dos comandantes. - Georgy Zhukov;I. V. Stalin era extremamente intolerante com o atraso em suas ligações. Mas o que fazer? A situação na guerra não leva em conta os personagens dos comandantes. - Georgy Zhukov
+MainMenu.Quote11;Historically, the victory of fascism is ridiculous and impossible, but I know that the only way to save humanity from destruction is by fighting. - - Dmitri Shostakovich;Исторически победа фашизма нелепа и невозможна, но я знаю, что спасти человечество от гибели можно только сражаясь. - Дмитрий Шостакович;Históricamente, la victoria del fascismo es ridícula e imposible, pero sé que la única manera de salvar a la humanidad de la destrucción es luchando. - Dmitry Shostakovich;Historicamente, a vitória do fascismo é ridícula e impossível, mas eu sei que a única maneira de salvar a humanidade da destruição é lutando. - Dmitry Shostakovich;Historicamente, a vitória do fascismo é ridícula e impossível, mas sei que a única maneira de salvar a humanidade da destruição é lutando. - Dmitry Shostakovich
+MainMenu.Quote12;Under the leadership of Marshal Joseph Stalin, the Russian people showed such an example of love for the motherland, fortitude and self-sacrifice, which the world has never known before. - Franklin Roosevelt;Под руководством маршала Иосифа Сталина русский народ показал такой пример любви к родине, твердости духа и самопожертвования, какого еще не знал мир. - Франклин Рузвельт;Bajo el liderazgo del Mariscal Joseph Stalin, el pueblo ruso mostró un ejemplo de amor por la patria, firmeza de espíritu y sacrificio que el mundo aún no conocía. - Franklin Roosevelt;Sob a direção do marechal Joseph Stalin, o povo russo mostrou um exemplo de amor à pátria, de firmeza de espírito e de auto-sacrifício como o mundo ainda não conheceu. - Franklin Roosevelt;Sob a liderança do Marechal Joseph Stalin, o povo russo mostrou um exemplo de amor à pátria, fortaleza e auto-sacrifício, que o mundo nunca conheceu antes. - Franklin Roosevelt
+MainMenu.Quote13;I have seen soldiers rise up to attack many times. It's not easy to rise to your height when the air is permeated with deadly metal. But they were rising! - Georgy Zhukov;Я много раз видел, как солдаты поднимались в атаку. Это нелегко: подняться в рост, когда смертоносным металлом пронизан воздух. Но они поднимались! - Георгий Жуков;He visto a los soldados subir al ataque muchas veces. No es fácil: subir a la altura cuando el metal mortal penetra en el aire. ¡Pero estaban subiendo! - George Zhukov;Vi muitas vezes os soldados subirem ao ataque. Não é fácil: crescer quando o metal Mortal permeia o ar. Mas eles subiram! - Georgy Zhukov;Já vi soldados se levantarem para atacar muitas vezes. Não é fácil subir à sua altura quando o ar está permeado de metal Mortal. Mas eles estavam subindo! - Georgy Zhukov
+MainMenu.Warning;Attention;Внимание;Atención;Atenção;Atenção
+MainMenu.WarningText;The advertising banner on the bottom right can be removed by clicking on it. However, it will load again instantly if you are in the main menu or in the mod editor. This means that if an advertisement covers part of the content, then while in the game you can hide it by clicking.;Рекламный баннер справа внизу можно убрать по нажатию на него. Однако он снова моментально загрузится если вы находитесь в главном меню или в редакторе модов. Это означает, что если реклама перекрывает часть контента, то находясь в игре вы можете скрыть её нажатием.;El banner publicitario en la parte inferior derecha se puede quitar haciendo clic en él. Sin embargo, se cargará de nuevo instantáneamente si está en el menú principal o en el Editor de mods. Esto significa que si los anuncios se superponen a parte del contenido, mientras estés en el juego, puedes ocultarlo haciendo clic.;O banner de publicidade na parte inferior direita pode ser removido clicando nele. No entanto, ele será carregado instantaneamente novamente se você estiver no menu principal ou no editor de mods. Isso significa que, se um anúncio sobrepor parte do conteúdo, você poderá ocultá-lo clicando no anúncio enquanto estiver no jogo.;O banner publicitário no canto inferior direito pode ser removido clicando nele. No entanto, ele será carregado novamente instantaneamente se você estiver no menu principal ou no editor de mod. Isso significa que, se um anúncio cobrir parte do conteúdo, enquanto estiver no jogo, você poderá ocultá-lo clicando em.
+AUTH_ERROR.NO_HASHED_PASSWORD;Your password is not hashed, which means it is vulnerable to hacking! To avoid this, go to the website and log in to your account. After that, you can try logging into your account in the game. Thanks for understanding;Ваш пароль не хеширован, а значит уязвим для взлома! Чтобы этого избежать перейдите на сайт и войдите в аккаунт. После этого можете пробовать зайти в аккаунт в игре. Спасибо за понимание;Su contraseña no está codificada, lo que significa que es vulnerable a la piratería! Para evitar esto, vaya al sitio e inicie sesión en su cuenta. Después de eso, puedes intentar ingresar a la cuenta en el juego. Gracias por su comprensión;Sua senha não é hash, o que significa que é vulnerável a hackers! Para evitar isso, acesse o site e faça login na sua conta. Depois disso, você pode tentar entrar na conta do jogo. Obrigado PELA compreensão;Sua senha não é hash, o que significa que é vulnerável a hackers! Para evitar isso, acesse o site e faça login na sua conta. Depois disso, você pode tentar entrar na sua conta no jogo. Obrigado PELA compreensão
+AUTH_ERROR.INCORRECT_DATA;Incorrect username or password;Неправильный логин или пароль;Nombre de usuario o contraseña incorrectos;Login ou senha inválidos;Nome de usuário ou senha incorretos
+AUTH_ERROR.ACCOUNT_NOT_EXIST;There is no such user;Такого пользователя не существует;Este usuario no existe;Esse usuário não existe;Não existe tal usuário
+Abkhazia;Abkhazia;Абхазия;Abjasia;Abecásia;Abecásia
+Afganistan;Afganistan;Афганистан;Afganistán;Afeganistão;Afeganistão
+Albania;Albania;Албания;Albania;Albânia;Albânia
+Algeria;Algeria;Алжир;Argelia;Argélia;Argélia
+Armenia;Armenia;Армения;Armenia;Armênia;Armênia
+Austria;Austria;Австрия;Austria;Áustria;Áustria
+Azerbaijan;Azerbaijan;Азербайджан;Azerbaiyán;Azerbaijão;Azerbaijão
+Banat;Banat;Банат;Banato;Banat;Banat
+Bashkortostan;Bashkortostan;Башкортостан;Bashkortostán;Bascortostão;Bascortostão
+Belarus;Belarus;Беларусь;Bielorrusia;Bielorrússia;Bielorrússia
+Belgium;Belgium;Бельгия;Bélgica;Bélgica;Bélgica
+Bosnia Herzegovina;Bosnia Herzegovina;Босния Герцеговина;bosniaherzegovina;Bósnia e Herzegovina;Bósnia e Herzegovina
+British Raj;British Raj;Британский Радж;Raj británico;Raj Britânico;Raj Britânico
+Bulgaria;Bulgaria;Болгария;Bulgaria;Bulgária;Bulgária
+Burkina-Faso;Burkina-Faso;Буркина-Фасо;Burkina Faso;Burkina Faso;Burkina Faso
+Chad;Chad;Чад;Chad;Chade;Chade
+Chechnya;Chechnya;Чечня;Chechenia;Chechênia;Chechênia
+Chuvashia;Chuvashia;Чувашия;Chuvasia;Chuváchia;Chuváchia
+Circassia;Circassia;Черкесия;circasia;Circássia;Circássia
+Crimea;Crimea;Крым;Crimea;Crimeia;Crimeia
+Croatia;Croatia;Хорватия;Croacia;Croácia;Croácia
+Czechoslovakia;Czechoslovakia;Чехословакия;Checoslovaquia;Checoslováquia;Checoslováquia
+Dagestan;Dagestan;Дагестан;Daguestán;Daguestão;Daguestão
+Free City of Danzig;Free City of Danzig;Вольный город Данциг;Ciudad libre de Danzig;Cidade Livre de Danzig;Cidade Livre de Danzig
+Denmark;Denmark;Дания;Dinamarca;Dinamarca;Dinamarca
+Djibuti;Djibuti;Джибути;Yibuti;Djibuti;Djibuti
+DDR;DDR;ГДР;DDR;DDR;DDR
+Egypt;Egypt;Египет;Egipto;Egito;Egito
+England;England;Англия;Inglaterra;Inglaterra;Inglaterra
+Eritrea;Eritrea;Эритрея;Eritrea;Eritreia;Eritreia
+Estonia;Estonia;Эстония;Estonia;Estônia;Estônia
+Ethiopia;Ethiopia;Эфиопия;Etiopía;Etiópia;Etiópia
+Finland;Finland;Финляндия;Finlandia;Finlândia;Finlândia
+France;France;Франция;Francia;França;França
+Free France;Free France;Свободная Франция;Francia libre;França Livre;França Livre
+FRG;FRG;ФРГ;RFA;Alemanha;Alemanha
+Georgia;Georgia;Грузия;Georgia;Geórgia;Geórgia
+Third Reich;Third Reich;Третий рейх;Tercer Reich;Terceiro Reich;Terceiro Reich
+Greece;Greece;Греция;Grecia;Grécia;Grécia
+Guinea;Guinea;Гвинея;Guinea;Guiné;Guiné
+Guinea-Bissau;Guinea-Bissau;Гвинея-Бисау;Guinea-Bisáu;Guiné-Bissau;Guiné-Bissau
+Hungary;Hungary;Венгрия;Hungría;Hungria;Hungria
+Iceland;Iceland;Исландия;Islandia;Islândia;Islândia
+Iran;Iran;Иран;Irán;Irã;Irã
+Iraq;Iraq;Ирак;Irak;Iraque;Iraque
+Ireland;Ireland;Ирландия;Irlanda;Irlanda;Irlanda
+Israel;Israel;Израиль;Israel;Israel;Israel
+Italy;Italy;Италия;Italia;Itália;Itália
+Jordan;Jordan;Иордания;Jordán;Jordânia;Jordânia
+Kabardino-Balkaria;Kabardino-Balkaria;Кабардино-Балкария;Kabardia-Balkaria;Cabardino-Balcária;Cabardino-Balcária
+Kalmykia;Kalmykia;Калмыкия;Kalmukia;Calmúquia;Calmúquia
+Kazakhstan;Kazakhstan;Казахстан;Kazajstán;Cazaquistão;Cazaquistão
+Kyrgyzstan;Kyrgyzstan;Кыргызстан;Kirguistán;Quirguistão;Quirguistão
+Kosovo;Kosovo;Косово;Kosovo;Kosovo;Kosovo
+Krasnodar;Krasnodar;Краснодар;Krasnodar;Krasnodar;Krasnodar
+Kurdistan;Kurdistan;Курдистан;Kurdistán;Curdistão;Curdistão
+Kuwait;Kuwait;Кувейт;Kuwait;Kuwait;Kuwait
+Latvia;Latvia;Латвия;Letonia;Letônia;Letônia
+Lebanon;Lebanon;Ливан;Líbano;Líbano;Líbano
+Libya;Libya;Ливия;Libia;Líbia;Líbia
+Lithuania;Lithuania;Литва;Lituania;Lituânia;Lituânia
+Luxembourg;Luxembourg;Люксембург;Luxemburgo;Luxemburgo;Luxemburgo
+Mali;Mali;Мали;Malí;Mali;Mali
+Mari El;Mari El;Марий Эл;Mari-El;Mari El;Mari El
+Mauritania;Mauritania;Мавритания;Mauritania;Mauritânia;Mauritânia
+Moldova;Moldova;Молдова;Moldavia;Moldávia;Moldávia
+Montenegro;Montenegro;Черногория;Montenegro;Montenegro;Montenegro
+Mordovia;Mordovia;Мордовия;Mordovia;Mordóvia;Mordóvia
+Morocco;Morocco;Марокко;Marruecos;Marrocos;Marrocos
+Netherlands;Netherlands;Нидерланды;Países Bajos;Holanda;Holanda
+Niger;Niger;Нигер;Níger;Níger;Níger
+Northern Macedonia;Northern Macedonia;Северная Македония;Macedonia del Norte;Macedônia do Norte;Macedônia do Norte
+Norway;Norway;Норвегия;Noruega;Noruega;Noruega
+Oman;Oman;Оман;Omán;Omã;Omã
+Ossetia;Ossetia;Осетия;Osetia;Ossétia;Ossétia
+Pakistan;Pakistan;Пакистан;Pakistán;Paquistão;Paquistão
+Palestine;Palestine;Палестина;Palestina;Palestina;Palestina
+Poland;Poland;Польша;Polonia;Polônia;Polônia
+Portugal;Portugal;Португалия;Portugal;Portugal;Portugal
+Prussia;Prussia;Пруссия;Prusia;Prússia;Prússia
+Romania;Romania;Румыния;Rumania;Romênia;Romênia
+Rostov;Rostov;Ростов;Rostov;Rostov;Rostov
+Russia;Russia;Россия;Rusia;Rússia;Rússia
+SaudiArabia;SaudiArabia;Саудовская Аравия;Arabia Saudita;Arábia Saudita;Arábia Saudita
+Saxony;Saxony;Саксония;Sajonia;Saxônia;Saxônia
+Scotland;Scotland;Шотландия;Escocia;Escócia;Escócia
+Senegal;Senegal;Сенегал;Senegal;Senegal;Senegal
+Serbia;Serbia;Сербия;Serbia;Sérvia;Sérvia
+Sirya;Sirya;Сирья;siria;Sirya;Sirya
+Slovakia;Slovakia;Словакия;Eslovaquia;Eslováquia;Eslováquia
+Slovenia;Slovenia;Словения;Eslovenia;Eslovênia;Eslovênia
+Spain;Spain;Испания;España;Espanha;Espanha
+Sudan;Sudan;Судан;Sudán;Sudão;Sudão
+Sweden;Sweden;Швеция;Suecia;Suécia;Suécia
+Switzerland;Switzerland;Швейцария;Suiza;Suíça;Suíça
+Tajikistan;Tajikistan;Таджикистан;Tayikistán;Tadjiquistão;Tadjiquistão
+Tatarstan;Tatarstan;Татарстан;Tartaristán;Tartaristão;Tartaristão
+Tunisia;Tunisia;Тунис;Túnez;Tunísia;Tunísia
+Turkey;Turkey;Турция;Pavo;Peru;Peru
+Turkmenistan;Turkmenistan;Туркменистан;Turkmenistán;Turcomenistão;Turcomenistão
+Ukraine;Ukraine;Украина;Ucrania;Ucrânia;Ucrânia
+United Kingdom;United Kingdom;Великобритания;Reino Unido;Reino Unido;Reino Unido
+USSR;USSR;СССР;URSS;URSS;URSS
+Uzbekistan;Uzbekistan;Узбекистан;Uzbekistán;Uzbequistão;Uzbequistão
+Vichy France;Vichy France;Виши Франция;Vichy Francia;Vichy França;Vichy França
+Vojvodina;Vojvodina;Воеводина;Voivodina;Voivodina;Voivodina
+Wales;Wales;Уэльс;Gales;País de Gales;País de Gales
+Waziristan;Waziristan;Вазиристан;Waziristán;Waziristão;Waziristão
+Yemen;Yemen;Йемен;Yemen;Iémen;Iémen
+Yugoslavia;Yugoslavia;Югославия;Yugoslavia;Iugoslávia;Iugoslávia
+Francoist Spain;Francoist Spain;Франкистская Испания;España franquista;Espanha franquista;Espanha franquista
+Yugoslavian Confederation;Yugoslavian Confederation;Югославская Конфедерация;Confederación Yugoslava;Confederação Iugoslava;Confederação Iugoslava
+Arabia;Arabia;Аравия;arabia;Arábia;Arábia
+Austria-Hungary;Austria-Hungary;Австро-Венгрия;Austria-Hungría;Áustria-Hungria;Áustria-Hungria
+Balkan Federation;Balkan Federation;Балканская Федерация;Federación Balcánica;Federação Balcânica;Federação Balcânica
+Baltic Union;Baltic Union;Балтийский Союз;Unión Báltica;União Báltica;União Báltica
+Belgian Empire;Belgian Empire;Бельгийская империя;Imperio belga;Império Belga;Império Belga
+Celtic Union;Celtic Union;Кельтский союз;Unión celta;União Celta;União Celta
+Elliniko Kratos;Elliniko Kratos;Эллинико Кратос;Elliniko Kratos;Elliniko Kratos;Elliniko Kratos
+European Union;European Union;Евросоюз;unión Europea;União Europeia;União Europeia
+French Empire;French Empire;Французская империя;Imperio francés;Império Francês;Império Francês
+German Empire;German Empire;Германская империя;imperio Alemán;Império Alemão;Império Alemão
+Greater Albania;Greater Albania;Великая Албания;Gran Albania;Grande Albânia;Grande Albânia
+Greater Bulgaria;Greater Bulgaria;Великая Болгария;Gran Bulgaria;Grande Bulgária;Grande Bulgária
+Greater Finland;Greater Finland;Великая Финляндия;Gran Finlandia;Grande Finlândia;Grande Finlândia
+Greater Italy;Greater Italy;Великая Италия;Gran Italia;Grande Itália;Grande Itália
+Greater Poland;Greater Poland;Великая Польша;Gran Polonia;Grande Polônia;Grande Polônia
+Großgermanisches Reich;Großgermanisches Reich;Großgermanisches Reich;Großgermanisches Reich;Großgermanisches Reich;Großgermanisches Reich
+Kalmar Union;Kalmar Union;Кальмарский союз;Unión de Kalmar;União de Kalmar;União de Kalmar
+Kingdom of Hungary;Kingdom of Hungary;Королевство Венгрия;Reino de Hungría;Reino da Hungria;Reino da Hungria
+LeoBelgikus;LeoBelgikus;ЛеоБельгикус;Leobelgikus;Leo Bélgica;Leo Bélgica
+Intermarium;Intermarium;Междуморье;Intermarium;Intermarium;Intermarium
+Ottoman Empire;Ottoman Empire;Османская империя;imperio Otomano;império Otomano;império Otomano
+Pan-slavic union;Pan-slavic union;Панславянский союз;Unión paneslava;União pan-eslava;União pan-eslava
+Polish-Lithuanian Commonwealth;Polish-Lithuanian Commonwealth;Речь посполитая;Commonwealth polaco-lituana;Comunidade Polaco-Lituana;Comunidade Polaco-Lituana
+Swedish Empire;Swedish Empire;Шведская империя;Imperio sueco;Império Sueco;Império Sueco
+Empire Of The North Sea;Empire Of The North Sea;Империя Северного моря;Imperio del Mar del Norte;Império do Mar do Norte;Império do Mar do Norte
+Демократия;Democracy;Демократия;Democracia;Democracia;Democracia
+Коммунизм;Communism;Коммунизм;Comunismo;O comunismo;O comunismo
+Фашизм;Fascism;Фашизм;Fascismo;Fascismo;Fascismo
+Монархия;Monarchy;Монархия;Monarquía;Monarquia;Monarquia
+Неопределено;Undefined;Неопределено;Indefinido;Indefinido;Indefinido
+Неопределённый;Undefined;Неопределено;Indefinido;Indefinido;Indefinido
+Неопределенный;Undefined;Неопределено;Indefinido;Indefinido;Indefinido
+Diplomaty.WarsWithMyParticipation;Wars with your participation;Войны с вашим участием;Guerras con su participación;Guerras com a sua participação;Guerras com sua participação
+Diplomaty.Accepted;They are <b><color="green">accepted</color></b> your offer;Они <b><color="green">приняли</color></b> ваше предложение;Han <b><color="green">aceptado</color></b> tu oferta;Eles <b><color="green">aceitaram</color></b> sua oferta;Eles <b><color="green">aceitaram</color></b> sua oferta
+Diplomaty.Declined;They are <b><color="red">rejected</color></b> your offer;Они <b><color="red">отклонили</color></b> ваше предложение;Han <b><color="red">rechazada</color></b> tu oferta.;Eles <b><color="red">rejeitaram</color></b> sua oferta;Eles <b><color="red">rejeitaram</color></b> sua oferta
+Diplomaty.SendMoney;Send gold;Отправить золото;enviar oro;Enviar ouro;Enviar ouro
+Diplomaty.AskMoney;Ask for gold;Попросить золото;pedir oro;Peça ouro;Peça ouro
+Diplomaty.SendFood;Send food;Отправить провизию;enviar comida;Enviar comida;Enviar comida
+Diplomaty.AskFood;Ask for food;Попросить провизию;pedir comida;Peça comida;Peça comida
+Diplomaty.SendRecruits;Send recruits;Отправить рекрутов;enviar reclutas;Enviar recrutas;Enviar recrutas
+Diplomaty.AskRecruits;Ask for recruits;Попросить рекрутов;Preguntar por reclutas;Peça recrutas;Peça recrutas
+Diplomaty.SendWar;Declare war;Объявить войну;Declarar la guerra;Declarar guerra;Declarar guerra
+Diplomaty.Peace;Peace;Заключить мир;Paz;Paz;Paz
+Diplomaty.AskForWar;Call to war with ...;Призвать в войну с ...;Llamado a la guerra con...;Chame para a guerra com ...;Chame para a guerra com ...
+Diplomaty.Vassal;Make a vassal;Сделать вассалом;hacer un vasallo;Faça um vassalo;Faça um vassalo
+Diplomaty.FreeVassal;Free a vassal;Освободить вассала;Liberar a un vasallo;Liberte um vassalo;Liberte um vassalo
+Diplomaty.Union;Union;Союз;Unión;União;União
+Diplomaty.DeUnion;Dissolve the union;Расторгнуть союз;disolver el sindicato;Dissolver o sindicato;Dissolver o sindicato
+Diplomaty.Trade;Trade;Торговля;Comercio;Troca;Troca
+Diplomaty.UnTrade;Stop trading;Прекратить торговлю;dejar de operar;Pare de negociar;Pare de negociar
+Diplomaty.Pact;Nonaggression pact;Пакт о ненападении;Pacto no agresivo;Pacto de não-agressão;Pacto de não-agressão
+Diplomaty.AntiPact;Terminate the non-aggression pact;Расторгнуть пакт о ненападении;Poner fin al pacto de no agresión;Terminar o pacto de não agressão;Terminar o pacto de não agressão
+Diplomaty.Right;Right of passage for troops;Право прохода войск;Derecho de paso de tropas;Direito de passagem para tropas;Direito de passagem para tropas
+Diplomaty.DeRight;Terminate the right of passage of troops;Расторгнуть право прохода войск;Terminar el derecho de paso de tropas.;Terminar o direito de passagem de tropas;Terminar o direito de passagem de tropas
+Diplomaty.TransferRegions;Transfer regions;Передать регионы;Transferir regiones;Regiões de transferência;Regiões de transferência
+Diplomaty.AskForRegions;Ask for regions;Попросить регионы;Preguntar por regiones;Pergunte por regiões;Pergunte por regiões
+Diplomaty.MoreInfoButton;More details;Подробнее;Más detalles;Mais detalhes;Mais detalhes
+Diplomaty.Title;Diplomatic actions;Дипломатические действия;Acciones diplomáticas;Ações diplomáticas;Ações diplomáticas
+CountryInfo.ProvincesText;Provinces;Провинции;Provincias;Províncias;Províncias
+CountryInfo.Population;Population;Население;Población;População;População
+CountryInfo.InternalPoliticsTitle;Internal politics;Внутренняя политика;Política interna;Política interna;Política interna
+CountryInfo.ChangeIdeoogyButton;Change the ideology of the state;Изменить идеологию государства;Cambiar la ideología del estado.;Mudar a ideologia do estado;Mudar a ideologia do estado
+CountryInfo.ChangeMobilisationLaw;Change the draft law;Изменить закон о призыве;Cambiar el proyecto de ley;Alterar o projeto de lei;Alterar o projeto de lei
+CountryInfo.Mobilisation.0;Unarmed country;Безоружная страна;país desarmado;País desarmado;País desarmado
+CountryInfo.Mobilisation.1;Volunteer Army;Добровольческая армия;ejército voluntario;Exército Voluntário;Exército Voluntário
+CountryInfo.Mobilisation.2;Partial conscription;Частичный призыв;Servicio militar obligatorio parcial;Recrutamento parcial;Recrutamento parcial
+CountryInfo.Mobilisation.3;Mandatory service;Обязательная служба;Servicio obligatorio;Serviço obrigatório;Serviço obrigatório
+CountryInfo.Mobilisation.4;All adults serve;Все взрослые проходят службу;Todos los adultos sirven;Todos os adultos servem;Todos os adultos servem
+CountryInfo.Mobilisation.5;Total mobilization;Тотальная мобилизация;Movilización total;Mobilização total;Mobilização total
+CountryInfo.FormCountryButton;Form a country in...;Сформировать страну в ...;Formar un país en...;Formar um país em...;Formar um país em...
+CountryInfo.DivisionsTemplateButton;Division Templates;Шаблоны дивизий;Plantillas de división;Modelos de divisão;Modelos de divisão
+CountryInfo.DivisionsTemplateTitle;Your division templates;Ваши шаблоны дивизий;Tus plantillas de división;Seus modelos de divisão;Seus modelos de divisão
+CountryInfo.DivisionTemplateTitle;Your division template;Ваш шаблон;Tu plantilla de división;Seu modelo de divisão;Seu modelo de divisão
+CountryInfo.CreateDivisionTemplateButton;Create a template;Создать шаблон;Crear una plantilla;Crie um modelo;Crie um modelo
+CountryInfo.CreateVassalButton;Create vassal;Создать вассала;Crear vasallo;Criar vassalo;Criar vassalo
+CountryInfo.PoliticalParties;Parties;Партии;Fiestas;Festas;Festas
+CountryInfo.IncomesTitle;Income;Доходы;Ingreso;Renda;Renda
+CountryInfo.ExpensesTitle;Expenses;Расходы;Gastos;Despesas;Despesas
+CountryInfo.Expenses.Inflation;Inflation;Инфляция;Inflación;Inflação;Inflação
+Settings.GraphicsTitle;Graphics;Графика;Gráficos;Gráficos;Gráficos
+Settings.PostProcessing;Post effects;Пост эффекты;Efectos posteriores;Pós-efeitos;Pós-efeitos
+Settings.WaterAnimation;Water animation;Анимация воды;Animación de agua;Animação de água;Animação de água
+Settings.Cities;Cities;Города;Ciudades;Cidades;Cidades
+Settings.Borders;Borders;Границы провинций;Fronteras;Fronteiras;Fronteiras
+Settings.MusicTitle;Music;Музыка;Música;Música;Música
+Settings.Resume;Continue;Продолжить;Continuar;Continuar;Continuar
+Settings.RestartCamera;Restart camera;Перезапустить камеру;Reiniciar cámara;Reinicie a câmera;Reinicie a câmera
+Settings.PhotoMode;Photo mode;Режим фото;Modo foto;Modo foto;Modo foto
+Settings.GameGuide;Game Guide;Справочник по игре;Guía de juego;Guia do jogo;Guia do jogo
+Settings.SaveGame;Save the game;Сохранить игру;guarda el juego;Salve o jogo;Salve o jogo
+Settings.Menu;Menu;Меню;Menú;Cardápio;Cardápio
+Settings.DeleteAllSaves;Delete all saves;Удалить все сохранения;Eliminar todos los guardados;Excluir todos os salvamentos;Excluir todos os salvamentos
+Settings.MoreResources;Additional Resources;Дополнительные ресурсы;Recursos adicionales;Recursos adicionais;Recursos adicionais
+Settings.FPSCounter;FPS counter;Счётчик FPS;Contador de FPS;Contador de FPS;Contador de FPS
+Settings.GameProcess;Game process;Игровой процесс;Proceso del juego;Processo de jogo;Processo de jogo
+Settings.CameraZoom;Camera zoom speed;Скорость приближения камеры;Velocidad de zoom de la cámara;Velocidade de zoom da câmera;Velocidade de zoom da câmera
+Settings.CameraSpeed;Camera movement speed;Скорость движения камеры;Velocidad de movimiento de la cámara;Velocidade de movimento da câmera;Velocidade de movimento da câmera
+Settings.MusicVolume;Music volume;Громкость музыки;Volumen de la música;Volume da música;Volume da música
+Settings.Autosave;Autosave after... moves;Автосохранение через ... ходов;Guardado automático después de... movimientos;Salvamento automático após... movimentos;Salvamento automático após... movimentos
+Settings.AdvertTitle;Resources for advertising;Ресурсы за рекламу;Recursos para publicidad;Recursos para publicidade;Recursos para publicidade
+RegionUI.ClaimButton;Make a claim;Заявить претензии;Hacer un reclamo;Faça uma reclamação;Faça uma reclamação
+RegionUI.Claims;Claims;Претензии;Reclamos;Reivindicações;Reivindicações
+RegionUI.ClickToRemove;Click to delete;Нажмите, чтобы удалить;Haga clic para eliminar;Clique para excluir;Clique para excluir
+RegionUI.Fleet.Remove;Disband the flotilla;Распустить флотилию;Disolver la flotilla;Dissolver a flotilha;Dissolver a flotilha
+RegionUI.Fleet.Heal;Send for repair;Отправить на ремонт;enviar a reparar;Enviar para reparo;Enviar para reparo
+RegionUI.RemoveDivisionText;Disband the division?&&All resources will be returned;Распустить дивизию?&&Все ресурсы будут возвращены;¿Disolver la división? &&Se devolverán todos los recursos;Dissolver a divisão?&&Todos os recursos serão devolvidos;Dissolver a divisão?&&Todos os recursos serão devolvidos
+RegionUI.Fleet.InStock;In stock;В запасах;En stock;Em estoque;Em estoque
+RegionUI.CreateFleetText;Create a flotilla?&&It will cost gold and recruits, and in the future food and gold will be spent on its maintenance;Создать флотилию?&&Это будет стоить золота и рекрутов, и в дальнейшем будет тратиться пища и золото на её содержание;¿Crear una flotilla?&&Costará oro y reclutas, y en el futuro se gastará comida y oro en su mantenimiento.;Criar uma flotilha?&&Isso custará ouro e recrutas, e no futuro alimentos e ouro serão gastos em sua manutenção;Criar uma flotilha?&&Isso custará ouro e recrutas, e no futuro alimentos e ouro serão gastos em sua manutenção
+RegionUI.CreateArmyText;Raise an army?&&It will cost gold, food and recruits. In the future, food and gold will be spent on its maintenance;Собрать армию?&&Это будет стоить золота, пищи и рекрутов. В дальнейшем будет тратиться пища и золото на её содержание;¿Levantar un ejército?&&Costará oro, comida y reclutas. En el futuro se gastará comida y oro en su mantenimiento.;Criar um exército?&&Isso custará ouro, comida e recrutas. No futuro, alimentos e ouro serão gastos na sua manutenção;Criar um exército?&&Isso custará ouro, comida e recrutas. No futuro, alimentos e ouro serão gastos na sua manutenção
+RegionUI.Division.Remove;Disband the division;Распустить дивизию;Disolver la división;Dissolver a divisão;Dissolver a divisão
+RegionUI.Division.HealButton;Restore health;Восстановить здоровье;Recuperar salud;Restaurar a saúde;Restaurar a saúde
+RegionUI.Division.HealText;Restore the health of the battalions?&&It will cost;Восстановиить здоровье батальонам?&&Это будет стоить;¿Restaurar la salud de los batallones?&&Costará;Restaurar a saúde dos batalhões?&&Isso custará;Restaurar a saúde dos batalhões?&&Isso custará
+RegionUI.GoldText;gold;золота;oro;ouro;ouro
+RegionUI.FoodText;provisions;провизии;provisiones;disposições;disposições
+RegionUI.RecruitsText;recruits;рекрутов;reclutas;recrutas;recrutas
+TechnologyPanel.Infantry;Infantry;Пехота;Infantería;Infantaria;Infantaria
+TechnologyPanel.Art;Artillery;Артиллерия;Artillería;Artilharia;Artilharia
+TechnologyPanel.Heavy;Armored vehicles;Бронетехника;Vehículos blindados;Veículos blindados;Veículos blindados
+TechnologyPanel.Economic;Economy;Экономика;Economía;Economia;Economia
+TechnologyPanel.Close;Close technology menu;Закрыть меню технологий;Cerrar menú de tecnología;Fechar menu de tecnologia;Fechar menu de tecnologia
+TechnologyPanel.Research;Research;Изучить;Investigación;Investigação;Pesquisa
+TechnologyPanel.CancelResearch;Cancel research;Отменить изучение;Cancelar investigación;Cancelar investigação;Cancelar pesquisa
+TechnologyPanel.Researched;Researched;Изучено;Investigado;Investigado;Pesquisado
+TechnologyPanel.TechNeeded;Technologies required:;Необходимы технологии:;Tecnologías requeridas:;Tecnologias necessárias:;Tecnologias necessárias:
+Buildings.Fabric;Factory;Фабрика;Fábrica;Fábrica;Fábrica
+Buildings.Farm;Farm;Ферма;Granja;Fazenda;Fazenda
+Buildings.ChemicalFarm;Chemical farm;Химическая ферма;granja quimica;Fazenda química;Fazenda química
+Buildings.ResLab;Research laboratory;Исследовательская лаборатория;Laboratorio de investigación;Laboratório de pesquisas;Laboratório de pesquisas
+Buildings.Dockyard;Shipyards;Верфи;Astilleros;Estaleiros;Estaleiros
+Buildings.Infra;Infrastructure;Инфраструктура;Infraestructura;A infraestrutura;A infraestrutura
+Buildings.Bunker;Strengthening;Укрепление;Fortalecimiento;Reforço;Reforço
+Buildings.MarineBase;Naval base;Морская база;Base naval;Base naval;Base naval
+//города;//города;//города;//города;//города;//города
+Ренн;Rennes;Ренн;Rennes;Rennes;Rennes
+Нант;Nantes;Нант;Nantes;Nantes;Nantes
+Бордо;Bordeaux;Бордо;Burdeos;Bordéus;Bordéus
+Тулуза;Toulouse;Тулуза;Tolosa;Toulouse;Toulouse
+Марсель;Marseilles;Марсель;Marsella;Marselha;Marselha
+Лион;Lyon;Лион;León;Lyon;Lyon
+Дижон;Dijon;Дижон;Dijon;Dijon;Dijon
+Страсбург;Strasbourg;Страсбург;Estrasburgo;Estrasburgo;Estrasburgo
+Париж;Paris;Париж;París;Paris;Paris
+Берлин;Berlin;Берлин;Berlina;Berlim;Berlim
+Варшава;Warsaw;Варшава;Varsovia;Varsóvia;Varsóvia
+Мадрид;Madrid;Мадрид;Madrid;Madri;Madri
+Белград;Belgrade;Белград;Belgrado;Belgrado;Belgrado
+Сараево;Sarajevo;Сараево;Sarajevo;Sarajevo;Sarajevo
+Загреб;Zagreb;Загреб;zagreb;Zagrebe;Zagrebe
+Любляна;Ljubljana;Любляна;Liubliana;Liubliana;Liubliana
+Приштина;Pristina;Приштина;Prístina;Pristina;Pristina
+Будапешт;Budapest;Будапешт;budapest;Budapeste;Budapeste
+Братислава;Bratislava;Братислава;Bratislava;Bratislava;Bratislava
+Прага;Prague;Прага;Praga;Praga;Praga
+Вена;Vein;Вена;Vena;Veia;Veia
+Рим;Rome;Рим;Roma;Roma;Roma
+Лиссабон;Lisbon;Лиссабон;Lisboa;Lisboa;Lisboa
+Брюссель;Brussels;Брюссель;Bruselas;Bruxelas;Bruxelas
+Амстердам;Amsterdam;Амстердам;Ámsterdam;Amsterdã;Amsterdã
+Люксембург;Luxembourg;Люксембург;Luxemburgo;Luxemburgo;Luxemburgo
+Подгорица;Podgorica;Подгорица;Podgorica;Podgorica;Podgorica
+Зальцбург;Salzburg;Зальцбург;Salsburgo;Salzburgo;Salzburgo
+Турин;Turin;Турин;Turín;Turim;Turim
+Милан;Milan;Милан;Milán;Milão;Milão
+Флоренция;Florence;Флоренция;Florencia;Florença;Florença
+Барселона;Barcelona;Барселона;Barcelona;Barcelona;Barcelona
+Саламанка;Salamanca;Саламанка;Salamanca;Salamanca;Salamanca
+Бильбао;Bilbao;Бильбао;bilbao;Bilbau;Bilbau
+Севилья;Seville;Севилья;Sevilla;Sevilha;Sevilha
+Лондон;London;Лондон;Londres;Londres;Londres
+Кардифф;Cardiff;Кардифф;Cardiff;Cardife;Cardife
+Ливерпуль;Liverpool;Ливерпуль;Liverpool;Liverpool;Liverpool
+Плимут;Plymouth;Плимут;Plymouth;Plymouth;Plymouth
+Норидж;Norwich;Норидж;Norwich;Norwich;Norwich
+Белфаст;Belfast;Белфаст;belfast;Belfast;Belfast
+Глазго;Glasgow;Глазго;glasgow;Glasgow;Glasgow
+Карлайл;Carlisle;Карлайл;Carlisle;Carlisle;Carlisle
+Дублин;Dublin;Дублин;Dublín;Dublin;Dublin
+Каррантуил;Carrantuil;Каррантуил;Carrantuil;Carrantuil;Carrantuil
+Слайго;Sligo;Слайго;sligo;Sligo;Sligo
+Лиффорд;Lifford;Лиффорд;Liford;Lifford;Lifford
+Голуэй;Galway;Голуэй;Galway;Galway;Galway
+Штутгард;Stuttgart;Штутгард;Stuttgart;Estugarda;Estugarda
+Кельн;Cologne;Кельн;Colonia;Colônia;Colônia
+Франкфурт;Frankfurt;Франкфурт;Francfort;Francoforte;Francoforte
+Мюнхен;Munich;Мюнхен;Munich;Munique;Munique
+Нюрнберг;Nuremberg;Нюрнберг;Núremberg;Nuremberg;Nuremberg
+Дрезден;Dresden;Дрезден;Dresde;Dresda;Dresda
+Лейпциг;Leipzig;Лейпциг;Leipzig;Lípsia;Lípsia
+Бремен;Bremen;Бремен;Brema;Brema;Brema
+Гамбург;Hamburg;Гамбург;Hamburgo;Hamburgo;Hamburgo
+Ганновер;Hanover;Ганновер;Hanovre;Hanôver;Hanôver
+Гаага;Hague;Гаага;la Haya;Haia;Haia
+Роттердам;Rotterdam;Роттердам;Róterdam;Roterdã;Roterdã
+Антверпен;Antwerp;Антверпен;Amberes;Antuérpia;Antuérpia
+Дюнкерк;Dunkirk;Дюнкерк;Dunkerque;Dunquerque;Dunquerque
+Кале;Calais;Кале;Calais;Calais;Calais
+Мец;Metz;Мец;Metz;Metz;Metz
+Нанси;Nancy;Нанси;nancy;Nancy;Nancy
+Реймс;Reims;Реймс;Reims;Reims;Reims
+Амьен;Amiens;Амьен;Amiens;Amiens;Amiens
+Руан;Rouen;Руан;Ruan;Ruão;Ruão
+Кан;Kahn;Кан;Kahn;Kahn;Kahn
+Брест;Brest;Брест;Brest;Brest;Brest
+Монпелье;Montpellier;Монпелье;Montpellier;Montpellier;Montpellier
+Ницца;Nice;Ницца;Lindo;Legal;Legal
+Лимож;Limoges;Лимож;Limoges;Limoges;Limoges
+Орлеан;Orleans;Орлеан;Orleáns;Orleães;Orleães
+Портсмут;Portsmouth;Портсмут;Portsmouth;Portsmouth;Portsmouth
+Дувр;Dover;Дувр;Dover;Dover;Dover
+Бирмингем;Birmingham;Бирмингем;Birmingham;Birmingham;Birmingham
+Манчестер;Manchester;Манчестер;Manchester;Manchester;Manchester
+Лидс;Leeds;Лидс;leeds;Leeds;Leeds
+Шеффилд;Sheffield;Шеффилд;Sheffield;Sheffield;Sheffield
+Эдинбург;Edinburgh;Эдинбург;Edimburgo;Edimburgo;Edimburgo
+Пальма;Palm;Пальма;Palmera;Palma;Palma
+Валенсия;Valencia;Валенсия;Valencia;Valência;Valência
+Ла-Корунья;La Coruña;Ла-Корунья;La Coruña;La Corunha;La Corunha
+Порту;Porto;Порту;Oporto;Porto;Porto
+Малага;Malaga;Малага;málaga;málaga;málaga
+Мурсия;Murcia;Мурсия;Murcia;Múrcia;Múrcia
+Коимбра;Coimbra;Коимбра;Coímbra;Coimbra;Coimbra
+Бургос;Burgos;Бургос;Burgos;Burgos;Burgos
+Леон;Leon;Леон;León;Leão;Leão
+Гренада;Grenada;Гренада;Granada;Granada;Granada
+Рабат;Rabat;Рабат;Rabat;Rabate;Rabate
+Марракеш;Marrakesh;Марракеш;Marrakech;Marraquexe;Marraquexe
+Алжир;Algeria;Алжир;Argelia;Argélia;Argélia
+Оран;Oran;Оран;Orán;Orã;Orã
+Тунис;Tunisia;Тунис;Túnez;Tunísia;Tunísia
+Сфакс;Sfax;Сфакс;sfax;Sfax;Sfax
+Триполи;Tripoli;Триполи;Trípoli;Trípoli;Trípoli
+Бенгази;Benghazi;Бенгази;Bengasi;Bengasi;Bengasi
+Александрия;Alexandria;Александрия;Alejandría;Alexandria;Alexandria
+Каир;Cairo;Каир;El Cairo;Cairo;Cairo
+Иерусалим;Jerusalem;Иерусалим;Jerusalén;Jerusalém;Jerusalém
+Тель-Авив;Tel Aviv;Тель-Авив;Tel Aviv;Tel Aviv;Tel Aviv
+Бейрут;Beirut;Бейрут;Beirut;Beirute;Beirute
+Дамаск;Damascus;Дамаск;Damasco;Damasco;Damasco
+Хомс;Homs;Хомс;homs;Homs;Homs
+Алеппо;Aleppo;Алеппо;Alepo;Alepo;Alepo
+Багдад;Baghdad;Багдад;Bagdad;Bagdá;Bagdá
+Эрбиль;Erbil;Эрбиль;Erbil;Arbil;Arbil
+Мосул;Mosul;Мосул;Mosul;Mossul;Mossul
+Эль-Кувейт;Kuwait City;Эль-Кувейт;Ciudad de Kuwait;Cidade de Kuwait;Cidade de Kuwait
+Тебриз;Tabriz;Тебриз;Tabriz;Tabriz;Tabriz
+Ереван;Yerevan;Ереван;Ereván;Erevan;Erevan
+Баку;Baku;Баку;Bakú;Bacu;Bacu
+Тбилиси;Tbilisi;Тбилиси;Tiflis;Tbilissi;Tbilissi
+Сухум;Sukhum;Сухум;Sujum;Sukhum;Sukhum
+Цхинвал;Tskhinvali;Цхинвал;Tsjinvali;Tskhinvali;Tskhinvali
+Махачкала;Makhachkala;Махачкала;Majachkalá;Mahackala;Mahackala
+Грозный;Grozny;Грозный;Grozni;Terrível;Terrível
+Владикавказ;Vladikavkaz;Владикавказ;Vladicáucaso;Vladikavkaz;Vladikavkaz
+Нальчик;Nalchik;Нальчик;Nálchik;Nalchik;Nalchik
+Пятигорск;Pyatigorsk;Пятигорск;Piatigorsk;Piatigorsk;Piatigorsk
+Ставрополь;Stavropol;Ставрополь;Stávropol;Stavropol;Stavropol
+Краснодар;Krasnodar;Краснодар;Krasnodar;Krasnodar;Krasnodar
+Новороссийск;Novorossiysk;Новороссийск;Novorosíisk;Novorossisk;Novorossisk
+Керчь;Kerch;Керчь;Kerch;Querche;Querche
+Севастополь;Sevastopol;Севастополь;Sebastopol;Sebastopol;Sebastopol
+Симферополь;Simferopol;Симферополь;Simferópol;Simferopol;Simferopol
+Ялта;Yalta;Ялта;Yalta;Ialta;Ialta
+Джанкой;Dzhankoy;Джанкой;Dzhankói;Dzhankoy;Dzhankoy
+Херсон;Kherson;Херсон;Jersón;Kherson;Kherson
+Каховка;Kakhovka;Каховка;Kajovka;Kakhovka;Kakhovka
+Мелитополь;Melitopol;Мелитополь;Melitópol;Melitopol;Melitopol
+Запорожье;Zaporozhye;Запорожье;Zaporozhye;Zaporozhye;Zaporozhye
+Мариуполь;Mariupol;Мариуполь;Mariúpol;Mariupol;Mariupol
+Сталино;Stalino;Сталино;estalino;Stálin;Stálin
+Ворошиловград;Voroshilovgrad;Ворошиловград;Voroshilovgrad;Voroshilovgrado;Voroshilovgrado
+Таганрог;Taganrog;Таганрог;Taganrog;Taganrog;Taganrog
+Ростов-на-Дону;Rostov-on-Don;Ростов-на-Дону;Rostov del Don;Rostov do Don;Rostov do Don
+София;Sofia;София;Sofía;Sofia;Sofia
+Бухарест;Bucharest;Бухарест;Bucarest;Bucareste;Bucareste
+Тегеран;Tehran;Тегеран;Teherán;Teerã;Teerã
+Добрич;Dobrich;Добрич;Dóbrich;Dobrich;Dobrich
+Варна;Varna;Варна;Varna;Varna;Varna
+Констанца;Constanta;Констанца;Constanza;Constança;Constança
+Пловдив;Plovdiv;Пловдив;Plovdiv;Plovdiv;Plovdiv
+Бургас;Burgas;Бургас;Burgas;Burgas;Burgas
+Стамбул;Istanbul;Стамбул;Estanbul;Istambul;Istambul
+Фесалоники;Thessaloniki;Фесалоники;Salónica;Salónica;Salónica
+Скопье;Skopje;Скопье;Skopie;Escópia;Escópia
+Палермо;Palermo;Палермо;palermo;Palermo;Palermo
+Печ;Pecs;Печ;pectorales;Peitorais;Peitorais
+Клуж;Cluj;Клуж;Cluja;Cluj;Cluj
+Тимишоара;Timisoara;Тимишоара;Timisoara;Timişoara;Timişoara
+Кишинев;Kishinev;Кишинев;Kishinev;Kishinev;Kishinev
+Одесса;Odessa;Одесса;Odesa;Odessa;Odessa
+Николаев;Nikolaev;Николаев;Nikolaev;Nicolaev;Nicolaev
+Кривой рог;Krivoy Rog;Кривой рог;Krivói Rog;Krivoy Rog;Krivoy Rog
+Днепропетровск;Dnepropetrovsk;Днепропетровск;Dnepropetrovsk;Dnepropetrovsk;Dnepropetrovsk
+Харьков;Kharkiv;Харьков;Járkov;Carcóvia;Carcóvia
+Сумы;Sumy;Сумы;Sumy;Sumy;Sumy
+Полтава;Poltava;Полтава;Poltava;Poltava;Poltava
+Кирово;Kirovo;Кирово;Kirovo;Kirovo;Kirovo
+Черкассы;Cherkasy;Черкассы;Cherkasy;Tcherkássi;Tcherkássi
+Киев;Kyiv;Киев;Kyiv;Kyiv;Kyiv
+Чернигов;Chernigov;Чернигов;Chernígov;Chernigov;Chernigov
+Гомель;Gomel;Гомель;Gómel;Gomel;Gomel
+Могилев;Mogilev;Могилев;Mogilev;Mogilev;Mogilev
+Витебск;Vitebsk;Витебск;Vítebsk;Vitebsk;Vitebsk
+Минск;Minsk;Минск;Minsk;Minsk;Minsk
+Брест-Литовский;Brest-Litovsk;Брест-Литовский;Brest-Litovsk;Brest-Litovsk;Brest-Litovsk
+Гродно;Grodno;Гродно;Grodno;Hrodna;Hrodna
+Вильнюс;Vilnius;Вильнюс;Vilna;Vilnius;Vilnius
+Каунас;Kaunas;Каунас;Kaunas;Kaunas;Kaunas
+Клайпеда;Klaipeda;Клайпеда;Kláipeda;Klaipeda;Klaipeda
+Мемель;Memel;Мемель;Memel;Memel;Memel
+Рига;Riga;Рига;riga;Riga;Riga
+Таллин;Tallinn;Таллин;Tallin;Tallin;Tallin
+Выборг;Vyborg;Выборг;Víborg;Vyborg;Vyborg
+Ленинград;Leningrad;Ленинград;Leningrado;Leningrado;Leningrado
+Псков;Pskov;Псков;Pskov;Pskov;Pskov
+Новгород;Novgorod;Новгород;Nóvgorod;Novgorod;Novgorod
+Калинин;Kalinin;Калинин;Kalinin;Kalinin;Kalinin
+Смоленск;Smolensk;Смоленск;Smolensk;Smolensk;Smolensk
+Брянск;Bryansk;Брянск;Briansk;Briansk;Briansk
+Орел;Eagle;Орел;Águila;Águia;Águia
+Курск;Kursk;Курск;kursk;Kursk;Kursk
+Белгород;Belgorod;Белгород;Bélgorod;Belgorod;Belgorod
+Воронеж;Voronezh;Воронеж;Vorónezh;Voronej;Voronej
+Куйбышев;Kuibyshev;Куйбышев;Kuibyshev;Kuibyshev;Kuibyshev
+Астрахань;Astrakhan;Астрахань;Astracán;Astracã;Astracã
+Сталинград;Stalingrad;Сталинград;Stalingrado;Stalingrado;Stalingrado
+Львов;Lviv;Львов;Leópolis;Lviv;Lviv
+Мукачево;Mukachevo;Мукачево;Mukácheve;Mukachevo;Mukachevo
+Кошице;Kosice;Кошице;Košice;Košice;Košice
+Пшемысль;Przemysl;Пшемысль;Przemyśl;Przemyśl;Przemyśl
+Катовице;Katowice;Катовице;Katowice;Katowice;Katowice
+Краков;Krakow;Краков;Cracovia;Cracóvia;Cracóvia
+Лодзь;Lodz;Лодзь;Łódź;Lódz;Lódz
+Данциг;Danzig;Данциг;Dánzig;Danzig;Danzig
+Кенигсберг;Koenigsberg;Кенигсберг;Königsberg;Königsberg;Königsberg
+Белосток;Bialystok;Белосток;Białystok;Bialystok;Bialystok
+Шецин;Sheqing;Шецин;sheqing;Sheqing;Sheqing
+Бреслау;Breslau;Бреслау;Breslau;Breslau;Breslau
+Познань;Poznan;Познань;Poznań;Poznań;Poznań
+Ровно;Rivne;Ровно;Rivne;Rivne;Rivne
+Тарнополь;Tarnopol;Тарнополь;Tarnópol;Tarnopol;Tarnopol
+Москва;Moscow;Москва;Moscú;Moscou;Moscou
+Хельсинки;Helsinki;Хельсинки;helsinki;Helsínquia;Helsínquia
+Стокгольм;Stockholm;Стокгольм;Estocolmo;Estocolmo;Estocolmo
+Осло;Oslo;Осло;Oslo;Oslo;Oslo
+Копенгаген;Copenhagen;Копенгаген;Copenhague;Copenhague;Copenhague
+Эр-Рияд;Riyadh;Эр-Рияд;Riad;Riad;Riad
+Рейкьявик;Reykjavik;Рейкьявик;Reikiavik;Reykjavík;Reykjavík
+Анкара;Ankara;Анкара;ankara;Ancara;Ancara
+Афины;Athens;Афины;Atenas;Atenas;Atenas
+Тирана;Tirana;Тирана;Tirana;Tirana;Tirana
+Берн;Berne;Берн;Berna;Berna;Berna
+Сана;Sana;Сана;sana;Sana;Sana
+Маскат;Muscat;Маскат;Moscatel;Mascate;Mascate
+Мурманск;Murmansk;Мурманск;Múrmansk;Murmansk;Murmansk
+Череповец;Cherepovets;Череповец;Cherepovéts;Tcherepovets;Tcherepovets
+Ярославль;Yaroslavl;Ярославль;Yaroslavl;Iaroslavl;Iaroslavl
+Владимир;Vladimir;Владимир;Vladímir;Vladimir;Vladimir
+Горький;Gorky;Горький;Gorki;Gorky;Gorky
+Чебоксары;Cheboksary;Чебоксары;Cheboksary;Tcheboksary;Tcheboksary
+Йошкар-Ола;Yoshkar-Ola;Йошкар-Ола;Yoshkar-Olá;Yoshkar-Ola;Yoshkar-Ola
+Архангельск;Arkhangelsk;Архангельск;Arkhangelsk;Arcangel;Arcangel
+Костомукша;Kostomuksha;Костомукша;Kostomuksha;Kostomuksha;Kostomuksha
+Петрозаводск;Petrozavodsk;Петрозаводск;Petrozavodsk;Petrozavodsk;Petrozavodsk
+Вологда;Vologda;Вологда;Vólogda;Vologda;Vologda
+Кострома;Kostroma;Кострома;Kostromá;Kostroma;Kostroma
+Иваново;Ivanovo;Иваново;Ivánovo;Ivanovo;Ivanovo
+Саратов;Saratov;Саратов;Sarátov;Saratov;Saratov
+Липецк;Lipetsk;Липецк;Lípetsk;Lipetsk;Lipetsk
+Тамбов;Tambov;Тамбов;Tambov;Tambov;Tambov
+Рязань;Ryazan;Рязань;Riazán;Riazan;Riazan
+Тула;Tula;Тула;tula;Tula;Tula
+Калуга;Kaluga;Калуга;Kaluga;Kaluga;Kaluga
+Ржев;Rzhev;Ржев;Rzhev;Rjev;Rjev
+Саранск;Saransk;Саранск;Saransk;Saransk;Saransk
+Пенза;Penza;Пенза;penza;Penza;Penza
+Ульяновск;Ulyanovsk;Ульяновск;Uliánovsk;Ulianovsk;Ulianovsk
+Кеми;Kemi;Кеми;kemi;Kemi;Kemi
+Оулу;Oulu;Оулу;Oulu;Oulu;Oulu
+Вааса;Vaasa;Вааса;Vaasa;Vaasa;Vaasa
+Тампере;Tampere;Тампере;Tampere;Tampere;Tampere
+Савонлинна;Savonlinna;Савонлинна;Savonlinna;Savonlinna;Savonlinna
+Гётеборг;Gothenburg;Гётеборг;Gotemburgo;Gotemburgo;Gotemburgo
+Мальме;Malmo;Мальме;Malmö;Malmö;Malmö
+Висбю;Visby;Висбю;Visby;Visby;Visby
+Ольборг;Aalborg;Ольборг;Ålborg;Aalborg;Aalborg
+Клермон-Ферран;Clermont-Ferrand;Клермон-Ферран;Clermont-Ferrand;Clermont-Ferrand;Clermont-Ferrand
+Гренобль;Grenoble;Гренобль;Grenoble;Grenoble;Grenoble
+Безансон;Besançon;Безансон;Besanzón;Besançon;Besançon
+Женева;Geneva;Женева;Ginebra;Genebra;Genebra
+Цюрих;Zurich;Цюрих;Zúrich;Zurique;Zurique
+Локарно;Locarno;Локарно;locarno;Locarno;Locarno
+Грац;Graz;Грац;Graz;Graz;Graz
+Филлах;Villach;Филлах;Villach;Vilach;Vilach
+Линц;Linz;Линц;Linz;Linz;Linz
+Дебрецен;Debrecen;Дебрецен;Debrecen;Debrecen;Debrecen
+Задар;Zadar;Задар;Zadar;Zadar;Zadar
+Баня-Лука;Banja Luka;Баня-Лука;Bania Luka;Banja Luka;Banja Luka
+Ниш;Nis;Ниш;Niš;Nis;Nis
+Крагуевац;Kragujevac;Крагуевац;Kragujevac;Kragujevac;Kragujevac
+Янина;Ioannina;Янина;Ioánina;Joanina;Joanina
+Александруполис;Alexandroupolis;Александруполис;Alejandrópolis;Alexandrópolis;Alexandrópolis
+Коринф;Corinth;Коринф;Corinto;Corinto;Corinto
+Ираклион;Heraklion;Ираклион;Heraclión;Iráclio;Iráclio
+Анталья;Antalya;Анталья;Antalya;Antália;Antália
+Измир;Izmir;Измир;Esmirna;Esmirna;Esmirna
+Бурса;Bursa;Бурса;Bolsa;Bursa;Bursa
+Конья;Konya;Конья;konya;Cônia;Cônia
+Мерсин;Mersin;Мерсин;Mersin;Mersin;Mersin
+Газинтеп;Gazintep;Газинтеп;Gazintep;Gazintep;Gazintep
+Синоп;Sinop;Синоп;Sinop;Sinop;Sinop
+Самсун;Samsun;Самсун;Samsung;Samsun;Samsun
+Эрзинджан;Erzincan;Эрзинджан;Erzincan;Erzincan;Erzincan
+Диярбакыр;Diyarbakir;Диярбакыр;Diyarbakır;Diarbaquir;Diarbaquir
+Ван;Wang;Ван;Wang;Wang;Wang
+Батуми;Batumi;Батуми;Batum;Batumi;Batumi
+Карс;Kars;Карс;kars;Kars;Kars
+Ардебиль;Ardabil;Ардебиль;Ardabil;Ardabil;Ardabil
+Букан;Bukan;Букан;Bukan;Bukan;Bukan
+Сененедж;Senenage;Сененедж;Senénage;Senenage;Senenage
+Басра;Basra;Басра;Basora;Baçorá;Baçorá
+Кербела;Karbala;Кербела;Kerbala;Carbala;Carbala
+Эсхафан;Eshaphan;Эсхафан;Eshafán;Eshaphan;Eshaphan
+Шираз;Shiraz;Шираз;shiraz;Xiraz;Xiraz
+Мешхед;Mashhad;Мешхед;Mashhad;Mashad;Mashad
+Бендер-Аббас;Bandar Abbas;Бендер-Аббас;Bandar Abbas;Bandar Abbas;Bandar Abbas
+Медина;Medina;Медина;medina;Medina;Medina
+Мекка;Mecca;Мекка;la meca;Meca;Meca
+Сакака;Sakaka;Сакака;Sakaka;Sakaka;Sakaka
+Доха;Doha;Доха;Doha;Doha;Doha
+Абу-Даби;Abu Dhabi;Абу-Даби;Abu Dhabi;Abu Dabi;Abu Dabi
+Хмельницкий;Khmelnitsky;Хмельницкий;Jmelnitsky;Khmelnitsky;Khmelnitsky
+Винница;Vinnitsa;Винница;Vínnitsa;Vinnitsa;Vinnitsa
+Житомир;Zhytomyr;Житомир;Zhytómyr;Jitomir;Jitomir
+Солигорск;Soligorsk;Солигорск;Soligorsk;Soligorsk;Soligorsk
+Даугавпилс;Daugavpils;Даугавпилс;Daugavpils;Daugavpils;Daugavpils
+Тарту;Tartu;Тарту;Tartu;Tartu;Tartu
+Урюпинск;Uryupinsk;Урюпинск;Uryupinsk;Uryupinsk;Uryupinsk
+Михайловка;Mikhailovka;Михайловка;Mijailovka;Mikhailovka;Mikhailovka
+Миллерово;Millerovo;Миллерово;Millerovo;Millerovo;Millerovo
+Волгодонск;Volgodonsk;Волгодонск;Volgodonsk;Volgodonsk;Volgodonsk
+Элиста;Elista;Элиста;Elistá;Elista;Elista
+Казань;Kazan;Казань;Kazán;Cazã;Cazã
+Ставрополь-на-Волге;Stavropol-on-Volga;Ставрополь-на-Волге;Stavropol del Volga;Stavropol-no-Volga;Stavropol-no-Volga
+Оренбург;Orenburg;Оренбург;Oremburgo;Oremburgo;Oremburgo
+Уфа;Ufa;Уфа;Ufá;Ufá;Ufá
+Набережные Челны;Naberezhnye Chelny;Набережные Челны;Náberezhnye Chelny;Naberejnye Chelny;Naberejnye Chelny
+Пермь;Permian;Пермь;Pérmico;Permiano;Permiano
+Киров;Kirov;Киров;Kírov;Kirov;Kirov
+Сыктывкар;Syktyvkar;Сыктывкар;Syktyvkar;Syktyvkar;Syktyvkar
+Актау;Aktau;Актау;aktau;Aktau;Aktau
+Костанай;Kostanay;Костанай;Kostanái;Kostanay;Kostanay
+Петропавловск;Petropavlovsk;Петропавловск;Petropávlovsk;Petropavlovsk;Petropavlovsk
+Алматы;Almaty;Алматы;almatý;Almaty;Almaty
+Астана;Astana;Астана;Astaná;Astana;Astana
+Караганда;Karaganda;Караганда;Karagandá;Karaganda;Karaganda
+Самарканд;Samarkand;Самарканд;Samarcanda;Samarcanda;Samarcanda
+Ташкент;Tashkent;Ташкент;Taskent;Tashkent;Tashkent
+Бишкек;Bishkek;Бишкек;Biskek;Bisqueque;Bisqueque
+Душанбе;Dushanbe;Душанбе;Dusambé;Duchambé;Duchambé
+Ашхабад;Ashgabat;Ашхабад;Asjabad;Asgabate;Asgabate
+Заболь;Illness;Заболь;Enfermedad;Doença;Doença
+Бирдженд;Birjand;Бирдженд;Biryand;Birjand;Birjand
+Керман;Kerman;Керман;Kermán;Kerman;Kerman
+Сирджан;Sirjan;Сирджан;sirjan;Sirjan;Sirjan
+Сераван;Seravan;Сераван;Seravan;Seravan;Seravan
+Захедан;Zahedan;Захедан;Zahedán;Zaedã;Zaedã
+Кум;Godfather;Кум;Padrino;Padrinho;Padrinho
+Решт;Rasht;Решт;Rasht;Rasht;Rasht
+Сари;Sari;Сари;Sari;Sari;Sari
+Мазари-Шариф;Mazar-i-Sharif;Мазари-Шариф;Mazar-i-Sharif;Mazar-i-Sharif;Mazar-i-Sharif
+Герат;Herat;Герат;Herāt;Herat;Herat
+Фарах;Farah;Фарах;farah;Farah;Farah
+Лашкаргах;Lashkar Gah;Лашкаргах;Lashkar Gah;Lashkar Gah;Lashkar Gah
+Кандагар;Kandahar;Кандагар;Kandahar;Candaar;Candaar
+Кабул;Kabul;Кабул;Kabul;Cabul;Cabul
+Гвадар;Gwadar;Гвадар;Gwadar;Gwadar;Gwadar
+Гвадар;Gwadar;Гвадар;Gwadar;Gwadar;Gwadar
+Кветта;Quetta;Кветта;queta;Queta;Queta
+Кветта;Quetta;Кветта;queta;Queta;Queta
+Асьют;Asyut;Асьют;Asiut;Assiut;Assiut
+Асуан;Aswan;Асуан;Asuán;Assuã;Assuã
+Луксор;Luxor;Луксор;Lúxor;Luxor;Luxor
+Донгола;Dongola;Донгола;Dongola;Dongola;Dongola
+Атбара;Atbara;Атбара;Atbara;Atbara;Atbara
+Хартум;Khartoum;Хартум;Jartum;Cartum;Cartum
+Эль-Обейд;El Obeid;Эль-Обейд;El-Obeid;El-Obeid;El-Obeid
+Эн-Нухуд;An-Nuhud;Эн-Нухуд;An-Nuhud;An-Nuhud;An-Nuhud
+Ньяла;Nyala;Ньяла;Nyala;Niala;Niala
+Эль-Фашер;El Fasher;Эль-Фашер;El-Fasher;El-Fasher;El-Fasher
+Эль-Генейна;El Geneina;Эль-Генейна;El Geneina;El Geneina;El Geneina
+Абеше;Abeche;Абеше;Abeche;Abeche;Abeche
+Ниамей;Niamey;Ниамей;niamey;Niamey;Niamey
+Маради;Maradi;Маради;maradi;Maradi;Maradi
+Угадугу;Guess what?;Угадугу;¿Adivina qué?;Adivinha?;Adivinha?
+Мопти;Mopti;Мопти;Moptí;Mopti;Mopti
+Бамако;Bamako;Бамако;Bamako;Bamaco;Bamaco
+Сигири;Siguiri;Сигири;Siguiri;Siguiri;Siguiri
+Бисау;Bissau;Бисау;Bisáu;Bissau;Bissau
+Зигиншор;Ziguinchor;Зигиншор;Ziguinchor;Ziguinchor;Ziguinchor
+Дакар;Dakar;Дакар;dakar;Dacar;Dacar
+Нуакшор;Nouakshore;Нуакшор;Costa de Nuakchot;Nouakshore;Nouakshore
+Киффа;Kiffa;Киффа;Kifa;Kiffa;Kiffa
+Атар;Atar;Атар;Atar;Atar;Atar
+Нуадибу;Nouadhibou;Нуадибу;Nuadibú;Nouadhibou;Nouadhibou
+Дахла;Dakhla;Дахла;Dajla;Dakhla;Dakhla
+Эль-Аюн;Laayoune;Эль-Аюн;El Aaiún;El Aiune;El Aiune
+Фес;Fes;Фес;Fez;Fez;Fez
+Тслемен;Tslemen;Тслемен;tslemen;Tslemen;Tslemen
+Асмара;Asmara;Асмара;Asmara;Asmara;Asmara
+Кассала;Kassala;Кассала;Kasala;Cassala;Cassala
+Джибути;Djibouti;Джибути;Yibuti;Djibuti;Djibuti
+Мэкэле;Mekele;Мэкэле;mekele;Mekele;Mekele
+Гондэр;Gondar;Гондэр;gondar;Gondar;Gondar
+Бахр-Дар;Bahir Dar;Бахр-Дар;Bahir-Dar;Bahir Dar;Bahir Dar
+Аламата;Alamata;Аламата;alamata;Almata;Almata
+Дамар;Damar;Дамар;damar;Damar;Damar
+Ходейда;Hodeidah;Ходейда;Hodeida;Hodeidah;Hodeidah
+Аден;Aden;Аден;Adén;Áden;Áden
+Джизан;Jizan;Джизан;Jizán;Jizan;Jizan
+Абха;Abha;Абха;Abhá;Abha;Abha
+Джедда;Jeddah;Джедда;Yeda;Jidá;Jidá
+Табук;Tabuk;Табук;tabuk;Tabuque;Tabuque
+Эль-Мукалла;El Mukalla;Эль-Мукалла;El Mukalla;El Mukalla;El Mukalla
+Салала;Salalah;Салала;Salalah;Salalá;Salalá
+Дубай;Dubai;Дубай;Dubái;Dubai;Dubai
+Эль-Хуфуф;Al-Hofuf;Эль-Хуфуф;Al Hofuf;Al-Hofuf;Al-Hofuf
+Венеция;Venice;Венеция;Venecia;Veneza;Veneza
+Болонья;Bologna;Болонья;Bolonia;Bolonha;Bolonha
+Генуя;Genoa;Генуя;Génova;Génova;Génova
+Равенна;Ravenna;Равенна;Rávena;Ravena;Ravena
+Гроссето;Grosseto;Гроссето;Grosseto;Grosseto;Grosseto
+Неаполь;Naples;Неаполь;Nápoles;Nápoles;Nápoles
+Бари;Bari;Бари;Barí;Bari;Bari
+Мессина;Messina;Мессина;Mesina;Messina;Messina
+Катания;Catania;Катания;catania;Catânia;Catânia
+Сассари;Sassari;Сассари;Sássari;Sássari;Sássari
+Кальяри;Cagliari;Кальяри;Cagliari;Cagliari;Cagliari
+Аяччо;Ajaccio;Аяччо;Ajaccio;Ajácio;Ajácio
+Анкона;Ancona;Анкона;Ancona;Ancona;Ancona
+Пескара;Pescara;Пескара;Pescara;Pescara;Pescara
+Волос;Hair;Волос;Cabello;Cabelo;Cabelo
+Ларисса;Larissa;Ларисса;Larisa;Larissa;Larissa
+Трикала;Trikala;Трикала;Tríkala;Tríkala;Tríkala
+Каламатра;Kalamatra;Каламатра;Kalamatra;Kalamatra;Kalamatra
+Яссы;Iasi;Яссы;Iasi;Iasi;Iasi
+Бакэу;Bacau;Бакэу;Bacău;Bacau;Bacau
+Сучава;Suceava;Сучава;Suceava;Suceava;Suceava
+Дева;Virgo;Дева;Virgo;Virgem;Virgem
+Сибиу;Sibiu;Сибиу;Sibiu;Sibiu;Sibiu
+Сибиу;Sibiu;Сибиу;Sibiu;Sibiu;Sibiu
+Браила;Braila;Браила;braila;Braila;Braila
+Плевен;Pleven;Плевен;pleven;Pleven;Pleven
+Хасково;Haskovo;Хасково;Jáskovo;Haskovo;Haskovo
+Суботица;Subotica;Суботица;Subótica;Subótica;Subótica
+Осиек;Osijek;Осиек;Osijek;Osijek;Osijek
+Риека;Rijeka;Риека;Rijeka;Rijeka;Rijeka
+Пула;Pula;Пула;Pula;Pula;Pula
+Триест;Trieste;Триест;Trieste;Trieste;Trieste
+Фрайбург;Freiburg;Фрайбург;Friburgo;Friburgo;Friburgo
+Хейльбронн;Heilbronn;Хейльбронн;Heilbronn;Heilbronn;Heilbronn
+Регенсбург;Regensburg;Регенсбург;Ratisbona;Ratisbona;Ratisbona
+Вюрцбург;Wurzburg;Вюрцбург;Würzburg;Wurzburgo;Wurzburgo
+Иннсбрук;Innsbruck;Иннсбрук;Innsbruck;Insbruck;Insbruck
+Эрфурт;Erfurt;Эрфурт;Érfurt;Erfurt;Erfurt
+Либерец;Liberec;Либерец;Liberec;Liberec;Liberec
+Брно;Brno;Брно;Brno;Bruno;Bruno
+Острава;Ostrava;Острава;Ostravá;Ostrava;Ostrava
+Тренчин;Trencin;Тренчин;Trencina;Trencin;Trencin
+Сомбатхей;Szombathely;Сомбатхей;Szombathely;Szombathely;Szombathely
+Лешно;Leszno;Лешно;Leszno;Leszno;Leszno
+Грюнберг;Grünberg;Грюнберг;Grünberg;Grunberg;Grunberg
+Быдгощ;Bydgoszcz;Быдгощ;Bydgoszcz;Bydgoszcz;Bydgoszcz
+Ольштын;Olsztyn;Ольштын;Olsztyn;Olsztyn;Olsztyn
+Радом;Radom;Радом;Radom;Radom;Radom
+Кельце;Kielce;Кельце;Kielce;Kielce;Kielce
+Калиш;Kalisz;Калиш;Kalisz;Kalisz;Kalisz
+Люблин;Lublin;Люблин;Lublin;Lublin;Lublin
+Седльце;Siedlce;Седльце;Siedlce;Siedlce;Siedlce
+Ле-Ман;Le Mans;Ле-Ман;le Mans;Le Mans;Le Mans
+Бурж;Burj;Бурж;burj;Burj;Burj
+Валанс;Valence;Валанс;Valencia;Valência;Valência
+Бержерак;Bergerac;Бержерак;Bergerac;Bergerac;Bergerac
+Ля-Рошель;La Rochelle;Ля-Рошель;La Rochela;La Rochelle;La Rochelle
+По;By;По;Por;Por;Por
+Перпиньян;Perpignan;Перпиньян;Perpiñán;Perpinhã;Perpinhã
+Герона;Gerona;Герона;Gerona;Girona;Girona
+Лерида;Lleida;Лерида;Lérida;Lérida;Lérida
+Сарагоса;Zaragoza;Сарагоса;zaragoza;Saragoça;Saragoça
+Лоргоньо;Lorgonyo;Лоргоньо;lorgonyo;Lorgonyo;Lorgonyo
+Толедо;Toledo;Толедо;Toledo;Toledo;Toledo
+Бадахос;Badajoz;Бадахос;Badajoz;Badajoz;Badajoz
+Кордоба;Cordoba;Кордоба;Córdoba;Córdoba;Córdoba
+Альбасете;Albacete;Альбасете;albacete;Albacete;Albacete
+Самара;Samara;Самара;Sámara;Samara;Samara
+Донецк;Donetsk;Донецк;Donetsk;Donetsk;Donetsk
+Луганск;Lugansk;Луганск;Lugansk;Lugansk;Lugansk
+Юзовка;Yuzovka;Юзовка;Yuzovka;Yuzovka;Yuzovka
+Нижний Новгород;Nizhny Novgorod;Нижний Новгород;Nizhny Novgorod;Nizhny Novgorod;Nizhny Novgorod
+Санкт-Петербург;Saint Petersburg;Санкт-Петербург;San Petersburgo;São Petersburgo;São Petersburgo
+Тольятти;Tolyatti;Тольятти;Toliatti;Togliatti;Togliatti
+Турбат;Turbat;Турбат;Turbat;Turbat;Turbat
+Пешавар;Peshawar;Пешавар;Peshawar;Peshawar;Peshawar
+Крайова;Craiova;Крайова;Craiova;Craiova;Craiova
+Волгоград;Volgograd;Волгоград;Volgogrado;Volgogrado;Volgogrado
+Царицын;Tsaritsyn;Царицын;Tsaritsyn;Tsaritsyn;Tsaritsyn
+// технологии;// технологии;// технологии;// технологии;// технологии;// технологии
+Прицельные приспособления;Sights;Прицельные приспособления;Monumentos;Vistas;Vistas
+Броня II;Armor II;Броня II;Armadura II;Armadura II;Armadura II
+Броня;Armor;Броня;Armadura;armaduras;armaduras
+Армия;Army;Армия;Ejército;Exército;Exército
+Ранняя артиллерия;Early artillery;Ранняя артиллерия;Artillería temprana;Artilharia antiga;Artilharia antiga
+Улучшенная артиллерия;Improved Artillery;Улучшенная артиллерия;Artillería mejorada;Artilharia Melhorada;Artilharia Melhorada
+Производство автомобилей;Automotive production;Производство автомобилей;Producción automotriz;Produção automotiva;Produção automotiva
+Дульный тормоз;Muzzle brake;Дульный тормоз;Freno de boca;Fucinho feio;Fucinho feio
+Двигатель II;Engine II;Двигатель II;Motor II;Motor II;Motor II
+Двигатель;Engine;Двигатель;Motor;Motor;Motor
+Бронетехника;Armored vehicles;Бронетехника;Vehículos blindados;Veículos blindados;Veículos blindados
+Регулярная армия;Regular army;Регулярная армия;Ejército regular;Exército regular;Exército regular
+Элитная пехота;Elite infantry;Элитная пехота;Infantería de élite;Infantaria de elite;Infantaria de elite
+Люлька;Cradle;Люлька;Cuna;Berço;Berço
+Щиток;shield;Щиток;blindaje;escudo;escudo
+Моторизированная пехота;Motorized infantry;Моторизированная пехота;Infantería motorizada;Infantaria motorizada;Infantaria motorizada
+Бронированная мотопехота;Armored motorized infantry;Бронированная мотопехота;Infantería motorizada blindada;Infantaria motorizada blindada;Infantaria motorizada blindada
+Накатник;Knurl;Накатник;Acordonar;serrilhado;serrilhado
+Нефтеперерабатывающие заводы;Oil refineries;Нефтеперерабатывающие заводы;Refinerías de petroleo;Refinarias de petróleo;Refinarias de petróleo
+Изготовление резины;Rubber manufacturing;Изготовление резины;Fabricación de caucho;Fabricação de borracha;Fabricação de borracha
+Щитовое прикрытие;Shield cover;Щитовое прикрытие;Cubierta protectora;Capa de escudo;Capa de escudo
+Синтетический каучук;Synthetic rubber;Синтетический каучук;Caucho sintético;Borracha sintética;Borracha sintética
+Сошники;Openers;Сошники;Abridores;Abridores;Abridores
+Станины;Beds;Станины;Camas;Camas;Camas
+Ствол;Trunk;Ствол;Trompa;Porta-malas;Porta-malas
+Лёгкий танк;Light tank;Лёгкий танк;tanque ligero;Tanque leve;Tanque leve
+Средний танк;Medium tank;Средний танк;Tanque mediano;Tanque médio;Tanque médio
+Производство шин;Tire production;Производство шин;Producción de neumáticos;Produção de pneus;Produção de pneus
+Тормоз отката;Rollback brake;Тормоз отката;freno de retroceso;Freio de reversão;Freio de reversão
+Инструкторы армии;Army instructors;Инструкторы армии;instructores del ejército;Instrutores do exército;Instrutores do exército
+Продвинутые тренировочные полигоны;Advanced training grounds;Продвинутые тренировочные полигоны;Campos de entrenamiento avanzado;Campos de treinamento avançado;Campos de treinamento avançado
+Обучение солдат II;Soldier Training II;Обучение солдат II;Entrenamiento de soldados II;Treinamento de Soldados II;Treinamento de Soldados II
+Обучение солдат;Soldier training;Обучение солдат;Entrenamiento de soldados;Treinamento de soldado;Treinamento de soldado
+Производство грузовиков;Truck production;Производство грузовиков;producción de camiones;Produção de caminhões;Produção de caminhões
+Современное снаряжение;Modern equipment;Современное снаряжение;Equipo moderno;Equipamento moderno;Equipamento moderno
+Усовершенствованное оружие;Advanced Weapons;Усовершенствованное оружие;Armas avanzadas;Armas Avançadas;Armas Avançadas
+Раннее ПТО;Early VET;Раннее ПТО;FP temprana;EFP precoce;EFP precoce
+Улучшенное ПТО;Improved PTO;Улучшенное ПТО;Toma de fuerza mejorada;Tomada de força melhorada;Tomada de força melhorada
+Стандартная переработка нефти;Standard oil refining;Стандартная переработка нефти;Refinación de petróleo estándar;Refino de petróleo padrão;Refino de petróleo padrão
+Улучшенная переработка нефти;Improved oil refining;Улучшенная переработка нефти;Refinación de petróleo mejorada;Melhor refino de petróleo;Melhor refino de petróleo
+Кавалерия;Cavalry;Кавалерия;Caballería;Cavalaria;Cavalaria
+Улучшенная Кавалерия;Improved Cavalry;Улучшенная Кавалерия;Caballería mejorada;Cavalaria Melhorada;Cavalaria Melhorada
+Броня III;Armor III;Броня III;Armadura III;Armadura III;Armadura III
+Двигатель III;Engine III;Двигатель III;Motor III;Motor III;Motor III
+Тяжелый танк;Heavy tank;Тяжелый танк;Tanque pesado;Tanque pesado;Tanque pesado
+NumberGoodiser.thounsand;K;тыс.;mil;milhar;milhar
+NumberGoodiser.million;M;млн.;millón;milhão;M
+NumberGoodiser.billion;B;млрд.;MM;Bil;Bil
+Date.0;January;Январь;Enero;Janeiro;Janeiro
+Date.1;February;Февраль;Febrero;Fevereiro;Fevereiro
+Date.2;March;Март;Marzo;Marchar;Marchar
+Date.3;April;Апрель;Abril;abril;abril
+Date.4;May;Май;Puede;Poderia;Poderia
+Date.5;June;Июнь;Junio;Junho;Junho
+Date.6;July;Июль;Julio;Julho;Julho
+Date.7;August;Август;Agosto;Agosto;Agosto
+Date.8;September;Сентябрь;Septiembre;Setembro;Setembro
+Date.9;October;Октябрь;Octubre;Outubro;Outubro
+Date.10;November;Ноябрь;Noviembre;novembro;novembro
+Date.11;December;Декабрь;Diciembre;dezembro;dezembro
+Diplomaty.AcceptAll;Accept all;Принять все;Acepta todo;Aceite tudo;Aceite tudo
+Diplomaty.DeclineAll;Decline all;Отклонить все;Rechazar todo;Rejeitar tudo;Rejeitar tudo
+Diplomaty.TheyOffersToYou;They offer to you;Они предлагают вам;te ofrecen;Eles oferecem a você;Eles oferecem a você
+Diplomaty.NewOffer;New offer;Новое предложение;Nueva oferta;Nova oferta;Nova oferta
+NewTemplateText;New template;Новый шаблон;Nueva plantilla;Novo modelo;Novo modelo
+Diplomaty.Accept;Accept;Принять;Aceptar;Aceitar;Aceitar
+Diplomaty.Decline;Reject;Отклонить;Rechazar;Rejeitar;Rejeitar
+VerifyBreakBuildingText;Destroy a building;Разрушить здание;Destruir un edificio;Destruir um edifício;Destruir um edifício
+FightUI.Victory;Victory;Победа;Victoria;Vitória;Vitória
+FightUI.Defeat;Defeat;Поражение;Fracaso;Derrota;Derrota
+FightUI.Attack;Attack;Атаковать;Ataque;Ataque;Ataque
+FightUI.AttackerLoss;Attacker losses;Потери атакующего;Pérdidas del atacante;Perdas do atacante;Perdas do atacante
+FightUI.AttackerGains;Attacker acquisitions;Приобретения атакующего;Adquisiciones de atacantes;Aquisições de invasores;Aquisições de invasores
+FightUI.DefenderLoss;Defender losses;Потери защищающегося;Pérdidas de defensores;Perdas do defensor;Perdas do defensor
+FightUI.DefenderGains;Acquisitions of the defender;Приобретения защищающегося;Adquisiciones del defensor.;Aquisições do defensor;Aquisições do defensor
+FightUI.AnnexRegion;Capture a region;Захватить регион;Capturar una región;Capturar uma região;Capturar uma região
+LosePanelTitle;You lose;Вы проиграли;Tú pierdes;Você perdeu;Você perdeu
+LosePanelText;Your country has capitulated!;Ваша страна капитулировала!;¡Tu país ha capitulado!;Seu país capitulou!;Seu país capitulou!
+EnterNumberPlaceholder;Enter the number...;Введите число...;Introduzca el número...;Digite o número...;Digite o número...
+MarketTitle;Resource Market;Рынок ресурсов;Mercado de recursos;Mercado de Recursos;Mercado de Recursos
+Market.Oil;Oil;Нефть;Aceite;Óleo;Óleo
+Market.Steel;Steel;Сталь;Acero;Aço;Aço
+Market.Alluminum;Aluminum;Аллюминий;Aluminio;Alumínio;Alumínio
+Market.Rubber;Rubber;Резина;Goma;Borracha;Borracha
+Market.AlreadyPurchasing;You're already buying this;Вы уже покупаете это;Ya estas comprando esto;Você já está comprando isso;Você já está comprando isso
+Market.PurchaseTitle;Purchasing resources;Покупка ресурсов;Compra de recursos;Compra de recursos;Compra de recursos
+Market.Buy;Buy;Купить;Comprar;Comprar;Comprar
+Market.YouWillPay;You'll pay every turn;Вы будете платить каждый ход;Pagarás cada turno;Você pagará cada turno;Você pagará cada turno
+Market.Refund;You make a purchase smaller than the previous one, so you get a refund for the turn;Вы совершаете покупку меньше предыдущей, поэтому получаете возврат средств за ход;Realizas una compra inferior a la anterior, por lo que obtienes un reembolso por la mudanza;Você faz uma compra menor que a anterior e recebe o reembolso da mudança;Você faz uma compra menor que a anterior e recebe o reembolso da mudança
+EnterTextPlaceholder;Enter text...;Введите текст...;Ingrese texto...;Digite o texto...;Digite o texto...
+Market.PurchaseDesc;Enter the quantity you wish to buy;Введите количество, которое Вы желаете купить;Ingrese la cantidad que desea comprar;Insira a quantidade que deseja comprar;Insira a quantidade que deseja comprar
+AutosavingText;Autosaving...;Идёт автосохранение...;Autoguardado en progreso...;Salvamento automático em andamento...;Salvamento automático em andamento...
+SmallNews.State;State;Государство;Estado;Estado;Estado
+SmallNews.Annexed;annexed;присоединило;anexo;anexado;anexado
+SmallNews.ProvincesOf;provinces of the state;провинций государства;provincias del estado;províncias do estado;províncias do estado
+SmallNews.Claimed;claimed the provinces of the state;заявило претензии на провинции государства;reclamó las provincias del estado;reivindicou as províncias do estado;reivindicou as províncias do estado
+SmallNews.UnClaimed;withdrew claims to the provinces of the state;отозвало претензии на провинции государства;retiró los reclamos a las provincias del estado;retirou reivindicações às províncias do estado;retirou reivindicações às províncias do estado
+SmallNews.DeclareWar;declared war on the state;объявило войну государству;declaró la guerra al estado;declarou guerra ao estado;declarou guerra ao estado
+SmallNews.Peace;made peace with the state;заключило мир с государством;hizo las paces con el estado;fez as pazes com o estado;fez as pazes com o estado
+SmallNews.Trade;entered into trade with the state;заключило торговлю с государством;entró en comercio con el estado;entrou em comércio com o estado;entrou em comércio com o estado
+SmallNews.Union;entered into an alliance with the state;заключило союз с государством;entró en una alianza con el estado;fez uma aliança com o estado;fez uma aliança com o estado
+SmallNews.Pact;signed a non-aggression pact with the state;подписало пакт о ненападении с государством;firmó un pacto de no agresión con el estado;assinou um pacto de não agressão com o estado;assinou um pacto de não agressão com o estado
+SmallNews.UnTrade;terminated trade with the state;расторгло торговлю с государством;comercio terminado con el estado;encerrou o comércio com o estado;encerrou o comércio com o estado
+SmallNews.UnPact;terminated the non-aggression pact with the state;расторгло пакт о ненападении с государством;puso fin al pacto de no agresión con el estado;rescindiu o pacto de não agressão com o estado;rescindiu o pacto de não agressão com o estado
+SmallNews.DeUnion;dissolved the union with the state;расторгло союз с государством;disolvió la unión con el estado;dissolveu a união com o estado;dissolveu a união com o estado
+Warn.BatalionLimit;Battalion limit reached;Достигнут лимит батальонов;Se alcanzó el límite de batallón;Limite do batalhão atingido;Limite do batalhão atingido
+Warn.ArmyLimit;A division template can only have 10 units;В шаблоне дивизии может быть только 10 юнитов;Una plantilla de división sólo puede tener 10 unidades.;Um modelo de divisão só pode ter 10 unidades;Um modelo de divisão só pode ter 10 unidades
+Warn.NoMoney;Not enough money;Недостаточно денег;Dinero insuficiente;Dinheiro insuficiente;Dinheiro insuficiente
+Warn.NoFood;Not enough provisions;Недостаточно провизии;No hay suficientes provisiones;Disposições insuficientes;Disposições insuficientes
+Warn.NoRecruits;Not enough recruits;Недостаточно рекрутов;No hay suficientes reclutas;Não há recrutas suficientes;Não há recrutas suficientes
+Warn.NotEnoughtResources;Insufficient resources;Недостаточно ресурсов;Recursos insuficientes;Recursos insuficientes;Recursos insuficientes
+Warn.FleetLimit;Maximum 10 ships;Максимум 10 кораблей;Máximo 10 barcos;Máximo de 10 navios;Máximo de 10 navios
+Warn.EnterModName;Enter mod name;Введите имя мода;Introduce el nombre del mod;Digite o nome do mod;Digite o nome do mod
+Warn.SaveModAtFirst;First save the mod;Сначала сохраните мод;Primero guarda el mod.;Primeiro salve o mod;Primeiro salve o mod
+Warn.technology;Technology successfully researched;Успешно исследована технология;Tecnología investigada con éxito;Tecnologia pesquisada com sucesso;Tecnologia pesquisada com sucesso
+Warn.Produced;Production completed successfully;Успешно завершено производство;La producción se completó con éxito;Produção concluída com sucesso;Produção concluída com sucesso
+Warn.NoBorder;You do not border this province;Вы не граничите с этой провинцией;No limitas con esta provincia.;Você não faz fronteira com esta província;Você não faz fronteira com esta província
+Warn.NoSlots;No free slots;Нет свободных слотов;No hay espacios libres;Sem slots grátis;Sem slots grátis
+Warn.NoCoast;The province has no coast;У провинции нет побережья;La provincia no tiene costa.;A província não tem costa;A província não tem costa
+Warn.Demil;The province is demilitarized;Провинция демилитаризована;La provincia está desmilitarizada.;A província está desmilitarizada;A província está desmilitarizada
+Warn.NoShips;You have no ships in stock;У Вас нет кораблей в запасах;No tienes barcos en stock;Você não tem navios em estoque;Você não tem navios em estoque
+Warn.NoMarineBase;The province does not have a naval base;У провинции нет морской базы;La provincia no cuenta con base naval;A província não possui base naval;A província não possui base naval
+Warn.NoMovePoints;The division has no movement points. Wait for the next move;У дивизии нет очков передвижения. Дождитесь следующего хода;La división no tiene puntos de movimiento. Espera el próximo movimiento;A divisão não possui pontos de movimento. Espere pelo próximo movimento;A divisão não possui pontos de movimento. Espere pelo próximo movimento
+Warn.technologyAlready;You are already researching the technology;Вы уже исследуете технологию;Ya estás investigando la tecnología.;Você já está pesquisando a tecnologia;Você já está pesquisando a tecnologia
+Editor.ModEventsTitle;Modification Events;События модификации;Eventos de modificación;Eventos de modificação;Eventos de modificação
+Editor.CreateNewEvent;Create an event;Создать событие;Crear un evento;Crie um evento;Crie um evento
+Editor.PictureHint;Click here to download picture;Нажмите здесь, чтобы загрузить картинку;Haga clic aquí para descargar la imagen;Clique aqui para baixar a imagem;Clique aqui para baixar a imagem
+Editor.CreateEventButtonText;Create an event button;Создать кнопку события;Crear un botón de evento;Crie um botão de evento;Crie um botão de evento
+Editor.Receivers;Recipients;Получатели;Destinatarios;Destinatários;Destinatários
+Editor.BlackList;Black list of countries;Черный список стран;Lista negra de países;Lista negra de países;Lista negra de países
+Editor.Remove;Delete;Удалить;Borrar;Excluir;Excluir
+Editor.EnterButtonNamePlaceholder;Enter the name of the button...;Введите название кнопки...;Introduzca el nombre del botón...;Digite o nome do botão...;Digite o nome do botão...
+Editor.SaveAndAddEvent;Save and add event;Сохранить и добавить событие;Guardar y agregar evento;Salvar e adicionar evento;Salvar e adicionar evento
+Editor.Ideology;Ideology;Идеология;Ideología;Ideologia;Ideologia
+Editor.SaveChanges;Save changes;Сохранить изменения;Guardar cambios;Salvar alterações;Salvar alterações
+Editor.ModName;Mod name;Название мода;Nombre del mod;Nome do mod;Nome do mod
+Editor.EnterModNamePlaceholder;Enter the name of the mod...;Введите название мода...;Introduce el nombre del mod...;Digite o nome do mod...;Digite o nome do mod...
+Editor.ModDesc;Description;Описание;Descripción;Descrição;Descrição
+Editor.EnterModDescPlaceholder;Enter a description of the mod...;Введите описание мода...;Introduce una descripción del mod...;Insira uma descrição do mod...;Insira uma descrição do mod...
+Editor.AllowGameEvents;Allow game events;Разрешить игровые события;Permitir eventos del juego;Permitir eventos de jogo;Permitir eventos de jogo
+Editor.GameEvents;Game events;Игровые события;Eventos del juego;Eventos de jogo;Eventos de jogo
+Editor.SaveAndCompile;Compile and save;Скомпилировать и сохранить;compilar y guardar;Compilar e salvar;Compilar e salvar
+Editor.Publish;Publish;Опубликовать;Publicar;Publicar;Publicar
+Editor.PublishError;An error occurred while publishing your modification!;Произошла ошибка при публикации Вашей модификации!;¡Ocurrió un error al publicar tu modificación!;Ocorreu um erro ao publicar sua modificação!;Ocorreu um erro ao publicar sua modificação!
+Editor.PublishSuccess;Your modification has been successfully published!;Ваша модификация успешно опубликована!;¡Tu modificación ha sido publicada exitosamente!;Sua modificação foi publicada com sucesso!;Sua modificação foi publicada com sucesso!
+Editor.EnterDatePlaceholder;Enter date...;Введите дату...;Introduce la fecha...;Insira a data...;Insira a data...
+Прицельные приспособления.desc;Loading...;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Броня II.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Броня.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Армия.desc;Provides access to the creation of divisions;Открывает доступ к созданию дивизий;Proporciona acceso a la creación de divisiones.;Fornece acesso à criação de divisões;Fornece acesso à criação de divisões
+Ранняя артиллерия.desc;This technology will open access to a new type of troops - Early Artillery;Эта технология откроет доступ к новому виду войск - Ранняя артиллерия;Esta tecnología abrirá el acceso a un nuevo tipo de tropas: Early Artillery;Esta tecnologia abrirá o acesso a um novo tipo de tropas - Artilharia Antecipada;Esta tecnologia abrirá o acesso a um novo tipo de tropas - Artilharia Antecipada
+Улучшенная артиллерия.desc;This technology will open access to a new type of troops - Improved Artillery;Эта технология откроет доступ к новому виду войск - Улучшенная артиллерия;Esta tecnología abrirá el acceso a un nuevo tipo de tropas: la artillería mejorada.;Esta tecnologia abrirá o acesso a um novo tipo de tropa - Artilharia Aprimorada;Esta tecnologia abrirá o acesso a um novo tipo de tropa - Artilharia Aprimorada
+Производство автомобилей.desc;Car production technology will open access to the following research;Технология производства автомобилей откроет доступ к следующим исследованиям;La tecnología de producción de automóviles abrirá el acceso a las siguientes investigaciones;A tecnologia de produção de automóveis abrirá acesso às seguintes pesquisas;A tecnologia de produção de automóveis abrirá acesso às seguintes pesquisas
+Дульный тормоз.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Двигатель II.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Двигатель.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Бронетехника.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Регулярная армия.desc;This technology will open access to a new type of troops - Regular Infantry;Эта технология откроет доступ к новому виду войск - Регулярная пехота;Esta tecnología abrirá el acceso a un nuevo tipo de tropas: la Infantería Regular;Esta tecnologia abrirá o acesso a um novo tipo de tropa - Infantaria Regular;Esta tecnologia abrirá o acesso a um novo tipo de tropa - Infantaria Regular
+Элитная пехота.desc;This technology will open access to a new type of troops - Elite Infantry;Эта технология откроет доступ к новому виду войск - Элитная пехота;Esta tecnología abrirá el acceso a un nuevo tipo de tropas: la infantería de élite.;Esta tecnologia abrirá o acesso a um novo tipo de tropas - Infantaria de Elite;Esta tecnologia abrirá o acesso a um novo tipo de tropas - Infantaria de Elite
+Люлька.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Щиток.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Моторизированная пехота.desc;This technology will open access to a new type of troops - Motorized Infantry. Motorized infantry moves twice per turn;Эта технология откроет доступ к новому виду войск - Моторизированная пехота. Мото-пехота ходит дважды за ход;Esta tecnología abrirá el acceso a un nuevo tipo de tropas: la infantería motorizada. La infantería motorizada se mueve dos veces por turno.;Esta tecnologia abrirá o acesso a um novo tipo de tropa - a Infantaria Motorizada. A infantaria motorizada se move duas vezes por turno;Esta tecnologia abrirá o acesso a um novo tipo de tropa - a Infantaria Motorizada. A infantaria motorizada se move duas vezes por turno
+Бронированная мотопехота.desc;This technology will open access to a new type of troops - Armored Motorized Infantry. Motorized infantry moves twice per turn;Эта технология откроет доступ к новому виду войск - Бронированная мотопехота. Мото-пехота ходит дважды за ход;Esta tecnología abrirá el acceso a un nuevo tipo de tropas: la infantería motorizada blindada. La infantería motorizada se mueve dos veces por turno.;Esta tecnologia abrirá o acesso a um novo tipo de tropa - Infantaria Motorizada Blindada. A infantaria motorizada se move duas vezes por turno;Esta tecnologia abrirá o acesso a um novo tipo de tropa - Infantaria Motorizada Blindada. A infantaria motorizada se move duas vezes por turno
+Накатник.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Нефтеперерабатывающие заводы.desc;Oil refinery technology makes it possible to extract fuel;Технология нефтеперерабатывающих заводов позволяет добывать горючее;La tecnología de refinería de petróleo permite extraer combustible;Tecnologia de refinaria de petróleo permite extrair combustível;Tecnologia de refinaria de petróleo permite extrair combustível
+Изготовление резины.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Щитовое прикрытие.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Синтетический каучук.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Сошники.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Станины.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Ствол.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Лёгкий танк.desc;This technology will open access to a new type of troops - the Light Tank. Armored vehicles move twice per turn.;Эта технология откроет доступ к новому виду войск - Лёгкий танк. Бронетехника перемещается дважды за ход.;Esta tecnología abrirá el acceso a un nuevo tipo de tropas: el tanque ligero. Los vehículos blindados se mueven dos veces por turno.;Esta tecnologia abrirá o acesso a um novo tipo de tropa - o Tanque Leve. Os veículos blindados se movem duas vezes por turno.;Esta tecnologia abrirá o acesso a um novo tipo de tropa - o Tanque Leve. Os veículos blindados se movem duas vezes por turno.
+Средний танк.desc;This technology will open access to a new type of troops - the Medium Tank. Armored vehicles move twice per turn;Эта технология откроет доступ к новому виду войск - Средний танк. Бронетехника перемещается дважды за ход;Esta tecnología abrirá el acceso a un nuevo tipo de tropas: el tanque medio. Los vehículos blindados se mueven dos veces por turno.;Esta tecnologia abrirá o acesso a um novo tipo de tropa - o Tanque Médio. Veículos blindados se movem duas vezes por turno;Esta tecnologia abrirá o acesso a um novo tipo de tropa - o Tanque Médio. Veículos blindados se movem duas vezes por turno
+Производство шин.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Тормоз отката.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Инструкторы армии.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Продвинутые тренировочные полигоны.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Обучение солдат II.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Обучение солдат.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Производство грузовиков.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Современное снаряжение.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Усовершенствованное оружие.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Раннее ПТО.desc;This technology will open access to a new type of troops - Early VET;Эта технология откроет доступ к новому виду войск - Раннее ПТО;Esta tecnología abrirá el acceso a un nuevo tipo de tropas - FP Temprana;Esta tecnologia abrirá o acesso a um novo tipo de tropas - Early VET;Esta tecnologia abrirá o acesso a um novo tipo de tropas - Early VET
+Улучшенное ПТО.desc;This technology will open access to a new type of troops - Improved VET;Эта технология откроет доступ к новому виду войск - Улучшенное ПТО;Esta tecnología abrirá el acceso a un nuevo tipo de tropas - FP mejorada;Esta tecnologia abrirá o acesso a um novo tipo de tropas - EFP melhorado;Esta tecnologia abrirá o acesso a um novo tipo de tropas - EFP melhorado
+Стандартная переработка нефти.desc;Standard oil refining gives a bonus to fuel production;Стандартная переработка нефти даёт бонус к получению горючего;La refinación estándar de petróleo otorga una bonificación a la producción de combustible;O refino padrão de petróleo dá um bônus à produção de combustível;O refino padrão de petróleo dá um bônus à produção de combustível
+Улучшенная переработка нефти.desc;Improved oil refining gives a bonus to fuel production;Улучшенная переработка нефти даёт бонус к получению горючего;La mejora del refinado del petróleo aporta un plus a la producción de combustible;Melhor refino de petróleo dá um bônus à produção de combustível;Melhor refino de petróleo dá um bônus à produção de combustível
+Кавалерия.desc;This technology will open access to a new type of troops - Cavalry. Cavalry moves twice per turn;Эта технология откроет доступ к новому виду войск - Кавалерия. Кавалерия ходит дважды за ход;Esta tecnología abrirá el acceso a un nuevo tipo de tropas: la caballería. La caballería mueve dos veces por turno.;Esta tecnologia abrirá o acesso a um novo tipo de tropa - a Cavalaria. Cavalaria se move duas vezes por turno;Esta tecnologia abrirá o acesso a um novo tipo de tropa - a Cavalaria. Cavalaria se move duas vezes por turno
+Улучшенная Кавалерия.desc;This technology will open access to a new type of troops - Cavalry. Cavalry moves twice per turn;Эта технология откроет доступ к новому виду войск - Кавалерия. Кавалерия ходит дважды за ход;Esta tecnología abrirá el acceso a un nuevo tipo de tropas: la caballería. La caballería mueve dos veces por turno.;Esta tecnologia abrirá o acesso a um novo tipo de tropa - a Cavalaria. Cavalaria se move duas vezes por turno;Esta tecnologia abrirá o acesso a um novo tipo de tropa - a Cavalaria. Cavalaria se move duas vezes por turno
+Броня III.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Двигатель III.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
+Тяжелый танк.desc;This technology will open access to a new type of troops - the Heavy Tank. Armored vehicles move twice per turn;Эта технология откроет доступ к новому виду войск - Тяжелый танк. Бронетехника перемещается дважды за ход;Esta tecnología abrirá el acceso a un nuevo tipo de tropas: el tanque pesado. Los vehículos blindados se mueven dos veces por turno.;Esta tecnologia abrirá o acesso a um novo tipo de tropa - o Tanque Pesado. Veículos blindados se movem duas vezes por turno;Esta tecnologia abrirá o acesso a um novo tipo de tropa - o Tanque Pesado. Veículos blindados se movem duas vezes por turno
+SaveText;Save;Сохранение;Guardar;Salvar;Salvar
+UpdateCheck.NewUpdateFound;New update available. Update the game via GooglePlay;Доступно новое обновление. Обновите игру через GooglePlay;Nueva actualización disponible. Actualiza el juego a través de GooglePlay;Nova atualização disponível. Atualize o jogo via GooglePlay;Nova atualização disponível. Atualize o jogo via GooglePlay
+MainMenu.SelectModeWarn_1;You choosed;Вы выбрали;tu elegiste;Você escolheu;Você escolheu
+MainMenu.SelectModeWarn_2;Go to the country selection menu and play.;Перейдите в меню выбора стран и играйте.;Ve al menú de selección de país y juega.;Vá para o menu de seleção de país e jogue.;Vá para o menu de seleção de país e jogue.
+BuildingManager.WasAdded_1;It was added;Было добавлено;fue añadido;Foi adicionado;Foi adicionado
+BuildingManager.WasAdded_2;buildings for construction!;зданий на стройку!;edificios para la construcción!;edifícios para construção!;edifícios para construção!
+BuildingManager.Title;Development management;Управление застройкой;Gestión del desarrollo;Gestão do desenvolvimento;Gestão do desenvolvimento
+BuildManager.Build;Build;Построить;Construir;Construir;Construir
+BuildManager.TotalBuildingsTitle;Constructed buildings;У Вас построено;Edificios construidos;Edifícios construídos;Edificações construídas
+BuildManager.BuildingInQueueTitle;Under construction;Сейчас строятся;Ahora se están construyendo;Agora eles estão sendo construídos;Agora eles estão sendo construídos
+Buildings.AirBase;Air base;Авиабаза;Base aérea;Base aérea;Base aérea
+Aviation.NoProvinces;No provinces selected;Не выбраны провинции;Provincias no seleccionadas;Nenhuma província selecionada;Nenhuma província selecionada
+Warn.NoAirport;There is no airbase in the province;В провинции нет авиабазы;No hay base aérea en la provincia;Não há Base Aérea na província;Não há Base Aérea na província
+Aviation.Title;Aviation Manager;Управление авиацией;Gestión de la aviación;Gestão de aviação;Gestão Da Aviação
+Aviation.ArmyAttack;Army attack;Удар по армии;Ataque al ejército;Ataque ao exército;Ataque ao exército
+Aviation.BuildingAttack;Attack buildings;Удар по зданиям;Golpe a edificios;Impacto em edifícios;Atingindo prédios
+Aviation.Attack;Attack;Атаковать;Atacar;Atacar;Ataque
+Aviation.AirbaseAttack;Attack airbase;Удар по авиабазам;Ataque a bases aéreas;Ataque às bases aéreas;Greve em bases aéreas
+Aviation.Move;Move;Переместить;Trasladar;Deslocar;Move
+Aviation.Disband;Disband;Расформировать;Disolver;Dissolver;Disband
+Aviation.Actions;Actions;Действия;Ações;Ação;Ações
+Aviation.Planes;Aircraft;Самолёты;Avión;Avião;Aeronaves
+Editor.ModYear;Game year in modification;Игровой год в моде;Año de juego en modificación;Ano de jogo na modificação;Ano do jogo em modificação
+BULKI;Loading...;Съешь ещё этих мягких французских булок, да выпей же чаю;Loading...;Loading...;Loading...

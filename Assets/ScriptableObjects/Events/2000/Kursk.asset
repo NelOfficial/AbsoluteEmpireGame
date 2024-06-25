@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b827dd8bde9b9c6438e425c7948232f1, type: 3}
+  m_Name: Kursk
+  m_EditorClassIdentifier: 
+  id: 4
+  _name: "\u041A\u0440\u0443\u0448\u0435\u043D\u0438\u0435 \u043F\u043E\u0434\u043B\u043E\u0434\u043A\u0438
+    \"\u041A\u0443\u0440\u0441\u043A\""
+  _nameEN: Wreck of Kursk submarine
+  description: "\u0423\u0442\u0440\u043E\u043C 11 \u0441\u0435\u043D\u0442\u044F\u0431\u0440\u044F
+    \u0447\u0435\u0442\u044B\u0440\u0435 \u0433\u0440\u0443\u043F\u043F\u044B \u0442\u0435\u0440\u0440\u043E\u0440\u0438\u0441\u0442\u043E\u0432
+    \u043E\u0431\u0449\u0438\u043C \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E\u043C
+    19 \u0447\u0435\u043B\u043E\u0432\u0435\u043A \u0437\u0430\u0445\u0432\u0430\u0442\u0438\u043B\u0438
+    \u0447\u0435\u0442\u044B\u0440\u0435 \u0440\u0435\u0439\u0441\u043E\u0432\u044B\u0445
+    \u043F\u0430\u0441\u0441\u0430\u0436\u0438\u0440\u0441\u043A\u0438\u0445 \u0441\u0430\u043C\u043E\u043B\u0451\u0442\u0430.
+    \u041A\u0430\u0436\u0434\u0430\u044F \u0433\u0440\u0443\u043F\u043F\u0430 \u0438\u043C\u0435\u043B\u0430
+    \u043A\u0430\u043A \u043C\u0438\u043D\u0438\u043C\u0443\u043C \u043E\u0434\u043D\u043E\u0433\u043E
+    \u0447\u043B\u0435\u043D\u0430, \u043F\u0440\u043E\u0448\u0435\u0434\u0448\u0435\u0433\u043E
+    \u043D\u0430\u0447\u0430\u043B\u044C\u043D\u0443\u044E \u043B\u0451\u0442\u043D\u0443\u044E
+    \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0443. \u0417\u0430\u0445\u0432\u0430\u0442\u0447\u0438\u043A\u0438
+    \u043D\u0430\u043F\u0440\u0430\u0432\u0438\u043B\u0438 \u0434\u0432\u0430 \u043B\u0430\u0439\u043D\u0435\u0440\u0430
+    \u0432 \u0431\u0430\u0448\u043D\u0438 \u0412\u0422\u0426, \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u043D\u044B\u0435
+    \u0432 \u044E\u0436\u043D\u043E\u0439 \u0447\u0430\u0441\u0442\u0438 \u041C\u0430\u043D\u0445\u044D\u0442\u0442\u0435\u043D\u0430
+    \u0432 \u041D\u044C\u044E-\u0419\u043E\u0440\u043A\u0435. \u0420\u0435\u0439\u0441
+    11 American Airlines \u0432\u0440\u0435\u0437\u0430\u043B\u0441\u044F \u0432
+    \u0431\u0430\u0448\u043D\u044E \u0412\u0422\u0426-1 (\u0421\u0435\u0432\u0435\u0440\u043D\u0443\u044E),
+    \u0430 \u0440\u0435\u0439\u0441 175 United Airlines \u2014 \u0432 \u0431\u0430\u0448\u043D\u044E
+    \u0412\u0422\u0426-2 (\u042E\u0436\u043D\u0443\u044E). \u0412 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0435
+    \u044D\u0442\u043E\u0433\u043E \u043E\u0431\u0435 \u0431\u0430\u0448\u043D\u0438
+    \u043E\u0431\u0440\u0443\u0448\u0438\u043B\u0438\u0441\u044C, \u0432\u044B\u0437\u0432\u0430\u0432
+    \u0441\u0435\u0440\u044C\u0451\u0437\u043D\u044B\u0435 \u0440\u0430\u0437\u0440\u0443\u0448\u0435\u043D\u0438\u044F
+    \u043F\u0440\u0438\u043B\u0435\u0433\u0430\u044E\u0449\u0438\u0445 \u0441\u0442\u0440\u043E\u0435\u043D\u0438\u0439.\n\n\u041F\u043E\u043C\u0438\u043C\u043E
+    19 \u0442\u0435\u0440\u0440\u043E\u0440\u0438\u0441\u0442\u043E\u0432, \u0432
+    \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0435 \u0430\u0442\u0430\u043A
+    \u043F\u043E\u0433\u0438\u0431\u043B\u043E 2977 \u0447\u0435\u043B\u043E\u0432\u0435\u043A"
+  descriptionEN: "On the morning of September 11, four terrorist groups totaling
+    19 people hijacked four scheduled passenger planes. Each group had at least one
+    member who had completed initial flight training. The invaders sent two airliners
+    to the WTC towers located in the southern part of Manhattan in New York. American
+    Airlines flight 11 crashed into the WTC-1 tower (North), and United Airlines
+    Flight 175 crashed into the WTC\u20142 Tower (South). As a result, both towers
+    collapsed, causing serious damage to adjacent buildings.\n\nIn addition to 19
+    terrorists, 2,977 people died as a result of the attacks"
+  date: 10-8-2000
+  image: {fileID: 21300000, guid: 4b297d58056045d4b8acb80f7da179bf, type: 3}
+  _checked: 0
+  silentEvent: 0
+  conditions:
+  - 
+  receivers: 
+  exceptionsReceivers: 
+  aiWillDo_Index: 0
+  buttons:
+  - name: "\u0422\u0440\u0430\u0433\u0435\u0434\u0438\u044F"
+    nameEN: Tragedy
+    actions:
+    - add_res;49;money;-5000
+    - add_res;49;recroots;-1600
+    rejectUltimatum: 0
+  IS_GAME_MAIN_EVENT: 1
+  OFFICIAL_SCENARIO_ID: 3

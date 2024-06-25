@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Niger
+  m_EditorClassIdentifier: 
+  _id: 95
+  _name: "\u041D\u0438\u0433\u0435\u0440"
+  _nameEN: Niger
+  _uiName: "\u041D\u0438\u0433\u0435\u0440"
+  _tag: NIG
+  countryType: 0
+  countryFlag: {fileID: 21300000, guid: 72f8c02f60531c54ebf4649b63363c80, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.7490196, g: 0.29411766, b: 0, a: 0.5019608}
+  countryIdeologyColors:
+  - {r: 0.7490196, g: 0.29411766, b: 0, a: 0.5019608}
+  - {r: 0.7490196, g: 0.29411766, b: 0, a: 0.5019608}
+  - {r: 0.7490196, g: 0.29411766, b: 0, a: 0.5019608}
+  - {r: 0.7490196, g: 0.29411766, b: 0, a: 0.5019608}
+  - {r: 0.7490196, g: 0.29411766, b: 0, a: 0.5019608}
+  - {r: 0.7490196, g: 0.29411766, b: 0, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: 72f8c02f60531c54ebf4649b63363c80, type: 3}
+  - {fileID: 21300000, guid: 72f8c02f60531c54ebf4649b63363c80, type: 3}
+  - {fileID: 21300000, guid: 72f8c02f60531c54ebf4649b63363c80, type: 3}
+  - {fileID: 21300000, guid: 72f8c02f60531c54ebf4649b63363c80, type: 3}
+  - {fileID: 21300000, guid: 72f8c02f60531c54ebf4649b63363c80, type: 3}
+  - {fileID: 21300000, guid: 72f8c02f60531c54ebf4649b63363c80, type: 3}
