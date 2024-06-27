@@ -1,3 +1,4 @@
+using System.Numerics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,5 +47,21 @@ public class Aviation_Cell_obj : MonoBehaviour
         this._background.color = Color.green;
 
         ReferencesManager.Instance.aviationUI.UpdateActionsButtons();
+    }
+
+    public void Disband()
+    {
+        Aviation_Storage airport = ReferencesManager.Instance.regionManager.currentRegionManager.GetComponent<Aviation_Storage>();
+
+        for (int i = 0; i < airport.planes.Count; i++)
+        {
+            if (airport.planes[i].AirPlane == MyObject.AirPlane && airport.planes[i].hp == MyObject.hp)
+            {
+                airport.planes.Remove(airport.planes[i]);
+                break;
+            }
+        }
+
+        ReferencesManager.Instance.aviationUI.UpdateMainUI();
     }
 }

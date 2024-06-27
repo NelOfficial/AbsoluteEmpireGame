@@ -1484,6 +1484,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.41960788
       objectReference: {fileID: 0}
+    - target: {fileID: 8369294093055063845, guid: b18ffe11c47d69c4f8bf9f98f95b71c8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8369294093055063846, guid: b18ffe11c47d69c4f8bf9f98f95b71c8, type: 3}
       propertyPath: m_Name
       value: UpdateButton
@@ -11926,6 +11930,7 @@ MonoBehaviour:
   chatManager: {fileID: 67752686}
   saveManager: {fileID: 295387376}
   languageManager: {fileID: 940381413}
+  aviationUI: {fileID: 0}
   debugString: 
 --- !u!4 &464485262
 Transform:
@@ -42374,6 +42379,8 @@ MonoBehaviour:
   regionSelectionMode: 0
   regionSelectionModeType: 
   provincesList: []
+  provincesListColor: {r: 0, g: 0, b: 0, a: 0}
+  provincesListMax: 0
   currentBattle:
     _id: 0
     enemyUnits: []
@@ -42495,6 +42502,7 @@ MonoBehaviour:
   _airBaseMaxLevel: 5
   _airBaseCost: 1000
   SubmarineLVL1: {fileID: 11400000, guid: 49ca352e17e907a49b20e6e00f4602e7, type: 2}
+  _planes: []
   translate: {fileID: 11400000, guid: 97be4b4f688bd874492e3a74efab93b3, type: 2}
   consolePanel: {fileID: 0}
 --- !u!4 &1669319530
@@ -44758,14 +44766,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7803922, g: 0.69803923, b: 0.5372549, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1486628c69f152e4e8e0d7b41cc60b0a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5718bb3266889574abbea88e6f3738af, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -49190,7 +49198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}

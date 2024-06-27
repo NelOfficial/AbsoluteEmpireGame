@@ -21,6 +21,8 @@ MonoBehaviour:
   price: 1500
   sprite: {fileID: 21300000, guid: 8705d0bd1ca8f9045b77dbba5d6e26ce, type: 3}
   type: 1
+  recruitsCost: 100
+  _tech: {fileID: 11400000, guid: 5139693ddbff8be4daac0a25f32621e9, type: 2}
   maxhp: 40
   airplane_damage: 10
   army_damage: 30

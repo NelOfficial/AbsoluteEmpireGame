@@ -203,6 +203,9 @@ public class GameSettings : MonoBehaviour
 	[Header("Fleet:")]
 	public FleetScriptableObject SubmarineLVL1;
 
+	[Header("Aviation:")]
+	public Aviation_ScriptableObj[] _planes;
+
     [Header("Translate")]
 	public Translate translate;
 

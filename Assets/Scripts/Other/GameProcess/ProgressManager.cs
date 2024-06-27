@@ -66,9 +66,13 @@ public class ProgressManager : MonoBehaviour
                 {
                     float fuelToFill = plane.AirPlane.fuelMax - plane.fuel;
 
-                    if (plane.Owner.fuel >= fuelToFill)
+                    if (plane.Owner != null)
                     {
-                        plane.Owner.fuel -= fuelToFill;
+                        if (plane.Owner.fuel >= fuelToFill)
+                        {
+                            plane.Owner.fuel -= fuelToFill;
+                            plane.fuel += fuelToFill;
+                        }
                     }
                 }
             }

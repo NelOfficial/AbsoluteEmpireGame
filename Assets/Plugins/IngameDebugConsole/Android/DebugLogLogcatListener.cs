@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR || UNITY_ANDROID
+﻿#if !UNITY_EDITOR && UNITY_ANDROID
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -37,7 +37,6 @@ namespace IngameDebugConsole
 				nativeObject.Call( "Stop" );
 		}
 
-		[UnityEngine.Scripting.Preserve]
 		public void OnLogReceived( string log )
 		{
 			queuedLogs.Enqueue( log );

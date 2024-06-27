@@ -48,6 +48,12 @@ public class AttackMenuUI : MonoBehaviour
                         GameObject obj = Instantiate(Cell, View);
                         obj.GetComponent<UnitPrefab>().SetUpBuilding(build);
                     }
+
+                    foreach (RegionManager.BuildingQueueItem buildQueue in reg.buildingsQueue)
+                    {
+                        GameObject obj = Instantiate(Cell, View);
+                        obj.GetComponent<UnitPrefab>().SetUpBuildingQueue(buildQueue);
+                    }
                 }
             }
 
@@ -116,8 +122,6 @@ public class AttackMenuUI : MonoBehaviour
 
 			plane.fuel -= plane.AirPlane.fuelperattack;
 
-			ToggleUI();
-
 			if (plane.fuel < plane.AirPlane.fuelperattack)
 			{
 				button.interactable = false;
@@ -162,20 +166,42 @@ public class AttackMenuUI : MonoBehaviour
 					item.movesLasts = reg.buildings[0].moves * (damage / 100);
 					reg.buildingsQueue.Add(item);
 					reg.buildings.Remove(reg.buildings[0]);
-				}				
+				}
+
+				for (int i = 0; i < reg.buildingsQueue.Count; i++)
+				{
+                    RegionManager.BuildingQueueItem queueItem = reg.buildingsQueue[i];
+
+                    queueItem.movesLasts -= queueItem.building.moves * (damage / 100);
+
+                    if (queueItem.movesLasts <= 0)
+                    {
+						reg.buildingsQueue.Remove(queueItem);
+                    }
+                }
 			}
 
 			plane.fuel -= plane.AirPlane.fuelperattack;
-
-			for (int i = 0; i < View.childCount; i++)
-			{
-				View.GetChild(i).GetComponent<UnitPrefab>()._healthBar.fillAmount = 1 - (damage / 100);
-            }
 
 			if (plane.fuel < plane.AirPlane.fuelperattack)
 			{
 				button.interactable = false;
 			}
-		}
+
+            if (plane.hp <= 0)
+            {
+                Aviation_Storage airport = ReferencesManager.Instance.regionManager.currentRegionManager.GetComponent<Aviation_Storage>();
+
+                for (int i = 0; i < airport.planes.Count; i++)
+                {
+                    if (airport.planes[i].AirPlane == plane.AirPlane && airport.planes[i].hp <= 0)
+                    {
+                        airport.planes.Remove(airport.planes[i]);
+                    }
+                }
+            }
+
+        }
+        ToggleUI();
 	}
 }

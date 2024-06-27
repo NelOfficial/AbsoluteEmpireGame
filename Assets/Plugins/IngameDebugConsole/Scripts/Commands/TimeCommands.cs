@@ -1,5 +1,4 @@
-﻿#if IDG_ENABLE_HELPER_COMMANDS
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace IngameDebugConsole.Commands
 {
@@ -18,4 +17,3 @@ namespace IngameDebugConsole.Commands
 		}
 	}
 }
-#endif

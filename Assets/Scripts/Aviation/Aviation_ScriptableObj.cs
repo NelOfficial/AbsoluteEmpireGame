@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
+
 [CreateAssetMenu(fileName = "NewAirPlane", menuName = "Airplane/default")]
 public class Aviation_ScriptableObj : ScriptableObject
 {
@@ -11,6 +11,8 @@ public class Aviation_ScriptableObj : ScriptableObject
     public int price;
     public Sprite sprite;  
     public Type type;
+    public int recruitsCost;
+    public TechnologyScriptableObject _tech;
 
     [Header("Характеристики")]
     public int maxhp;
@@ -23,7 +25,4 @@ public class Aviation_ScriptableObj : ScriptableObject
     public int fuelMax;
     public int fuelperattack;
     public int hitprice;
-   
-
-
 }

@@ -4,17 +4,21 @@ using UnityEngine.UI;
 
 public class Aviation_UI : MonoBehaviour
 {
-    [SerializeField] GameObject Cell;
-    [SerializeField] Transform View;
+    [SerializeField] private GameObject Cell;
+    [SerializeField] private Transform View;
 
     private GameObject airport;
-    public static GameObject SelectedPlane;
+    [HideInInspector] public static GameObject SelectedPlane;
 
     public GameObject cancelbutton;
 
-    public static int attackMode;
+    [HideInInspector] public static int attackMode;
 
+    [SerializeField] private GameObject _openPurchaseMenu_Button;
     [SerializeField] private Button[] _actionsButtons;
+
+    [SerializeField] private Transform _aviationShopPanel_Container;
+    [SerializeField] private GameObject _aviationShopItem_Prefab;
 
     public void ToggleUI()
     {
@@ -23,30 +27,47 @@ public class Aviation_UI : MonoBehaviour
 
         if (airport.GetComponent<Aviation_Storage>())
         {
-            Aviation_Storage storage = airport.GetComponent<Aviation_Storage>();
-
-            for (int i = View.childCount - 1; i >= 0; i--)
-            {
-                Destroy(View.GetChild(i).gameObject);
-            }
-
-            foreach (Aviation_Cell cell in storage.planes)
-            {
-                GameObject obj2 = Instantiate(Cell, View);
-                obj2.GetComponent<Aviation_Cell_obj>()._interactable = true;
-                obj2.GetComponent<Aviation_Cell_obj>().SetUp(cell);
-            }
+            UpdateMainUI();
 
             gameObject.SetActive(true);
             BackgroundUI_Overlay.Instance.OpenOverlay(gameObject);
             cancelbutton.SetActive(false);
-
-            UpdateActionsButtons();
         }
         else
         {
             WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoAirport"));
         }
+    }
+
+    public void UpdateMainUI()
+    {
+        Aviation_Storage storage = airport.GetComponent<Aviation_Storage>();
+
+        foreach (Transform item in View.transform)
+        {
+            if (item.gameObject.GetComponent<Aviation_Cell_obj>())
+            {
+                Destroy(item.gameObject);
+            }
+        }
+
+        foreach (Aviation_Cell cell in storage.planes)
+        {
+            GameObject obj2 = Instantiate(Cell, View);
+            obj2.GetComponent<Aviation_Cell_obj>()._interactable = true;
+            obj2.GetComponent<Aviation_Cell_obj>().SetUp(cell);
+        }
+
+        if (storage.planes.Count >= 4)
+        {
+            _openPurchaseMenu_Button.SetActive(false);
+        }
+        else
+        {
+            _openPurchaseMenu_Button.SetActive(true);
+        }
+
+        UpdateActionsButtons();
     }
 
     public void CloseUI()
@@ -196,5 +217,40 @@ public class Aviation_UI : MonoBehaviour
         {
             _actionsButtons[i].interactable = interactable;
         }
+    }
+
+    public void UpdateShopUI()
+    {
+        foreach (Transform item in _aviationShopPanel_Container)
+        {
+            Destroy(item.gameObject);
+        }
+
+        var gameSettings = ReferencesManager.Instance.gameSettings;
+
+        for (int i = 0; i < gameSettings._planes.Length; i++)
+        {
+            GameObject spawnedItem = Instantiate(_aviationShopItem_Prefab, _aviationShopPanel_Container);
+
+            var spawnedItem_component = spawnedItem.GetComponent<AviationPurchaseItem>();
+
+            spawnedItem_component._plane = gameSettings._planes[i];
+            spawnedItem_component.SetUp();
+        }
+    }
+
+    public void DisbandAircraft()
+    {
+        Aviation_Storage storage = airport.GetComponent<Aviation_Storage>();
+        storage.planes.Clear();
+
+        UpdateMainUI();
+    }
+
+    public bool HasPlaneTech(Aviation_ScriptableObj plane, CountrySettings country)
+    {
+        bool result = country.countryTechnologies.Contains(plane._tech);
+
+        return result;
     }
 }

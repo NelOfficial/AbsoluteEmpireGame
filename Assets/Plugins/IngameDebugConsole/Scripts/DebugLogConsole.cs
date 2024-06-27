@@ -54,9 +54,6 @@ namespace IngameDebugConsole
 	{
 		public delegate bool ParseFunction( string input, out object output );
 
-		public delegate void CommandExecutedDelegate( string command, object[] parameters );
-		public static event CommandExecutedDelegate OnCommandExecuted;
-
 		// All the commands
 		private static readonly List<ConsoleMethodInfo> methods = new List<ConsoleMethodInfo>();
 		private static readonly List<ConsoleMethodInfo> matchingMethods = new List<ConsoleMethodInfo>( 4 );
@@ -126,13 +123,9 @@ namespace IngameDebugConsole
 
 		static DebugLogConsole()
 		{
-#if !IDG_DISABLE_HELP_COMMAND
 			AddCommand( "help", "Prints all commands", LogAllCommands );
 			AddCommand<string>( "help", "Prints all matching commands", LogAllCommandsWithName );
-#endif
-#if IDG_ENABLE_HELPER_COMMANDS || IDG_ENABLE_SYSINFO_COMMAND
 			AddCommand( "sysinfo", "Prints system information", LogSystemInfo );
-#endif
 
 #if UNITY_EDITOR || !NETFX_CORE
 			// Find all [ConsoleMethod] functions
@@ -217,11 +210,6 @@ namespace IngameDebugConsole
 			{
 				Debug.LogError( "Couldn't search assembly for [ConsoleMethod] attributes: " + assembly.GetName().Name + "\n" + e.ToString() );
 			}
-		}
-
-		public static List<ConsoleMethodInfo> GetAllCommands()
-		{
-			return methods;
 		}
 
 		// Logs the list of available commands
@@ -757,9 +745,6 @@ namespace IngameDebugConsole
 					else
 						Debug.Log( "Returned: " + result.ToString() );
 				}
-
-				if( OnCommandExecuted != null )
-					OnCommandExecuted( methodToExecute.command, parameters );
 			}
 		}
 

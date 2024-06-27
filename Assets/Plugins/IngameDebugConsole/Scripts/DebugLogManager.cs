@@ -32,14 +32,7 @@ namespace IngameDebugConsole
 		Info = 1,
 		Warning = 2,
 		Error = 4,
-		All = ~0
-	}
-
-	public enum PopupVisibility
-	{
-		Always = 0,
-		WhenLogReceived = 1,
-		Never = 2
+		All = 7
 	}
 
 	public class DebugLogManager : MonoBehaviour
@@ -75,25 +68,13 @@ namespace IngameDebugConsole
 
 		[SerializeField]
 		[HideInInspector]
-		[Tooltip( "Opacity of the console window" )]
-		[Range( 0f, 1f )]
-		private float logWindowOpacity = 1f;
+		[Tooltip( "If disabled, no popup will be shown when the console window is hidden" )]
+		private bool enablePopup = true;
 
 		[SerializeField]
 		[HideInInspector]
-		[Tooltip( "Opacity of the popup" )]
-		[Range( 0f, 1f )]
-		internal float popupOpacity = 1f;
-
-		[SerializeField]
-		[HideInInspector]
-		[Tooltip( "Determines when the popup will show up (after the console window is closed)" )]
-		private PopupVisibility popupVisibility = PopupVisibility.Always;
-
-		[SerializeField]
-		[HideInInspector]
-		[Tooltip( "Determines which log types will show the popup on screen" )]
-		private DebugLogFilter popupVisibilityLogFilter = DebugLogFilter.All;
+		[Tooltip( "If enabled, console will be initialized as a popup" )]
+		private bool startInPopupMode = true;
 
 		[SerializeField]
 		[HideInInspector]
@@ -609,10 +590,8 @@ namespace IngameDebugConsole
 #endif
 			}
 
-#if IDG_ENABLE_HELPER_COMMANDS || IDG_ENABLE_LOGS_SAVE_COMMAND
 			DebugLogConsole.AddCommand( "logs.save", "Saves logs to persistentDataPath", SaveLogsToFile );
 			DebugLogConsole.AddCommand<string>( "logs.save", "Saves logs to the specified file", SaveLogsToFile );
-#endif
 
 #if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
 			if( toggleWithKey )
@@ -649,12 +628,12 @@ namespace IngameDebugConsole
 
 		private void Start()
 		{
-			if( startMinimized )
+			if( ( enablePopup && startInPopupMode ) || ( !enablePopup && startMinimized ) )
 				HideLogWindow();
 			else
 				ShowLogWindow();
 
-			PopupEnabled = ( popupVisibility != PopupVisibility.Never );
+			PopupEnabled = enablePopup;
 		}
 
 		private void OnDestroy()
@@ -800,19 +779,7 @@ namespace IngameDebugConsole
 				if( !isLogWindowVisible )
 				{
 					entryCountTextsDirty = true;
-
-					if( popupVisibility == PopupVisibility.WhenLogReceived && !popupManager.IsVisible )
-					{
-						if( ( newInfoEntryCount > 0 && ( popupVisibilityLogFilter & DebugLogFilter.Info ) == DebugLogFilter.Info ) ||
-							( newWarningEntryCount > 0 && ( popupVisibilityLogFilter & DebugLogFilter.Warning ) == DebugLogFilter.Warning ) ||
-							( newErrorEntryCount > 0 && ( popupVisibilityLogFilter & DebugLogFilter.Error ) == DebugLogFilter.Error ) )
-						{
-							popupManager.Show();
-						}
-					}
-
-					if( popupManager.IsVisible )
-						popupManager.NewLogsArrived( newInfoEntryCount, newWarningEntryCount, newErrorEntryCount );
+					popupManager.NewLogsArrived( newInfoEntryCount, newWarningEntryCount, newErrorEntryCount );
 				}
 			}
 
@@ -956,7 +923,7 @@ namespace IngameDebugConsole
 		{
 			// Show the log window
 			logWindowCanvasGroup.blocksRaycasts = true;
-			logWindowCanvasGroup.alpha = logWindowOpacity;
+			logWindowCanvasGroup.alpha = 1f;
 
 			popupManager.Hide();
 
@@ -985,8 +952,7 @@ namespace IngameDebugConsole
 			if( commandInputField.isFocused )
 				commandInputField.DeactivateInputField();
 
-			if( popupVisibility == PopupVisibility.Always )
-				popupManager.Show();
+			popupManager.Show();
 
 			isLogWindowVisible = false;
 
@@ -1793,12 +1759,12 @@ namespace IngameDebugConsole
 			return sb.ToString();
 		}
 
-		public void SaveLogsToFile()
+		private void SaveLogsToFile()
 		{
 			SaveLogsToFile( Path.Combine( Application.persistentDataPath, System.DateTime.Now.ToString( "dd-MM-yyyy--HH-mm-ss" ) + ".txt" ) );
 		}
 
-		public void SaveLogsToFile( string filePath )
+		private void SaveLogsToFile( string filePath )
 		{
 			File.WriteAllText( filePath, GetAllLogs() );
 			Debug.Log( "Logs saved to: " + filePath );

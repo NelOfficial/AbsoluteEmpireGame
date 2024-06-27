@@ -258,7 +258,7 @@ public class ReferencesManager : MonoBehaviour
 
         if (integer < 1000000)
         {
-            float resultInteger = integer / 1000;
+            double resultInteger = (float)integer / 1000f;
             result = $"{resultInteger} {languageManager.GetTranslation("NumberGoodiser.thounsand")}";
         }
 
@@ -266,7 +266,7 @@ public class ReferencesManager : MonoBehaviour
 
         if (integer > 1000000)
         {
-            float resultInteger = integer / 1000000;
+            double resultInteger = integer / 1000000f;
             result = $"{resultInteger} {languageManager.GetTranslation("NumberGoodiser.million")}";
         }
 
