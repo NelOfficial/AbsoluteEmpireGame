@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System;
-using System.Collections.Generic;
 
 public class SaveManager : MonoBehaviour
 {
@@ -141,6 +140,20 @@ public class SaveManager : MonoBehaviour
             for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
             {
                 RegionManager region = ReferencesManager.Instance.countryManager.regions[i];
+                if (region._airBaseLevel > 0)
+                {
+                    Aviation_Storage airbase = region.gameObject.GetComponent<Aviation_Storage>();
+
+                    PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_PLANES", airbase.planes.Count);
+
+                    for (int p = 0; p < airbase.planes.Count; p++)
+                    {
+                        PlayerPrefs.SetString($"{saveId}_REGION_{region._id}_PLANE_{p}_TYPE", airbase.planes[p].AirPlane.tag);
+                        PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_PLANE_{p}_OWNER", airbase.planes[p].Owner.country._id);
+                        PlayerPrefs.SetFloat($"{saveId}_REGION_{region._id}_PLANE_{p}_HP", airbase.planes[p].hp);
+                        PlayerPrefs.SetFloat($"{saveId}_REGION_{region._id}_PLANE_{p}_FUEL", airbase.planes[p].fuel);
+                    }
+                }
 
                 PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_CURRENTCOUNTRY_ID", region.currentCountry.country._id);
 
@@ -152,6 +165,8 @@ public class SaveManager : MonoBehaviour
                 PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_DOCKYARDS", region.dockyards);
                 PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_POPULATION", region.population);
                 PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_FORTS", region.fortifications_Amount);
+                PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_MARINEBASES", region._marineBaseLevel);
+                PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_AIRBASES", region._airBaseLevel);
             }
 
             #region Army

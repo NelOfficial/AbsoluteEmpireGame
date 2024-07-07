@@ -76,11 +76,10 @@ public class MovePoint : MonoBehaviour
         if (hit.collider)
         {
             currentMovePoint = this;
+            UnitMovement dzharahov = ReferencesManager.Instance.regionManager.currentRegionManager.GetDivision(ReferencesManager.Instance.regionManager.currentRegionManager);
+
             if (regionTo.GetComponent<RegionManager>().currentCountry == ReferencesManager.Instance.countryManager.currentCountry) // Just move
             { // my country
-
-                UnitMovement dzharahov = ReferencesManager.Instance.regionManager.currentRegionManager.GetDivision(ReferencesManager.Instance.regionManager.currentRegionManager);
-
                 dzharahov.AIMoveNoHit(regionTo.GetComponent<RegionManager>(), dzharahov);
 
                 ReferencesManager.Instance.regionManager.moveMode = false;
@@ -132,18 +131,14 @@ public class MovePoint : MonoBehaviour
                         }
                         else if (realtion.right)
                         {
-                            UnitMovement dzharahov = ReferencesManager.Instance.regionManager.currentRegionManager.GetDivision(regionTo.GetComponent<RegionManager>());
-
                             dzharahov.AIMoveNoHit(regionTo.GetComponent<RegionManager>(), dzharahov);
 
                             ReferencesManager.Instance.regionManager.moveMode = false;
                             ReferencesManager.Instance.regionUI.barContent.SetActive(true);
 
-                            ReferencesManager.Instance.regionUI.DeMoveUnitMode(false);
                             ReferencesManager.Instance.regionManager.UpdateRegions();
-
+                            ReferencesManager.Instance.regionUI.DeMoveUnitMode(false);
                             ReferencesManager.Instance.regionManager.SelectRegionNoHit(regionTo.GetComponent<RegionManager>());
-
                         }
                         else if (!realtion.right)
                         {

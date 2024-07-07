@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Org.BouncyCastle.Asn1.Pkcs;
 
 public class RegionLoader : MonoBehaviour
 {
@@ -36,7 +37,10 @@ public class RegionLoader : MonoBehaviour
             {
                 _currentScenarioData = _currentScenarioData_Value.value;
 
-                StartCoroutine(LoadMod_Co(_currentScenarioData));
+                if (SceneManager.GetActiveScene().isLoaded)
+                {
+                    LoadMod(_currentScenarioData);
+                }
             }
         }
 
@@ -46,12 +50,6 @@ public class RegionLoader : MonoBehaviour
 
         //ReferencesManager.Instance.gameSettings._regionOpacity = 0.5f;
         //ReferencesManager.Instance.regionManager.UpdateRegions();
-    }
-
-    private IEnumerator LoadMod_Co(string modData)
-    {
-        yield return new WaitForSecondsRealtime(0.5f);
-        LoadMod(modData);
     }
 
     private void LoadMod(string modData)
@@ -168,7 +166,10 @@ public class RegionLoader : MonoBehaviour
             if (regionDict.TryGetValue(regValue.regionId, out var province) &&
                 countryDict.TryGetValue(regValue.countryID, out var country))
             {
-                ReferencesManager.Instance.AnnexRegion(province, country);
+                if (province.currentCountry != country)
+                {
+                    ReferencesManager.Instance.AnnexRegion(province, country);
+                }
             }
         }
     }

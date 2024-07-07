@@ -192,7 +192,7 @@ public class ReferencesManager : MonoBehaviour
             annexedRegion.currentCountry = newCountry;
             annexedRegion.defaultColor = newCountry.country.countryColor;
 
-            annexedRegion.gameObject.name = $"AnxReg_{Random.Range(0, 9999)}";
+            annexedRegion.gameObject.name = $"AnxReg_{UnityEngine.Random.Range(0, 9999)}";
             annexedRegion.transform.SetParent(newCountry.transform);
 
             annexedRegion.currentCountry = newCountry;
@@ -207,7 +207,7 @@ public class ReferencesManager : MonoBehaviour
             newCountry.population += annexedRegion.population;
         }
 
-        ReferencesManager.Instance.ChangeMobilizationLaw(newCountry.mobilizationLaw, newCountry);
+        ChangeMobilizationLaw(newCountry.mobilizationLaw, newCountry);
     }
 
     public void ChangeMobilizationLaw(int id, CountrySettings country)
@@ -258,16 +258,18 @@ public class ReferencesManager : MonoBehaviour
 
         if (integer < 1000000)
         {
-            double resultInteger = (float)integer / 1000f;
-            result = $"{resultInteger} {languageManager.GetTranslation("NumberGoodiser.thounsand")}";
+            float resultInteger = (float)integer / 1000f;
+
+            result = $"{resultInteger.ToString("0.0")} {languageManager.GetTranslation("NumberGoodiser.thounsand")}";
         }
 
         //Millions
 
         if (integer > 1000000)
         {
-            double resultInteger = integer / 1000000f;
-            result = $"{resultInteger} {languageManager.GetTranslation("NumberGoodiser.million")}";
+            float resultInteger = integer / 1000000f;
+
+            result = $"{resultInteger.ToString("0.0")} {languageManager.GetTranslation("NumberGoodiser.millions")}";
         }
 
         return result;
@@ -276,7 +278,7 @@ public class ReferencesManager : MonoBehaviour
     public void CalculateTradeBuff(CountrySettings sender, CountrySettings receiver)
     {
         TradeBuff tradeBuff = new TradeBuff();
-        tradeBuff.id = Random.Range(0, 99999);
+        tradeBuff.id = UnityEngine.Random.Range(0, 99999);
         tradeBuff.sender = sender;
         tradeBuff.receiver = receiver;
 
@@ -303,8 +305,6 @@ public class ReferencesManager : MonoBehaviour
 
     public void PaintRegion(RegionManager region, CountrySettings newCountry)
     {
-
-        //currentRegionManager = hit.collider.gameObject.GetComponent<RegionManager>();
         region.currentCountry.myRegions.Remove(region);
 
         region.currentCountry = newCountry;

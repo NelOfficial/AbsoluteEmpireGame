@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using System.Numerics;
 
 public class ProgressManager : MonoBehaviour
 {
@@ -68,10 +69,20 @@ public class ProgressManager : MonoBehaviour
 
                     if (plane.Owner != null)
                     {
-                        if (plane.Owner.fuel >= fuelToFill)
+                        if (plane.Owner.fuel > 0)
                         {
-                            plane.Owner.fuel -= fuelToFill;
-                            plane.fuel += fuelToFill;
+                            if (plane.Owner.fuel >= fuelToFill)
+                            {
+                                plane.Owner.fuel -= fuelToFill;
+                                plane.fuel += fuelToFill;
+                            }
+                            else
+                            {
+                                float fuelCanFill = plane.Owner.fuel;
+
+                                plane.Owner.fuel -= fuelCanFill;
+                                plane.fuel += fuelCanFill;
+                            }
                         }
                     }
                 }
@@ -158,11 +169,18 @@ public class ProgressManager : MonoBehaviour
 
                     float fuelToFill = unit.unit.maxFuel - unit.fuel;
 
-                    if (units[i].currentCountry.fuel > fuelToFill)
+                    if (units[i].currentCountry.fuel >= fuelToFill)
                     {
                         units[i].currentCountry.fuel -= fuelToFill;
 
                         unit.fuel += fuelToFill;
+                    }
+                    else
+                    {
+                        float fuelCanFill = units[i].currentCountry.fuel;
+
+                        units[i].currentCountry.fuel -= fuelCanFill;
+                        unit.fuel += fuelCanFill;
                     }
 
                     if (unit.fuel >= 50 || unit.unit.maxFuel <= 0)

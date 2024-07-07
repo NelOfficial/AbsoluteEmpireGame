@@ -14,6 +14,8 @@ public class Aviation_ScriptableObj : ScriptableObject
     public int recruitsCost;
     public TechnologyScriptableObject _tech;
 
+    public string tag;
+
     [Header("Характеристики")]
     public int maxhp;
     public int airplane_damage;

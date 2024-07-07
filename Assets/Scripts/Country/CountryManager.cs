@@ -403,10 +403,46 @@ public class CountryManager : MonoBehaviour
             int resLabs = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_RESLABS");
             int dockyards = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_DOCKYARDS");
             int forts = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_FORTS");
+            int marinebases = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_MARINEBASES");
+            int airbases = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_AIRBASES");
 
             region.buildings.Clear();
-            region.infrastructure_Amount = 0;
+            region.infrastructure_Amount = infrastructure_Amount;
             region.fortifications_Amount = forts;
+            region._marineBaseLevel = marinebases;
+            region._airBaseLevel = airbases;
+
+            if (airbases > 0)
+            {
+                region.gameObject.AddComponent<Aviation_Storage>();
+            }
+
+            Aviation_Storage airStorage = region.gameObject.GetComponent<Aviation_Storage>();
+
+            for (int p = 0; p < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_PLANES"); p++)
+            {
+                Aviation_ScriptableObj plane = null;
+
+                for (int f = 0; f < ReferencesManager.Instance.gameSettings._planes.Length; f++)
+                {
+                    Aviation_ScriptableObj _plane = ReferencesManager.Instance.gameSettings._planes[f];
+
+                    if (_plane.tag == PlayerPrefs.GetString($"{currentSaveIndex_INT}_REGION_{region._id}_PLANE_{p}_TYPE"))
+                    {
+                        plane = _plane;
+                    }
+                }
+
+                CountrySettings owner = FindCountryByID(PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_PLANE_{p}_OWNER"));
+
+                Aviation_Cell aviation_Cell = new Aviation_Cell(plane, owner)
+                {
+                    hp = PlayerPrefs.GetFloat($"{currentSaveIndex_INT}_REGION_{region._id}_PLANE_{p}_HP"),
+                    fuel = PlayerPrefs.GetFloat($"{currentSaveIndex_INT}_REGION_{region._id}_PLANE_{p}_FUEL")
+                };
+
+                airStorage.planes.Add(aviation_Cell);
+            }
 
             for (int f = 0; f < civFactory_Amount; f++)
             {
@@ -436,11 +472,6 @@ public class CountryManager : MonoBehaviour
             {
                 region.buildings.Add(ReferencesManager.Instance.gameSettings.dockyard);
                 region.currentCountry.dockyards++;
-            }
-
-            for (int f = 0; f < infrastructure_Amount; f++)
-            {
-                region.UpgradeInfrastructureForce(region);
             }
 
             if (PlayerPrefs.GetString($"{currentSaveIndex_INT}_REGION_{region._id}_HAS_ARMY") == "TRUE")
@@ -992,7 +1023,14 @@ public class CountryManager : MonoBehaviour
             }
             if (foodText != null)
             {
-                foodText.text = currentCountry.food.ToString();
+                if (currentCountry.food >= 30000)
+                {
+                    foodText.text = ReferencesManager.Instance.GoodNumberString((int)currentCountry.food);
+                }
+                else
+                {
+                    foodText.text = currentCountry.food.ToString();
+                }
             }
             if (recrootsText != null)
             {

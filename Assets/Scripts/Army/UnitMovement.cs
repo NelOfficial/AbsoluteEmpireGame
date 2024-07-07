@@ -175,11 +175,11 @@ public class UnitMovement : MonoBehaviour
                             {
                                 division._movePoints--;
                                 division.firstMove = false;
+
                                 MoveUnit(defenderRegion, attackerRegion, division);
+
                                 attackerRegion.hasArmy = false;
                                 defenderRegion.hasArmy = true;
-
-                                division.currentProvince = defenderRegion;
                             }
                         }
                         else if (!realtion.right)

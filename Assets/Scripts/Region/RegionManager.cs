@@ -393,12 +393,12 @@ public class RegionManager : MonoBehaviour
     {
         int check = region.infrastructure_Amount + 1;
 
-        if (region.currentCountry.money >= 800)
+        if (region.currentCountry.money >= 200)
         {
             if (check <= 10)
             {
                 region.infrastructure_Amount++;
-                region.currentCountry.money -= 800;
+                region.currentCountry.money -= 200;
                 region.currentCountry.moneyNaturalIncome += 8;
             }
         }

@@ -301,7 +301,10 @@ public class CountryAIManager : MonoBehaviour
                         }
                         else
                         {
-                            division.Retreat(division);
+                            if (!relation.right)
+                            {
+                                division.Retreat(division);
+                            }
                         }
                     }
                 }
@@ -798,31 +801,34 @@ public class CountryAIManager : MonoBehaviour
     {
         region.CheckRegionUnits(region);
 
-        if (region.currentCountry.country._id == country.country._id && !region.hasArmy)
+        if (!region.demilitarized)
         {
-            UnitScriptableObject unit = ReferencesManager.Instance.gameSettings.soldierLVL1;
-            UnitMovement division = null;
-
-            if (warExpenses >= unit.moneyCost)
+            if (region.currentCountry.country._id == country.country._id && !region.hasArmy)
             {
-                if (country.money >= unit.moneyCost && country.recroots >= unit.recrootsCost && country.food >= unit.foodCost)
+                UnitScriptableObject unit = ReferencesManager.Instance.gameSettings.soldierLVL1;
+                UnitMovement division = null;
+
+                if (warExpenses >= unit.moneyCost)
                 {
-                    GameObject spawnedUnit = Instantiate(ReferencesManager.Instance.army.unitPrefab, region.transform);
-                    spawnedUnit.transform.localScale = new Vector3(ReferencesManager.Instance.army.unitPrefab.transform.localScale.x, ReferencesManager.Instance.army.unitPrefab.transform.localScale.y);
-                    division = spawnedUnit.GetComponent<UnitMovement>();
+                    if (country.money >= unit.moneyCost && country.recroots >= unit.recrootsCost && country.food >= unit.foodCost)
+                    {
+                        GameObject spawnedUnit = Instantiate(ReferencesManager.Instance.army.unitPrefab, region.transform);
+                        spawnedUnit.transform.localScale = new Vector3(ReferencesManager.Instance.army.unitPrefab.transform.localScale.x, ReferencesManager.Instance.army.unitPrefab.transform.localScale.y);
+                        division = spawnedUnit.GetComponent<UnitMovement>();
 
-                    spawnedUnit.GetComponent<UnitMovement>().currentCountry = country;
-                    spawnedUnit.GetComponent<UnitMovement>().currentProvince = region;
-                    spawnedUnit.GetComponent<UnitMovement>().UpdateInfo();
+                        spawnedUnit.GetComponent<UnitMovement>().currentCountry = country;
+                        spawnedUnit.GetComponent<UnitMovement>().currentProvince = region;
+                        spawnedUnit.GetComponent<UnitMovement>().UpdateInfo();
 
-                    region.hasArmy = true;
-                    country.countryUnits.Add(spawnedUnit.GetComponent<UnitMovement>());
+                        region.hasArmy = true;
+                        country.countryUnits.Add(spawnedUnit.GetComponent<UnitMovement>());
 
-                    AddUnitToArmy(country, ReferencesManager.Instance.gameSettings.soldierLVL1, region, spawnedUnit.GetComponent<UnitMovement>());
+                        AddUnitToArmy(country, ReferencesManager.Instance.gameSettings.soldierLVL1, region, spawnedUnit.GetComponent<UnitMovement>());
 
-                    CreateDivision(country, region, division);
+                        CreateDivision(country, region, division);
 
-                    region.CheckRegionUnits(region);
+                        region.CheckRegionUnits(region);
+                    }
                 }
             }
         }
