@@ -257,7 +257,7 @@ public class CountryManager : MonoBehaviour
                 }
             }
         }
-        catch (Exception ex) {
+        catch{
             Debug.Log(PlayerPrefs.GetString($"{currentSaveIndex_INT}_COUNTRIES"));
         }
 
@@ -599,8 +599,6 @@ public class CountryManager : MonoBehaviour
 
         string path = "";
 
-        string eventPartPath = "";
-
         if (pathType == "local")
         {
             path = Path.Combine(Application.persistentDataPath, "localMods", $"{modName}", $"{modName}.AEMod");
@@ -792,7 +790,7 @@ public class CountryManager : MonoBehaviour
                             }
                         }
                     }
-                    catch (Exception except)
+                    catch
                     {
 
                     }

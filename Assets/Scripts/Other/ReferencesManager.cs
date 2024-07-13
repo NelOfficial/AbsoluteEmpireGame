@@ -269,7 +269,7 @@ public class ReferencesManager : MonoBehaviour
         {
             float resultInteger = integer / 1000000f;
 
-            result = $"{resultInteger.ToString("0.0")} {languageManager.GetTranslation("NumberGoodiser.millions")}";
+            result = $"{resultInteger.ToString("0.0")} {languageManager.GetTranslation("NumberGoodiser.million")}";
         }
 
         return result;

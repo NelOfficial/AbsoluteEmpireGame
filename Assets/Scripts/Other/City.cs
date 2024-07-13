@@ -11,8 +11,7 @@ public class City : MonoBehaviour
 
         for (int i = 0; i < centuryLocalises.Length; i++)
         {
-            if (ReferencesManager.Instance.dateManager.currentDate[2] >= centuryLocalises[i].yearMin &&
-                ReferencesManager.Instance.dateManager.currentDate[2] < centuryLocalises[i].yearMax)
+            if (ReferencesManager.Instance.dateManager.currentDate[2] >= centuryLocalises[i].yearMin)
             {
                 key = centuryLocalises[i]._key;
             }

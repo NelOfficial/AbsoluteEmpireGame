@@ -879,7 +879,6 @@ public class CountryAIManager : MonoBehaviour
         }
 
         int winChance = 0;
-        int offset = 0;
 
         #region Defender info
 
@@ -1056,71 +1055,51 @@ public class CountryAIManager : MonoBehaviour
             if (difference >= 1 && difference <= 15)
             {
                 winChance = Random.Range(47, 49);
-
-                offset = 85;
             }
 
             else if (difference >= 15 && difference <= 20)
             {
                 winChance = Random.Range(45, 47);
-
-                offset = 75;
             }
 
             else if (difference >= 20 && difference <= 25)
             {
                 winChance = Random.Range(43, 45);
-
-                offset = 65;
             }
 
             else if (difference >= 25 && difference <= 30)
             {
                 winChance = Random.Range(41, 43);
-
-                offset = 55;
             }
 
             else if (difference >= 35 && difference <= 40)
             {
                 winChance = Random.Range(39, 41);
-
-                offset = 45;
             }
 
             else if (difference >= 45 && difference <= 50)
             {
                 winChance = Random.Range(37, 39);
-
-                offset = 35;
             }
 
             else if (difference >= 55 && difference <= 60)
             {
                 winChance = Random.Range(35, 37);
-
-                offset = 25;
             }
 
             else if (difference >= 65 && difference <= 70)
             {
                 winChance = Random.Range(30, 37);
-
-                offset = 20;
             }
 
             else if (difference >= 75 && difference <= 80)
             {
                 winChance = Random.Range(10, 25);
-
-                offset = 10;
             }
 
             else if (difference >= 85 && difference <= 100)
             {
                 winChance = Random.Range(0, 15);
-
-                offset = 0;
             }
         }
         else if (battle.defenderStrength == battle.attackerStrength)
@@ -1135,84 +1114,56 @@ public class CountryAIManager : MonoBehaviour
             if (difference >= 1 && difference <= 10)
             {
                 winChance = Random.Range(51, 53);
-
-                offset = 85;
             }
 
             else if (difference > 10 && difference <= 15)
             {
                 winChance = Random.Range(53, 56);
-
-                offset = 75;
             }
 
             else if (difference > 15 && difference <= 20)
             {
                 winChance = Random.Range(56, 60);
-
-                offset = 65;
             }
 
             else if (difference > 25 && difference <= 30)
             {
                 winChance = Random.Range(60, 64);
-
-                offset = 55;
             }
 
             else if (difference > 30 && difference <= 40)
             {
                 winChance = Random.Range(64, 68);
-
-                offset = 45;
             }
 
             else if (difference > 40 && difference <= 50)
             {
                 winChance = Random.Range(68, 74);
-
-
-                offset = 35;
             }
 
             else if (difference > 50 && difference <= 60)
             {
                 winChance = Random.Range(74, 78);
-
-
-                offset = 25;
             }
 
             else if (difference > 60 && difference <= 70)
             {
                 winChance = Random.Range(78, 82);
-
-
-                offset = 15;
             }
 
             else if (difference > 70 && difference <= 80)
             {
                 winChance = Random.Range(82, 86);
-
-
-                offset = 5;
             }
 
             else if (difference > 80 && difference <= 90)
             {
                 winChance = Random.Range(86, 90);
-
-
-                offset = 0;
             }
 
             else if (difference > 90 && difference <= 100)
             {
                 winChance = Random.Range(90, 92);
-
-
-                offset = 0;
             }
         }
 
@@ -1571,7 +1522,7 @@ public class CountryAIManager : MonoBehaviour
         bool result;
         int researchedNeeded = 0;
 
-        if (!Researched(country, tech))
+        if (!Researched(country, tech) && ReferencesManager.Instance.dateManager.currentDate[2] >= tech._yearUnlock)
         {
             if (tech.techsNeeded.Length > 0)
             {

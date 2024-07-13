@@ -23,16 +23,12 @@ public class SmallNewsManager : MonoBehaviour
     {
         container.SetActive(true);
 
-        string currentLanguage = "";
-
         if (PlayerPrefs.GetInt("languageId") == 0)
         {
-            currentLanguage = "EN";
             headerText_TMP.text = $"Message from state: {countrySender._nameEN}";
         }
         else if (PlayerPrefs.GetInt("languageId") == 1)
         {
-            currentLanguage = "RU";
             headerText_TMP.text = $"Послание от государства: {countrySender._name}";
         }
 

@@ -19,5 +19,7 @@ public class TechnologyScriptableObject : ScriptableObject
 
     public TechnologyScriptableObject[] techsNeeded;
 
+    public int _yearUnlock;
+
     public int oilBonus;
 }

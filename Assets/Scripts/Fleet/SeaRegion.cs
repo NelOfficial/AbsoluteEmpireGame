@@ -166,6 +166,4 @@ public class SeaRegion : MonoBehaviour
             region._currentSeaRegion = null;
         }
     }
-
-
 }

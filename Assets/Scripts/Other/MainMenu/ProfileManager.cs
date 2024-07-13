@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class ProfileManager : MonoBehaviour
@@ -10,6 +12,7 @@ public class ProfileManager : MonoBehaviour
 
     [SerializeField] int maxLevels;
 
+    [SerializeField] Image _profileAvatar;
     [SerializeField] TMP_Text playerProgressExp;
     [SerializeField] TMP_Text playerLevel;
 
@@ -52,7 +55,6 @@ public class ProfileManager : MonoBehaviour
     [SerializeField] GameObject wallAnimationUISecond;
     [SerializeField] Button refreshButtonSecond;
     [SerializeField] TMP_Text refreshButtonTextSecond;
-    private bool updatingFeed;
 
     [SerializeField] Transform wallContrainer;
     [SerializeField] Transform onVerifyWallContrainer;
@@ -60,6 +62,9 @@ public class ProfileManager : MonoBehaviour
 
     [SerializeField] Button createModButton;
     [SerializeField] TMP_Text createModButtonText;
+
+    [SerializeField] private GameObject _loginForm;
+    [SerializeField] private GameObject _profilePanel;
 
     private void Start()
     {
@@ -88,11 +93,11 @@ public class ProfileManager : MonoBehaviour
 
         if (isPremium == 0)
         {
-            acountStatusTexts[0].text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.Premium")}: <color=red>{ReferencesManager.Instance.languageManager.GetTranslation("No")}</color>";
+            acountStatusTexts[0].text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.Premium")} <color=red>{ReferencesManager.Instance.languageManager.GetTranslation("No")}</color>";
         }
         else if (isPremium == 1)
         {
-            acountStatusTexts[0].text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.Premium")}: <color=green>{ReferencesManager.Instance.languageManager.GetTranslation("Yes")}</color>";
+            acountStatusTexts[0].text = $"{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.Account.Premium")} <color=green>{ReferencesManager.Instance.languageManager.GetTranslation("Yes")}</color>";
         }
 
         if (isBanned == 0)
@@ -227,9 +232,17 @@ public class ProfileManager : MonoBehaviour
                     PlayerPrefs.SetString("nickname", $"{_profileName}");
 
                     ReferencesManager.Instance.mainMenu.UpdateNickname(_profileName);
+                    StartCoroutine(DownloadImage(accountData[11]));
 
                     loginButton.SetActive(false);
                     profileButton.SetActive(true);
+
+                    _loginForm.SetActive(false);
+
+                    if (!string.IsNullOrEmpty(login_AccountNameInputField.text))
+                    {
+                        _profilePanel.SetActive(true);
+                    }
 
                     createModButton.interactable = true;
                 }
@@ -243,6 +256,44 @@ public class ProfileManager : MonoBehaviour
         }
     }
 
+    IEnumerator DownloadImage(string url)
+    {
+        UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError($"Error: {request.error}");
+        }
+        else
+        {
+            Texture2D texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
+
+            if (texture == null)
+            {
+                Debug.LogError("Error: Texture is null");
+            }
+            else
+            {
+                // Проверяем тип MIME
+                string contentType = request.GetResponseHeader("Content-Type");
+                Debug.Log($"Content-Type: {contentType}");
+
+                if (!contentType.StartsWith("image/"))
+                {
+                    Debug.LogError("Error: URL does not point to an image");
+                }
+                else
+                {
+                    _profileAvatar.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                    Debug.Log("Image successfully downloaded and applied");
+                }
+            }
+        }
+    }
+
+
+    [System.Obsolete]
     public void LoadMyMods(bool verified)
     {
         StartCoroutine(GetIds(verified));
@@ -301,7 +352,6 @@ public class ProfileManager : MonoBehaviour
 
     private IEnumerator WallUpdate(bool verified)
     {
-        updatingFeed = true;
         if (verified)
         {
             wallAnimationUI.SetActive(true);
@@ -317,7 +367,6 @@ public class ProfileManager : MonoBehaviour
 
         if (loadedModifications != null)
         {
-            updatingFeed = true;
             for (int i = 0; i < loadedModificationsIds.Count; i++)
             {
                 // Getting Post with id
@@ -360,7 +409,6 @@ public class ProfileManager : MonoBehaviour
                 }
 
             }
-            updatingFeed = false;
 
             yield return new WaitForSeconds(2f);
             wallAnimationUI.SetActive(false);

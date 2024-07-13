@@ -125,6 +125,7 @@ public class ModificationPanel : MonoBehaviour
         }
     }
 
+    [Obsolete]
     public void UpdateScenariosList()
     {
         StartCoroutine(GetIds());
@@ -176,6 +177,7 @@ public class ModificationPanel : MonoBehaviour
         StartCoroutine(GetNotifications_Co());
     }
 
+    [Obsolete]
     private IEnumerator GetNotifications_Co()
     {
         ReferencesManager.Instance.profileManager.loadedNotifications.Clear();
@@ -236,6 +238,7 @@ public class ModificationPanel : MonoBehaviour
         notifications_refreshButtonText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("RefreshButton")}";
     }
 
+    [Obsolete]
     private IEnumerator WallUpdate()
     {
         wallAnimationUI.SetActive(true);

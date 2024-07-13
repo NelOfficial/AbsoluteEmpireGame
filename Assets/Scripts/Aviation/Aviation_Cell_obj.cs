@@ -23,7 +23,7 @@ public class Aviation_Cell_obj : MonoBehaviour
         icon.sprite = obj.AirPlane.sprite;
         HP_slider.value = obj.hp / obj.AirPlane.maxhp;
         FuelSlider.value = obj.fuel / obj.AirPlane.fuelMax;
-        text.text = obj.AirPlane.name;
+        text.text = ReferencesManager.Instance.languageManager.GetTranslation(obj.AirPlane.name);
 
         this.GetComponent<Button>().interactable = _interactable;
 

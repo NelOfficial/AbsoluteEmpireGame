@@ -618,8 +618,6 @@ public class RegionManager : MonoBehaviour
         bool enemiesArmy = false;
         string country_id = "";
 
-        CountrySettings otherCountry;
-
         if (rules == "my_country")
         {
             onlyMyRegions = true;

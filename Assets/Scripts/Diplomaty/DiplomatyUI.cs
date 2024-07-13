@@ -35,6 +35,8 @@ public class DiplomatyUI : MonoBehaviour
 
     [SerializeField] GameObject countryItem;
 
+    [SerializeField] private GameObject _warCallPanel;
+    [SerializeField] private GameObject _offersButtonsPanel;
     [SerializeField] GameObject valuePanel;
     [SerializeField] TMP_InputField valueField;
     [SerializeField] TMP_Text textValueField;
@@ -86,6 +88,11 @@ public class DiplomatyUI : MonoBehaviour
         countryManager = FindObjectOfType<CountryManager>();
         DestroyChildrens();
 
+        _warCallPanel.SetActive(false);
+        _offersButtonsPanel.SetActive(true);
+        offersContent.gameObject.SetActive(true);
+        valuePanel.SetActive(false);
+
         UISoundEffect.Instance.PlayAudio(regionUI.paper_01);
 
         BackgroundUI_Overlay.Instance.OpenOverlay(diplomatyContainer);
@@ -95,7 +102,8 @@ public class DiplomatyUI : MonoBehaviour
 
         senderId = countryManager.currentCountry.country._id;
         receiverId = regionManager.currentRegionManager.currentCountry.country._id;
-        regionManager.DeselectRegions();
+
+        ReferencesManager.Instance.regionUI.barContent.SetActive(false);
 
         if (senderId != receiverId)
         {
@@ -138,6 +146,11 @@ public class DiplomatyUI : MonoBehaviour
     {
         DestroyChildrens();
 
+        _warCallPanel.SetActive(false);
+        _offersButtonsPanel.SetActive(true);
+        offersContent.gameObject.SetActive(true);
+        valuePanel.SetActive(false);
+
         UISoundEffect.Instance.PlayAudio(regionUI.paper_01);
 
         diplomatyContainer.SetActive(true);
@@ -148,7 +161,7 @@ public class DiplomatyUI : MonoBehaviour
         senderId = ReferencesManager.Instance.countryManager.currentCountry.country._id;
         receiverId = _receiverId;
 
-        regionManager.DeselectRegions();
+        ReferencesManager.Instance.regionUI.barContent.SetActive(false);
 
         if (senderId != receiverId)
         {
@@ -189,6 +202,8 @@ public class DiplomatyUI : MonoBehaviour
 
     public void ClsoeUI()
     {
+        ReferencesManager.Instance.regionUI.barContent.SetActive(true);
+
         if (diplomatyContainer.activeSelf)
         {
             diplomatyContainer.GetComponent<UI_Panel>().ClosePanel();
@@ -1263,17 +1278,9 @@ public class DiplomatyUI : MonoBehaviour
 
     private void DestroyChildrens(Transform parent)
     {
-        List<GameObject> childrens = new List<GameObject>();
-
-        foreach (Transform child in parent.Cast<Transform>().ToArray())
+        foreach (Transform child in parent)
         {
-            childrens.Add(child.gameObject);
-        }
-
-        foreach (GameObject child in childrens)
-        {
-            child.transform.SetParent(null);
-            DestroyImmediate(child);
+            Destroy(child.gameObject);
         }
     }
 
@@ -1702,6 +1709,8 @@ public class DiplomatyUI : MonoBehaviour
 
     private IEnumerator UpdateUI_Co(CountrySettings sender, CountrySettings receiver)
     {
+        yield return new WaitForSeconds(0.1f);
+
         for (int i = 0; i < horizontalSenderScrolls.Length; i++)
         {
             DestroyChildrens(horizontalSenderScrolls[i].transform);
@@ -1752,11 +1761,13 @@ public class DiplomatyUI : MonoBehaviour
         if (type == "receiver_country")
         {
             ReferencesManager.Instance.gameSettings.regionSelectionModeType = $"other_country;{receiverId}";
+            ReferencesManager.Instance.gameSettings.provincesListMax = receiver.myRegions.Count;
             regionTransferType = "ask";
         }
         else
         {
             ReferencesManager.Instance.gameSettings.regionSelectionModeType = type;
+            ReferencesManager.Instance.gameSettings.provincesListMax = sender.myRegions.Count;
             regionTransferType = "give";
         }
     }

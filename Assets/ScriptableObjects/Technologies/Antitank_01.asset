@@ -29,3 +29,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e27acd09a9bd86f46ab5ba4ce77fd676, type: 2}
   - {fileID: 11400000, guid: 45e59fcccfad5f64fa7f3a371f27dae0, type: 2}
   - {fileID: 11400000, guid: bba7ba0ae2961af4f9ea1d2136cbe12e, type: 2}
+  _yearUnlock: 1912
+  oilBonus: 0

@@ -24,3 +24,5 @@ MonoBehaviour:
   optional: 0
   techsNeeded:
   - {fileID: 11400000, guid: c0137f96a4875fd44b38dc62b5e0087a, type: 2}
+  _yearUnlock: 1912
+  oilBonus: 0

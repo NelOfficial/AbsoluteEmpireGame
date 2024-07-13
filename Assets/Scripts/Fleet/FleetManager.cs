@@ -6,7 +6,7 @@ public class FleetManager : MonoBehaviour
 
     [SerializeField] private LayerMask layerMask;
 
-    [SerializeField] private float checkDistance = 0.6f;
+    //[SerializeField] private float checkDistance = 0.6f;
     [SerializeField] private float shoreOffset = 0.5f;  // Смещение корабля к берегу
 
     [SerializeField] private Transform _fleetHorizontalContainer;

@@ -22,8 +22,10 @@ MonoBehaviour:
   descriptionEN: Opens up access to other technologies
   moneyCost: 8850
   researchPointsCost: 20
-  moves: 7
+  moves: 4
   startReasearched: 0
   optional: 0
   techsNeeded:
   - {fileID: 11400000, guid: dd22fe4d0e63fe3449163cac25a3a00d, type: 2}
+  _yearUnlock: 1912
+  oilBonus: 0

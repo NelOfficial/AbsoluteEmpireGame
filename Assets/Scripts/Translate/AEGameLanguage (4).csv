@@ -20,7 +20,7 @@ MainMenu.CreateRoomButton;Create a room;Создать комнату;Crear una 
 MainMenu.RoomsListButton;List of rooms;Список комнат;Lista de habitaciones;Lista de quartos;Lista de quartos
 MainMenu.SettingButton;Settings;Настройки;Ajustes;Sintonização;Configurações
 MainMenu.ExitButton;Quit the game;Выйти из игры;Alzarse;Sair do jogo;Sair do jogo
-MainMenu.Multiplayer;Multiplayer;Multijugador;Multijogador;Multiplayer
+MainMenu.Multiplayer;Multiplayer;Мультиплеер;Multijugador;Multijogador;Multiplayer
 MainMenu.News;News;Новости;Novedad;Notícia;Notícias
 MainMenu.News.ButtonAction;Proceed;Перейти;Proceder;Prosseguir;Prosseguir
 MainMenu.ExitGameDesc;Quit Absolute Empire?;Выйти из Absolute Empire?;¿Abandonar Absolute Empire?;Sair do Absolute Empire?;Quit Absolute Empire?
@@ -360,6 +360,7 @@ TechnologyPanel.Research;Research;Изучить;Investigación;Investigação;P
 TechnologyPanel.CancelResearch;Cancel research;Отменить изучение;Cancelar investigación;Cancelar investigação;Cancelar pesquisa
 TechnologyPanel.Researched;Researched;Изучено;Investigado;Investigado;Pesquisado
 TechnologyPanel.TechNeeded;Technologies required:;Необходимы технологии:;Tecnologías requeridas:;Tecnologias necessárias:;Tecnologias necessárias:
+TechnologyPanel.LockedUntil;Locked until;Закрыто до;Cerrado hasta;Fechado até;Fechado até
 Buildings.Fabric;Factory;Фабрика;Fábrica;Fábrica;Fábrica
 Buildings.Farm;Farm;Ферма;Granja;Fazenda;Fazenda
 Buildings.ChemicalFarm;Chemical farm;Химическая ферма;granja quimica;Fazenda química;Fazenda química
@@ -887,6 +888,22 @@ Buildings.MarineBase;Naval base;Морская база;Base naval;Base naval;Ba
 Броня III;Armor III;Броня III;Armadura III;Armadura III;Armadura III
 Двигатель III;Engine III;Двигатель III;Motor III;Motor III;Motor III
 Тяжелый танк;Heavy tank;Тяжелый танк;Tanque pesado;Tanque pesado;Tanque pesado
+Бомбардировщик;Bomber;Бомбардировщик;Bombardero;Bombardeiro;Bombeiro
+Бомбардировщик II;Bomber II;Бомбардировщик II;Bombardero II;Bombardeiro II;Bombeiro II
+Бомбардировщик III;Bomber III;Бомбардировщик III;Bombardero III;Bombardeiro III;Bombeiro III
+Истребитель;Fighter;Истребитель;Caza;Avião de caça;Caça a jato
+Истребитель II;Fighter II;Истребитель II;Caza II;Avião de caça II;Caça a jato II
+Истребитель III;Fighter III; Истребитель III;Caza III;Avião de caça III;Caça a jato III
+Штурмовик;Stormfighter;Штурмовик;Avión de asalto;Avião de assalto;Stormfighter
+Штурмовик II;Stormfighter II;Штурмовик II;Avión de asalto II;Avião de assalto II;Stormfighter II
+Штурмовик III;Stormfighter III;Штурмовик III;Avión de asalto III;Avião de assalto III;Stormfighter III
+Дирижабль;Airship;Дирижабль;Dirigible;Dirigível;Dirigível
+Планёр;Glider;Планёр;Planeador;Planador;Planador
+Винтовой двигатель;Screw engine;Винтовой двигатель;Motor de tornillo;Motor de parafuso;Motor parafuso
+Увеличение аэродинамичности;Increased aerodynamics;Увеличение аэродинамичности;Mayor aerodinámica;Aumento da aerodinâmica;Aumento da aerodinâmica
+Увеличение дальности;Increased range;Увеличение дальности;Mayor alcance;Maior alcance;Maior alcance
+Укрепление брони;Reinforced armor;Укрепление брони;Armadura reforzada;Armadura reforçada;Armadura reforçada
+Реактивный двигатель;Jet engine;Реактивный двигатель;Motor a reacción;Motor a jacto;Motor a jato
 NumberGoodiser.thounsand;K;тыс.;mil;milhar;milhar
 NumberGoodiser.million;M;млн.;millón;milhão;M
 NumberGoodiser.billion;B;млрд.;MM;Bil;Bil

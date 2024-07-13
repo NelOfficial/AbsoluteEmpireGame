@@ -23,7 +23,7 @@ public class RegionLoader : MonoBehaviour
         {
             if (province.population == 0)
             {
-                province.population = UnityEngine.Random.Range(1000, 70000);
+                province.population = UnityEngine.Random.Range(1000, 300000);
             }
 
             province.currentDefenseUnits = ReferencesManager.Instance.gameSettings.currentDefenseUnits_FirstLevel;
@@ -58,7 +58,7 @@ public class RegionLoader : MonoBehaviour
 
         string[] mainModDataLines = sections[0].Split(';');
         string[] regionsDataLines = sections[1].Split(';');
-        string[] countriesDataLines = sections[2].Split(';');
+        string[] countriesDataLines = sections[3].Split(';');
 
         LoadScenario(mainModDataLines);
         LoadCountries(mainModDataLines);

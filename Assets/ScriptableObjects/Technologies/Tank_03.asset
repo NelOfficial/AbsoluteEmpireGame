@@ -30,4 +30,5 @@ MonoBehaviour:
   techsNeeded:
   - {fileID: 11400000, guid: 1a0c2126959838646ab2f3d5e245c05b, type: 2}
   - {fileID: 11400000, guid: e6e86f1bffa28704ab9ec050b2498f01, type: 2}
+  _yearUnlock: 1918
   oilBonus: 0

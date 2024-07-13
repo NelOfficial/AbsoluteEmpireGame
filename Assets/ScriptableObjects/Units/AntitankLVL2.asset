@@ -21,14 +21,14 @@ MonoBehaviour:
   recrootsCost: 500
   level: 2
   unlockLevel: 37
-  rank: 1
   maxFuel: 0
-  health: 2
+  health: 2.5
   softAttack: 0.8
-  hardAttack: 20
+  hardAttack: 22
+  aviationAttack: 0
   defense: 1.6
   maxEntrenchment: 0
   armor: 0
-  armorPiercing: 60
+  armorPiercing: 65
   hardness: 0
   unitName: ATI_02

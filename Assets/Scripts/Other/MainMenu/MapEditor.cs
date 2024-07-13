@@ -1189,7 +1189,7 @@ public class MapEditor : MonoBehaviour
 
         string _name = "";
         string _nameEN = "";
-        string _ideology = "";
+        //string _ideology = "";
         string _tag = "";
         int _capLimit = 0;
 
