@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class CountryAIManager : MonoBehaviour
@@ -18,110 +21,396 @@ public class CountryAIManager : MonoBehaviour
 
     private DiplomatyUI diplomatyUI;
 
+    // Rfghhbc rgb rsv3:4';*4;4:4';7dvtv dzeg rx = 228
+    float mult = 1.0f;
+
     private void Awake()
     {
-        diplomatyUI = FindObjectOfType<DiplomatyUI>();
+        diplomatyUI = ReferencesManager.Instance.diplomatyUI;
+        switch (ReferencesManager.Instance.gameSettings.difficultyValue.value)
+        {
+            case "EASY":
+                mult = 0.5f;
+                break;
+            case "HARD":
+                mult = 1.3f;
+                break;
+            case "INSANE":
+                mult = 1.5f;
+                break;
+            case "HARDCORE":
+                mult = 1.75f;
+                break;
+        }
     }
 
     public void Process(CountrySettings country, int mode)
     {
-        float mult = 1.15f;
-
-        if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "EASY")
+        if (country.myRegions.Count > 0)
         {
-            mult = 0.5f;
-        }
-        else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "INSANE")
-        {
-            mult = 1.3f;
-        }
-        else if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "HARDCORE")
-        {
-            mult = 1.6f;
-        }
-        country.UpdateCapitulation();
+            ReferencesManager.Instance.countryManager.botCountry = country;
 
-        moneySaving = country.money / 100 * 35; // 25% на сохранение
-        warExpenses = country.money / 100 * 15; // 10% на военные расходы
-        civilExpenses = country.money / 100 * 50; // 65% на стройку
-        buildingExpenses = civilExpenses;
+            moneySaving = country.money / 100 * 35; // 35% на сохранение
+            warExpenses = country.money / 100 * 15; // 15% на военные расходы
+            civilExpenses = country.money / 100 * 50; // 50% на стройку
+            buildingExpenses = civilExpenses;
 
-        if (ReferencesManager.Instance.gameSettings.developerMode) Debug.Log($"{country.country._name} Деньги: {country.money} Сберегаем {moneySaving} Военные расходы: {warExpenses} Гражданские расходы: {civilExpenses} Расходы на постройки: {buildingExpenses} Расходы на исследования: {researchingExpenses}");
-
-        if (country.inWar)
-        {
-            if (country.ideology == "Демократия")
+            if (country.inWar)
             {
-                moneySaving = country.money / 100 * 5; // 5% на сохранение
-                warExpenses = country.money / 100 * 70; // 70% на военные расходы во время войны
-                civilExpenses = country.money / 100 * 25; // 25% на стройку во время войны
-            }
-            else if (country.ideology == "Монархия" || country.ideology == "Неопределено")
-            {
-                warExpenses = country.money / 100 * 65; // 65% на военные расходы во время войны
-                civilExpenses = country.money / 100 * 35; // 35% на стройку во время войны
-            }
-            else if (country.ideology == "Коммунизм" || country.ideology == "Фашизм")
-            {
-                moneySaving = country.money / 100 * 3; // 3% на сохранение
-                warExpenses = country.money / 100 * 80; // 80% на военные расходы во время войны
-                civilExpenses = country.money / 100 * 17; // 17% на стройку во время войны
-            }
-
-        }
-
-        #region Army
-        // самые опасные регионы (на границе с странами-противниками)
-        List<RegionManager> warBorderingRegions = new List<RegionManager>();
-        // регионы 2го плана (соседние с опасными)
-        List<RegionManager> dangerousBorderingRegions = new List<RegionManager>();
-        // регионы 3го плана (обычно границы с мирными странами)
-        List<RegionManager> calmBorderingRegions = new List<RegionManager>();
-        // регионы 4го плана (на них дивки не спавнятся)
-        List<RegionManager> fourthBorderingRegions = new List<RegionManager>();
-
-        // обнаружение опасных регионов
-        if (country.myRegions.Count >= 1)
-        {
-            foreach (RegionManager region in country.myRegions)
-            {
-                foreach (CountrySettings _country in GetBorderingCountiesWithRegion(region))
+                switch (country.ideology)
                 {
-                    if (ReferencesManager.Instance.diplomatyUI.
-                        FindCountriesRelation(country, _country).war) // Если граничащая страна воюет с нами
+                    case "Демократия":
+                        moneySaving = country.money / 100 * 5;
+                        warExpenses = country.money / 100 * 85;
+                        civilExpenses = country.money / 100 * 10;
+                        break;
+                    case "Монархия":
+                        warExpenses = country.money / 100 * 90;
+                        civilExpenses = country.money / 100 * 10;
+                        break;
+                    case "Неопределено":
+                        warExpenses = country.money / 100 * 90;
+                        civilExpenses = country.money / 100 * 10;
+                        break;
+                    case "Коммунизм":
+                        moneySaving = country.money / 100 * 20;
+                        warExpenses = country.money / 100 * 75;
+                        civilExpenses = country.money / 100 * 5;
+                        break;
+                    case "Фашизм":
+                        moneySaving = country.money / 100 * 20;
+                        warExpenses = country.money / 100 * 75;
+                        civilExpenses = country.money / 100 * 5;
+                        break;
+                }
+            }
+
+            // самые опасные регионы (на границе с странами-противниками)
+            List<RegionManager> warBorderingRegions = new(20);
+            // регионы 2го плана (соседние с опасными)
+            List<RegionManager> dangerousBorderingRegions = new(33);
+            // регионы 3го плана (обычно границы с мирными странами)
+            List<RegionManager> calmBorderingRegions = new(50);
+            //
+            //List<Decisions_ScriptableObj> decs = new(0);
+            Thread thread = new(() =>
+            {
+                // for (int k = 0; k < country.myRegions.Count; k++)
+                Parallel.ForEach(country.myRegions, reg =>
+                {
+                    RegionManager region = reg;
+                    if (buildingExpenses >= 0)
                     {
-                        if (!warBorderingRegions.Contains(region))
+                        if (country.foodIncomeUI < 0)
                         {
-                            warBorderingRegions.Add(region);
-                            if (ReferencesManager.Instance.gameSettings.difficultyValue.value
-                                == "HARD" ||
-                                ReferencesManager.Instance.gameSettings.difficultyValue.value
-                                == "INSANE" ||
-                                ReferencesManager.Instance.gameSettings.difficultyValue.value
-                                == "HARDCORE")
+                            if (country.money >= ReferencesManager.Instance.gameSettings.chefarm.goldCost)
                             {
-                                foreach (RegionManager reg in GetNeiboursOfRegion(region))
+                                region.buildings.Remove(ReferencesManager.Instance.gameSettings.fabric);
+
+                                region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.chefarm, region);
+                                buildingExpenses -= ReferencesManager.Instance.gameSettings.chefarm.goldCost;
+                            }
+
+                        }
+                        if (country.moneyIncomeUI < 0)
+                        {
+                            if (region.buildings.Contains(ReferencesManager.Instance.gameSettings.farm))
+                            {
+                                region.buildings.Remove(ReferencesManager.Instance.gameSettings.farm);
+                            }
+                            if (region.buildings.Contains(ReferencesManager.Instance.gameSettings.chefarm))
+                            {
+                                region.buildings.Remove(ReferencesManager.Instance.gameSettings.chefarm);
+                            }
+
+                            region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.fabric, region);
+                            buildingExpenses -= ReferencesManager.Instance.gameSettings.farm.goldCost;
+                        }
+                        if (country.money >= ReferencesManager.Instance.gameSettings.fabric.goldCost &&
+                            buildingExpenses >= ReferencesManager.Instance.gameSettings.fabric.goldCost)
+                        {
+                            if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
+                            {
+                                region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.fabric, region);
+                                buildingExpenses -= ReferencesManager.Instance.gameSettings.fabric.goldCost;
+                            }
+                            else
+                            {
+                                UpgradeInfrastructure(region);
+                            }
+                        }
+                        if (country.money >= ReferencesManager.Instance.gameSettings.farm.goldCost &&
+                        buildingExpenses >= ReferencesManager.Instance.gameSettings.farm.goldCost &&
+                            country.foodNaturalIncome <= 0 || country.foodIncomeUI <= 0)
+                        {
+                            if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
+                            {
+                                region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.farm, region);
+                                buildingExpenses -= ReferencesManager.Instance.gameSettings.farm.goldCost;
+                            }
+                        }
+
+                        if (country.money >= ReferencesManager.Instance.gameSettings.chefarm.goldCost &&
+                        buildingExpenses >= ReferencesManager.Instance.gameSettings.chefarm.goldCost &&
+                            country.foodNaturalIncome <= 0 || country.foodIncomeUI <= 0)
+                        {
+                            if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
+                            {
+                                region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.chefarm, region);
+                                buildingExpenses -= ReferencesManager.Instance.gameSettings.chefarm.goldCost;
+                            }
+                        }
+
+                        if (country.money >= ReferencesManager.Instance.gameSettings.researchLab.goldCost &&
+                            buildingExpenses >= ReferencesManager.Instance.gameSettings.researchLab.goldCost &&
+                            country.researchPointsIncome <= 0)
+                        {
+                            if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
+                            {
+                                region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.researchLab, region);
+                                buildingExpenses -= ReferencesManager.Instance.gameSettings.researchLab.goldCost;
+                            }
+                        }
+                    }
+                });
+            });
+            thread.Start();
+
+            Thread thread2 = new(() =>
+            {
+                researchingExpenses = country.money / 100 * 90; // 90% of all country budget
+
+                for (int i = 0; i < ReferencesManager.Instance.gameSettings.technologies.Length; i++)
+                {
+                    TechnologyScriptableObject tech = ReferencesManager.Instance.gameSettings.technologies[i];
+
+                    if (country.countryTechnologies.Any(item => item._type == TechnologyScriptableObject.TechType.Heavy))
+                    {
+                        if (country.moneyNaturalIncome >= new System.Random().Next(4000, 6000))
+                        {
+                            if (country.researchPointsIncome >= new System.Random().Next(5, 15))
+                            {
+                                if (tech._type == TechnologyScriptableObject.TechType.Heavy &&
+                                !Researched(country, tech))
                                 {
-                                    if (reg.currentCountry == country && !reg._isCoast )
+                                    if (CanResearch(country, tech))
                                     {
-                                        dangerousBorderingRegions.Add(reg);
-                                        if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "HARDCORE" ||
-                                            ReferencesManager.Instance.gameSettings.difficultyValue.value == "INSANE")
+                                        while (!researching)
                                         {
-                                            foreach (RegionManager reg1 in GetNeiboursOfRegion(reg))
+                                            if (!researching)
                                             {
-                                                if (reg1.currentCountry == country && !reg._isCoast)
+                                                StartRecearch(country, tech);
+                                            }
+                                        }
+                                    }
+                                }
+                                else if (tech._type == TechnologyScriptableObject.TechType.Aviation ||
+                                tech._type == TechnologyScriptableObject.TechType.AirPlane &&
+                                !Researched(country, tech))
+                                {
+                                    if (CanResearch(country, tech))
+                                    {
+                                        while (!researching)
+                                        {
+                                            if (!researching)
+                                            {
+                                                StartRecearch(country, tech);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                if (!researching)
+                {
+                    moneySaving += researchingExpenses;
+                }
+
+
+                if (country.myRegions.Count > 0 && ReferencesManager.Instance.dateManager.currentDate[0] > 1)
+                {
+                    float preferedMP = country.myRegions.Count * new System.Random().Next(5000, 10000);
+
+                    if (country.inWar)
+                    {
+                        preferedMP *= 5;
+                    }
+
+                    if (country.ideology == "Коммунизм" || country.ideology == "Фашизм")
+                    {
+                        preferedMP *= (new System.Random()).Next(2, 5);
+                    }
+
+                    if (country.recroots <= preferedMP)
+                    {
+                        if (!country.inWar)
+                        {
+                            if (!country.mobilasing)
+                            {
+                                if (country.mobilizationLaw + 1 < ReferencesManager.Instance.gameSettings.mobilizationPercent.Length)
+                                {
+                                    ReferencesManager.Instance.SetRecroots(country.mobilizationLaw + 1, country);
+                                    //Debug.Log($"{country.country._name} начинает мобилизацию, устанавливая закон {country.mobilizationLaw} | {country.recroots} людей => {preferedMP} людей");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (country.mobilizationLaw + 1 < ReferencesManager.Instance.gameSettings.mobilizationPercent.Length)
+                            {
+                                ReferencesManager.Instance.SetRecroots(country.mobilizationLaw + 1, country);
+                                //Debug.Log($"{country.country._name} начинает мобилизацию, устанавливая закон {country.mobilizationLaw} | {country.recroots} людей => {preferedMP} людей");
+                            }
+                        }
+                    }
+                }
+            });
+            thread2.Start();
+
+            //decs = DecisionsManager.Enable(country);
+            //for (int i = 0; i < decs.Count; i++)
+            //{
+            //    Decision_obj.Execute(country, decs[i]);
+            //}
+
+            #region aviation
+
+            bool hasTech = country.countryTechnologies.Any(item => item._type == TechnologyScriptableObject.TechType.AirPlane);
+
+            if (country.inWar && hasTech)
+            {
+                foreach (RegionManager reg in country.myRegions)
+                {
+                    bool check = false;
+                    foreach (RegionManager reg1 in GetNeiboursOfRegion(reg))
+                    {
+                        if (reg1.currentCountry != country && ReferencesManager.Instance.diplomatyUI.
+                            FindCountriesRelation(country, reg1.currentCountry).war)
+                        {
+                            check = true;
+                            break;
+                        }
+                    }
+                    if (!check) { continue; }
+
+                    RegionManager max_reg = null;
+                    float max_distance = 0f;
+                    foreach (RegionManager reg1 in GetNeiboursOfRegion(reg))
+                    {
+                        if (reg1.currentCountry == country)
+                        {
+                            if (Vector2.Distance(reg.transform.position, reg1.transform.position) > max_distance)
+                            {
+                                max_distance = Vector2.Distance(reg.transform.position, reg1.transform.position);
+                                max_reg = reg1;
+
+                                UpgradeAirBase(max_reg);
+                                BuyAirplanes(max_reg);
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (RegionManager reg in country.myRegions)
+            {
+                if (reg._airBaseLevel > 0)
+                {
+                    Aviation_Storage storage = reg.gameObject.GetComponent<Aviation_Storage>();
+                    if (storage.planes.Count > 0)
+                    {
+                        foreach (Aviation_Cell cell in storage.planes)
+                        {
+                            if (cell.AirPlane.type == Aviation_ScriptableObj.Type.bomber)
+                            {
+                                List<RegionManager> regs = new List<RegionManager>(3);
+                                foreach (GameObject obj in FindObjectsWithComponent<RegionManager>(new Vector2(reg.transform.position.x, reg.transform.position.y), 0.00375f * cell.AirPlane.distance))
+                                {
+                                    if (obj.GetComponent<RegionManager>().currentCountry != country && ReferencesManager.Instance.diplomatyUI.
+                                    FindCountriesRelation(country, obj.GetComponent<RegionManager>().currentCountry).war)
+                                    {
+                                        if (regs.Count < 3 && obj.GetComponent<RegionManager>().buildings.Count > 0)
+                                        {
+                                            regs.Add(obj.GetComponent<RegionManager>());
+                                        }
+                                    }
+                                }
+                                attack(cell, regs, 1, reg);
+                            }
+                            else if (cell.AirPlane.type == Aviation_ScriptableObj.Type.stormtrooper)
+                            {
+                                foreach (GameObject obj in FindObjectsWithComponent<RegionManager>(new Vector2(reg.transform.position.x, reg.transform.position.y), 0.00375f * cell.AirPlane.distance))
+                                {
+                                    if (obj.GetComponent<RegionManager>().currentCountry != country && ReferencesManager.Instance.diplomatyUI.
+                                    FindCountriesRelation(country, obj.GetComponent<RegionManager>().currentCountry).war && obj.GetComponent<RegionManager>().hasArmy)
+                                    {
+                                        attack(cell, new List<RegionManager>(1) { obj.GetComponent<RegionManager>() }, 0, reg);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            List<GameObject> FindObjectsWithComponent<T>(Vector2 center, float searchRadius) where T : Component
+            {
+                // Найти все коллайдеры в радиусе
+                Collider2D[] hitColliders = Physics2D.OverlapCircleAll(center, searchRadius);
+
+                List<GameObject> foundObjects = new List<GameObject>();
+
+                // Проверяем каждый найденный коллайдер
+                foreach (Collider2D collider in hitColliders)
+                {
+                    // Проверяем, содержит ли объект нужный компонент
+                    T component = collider.GetComponent<T>();
+                    if (component != null)
+                    {
+                        foundObjects.Add(collider.gameObject);
+                    }
+                }
+
+                return foundObjects;
+            }
+            #endregion
+
+            if (country.myRegions.Count >= 3)
+            {
+                foreach (RegionManager region in country.myRegions)
+                {
+                    foreach (CountrySettings _country in GetBorderingCountiesWithRegion(region))
+                    {
+                        if (ReferencesManager.Instance.diplomatyUI.
+                            FindCountriesRelation(country, _country).war) // Если граничащая страна воюет с нами
+                        {
+                            if (!warBorderingRegions.Contains(region))
+                            {
+                                warBorderingRegions.Add(region);
+                                if (ReferencesManager.Instance.gameSettings.difficultyValue.value
+                                    == "HARD" ||
+                                    ReferencesManager.Instance.gameSettings.difficultyValue.value
+                                    == "INSANE" ||
+                                    ReferencesManager.Instance.gameSettings.difficultyValue.value
+                                    == "HARDCORE")
+                                {
+                                    foreach (RegionManager reg in GetNeiboursOfRegion(region))
+                                    {
+                                        if (reg.currentCountry == country && !reg._isCoast)
+                                        {
+                                            dangerousBorderingRegions.Add(reg);
+                                            if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "HARDCORE" ||
+                                                ReferencesManager.Instance.gameSettings.difficultyValue.value == "INSANE")
+                                            {
+                                                foreach (RegionManager reg1 in GetNeiboursOfRegion(reg))
                                                 {
-                                                    calmBorderingRegions.Add(reg1);
-                                                    if (ReferencesManager.Instance.gameSettings.difficultyValue.value == "HARDCORE")
+                                                    if (reg1.currentCountry == country && !reg._isCoast)
                                                     {
-                                                        foreach (RegionManager reg2 in GetNeiboursOfRegion(reg1))
-                                                        {
-                                                            if (reg2.currentCountry == country && !reg._isCoast)
-                                                            {
-                                                                fourthBorderingRegions.Add(reg2);
-                                                            }
-                                                        }
+                                                        calmBorderingRegions.Add(reg1);
                                                     }
                                                 }
                                             }
@@ -130,107 +419,254 @@ public class CountryAIManager : MonoBehaviour
                                 }
                             }
                         }
-                    }
-                    else if (!ReferencesManager.Instance.diplomatyUI.
-                        FindCountriesRelation(country, _country).union && !ReferencesManager.Instance.diplomatyUI.
-                        FindCountriesRelation(country, _country).pact) // иначе просто добавляем границу в регионы 3 плана (если нет пакта или альянса)
-                    {
-                        foreach (RegionManager reg in GetNeiboursOfRegion(region))
+                        else if (!ReferencesManager.Instance.diplomatyUI.
+                            FindCountriesRelation(country, _country).union && !ReferencesManager.Instance.diplomatyUI.
+                            FindCountriesRelation(country, _country).pact) // иначе просто добавляем границу в регионы 3 плана (если нет пакта или альянса)
                         {
-                            if (reg.currentCountry != region.currentCountry)
+                            foreach (RegionManager reg in GetNeiboursOfRegion(region))
                             {
-                                if (reg.hasArmy)
+                                if (reg.currentCountry != region.currentCountry)
                                 {
-                                    dangerousBorderingRegions.Add(region);
-                                }
+                                    if (reg.hasArmy)
+                                    {
+                                        dangerousBorderingRegions.Add(region);
+                                    }
 
-                                else
-                                {
-                                    calmBorderingRegions.Add(region);
+                                    else
+                                    {
+                                        calmBorderingRegions.Add(region);
+                                    }
                                 }
                             }
                         }
-                    }
-                    if (region._isCoast && country.money >= 40000 && country.recroots > 20000)
-                    {
-                        calmBorderingRegions.Add(region);
+                        if (region._isCoast && country.money >= 40000 && country.recroots > 20000)
+                        {
+                            calmBorderingRegions.Add(region);
+                        }
                     }
                 }
             }
-        }
-        else
-        {
-            calmBorderingRegions = country.myRegions;
-        }
-        // тут крч движение армий ближе к границе
-        foreach (RegionManager region in country.myRegions)
-        {
-            if (region.hasArmy)
+            else
             {
-                Transform divisionTransform = null;
-                UnitMovement division = null;
-
-                foreach (Transform child in region.transform)
-                {
-                    if (child.name == "Unit(Clone)")
-                    {
-                        divisionTransform = child;
-
-                        if (divisionTransform.GetComponent<UnitMovement>())
-                        {
-                            division = divisionTransform.GetComponent<UnitMovement>();
-                        }
-                    }
-                }
-                if (division != null && division.currentCountry == country)
-                {
-                    if (warBorderingRegions.Contains(region))
-                    {
-                        continue;
-                    }
-                    if (dangerousBorderingRegions.Contains(region))
-                    {
-                        foreach (RegionManager neighbour_region in GetNeiboursOfRegion(region))
-                        {
-                            if (warBorderingRegions.Contains(neighbour_region))
-                            {
-                                division.AIMoveNoHit(neighbour_region, division);
-                                break;
-                            }
-                        }
-                        continue;
-                    }
-                    if (calmBorderingRegions.Contains(region))
-                    {
-                        foreach (RegionManager neighbour_region in GetNeiboursOfRegion(region))
-                        {
-                            if (warBorderingRegions.Contains(neighbour_region) || dangerousBorderingRegions.Contains(neighbour_region))
-                            {
-                                division.AIMoveNoHit(neighbour_region, division);
-                                break;
-                            }
-                        }
-                        continue;
-                    }
-                    if (fourthBorderingRegions.Contains(region))
-                    {
-                        foreach (RegionManager neighbour_region in GetNeiboursOfRegion(region))
-                        {
-                            if (warBorderingRegions.Contains(neighbour_region) || dangerousBorderingRegions.Contains(neighbour_region) || calmBorderingRegions.Contains(neighbour_region))
-                            {
-                                division.AIMoveNoHit(neighbour_region, division);
-                                break;
-                            }
-                        }
-                        continue;
-                    }
-                    Destroy(divisionTransform.gameObject);
-                }
+                calmBorderingRegions = country.myRegions;
             }
-        }
 
-        if (warBorderingRegions.Count > 0)
-        {
+            foreach (CountrySettings countryOther in ReferencesManager.Instance.countryManager.countries)
+            {
+
+                Relationships.Relation relations = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country);
+                if (countryOther.country._id != country.country._id)
+                {
+                    if (country.myRegions.Count < 1 || country.capitulated)
+                    {
+                        country.exist = false;
+                    }
+
+                    //countryOther.UpdateCapitulation();
+
+                    if (country.country._id != countryOther.country._id)
+                    {
+                        if (country.exist && countryOther.exist)
+                        {
+                            if (!relations.trade && //Trade
+                                !relations.war) //Go trade
+                            {
+                                int random = (new System.Random()).Next(0, 100);
+                                if (countryOther.ideology == country.ideology)
+                                {
+                                    random += 10;
+                                }
+                                else if (countryOther.ideology != country.ideology)
+                                {
+                                    random -= 10;
+                                }
+
+                                if (country.myRegions.Count > 0 && countryOther.myRegions.Count > 0)
+                                {
+                                    if (country.myRegions.Count > countryOther.myRegions.Count)
+                                    {
+                                        if (country.myRegions.Count / countryOther.myRegions.Count >= 4)
+                                        {
+                                            random -= 70;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (countryOther.myRegions.Count / country.myRegions.Count >= 4)
+                                        {
+                                            random -= 70;
+                                        }
+                                    }
+                                }
+
+                                if (countryOther.isPlayer)
+                                {
+                                    random += 15;
+                                }
+
+                                if (countryOther.ideology == "Фашизм" && country.ideology != "Фашизм")
+                                {
+                                    random -= (new System.Random()).Next(60, 100);
+                                }
+                                if (country.ideology == "Фашизм" && countryOther.ideology != "Фашизм")
+                                {
+                                    random -= (new System.Random()).Next(60, 100);
+                                }
+                                if (countryOther.ideology == "Фашизм" && country.ideology == "Фашизм")
+                                {
+                                    random += (new System.Random()).Next(70, 100);
+                                }
+
+                                if (random >= 50)
+                                {
+                                    SendOffer("Торговля", country, countryOther);
+                                }
+                            }
+
+                            if (!relations.pact && //Pact
+                                !relations.war &&
+                                relations.relationship >= 35)
+                            {
+                                int random = (new System.Random()).Next(0, 100);
+                                if (countryOther.ideology == country.ideology)
+                                {
+                                    random += (new System.Random()).Next(0, 10);
+                                }
+                                else if (countryOther.ideology != country.ideology)
+                                {
+                                    random -= (new System.Random()).Next(10, 30);
+                                }
+
+                                if (countryOther.ideology == "Фашизм" && country.ideology != "Фашизм")
+                                {
+                                    random -= (new System.Random()).Next(60, 100);
+                                }
+                                if (country.ideology == "Фашизм" && countryOther.ideology != "Фашизм")
+                                {
+                                    random -= (new System.Random()).Next(60, 100);
+                                }
+
+                                if (countryOther.ideology == "Фашизм" && country.ideology == "Фашизм")
+                                {
+                                    random += (new System.Random()).Next(70, 100);
+                                }
+
+                                if (random > (new System.Random()).Next(50, 90))
+                                {
+                                    SendOffer("Пакт о ненападении", country, countryOther);
+                                }
+                            }
+
+                            if (!relations.right && //Move right
+                                !relations.war &&
+                                relations.relationship >= 20)
+                            {
+                                int random = (new System.Random()).Next(0, 100);
+                                if (countryOther.ideology == country.ideology)
+                                {
+                                    random += (new System.Random()).Next(0, 10);
+                                }
+                                else if (countryOther.ideology != country.ideology)
+                                {
+                                    random -= (new System.Random()).Next(10, 30);
+                                }
+
+                                if (countryOther.ideology == "Фашизм" && country.ideology != "Фашизм")
+                                {
+                                    random -= (new System.Random()).Next(60, 100);
+                                }
+                                if (country.ideology == "Фашизм" && countryOther.ideology != "Фашизм")
+                                {
+                                    random -= (new System.Random()).Next(60, 100);
+                                }
+
+                                if (countryOther.ideology == "Фашизм" && country.ideology == "Фашизм")
+                                {
+                                    random += (new System.Random()).Next(70, 100);
+                                }
+
+
+                                if (random >= 50)
+                                {
+                                    SendOffer("Право прохода войск", country, countryOther);
+                                }
+                            }
+
+                            if (!relations.right && //Union
+                                !relations.war &&
+                                relations.relationship >= 20)
+                            {
+                                int random = (new System.Random()).Next(0, 100);
+
+                                if (countryOther.ideology == country.ideology)
+                                {
+                                    random += (new System.Random()).Next(0, 10);
+                                }
+                                else if (countryOther.ideology != country.ideology)
+                                {
+                                    random -= (new System.Random()).Next(10, 30);
+                                }
+
+                                if (countryOther.ideology == "Фашизм" && country.ideology != "Фашизм")
+                                {
+                                    random -= (new System.Random()).Next(60, 100);
+                                }
+                                else if (country.ideology == "Фашизм" && countryOther.ideology != "Фашизм")
+                                {
+                                    random -= (new System.Random()).Next(60, 100);
+                                }
+
+                                else if (countryOther.ideology == "Фашизм" && country.ideology == "Фашизм")
+                                {
+                                    random += (new System.Random()).Next(70, 100);
+                                }
+
+                                else if (countryOther.ideology == "Коммунизм" && country.ideology == "Коммунизм")
+                                {
+                                    random += (new System.Random()).Next(70, 100);
+                                }
+
+                                else if (random >= 85)
+                                {
+                                    SendOffer("Союз", country, countryOther);
+                                }
+                            }
+                        }
+                    }
+
+                    if (mode == 1)
+                    {
+                        int random = (new System.Random()).Next(0, 100);
+
+                        if (random >= 99 && ReferencesManager.Instance.aiManager.progressManager.progressIndex >= 10)
+                        {
+
+                            if (countryOther.myRegions.Count > 0)
+                            {
+                                if (!relations.war)
+                                {
+                                    if (isCountriesAreNeibours(country, countryOther))
+                                    {
+                                        if (country.myRegions.Count / countryOther.myRegions.Count >= 2f / mult / country.aiAccuracy)
+                                        {
+                                            if (relations.pact)
+                                            {
+                                                SendOffer("Разорвать пакт о ненападении", country, countryOther);
+                                            }
+                                            else
+                                            {
+                                                SendOffer("Объявить войну", country, countryOther);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+
             for (int i = 0; i < warBorderingRegions.Count; i++)
             {
                 RegionManager enemyRegion = GetEnemyRegionFromMy(warBorderingRegions[i]);
@@ -238,10 +674,10 @@ public class CountryAIManager : MonoBehaviour
                 if (warBorderingRegions[i].hasArmy)
                 {
                     float currentAttackPreference = 100;
+                    //currentAttackPreference = CountWinChance(warBorderingRegions[i], enemyRegion);
 
-                    if (currentAttackPreference >= 50)
+                    if (currentAttackPreference >= 10f * mult)
                     {
-
                         //Debug.Log($"{country.country._name} хочет атаковать в {enemyRegion.name} ({enemyRegion.currentCountry.country._name}) с шансом {currentAttackPreference} ({_winChance})");
                         foreach (Transform child in warBorderingRegions[i].transform)
                         {
@@ -274,34 +710,119 @@ public class CountryAIManager : MonoBehaviour
                     }
                 }
             }
-        }
 
-        if ((country.countryUnits.Count > 0 &&
-            country.countryUnits.Count <= dangerousBorderingRegions.Count)
-            || country.countryUnits.Count <= 0)
-        {
-            foreach (RegionManager _region in dangerousBorderingRegions)
+            // тут крч движение армий ближе к границе
+            foreach (RegionManager region in country.myRegions)
             {
-                _region.CheckRegionUnits(_region);
-
-                if (!_region.hasArmy)
+                if (region.hasArmy)
                 {
-                    CreateDivisionInRegion(_region, country);
-                }
-                else
-                {
-                    UnitMovement division = _region.GetDivision(_region);
-                    if (division.currentCountry != _region.currentCountry)
+                    UnitMovement division = region.GetDivision(region);
+                    if (division != null && division.currentCountry == country && division.currentProvince != null)
                     {
-                        Relationships.Relation relation = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, division.currentCountry);
-
-                        if (relation.war)
+                        if (warBorderingRegions.Contains(region))
                         {
-                            _region.DestroyRegionDivision(_region);
+                            continue;
+                        }
+                        if (dangerousBorderingRegions.Contains(region))
+                        {
+                            foreach (RegionManager neighbour_region in GetNeiboursOfRegion(region))
+                            {
+                                if (warBorderingRegions.Contains(neighbour_region))
+                                {
+                                    division.AIMoveNoHit(neighbour_region, division);
+                                    break;
+                                }
+                            }
+                            continue;
+                        }
+                        if (Random.value > 0.95f && !country.inWar)
+                        {
+                            Destroy(division.gameObject);
                         }
                         else
                         {
-                            if (!relation.right)
+                            if (division._movePoints > 0)
+                            {
+                                if (division.moveto == null)
+                                {
+                                    if (Random.value > 0.5)
+                                    {
+                                        if (warBorderingRegions.Count > 0)
+                                        {
+                                            division.moveto = warBorderingRegions[0];
+                                            float minvalue = Vector2.Distance(warBorderingRegions[0].transform.position, region.transform.position);
+                                            for (int i = 0; i < warBorderingRegions.Count; i++)
+                                            {
+                                                if (Vector2.Distance(warBorderingRegions[i].transform.position, region.transform.position) < minvalue)
+                                                {
+                                                    minvalue = Vector2.Distance(warBorderingRegions[i].transform.position, region.transform.position);
+                                                    division.moveto = warBorderingRegions[i];
+                                                }
+                                            }
+                                        }
+                                        else if (dangerousBorderingRegions.Count > 0)
+                                        {
+                                            division.moveto = dangerousBorderingRegions[0];
+                                            float minvalue = Vector2.Distance(dangerousBorderingRegions[0].transform.position, region.transform.position);
+                                            for (int i = 0; i < dangerousBorderingRegions.Count; i++)
+                                            {
+                                                if (Vector2.Distance(dangerousBorderingRegions[i].transform.position, region.transform.position) < minvalue)
+                                                {
+                                                    minvalue = Vector2.Distance(dangerousBorderingRegions[i].transform.position, region.transform.position);
+                                                    division.moveto = dangerousBorderingRegions[i];
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                if (division.moveto != null)
+                                {
+                                    if (division.moveto == division.currentProvince)
+                                    {
+                                        division.moveto = null;
+                                    }
+                                    else
+                                    {
+                                        RegionManager min2 = region;
+                                        float minvalue2 = Vector2.Distance(division.moveto.transform.position, region.transform.position);
+                                        foreach (RegionManager reg in GetNeiboursOfRegion(region))
+                                        {
+                                            if (!reg.hasArmy && reg.currentCountry == country && Vector2.Distance(reg.transform.position, division.moveto.transform.position) < minvalue2)
+                                            {
+                                                minvalue2 = Vector2.Distance(reg.transform.position, division.moveto.transform.position);
+                                                min2 = reg;
+                                            }
+                                        }
+                                        region.GetDivision(region).AIMoveNoHit(min2, region.GetDivision(region));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if ((country.countryUnits.Count > 0 && country.countryUnits.Count <= dangerousBorderingRegions.Count) || country.countryUnits.Count <= 0)
+            {
+                foreach (RegionManager _region in dangerousBorderingRegions)
+                {
+                    _region.CheckRegionUnits(_region);
+
+                    if (!_region.hasArmy)
+                    {
+                        CreateDivisionInRegion(_region, country);
+                    }
+                    else
+                    {
+                        UnitMovement division = _region.GetDivision(_region);
+                        if (division.currentCountry != _region.currentCountry)
+                        {
+                            Relationships.Relation relation = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, division.currentCountry);
+
+                            if (relation.war)
+                            {
+                                _region.DestroyRegionDivision(_region);
+                            }
+                            else
                             {
                                 division.Retreat(division);
                             }
@@ -309,406 +830,169 @@ public class CountryAIManager : MonoBehaviour
                     }
                 }
             }
+            foreach (RegionManager _region in calmBorderingRegions)
+            {
+                if (new System.Random().Next(1, (int)(100 / mult / country.aiAccuracy)) == 1)
+                {
+                    CreateDivisionInRegion(_region, country);
+                }
+            }
+
+            thread.Join();
+            thread2.Join();
+            country.UpdateCapitulation();
+            ReferencesManager.Instance.eventsContainer.UpdateEvents();
         }
-        #endregion
-
-        #region Buildings
-
-        for (int k = 0; k < country.myRegions.Count; k++)
+        else
         {
-            RegionManager region = country.myRegions[k];
-            if (buildingExpenses >= 0)
-            {
-                if (country.money >= ReferencesManager.Instance.gameSettings.fabric.goldCost &&
-                    buildingExpenses >= ReferencesManager.Instance.gameSettings.fabric.goldCost)
-                {
-                    if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
-                    {
-                        region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.fabric, region);
-                        buildingExpenses -= ReferencesManager.Instance.gameSettings.fabric.goldCost;
-                    }
-                    else
-                    {
-                        UpgradeInfrastructure(region);
-                    }
-                }
-                if (country.money >= ReferencesManager.Instance.gameSettings.farm.goldCost &&
-                    buildingExpenses >= ReferencesManager.Instance.gameSettings.farm.goldCost &&
-                    country.foodNaturalIncome <= 0 || country.foodIncomeUI <= 0)
-                {
-                    if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
-                    {
-                        region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.farm, region);
-                        buildingExpenses -= ReferencesManager.Instance.gameSettings.farm.goldCost;
-                    }
-                }
-
-                if (country.money >= ReferencesManager.Instance.gameSettings.chefarm.goldCost &&
-                    buildingExpenses >= ReferencesManager.Instance.gameSettings.chefarm.goldCost &&
-                    country.foodNaturalIncome <= 0 || country.foodIncomeUI <= 0)
-                {
-                    if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
-                    {
-                        region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.chefarm, region);
-                        buildingExpenses -= ReferencesManager.Instance.gameSettings.chefarm.goldCost;
-                    }
-                }
-
-                if (country.money >= ReferencesManager.Instance.gameSettings.researchLab.goldCost &&
-                    buildingExpenses >= ReferencesManager.Instance.gameSettings.researchLab.goldCost &&
-                    country.researchPointsIncome <= 0)
-                {
-                    if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
-                    {
-                        region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.researchLab, region);
-                        buildingExpenses -= ReferencesManager.Instance.gameSettings.researchLab.goldCost;
-                    }
-                }
-
-                if (country.foodIncomeUI < 0)
-                {
-                    if (country.money >= ReferencesManager.Instance.gameSettings.chefarm.goldCost)
-                    {
-                        region.buildings.Remove(ReferencesManager.Instance.gameSettings.fabric);
-
-                        region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.chefarm, region);
-                        buildingExpenses -= ReferencesManager.Instance.gameSettings.chefarm.goldCost;
-                    }
-                }
-                if (country.moneyIncomeUI < 0)
-                {
-                    if (region.buildings.Contains(ReferencesManager.Instance.gameSettings.farm))
-                    {
-                        region.buildings.Remove(ReferencesManager.Instance.gameSettings.farm);
-                    }
-                    if (region.buildings.Contains(ReferencesManager.Instance.gameSettings.chefarm))
-                    {
-                        region.buildings.Remove(ReferencesManager.Instance.gameSettings.chefarm);
-                    }
-
-                    region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.fabric, region);
-                    buildingExpenses -= ReferencesManager.Instance.gameSettings.farm.goldCost;
-                }
-            }
+            country.UpdateCapitulation();
         }
-
-        #endregion
-
-        #region ArmySecond
-        foreach (RegionManager _region in calmBorderingRegions)
-        {
-            if ((Random.Range(1, (int)(100 / mult)) == 1))
-            {
-                CreateDivisionInRegion(_region, country);
-            }
-        }
-        #endregion
-
-        researchingExpenses = country.money / 100 * 90; // 90% of all country budget
-
-        #region Research Technologies
-
-        for (int i = 0; i < ReferencesManager.Instance.gameSettings.technologies.Length; i++)
-        {
-            if (CanResearch(country, ReferencesManager.Instance.gameSettings.technologies[i]))
-            {
-                while (!researching)
-                {
-                    if (!researching)
-                    {
-                        StartRecearch(country, ReferencesManager.Instance.gameSettings.technologies[i]);
-                    }
-                }
-            }
-        }
-
-        #endregion
-
-        if (!researching)
-        {
-            moneySaving += researchingExpenses;
-        }
-
-        #region SetMobilizationLaw
-
-        if (country.myRegions.Count > 0 && ReferencesManager.Instance.dateManager.currentDate[0] > 1)
-        {
-            float preferedMP = country.myRegions.Count * Random.Range(5000, 10000);
-
-            if (country.inWar)
-            {
-                preferedMP *= 5;
-            }
-
-            if (country.ideology == "Коммунизм" || country.ideology == "Фашизм")
-            {
-                preferedMP *= Random.Range(2, 5);
-            }
-
-            if (country.recroots <= preferedMP)
-            {
-                if (!country.inWar)
-                {
-                    if (!country.mobilasing)
-                    {
-                        if (country.mobilizationLaw + 1 < ReferencesManager.Instance.gameSettings.mobilizationPercent.Length)
-                        {
-                            ReferencesManager.Instance.SetRecroots(country.mobilizationLaw + 1, country);
-                            //Debug.Log($"{country.country._name} начинает мобилизацию, устанавливая закон {country.mobilizationLaw} | {country.recroots} людей => {preferedMP} людей");
-                        }
-                    }
-                }
-                else
-                {
-                    if (country.mobilizationLaw + 1 < ReferencesManager.Instance.gameSettings.mobilizationPercent.Length)
-                    {
-                        ReferencesManager.Instance.SetRecroots(country.mobilizationLaw + 1, country);
-                        //Debug.Log($"{country.country._name} начинает мобилизацию, устанавливая закон {country.mobilizationLaw} | {country.recroots} людей => {preferedMP} людей");
-                    }
-                }
-            }
-        }
-
-        #endregion
-
-        foreach (CountrySettings countryOther in ReferencesManager.Instance.countryManager.countries)
-        {
-            if (countryOther.country._id != country.country._id)
-            {
-                if (country.myRegions.Count < 1 || country.capitulated)
-                {
-                    country.exist = false;
-                }
-
-                countryOther.UpdateCapitulation();
-
-                #region GoodRelations
-
-                if (country.country._id != countryOther.country._id)
-                {
-                    if (country.exist && countryOther.exist)
-                    {
-                        if (!ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).trade && //Trade
-                            !ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).war) //Go trade
-                        {
-                            int random = Random.Range(0, 100);
-                            if (countryOther.ideology == country.ideology)
-                            {
-                                random += 10;
-                            }
-                            else if (countryOther.ideology != country.ideology)
-                            {
-                                random -= 10;
-                            }
-
-                            if (country.myRegions.Count > 0 && countryOther.myRegions.Count > 0)
-                            {
-                                if (country.myRegions.Count > countryOther.myRegions.Count)
-                                {
-                                    if (country.myRegions.Count / countryOther.myRegions.Count >= 4)
-                                    {
-                                        random -= 70;
-                                    }
-                                }
-                                else
-                                {
-                                    if (countryOther.myRegions.Count / country.myRegions.Count >= 4)
-                                    {
-                                        random -= 70;
-                                    }
-                                }
-                            }
-
-                            if (countryOther.isPlayer)
-                            {
-                                random += 15;
-                            }
-
-                            if (countryOther.ideology == "Фашизм" && country.ideology != "Фашизм")
-                            {
-                                random -= Random.Range(60, 100);
-                            }
-                            if (country.ideology == "Фашизм" && countryOther.ideology != "Фашизм")
-                            {
-                                random -= Random.Range(60, 100);
-                            }
-
-                            if (countryOther.ideology == "Фашизм" && country.ideology == "Фашизм")
-                            {
-                                random += Random.Range(70, 100);
-                            }
-
-                            if (random >= 50)
-                            {
-                                SendOffer("Торговля", country, countryOther);
-                            }
-                        }
-
-                        if (!ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).pact && //Pact
-                            !ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).war &&
-                            ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).relationship >= 35)
-                        {
-                            int random = Random.Range(0, 100);
-                            if (countryOther.ideology == country.ideology)
-                            {
-                                random += Random.Range(0, 10);
-                            }
-                            else if (countryOther.ideology != country.ideology)
-                            {
-                                random -= Random.Range(10, 30);
-                            }
-
-                            if (countryOther.ideology == "Фашизм" && country.ideology != "Фашизм")
-                            {
-                                random -= Random.Range(60, 100);
-                            }
-                            if (country.ideology == "Фашизм" && countryOther.ideology != "Фашизм")
-                            {
-                                random -= Random.Range(60, 100);
-                            }
-
-                            if (countryOther.ideology == "Фашизм" && country.ideology == "Фашизм")
-                            {
-                                random += Random.Range(70, 100);
-                            }
-
-                            if (random > Random.Range(50, 90))
-                            {
-                                SendOffer("Пакт о ненападении", country, countryOther);
-                            }
-                        }
-
-                        if (!ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).right && //Move right
-                            !ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).war &&
-                            ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).relationship >= 20)
-                        {
-                            int random = Random.Range(0, 100);
-                            if (countryOther.ideology == country.ideology)
-                            {
-                                random += Random.Range(0, 10);
-                            }
-                            else if (countryOther.ideology != country.ideology)
-                            {
-                                random -= Random.Range(10, 30);
-                            }
-
-                            if (countryOther.ideology == "Фашизм" && country.ideology != "Фашизм")
-                            {
-                                random -= Random.Range(60, 100);
-                            }
-                            if (country.ideology == "Фашизм" && countryOther.ideology != "Фашизм")
-                            {
-                                random -= Random.Range(60, 100);
-                            }
-
-                            if (countryOther.ideology == "Фашизм" && country.ideology == "Фашизм")
-                            {
-                                random += Random.Range(70, 100);
-                            }
-
-
-                            if (random >= 50)
-                            {
-                                SendOffer("Право прохода войск", country, countryOther);
-                            }
-                        }
-
-                        if (!ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).right && //Union
-                            !ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).war &&
-                            ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).relationship >= 20)
-                        {
-                            int random = Random.Range(0, 100);
-
-                            if (countryOther.ideology == country.ideology)
-                            {
-                                random += Random.Range(0, 10);
-                            }
-                            else if (countryOther.ideology != country.ideology)
-                            {
-                                random -= Random.Range(10, 30);
-                            }
-
-                            if (countryOther.ideology == "Фашизм" && country.ideology != "Фашизм")
-                            {
-                                random -= Random.Range(60, 100);
-                            }
-                            else if (country.ideology == "Фашизм" && countryOther.ideology != "Фашизм")
-                            {
-                                random -= Random.Range(60, 100);
-                            }
-
-                            else if (countryOther.ideology == "Фашизм" && country.ideology == "Фашизм")
-                            {
-                                random += Random.Range(70, 100);
-                            }
-
-                            else if (countryOther.ideology == "Коммунизм" && country.ideology == "Коммунизм")
-                            {
-                                random += Random.Range(70, 100);
-                            }
-
-                            else if (random >= 85)
-                            {
-                                SendOffer("Союз", country, countryOther);
-                            }
-                        }
-                    }
-                }
-
-                #endregion
-                if (mode == 1)
-                {
-                    int random = Random.Range(0, 100);
-
-                    if (random >= 99 && ReferencesManager.Instance.aiManager.progressManager.progressIndex >= 10)
-                    {
-                        Relationships.Relation relation = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country);
-
-                        if (countryOther.myRegions.Count > 0)
-                        {
-                            if (!relation.war)
-                            {
-                                if (isCountriesAreNeibours(country, countryOther))
-                                {
-                                    if (country.myRegions.Count / countryOther.myRegions.Count >= 2)
-                                    {
-                                        if (relation.pact)
-                                        {
-                                            SendOffer("Разорвать пакт о ненападении", country, countryOther);
-                                        }
-                                        else
-                                        {
-                                            SendOffer("Объявить войну", country, countryOther);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-
-        }
-
-        ReferencesManager.Instance.eventsContainer.UpdateEvents();
     }
+
+    void attack(Aviation_Cell plane, List<RegionManager> regs, int mode, RegionManager regg)
+    {
+        if (plane.fuel >= plane.AirPlane.fuelperattack)
+        {
+            if (mode == 0)
+            {
+                float damage = (float)plane.AirPlane.army_damage;
+
+                foreach (RegionManager reg in regs)
+                {
+                    if (reg.hasArmy)
+                    {
+                        while (damage != 0f)
+                        {
+                            UnitHealth unit = reg.GetDivision(reg).unitsHealth[0];
+
+                            float unithp = unit.health * (1 + (ArmorBreak(unit.unit.armor, plane.AirPlane.armorBreak) / 100)) / (plane.hp / plane.AirPlane.maxhp);
+
+                            if (damage >= unithp)
+                            {
+                                damage -= unithp;
+
+                                reg.GetDivision(reg).unitsHealth.Remove(unit);
+
+                                plane.hp -= unit.unit.aviationAttack / (1 + (plane.AirPlane.armor / 100));
+                            }
+                            else
+                            {
+                                unit.health -= damage * (1 + (ArmorBreak(unit.unit.armor, plane.AirPlane.armorBreak) / 100)) / (plane.hp / plane.AirPlane.maxhp);
+
+                                damage = 0;
+
+                                plane.hp -= unit.unit.aviationAttack / (1 + (plane.AirPlane.armor / 100));
+                            }
+
+                            reg.CheckRegionUnits(reg);
+
+                            if (reg.GetDivision(reg).unitsHealth.Count <= 0 || !reg.GetDivision(reg))
+                            {
+                                reg.hasArmy = false;
+                                Destroy(reg.GetDivision(reg).gameObject);
+
+                                damage = 0;
+                            }
+                        }
+                    }
+                }
+
+                ReferencesManager.Instance.aviationManager.regions = regs.ToArray();
+                ReferencesManager.Instance.aviationManager.StartExplosionCoroutine(0f);
+
+                plane.fuel -= plane.AirPlane.fuelperattack;
+
+
+                if (plane.hp <= 0)
+                {
+                    Aviation_Storage airport = regg.GetComponent<Aviation_Storage>();
+
+                    for (int i = 0; i < airport.planes.Count; i++)
+                    {
+                        if (airport.planes[i].AirPlane == plane.AirPlane && airport.planes[i].hp <= 0)
+                        {
+                            airport.planes.Remove(airport.planes[i]);
+                        }
+                    }
+                }
+
+                float ArmorBreak(float armor, float armorbreak)
+                {
+                    if (armorbreak >= armor)
+                    {
+                        return 0f;
+                    }
+                    return armor - armorbreak;
+                }
+            }
+
+            else if (mode == 1)
+            {
+                float damage = (float)plane.AirPlane.builds_damage;
+
+                foreach (RegionManager reg in regs)
+                {
+                    while (reg.buildings.Count != 0)
+                    {
+                        RegionManager.BuildingQueueItem item = new RegionManager.BuildingQueueItem();
+                        item.building = reg.buildings[0];
+                        item.region = reg;
+                        item.movesLasts = reg.buildings[0].moves * (damage / 100);
+                        reg.buildingsQueue.Add(item);
+                        reg.buildings.Remove(reg.buildings[0]);
+                    }
+
+                    for (int i = 0; i < reg.buildingsQueue.Count; i++)
+                    {
+                        RegionManager.BuildingQueueItem queueItem = reg.buildingsQueue[i];
+
+                        queueItem.movesLasts -= queueItem.building.moves * (damage / 100);
+
+                        if (queueItem.movesLasts <= 0)
+                        {
+                            reg.buildingsQueue.Remove(queueItem);
+                        }
+                    }
+
+                    ReferencesManager.Instance.aviationManager.regions = regs.ToArray();
+                    ReferencesManager.Instance.aviationManager.StartExplosionCoroutine(0f);
+                }
+
+                plane.fuel -= plane.AirPlane.fuelperattack;
+
+
+                if (plane.hp <= 0)
+                {
+                    Aviation_Storage airport = regg.GetComponent<Aviation_Storage>();
+
+                    for (int i = 0; i < airport.planes.Count; i++)
+                    {
+                        if (airport.planes[i].AirPlane == plane.AirPlane && airport.planes[i].hp <= 0)
+                        {
+                            airport.planes.Remove(airport.planes[i]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public List<RegionManager> GetNeiboursOfRegion(RegionManager region)
     {
-        var regions = new List<RegionManager>();
+        List<RegionManager> regions = new List<RegionManager>(10);
 
-        foreach (var movePoint in region.movePoints)
+        foreach (Transform movePoint in region.movePoints)
         {
-            try
+            MovePoint movePointComponent = movePoint.GetComponent<MovePoint>();
+            if (movePointComponent != null)
             {
-                RegionManager _region = movePoint.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
-
+                RegionManager _region = movePointComponent.regionTo.GetComponent<RegionManager>();
                 if (_region != null)
                 {
                     regions.Add(_region);
                 }
             }
-            catch (System.Exception)
+            else
             {
                 Debug.Log($"{movePoint.parent.name} -> {movePoint.name}");
             }
@@ -716,14 +1000,101 @@ public class CountryAIManager : MonoBehaviour
 
         return regions;
     }
+
+    private void BuyAirplanes(RegionManager region)
+    {
+        if (region._airBaseLevel > 0)
+        {
+            byte highestFighter = 0;
+            byte highestStormFighter = 0;
+            byte highestBomber = 0;
+
+            foreach (Aviation_ScriptableObj plane in ReferencesManager.Instance.gameSettings._planes)
+            {
+                if (CheckPlanePurchase(region.currentCountry, region, plane))
+                {
+                    switch (plane.type)
+                    {
+                        case Aviation_ScriptableObj.Type.fighter:
+                            highestFighter = (byte)plane.level;
+                            break;
+                        case Aviation_ScriptableObj.Type.stormtrooper:
+                            highestStormFighter = (byte)plane.level;
+                            break;
+                        case Aviation_ScriptableObj.Type.bomber:
+                            highestBomber = (byte)plane.level;
+                            break;
+                    }
+                }
+            }
+
+            foreach (Aviation_ScriptableObj plane in ReferencesManager.Instance.gameSettings._planes)
+            {
+                if (CheckPlanePurchase(region.currentCountry, region, plane))
+                {
+                    if (plane.type == Aviation_ScriptableObj.Type.fighter)
+                    {
+                        if (plane.level == highestFighter)
+                        {
+                            BuyPlane(region, region.currentCountry, plane);
+                        }
+                    }
+                    else if (plane.type == Aviation_ScriptableObj.Type.stormtrooper)
+                    {
+                        if (plane.level == highestStormFighter)
+                        {
+                            BuyPlane(region, region.currentCountry, plane);
+                        }
+                    }
+                    else if (plane.type == Aviation_ScriptableObj.Type.bomber)
+                    {
+                        if (plane.level == highestBomber)
+                        {
+                            BuyPlane(region, region.currentCountry, plane);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void BuyPlane(RegionManager region, CountrySettings country, Aviation_ScriptableObj plane)
+    {
+        Aviation_Storage airBase = region.GetComponent<Aviation_Storage>();
+
+        if (country.money >= plane.price && country.recroots >= plane.recruitsCost)
+        {
+            if (airBase.planes.Count + 1 <= region._airBaseLevel)
+            {
+                Aviation_Cell air_cell = new Aviation_Cell(plane, country);
+                airBase.planes.Add(air_cell);
+            }
+        }
+    }
+
+    private bool CheckPlanePurchase(CountrySettings country, RegionManager region, Aviation_ScriptableObj plane)
+    {
+        bool result = false;
+
+        if (country.money >= plane.price && country.recroots >= plane.recruitsCost)
+        {
+            if (country.countryTechnologies.Contains(plane._tech))
+            {
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
     private List<CountrySettings> GetBorderingCountiesWithRegion(RegionManager region)
     {
-        List<CountrySettings> countries = new List<CountrySettings>();
+        List<CountrySettings> countries = new(3);
         try
         {
-
-            foreach (Transform point in region.movePoints)
+            for (int i = 0; i < region.movePoints.Count; i++)
             {
+                Transform point = region.movePoints[i];
                 RegionManager _pointRegion = point.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
 
                 if (_pointRegion.currentCountry != region.currentCountry) // If founded region is not my state
@@ -733,7 +1104,6 @@ public class CountryAIManager : MonoBehaviour
             }
 
             countries.Distinct(); // Remove dupes
-
         }
         catch (System.Exception) { }
 
@@ -742,8 +1112,8 @@ public class CountryAIManager : MonoBehaviour
 
     private RegionManager GetRoute(RegionManager regionTo, UnitMovement division)
     {
-        List<float> foundedRoutesDistances = new List<float>();
-        List<RegionManager> foundedRoutesProvinces = new List<RegionManager>();
+        List<float> foundedRoutesDistances = new List<float>(10);
+        List<RegionManager> foundedRoutesProvinces = new List<RegionManager>(10);
 
         RegionManager regionToReturn = new RegionManager();
 
@@ -785,7 +1155,7 @@ public class CountryAIManager : MonoBehaviour
 
     private bool isRegionBorderSecondRegion(RegionManager regionA, RegionManager regionB)
     {
-        List<RegionManager> borderingRegions = new List<RegionManager>();
+        List<RegionManager> borderingRegions = new List<RegionManager>(10);
 
         for (int i = 0; i < regionA.movePoints.Count; i++)
         {
@@ -801,34 +1171,32 @@ public class CountryAIManager : MonoBehaviour
     {
         region.CheckRegionUnits(region);
 
-        if (!region.demilitarized)
+        if (region.currentCountry.country._id == country.country._id && !region.hasArmy)
         {
-            if (region.currentCountry.country._id == country.country._id && !region.hasArmy)
+            UnitScriptableObject unit = ReferencesManager.Instance.gameSettings.soldierLVL1;
+
+            if (warExpenses >= unit.moneyCost)
             {
-                UnitScriptableObject unit = ReferencesManager.Instance.gameSettings.soldierLVL1;
-                UnitMovement division = null;
-
-                if (warExpenses >= unit.moneyCost)
+                if (country.money >= unit.moneyCost && country.recroots >= unit.recrootsCost && country.food >= unit.foodCost)
                 {
-                    if (country.money >= unit.moneyCost && country.recroots >= unit.recrootsCost && country.food >= unit.foodCost)
-                    {
-                        GameObject spawnedUnit = Instantiate(ReferencesManager.Instance.army.unitPrefab, region.transform);
-                        spawnedUnit.transform.localScale = new Vector3(ReferencesManager.Instance.army.unitPrefab.transform.localScale.x, ReferencesManager.Instance.army.unitPrefab.transform.localScale.y);
-                        division = spawnedUnit.GetComponent<UnitMovement>();
+                    GameObject spawnedUnit = Instantiate(ReferencesManager.Instance.army.unitPrefab, region.transform);
+                    spawnedUnit.transform.localScale = ReferencesManager.Instance.army.unitPrefab.transform.localScale;
+                    UnitMovement division = spawnedUnit.GetComponent<UnitMovement>();
 
-                        spawnedUnit.GetComponent<UnitMovement>().currentCountry = country;
-                        spawnedUnit.GetComponent<UnitMovement>().currentProvince = region;
-                        spawnedUnit.GetComponent<UnitMovement>().UpdateInfo();
+                    division.currentCountry = country;
+                    division.currentProvince = region;
+                    division.UpdateInfo();
 
-                        region.hasArmy = true;
-                        country.countryUnits.Add(spawnedUnit.GetComponent<UnitMovement>());
+                    region.hasArmy = true;
+                    country.countryUnits.Add(division);
 
-                        AddUnitToArmy(country, ReferencesManager.Instance.gameSettings.soldierLVL1, region, spawnedUnit.GetComponent<UnitMovement>());
+                    AddUnitToArmy(country, ReferencesManager.Instance.gameSettings.soldierLVL1, region, division);
 
-                        CreateDivision(country, region, division);
+                    CreateDivision(country, region, division);
 
-                        region.CheckRegionUnits(region);
-                    }
+                    region.CheckRegionUnits(region);
+                    ReferencesManager.Instance.countryManager.UpdateValuesUI();
+                    ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
                 }
             }
         }
@@ -895,7 +1263,7 @@ public class CountryAIManager : MonoBehaviour
                     battle.enemyUnits = battle.defenderDivision.unitsHealth;
                     battle.fightRegion = fightRegion;
 
-                    foreach (UnitMovement.UnitHealth unit in battle.defenderDivision.unitsHealth)
+                    foreach (UnitHealth unit in battle.defenderDivision.unitsHealth)
                     {
                         _armors.Add(unit.unit.armor);
 
@@ -934,7 +1302,7 @@ public class CountryAIManager : MonoBehaviour
             {
                 try
                 {
-                    foreach (UnitMovement.UnitHealth unit in fightRegion.currentDefenseUnits)
+                    foreach (UnitHealth unit in fightRegion.currentDefenseUnits)
                     {
                         defenderArmors.Add(unit.unit.armor);
 
@@ -969,7 +1337,7 @@ public class CountryAIManager : MonoBehaviour
         battle.myUnits = battle.attackerDivision.unitsHealth;
         battle.fightRegion = fightRegion;
 
-        foreach (UnitMovement.UnitHealth unit in attackerUnit.unitsHealth)
+        foreach (UnitHealth unit in attackerUnit.unitsHealth)
         {
             attackerArmors.Add(unit.unit.armor);
 
@@ -1054,52 +1422,52 @@ public class CountryAIManager : MonoBehaviour
 
             if (difference >= 1 && difference <= 15)
             {
-                winChance = Random.Range(47, 49);
+                winChance = (new System.Random()).Next(47, 49);
             }
 
             else if (difference >= 15 && difference <= 20)
             {
-                winChance = Random.Range(45, 47);
+                winChance = (new System.Random()).Next(45, 47);
             }
 
             else if (difference >= 20 && difference <= 25)
             {
-                winChance = Random.Range(43, 45);
+                winChance = (new System.Random()).Next(43, 45);
             }
 
             else if (difference >= 25 && difference <= 30)
             {
-                winChance = Random.Range(41, 43);
+                winChance = (new System.Random()).Next(41, 43);
             }
 
             else if (difference >= 35 && difference <= 40)
             {
-                winChance = Random.Range(39, 41);
+                winChance = (new System.Random()).Next(39, 41);
             }
 
             else if (difference >= 45 && difference <= 50)
             {
-                winChance = Random.Range(37, 39);
+                winChance = (new System.Random()).Next(37, 39);
             }
 
             else if (difference >= 55 && difference <= 60)
             {
-                winChance = Random.Range(35, 37);
+                winChance = (new System.Random()).Next(35, 37);
             }
 
             else if (difference >= 65 && difference <= 70)
             {
-                winChance = Random.Range(30, 37);
+                winChance = (new System.Random()).Next(30, 37);
             }
 
             else if (difference >= 75 && difference <= 80)
             {
-                winChance = Random.Range(10, 25);
+                winChance = (new System.Random()).Next(10, 25);
             }
 
             else if (difference >= 85 && difference <= 100)
             {
-                winChance = Random.Range(0, 15);
+                winChance = (new System.Random()).Next(0, 15);
             }
         }
         else if (battle.defenderStrength == battle.attackerStrength)
@@ -1113,57 +1481,57 @@ public class CountryAIManager : MonoBehaviour
 
             if (difference >= 1 && difference <= 10)
             {
-                winChance = Random.Range(51, 53);
+                winChance = (new System.Random()).Next(51, 53);
             }
 
             else if (difference > 10 && difference <= 15)
             {
-                winChance = Random.Range(53, 56);
+                winChance = (new System.Random()).Next(53, 56);
             }
 
             else if (difference > 15 && difference <= 20)
             {
-                winChance = Random.Range(56, 60);
+                winChance = (new System.Random()).Next(56, 60);
             }
 
             else if (difference > 25 && difference <= 30)
             {
-                winChance = Random.Range(60, 64);
+                winChance = (new System.Random()).Next(60, 64);
             }
 
             else if (difference > 30 && difference <= 40)
             {
-                winChance = Random.Range(64, 68);
+                winChance = (new System.Random()).Next(64, 68);
             }
 
             else if (difference > 40 && difference <= 50)
             {
-                winChance = Random.Range(68, 74);
+                winChance = (new System.Random()).Next(68, 74);
             }
 
             else if (difference > 50 && difference <= 60)
             {
-                winChance = Random.Range(74, 78);
+                winChance = (new System.Random()).Next(74, 78);
             }
 
             else if (difference > 60 && difference <= 70)
             {
-                winChance = Random.Range(78, 82);
+                winChance = (new System.Random()).Next(78, 82);
             }
 
             else if (difference > 70 && difference <= 80)
             {
-                winChance = Random.Range(82, 86);
+                winChance = (new System.Random()).Next(82, 86);
             }
 
             else if (difference > 80 && difference <= 90)
             {
-                winChance = Random.Range(86, 90);
+                winChance = (new System.Random()).Next(86, 90);
             }
 
             else if (difference > 90 && difference <= 100)
             {
-                winChance = Random.Range(90, 92);
+                winChance = (new System.Random()).Next(90, 92);
             }
         }
 
@@ -1211,17 +1579,13 @@ public class CountryAIManager : MonoBehaviour
 
     private bool isDivisionFrontlineWithEnemyNOWARCHECK(UnitMovement division, CountrySettings enemy)
     {
-        bool result = GetBorderingCountiesWithRegion(division.currentProvince).Contains(enemy);
-
-        return result;
+        return GetBorderingCountiesWithRegion(division.currentProvince).Contains(enemy);
     }
 
 
     private bool isDivisionInRegion(UnitMovement division, RegionManager region)
     {
-        bool result = division.currentProvince == region;
-
-        return result;
+        return division.currentProvince == region;
     }
 
     public void UpgradeInfrastructure(RegionManager region)
@@ -1230,16 +1594,13 @@ public class CountryAIManager : MonoBehaviour
 
         if (buildingExpenses >= 200)
         {
-            if (region.currentCountry.money >= 200)
+            if (region.currentCountry.money >= 200 && check <= (new System.Random()).Next(5, 10))
             {
-                if (check <= 10)
-                {
-                    region.infrastructure_Amount++;
-                    region.currentCountry.money -= 200;
-                    region.currentCountry.moneyNaturalIncome += 8;
+                region.infrastructure_Amount++;
+                region.currentCountry.money -= 200;
+                region.currentCountry.moneyNaturalIncome += 8;
 
-                    buildingExpenses -= 200;
-                }
+                buildingExpenses -= 200;
             }
 
             if (ReferencesManager.Instance.gameSettings.onlineGame)
@@ -1252,18 +1613,89 @@ public class CountryAIManager : MonoBehaviour
             }
         }
     }
+    public void UpgradeFortification(RegionManager region)
+    {
+        int check = region.fortifications_Amount + 1;
+        int cost = 0;
+        if (region.fortifications_Amount == 0)
+        {
+            cost = 400;
+        }
+        else
+        {
+            cost = 400 * region.fortifications_Amount;
+        }
+        if (buildingExpenses >= cost)
+        {
+            float multiplier = 1;
+            multiplier *= mult;
+            foreach (CountrySettings other_country in GetBorderingCountiesWithRegion(region))
+            {
+                multiplier *= region.currentCountry.myRegions.Count / other_country.myRegions.Count;
+            }
+            if (region.currentCountry.money >= cost && check <= (new System.Random()).Next(1, 2))
+            {
+                region.fortifications_Amount++;
+                region.currentCountry.money -= cost;
 
+                buildingExpenses -= cost;
+            }
+
+            if (ReferencesManager.Instance.gameSettings.onlineGame)
+            {
+                Multiplayer.Instance.SetCountryValues(
+                    region.currentCountry.country._id,
+                    region.currentCountry.money,
+                    region.currentCountry.food,
+                    region.currentCountry.recroots
+                );
+            }
+        }
+    }
+
+    public void UpgradeAirBase(RegionManager region)
+    {
+        if (new System.Random().Next(0, 3) == 0)
+        {
+            int check = region._airBaseLevel + 1;
+
+            int cost = 0;
+
+            if (region._airBaseLevel == 0)
+            {
+                cost = 1000;
+            }
+            else
+            {
+                cost = 1000 * region._airBaseLevel;
+            }
+
+            if (region.currentCountry.money >= cost && check <= ReferencesManager.Instance.gameSettings._airBaseMaxLevel)
+            {
+                region._airBaseLevel++;
+                region.gameObject.AddComponent<Aviation_Storage>();
+                region.currentCountry.money -= cost;
+                buildingExpenses -= cost;
+            }
+
+            if (ReferencesManager.Instance.gameSettings.onlineGame)
+            {
+                Multiplayer.Instance.SetCountryValues(
+                    region.currentCountry.country._id,
+                    region.currentCountry.money,
+                    region.currentCountry.food,
+                    region.currentCountry.recroots);
+            }
+        }
+    }
     private float GetDistance(RegionManager regionA, RegionManager regionB)
     {
-        float distance = Vector2.Distance(regionA.transform.position, regionB.transform.position);
-
-        if (ReferencesManager.Instance.gameSettings.developerMode) Debug.Log($"Дистанция между {regionA.name} ({regionA.currentCountry.country._name}) и {regionB.name} ({regionB.currentCountry.country._name}) равна {distance}");
-
-        return distance;
+        return Vector2.Distance(regionA.transform.position, regionB.transform.position);
     }
 
     private void CreateDivision(CountrySettings country, RegionManager region, UnitMovement addUnitToArmy)
     {
+
         if (region.currentCountry.country._id == country.country._id)
         {
             if (region.currentCountry.country._id == country.country._id)
@@ -1273,18 +1705,18 @@ public class CountryAIManager : MonoBehaviour
                 if (!HasUnitTech(country, ReferencesManager.Instance.gameSettings.tankLVL1) &&
                     !HasUnitTech(country, ReferencesManager.Instance.gameSettings.tankLVL2))
                 {
-                    random = Random.Range(0, 25);
+                    random = (new System.Random()).Next(0, 25);
 
                     if (HasUnitTech(country, ReferencesManager.Instance.gameSettings.artileryLVL1) ||
                         HasUnitTech(country, ReferencesManager.Instance.gameSettings.artileryLVL2))
                     {
-                        random = Random.Range(25, 100);
+                        random = (new System.Random()).Next(25, 100);
                     }
                 }
                 else if (HasUnitTech(country, ReferencesManager.Instance.gameSettings.tankLVL1) ||
                     HasUnitTech(country, ReferencesManager.Instance.gameSettings.tankLVL2))
                 {
-                    random = Random.Range(101, 150);
+                    random = (new System.Random()).Next(101, 150);
                 }
                 else if (!HasUnitTech(country, ReferencesManager.Instance.gameSettings.tankLVL1) &&
                     !HasUnitTech(country, ReferencesManager.Instance.gameSettings.tankLVL2))
@@ -1292,7 +1724,7 @@ public class CountryAIManager : MonoBehaviour
                     if (HasUnitTech(country, ReferencesManager.Instance.gameSettings.motoLVL1) ||
                         HasUnitTech(country, ReferencesManager.Instance.gameSettings.motoLVL2))
                     {
-                        random = Random.Range(151, 200);
+                        random = (new System.Random()).Next(151, 200);
                     }
                 }
 
@@ -1468,7 +1900,7 @@ public class CountryAIManager : MonoBehaviour
 
                             warExpenses -= unit.moneyCost;
 
-                            UnitMovement.UnitHealth newUnitHealth = new UnitMovement.UnitHealth();
+                            UnitHealth newUnitHealth = new UnitHealth();
                             newUnitHealth.unit = unit;
                             newUnitHealth.health = unit.health;
                             if (unitMovement.unitsHealth.Count > 0)
@@ -1497,13 +1929,9 @@ public class CountryAIManager : MonoBehaviour
             if (unitMovement.unitsHealth.Count > 0)
             {
                 unitMovement.unitsHealth.Remove(unitMovement.unitsHealth[index]);
-
-                ReferencesManager.Instance.countryManager.UpdateValuesUI();
-                ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
             }
         }
     }
-
 
     private bool HasUnitTech(CountrySettings country, UnitScriptableObject unit)
     {
@@ -1522,7 +1950,7 @@ public class CountryAIManager : MonoBehaviour
         bool result;
         int researchedNeeded = 0;
 
-        if (!Researched(country, tech) && ReferencesManager.Instance.dateManager.currentDate[2] >= tech._yearUnlock)
+        if (!Researched(country, tech))
         {
             if (tech.techsNeeded.Length > 0)
             {
@@ -1581,9 +2009,11 @@ public class CountryAIManager : MonoBehaviour
         {
             if (currentTech == null || currentTech.tech == null)
             {
-                TechQueue techQueue = new TechQueue();
-                techQueue.tech = tech;
-                techQueue.moves = tech.moves;
+                TechQueue techQueue = new()
+                {
+                    tech = tech,
+                    moves = tech.moves
+                };
 
                 currentTech = techQueue;
                 country.money -= currentTech.tech.moneyCost;
@@ -1605,7 +2035,7 @@ public class CountryAIManager : MonoBehaviour
     {
         if (offer == "Торговля")
         {
-            int relationsRandom = Random.Range(10, 15);
+            int relationsRandom = (new System.Random()).Next(10, 15);
 
             Relationships.Relation senderToReceiver = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(sender, receiver);
             Relationships.Relation receiverToSender = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(receiver, sender);
@@ -1627,7 +2057,7 @@ public class CountryAIManager : MonoBehaviour
         }
         else if (offer == "Пакт о ненападении")
         {
-            int relationsRandom = Random.Range(10, 15);
+            int relationsRandom = (new System.Random()).Next(10, 15);
 
             Relationships.Relation senderToReceiver = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(sender, receiver);
             Relationships.Relation receiverToSender = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(receiver, sender);
@@ -1648,7 +2078,7 @@ public class CountryAIManager : MonoBehaviour
         }
         else if (offer == "Разорвать пакт о ненападении")
         {
-            int relationsRandom = Random.Range(10, 15);
+            int relationsRandom = (new System.Random()).Next(10, 15);
 
             Relationships.Relation senderToReceiver = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(sender, receiver);
             Relationships.Relation receiverToSender = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(receiver, sender);
@@ -1669,7 +2099,7 @@ public class CountryAIManager : MonoBehaviour
         }
         else if (offer == "Право прохода войск")
         {
-            int relationsRandom = Random.Range(10, 15);
+            int relationsRandom = (new System.Random()).Next(10, 15);
 
             Relationships.Relation senderToReceiver = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(sender, receiver);
             Relationships.Relation receiverToSender = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(receiver, sender);
@@ -1699,8 +2129,8 @@ public class CountryAIManager : MonoBehaviour
             senderToReceiver.pact = false;
             senderToReceiver.union = false;
 
-            sender.enemy = receiver;
-            receiver.enemy = sender;
+            sender.enemies.Add(receiver);
+            receiver.enemies.Add(sender);
 
             sender.inWar = true;
             receiver.inWar = true;
@@ -1721,7 +2151,7 @@ public class CountryAIManager : MonoBehaviour
         }
         else if (offer == "Союз")
         {
-            int relationsRandom = Random.Range(40, 70);
+            int relationsRandom = (new System.Random()).Next(40, 70);
 
             Relationships.Relation senderToReceiver = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(sender, receiver);
             Relationships.Relation receiverToSender = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(receiver, sender);

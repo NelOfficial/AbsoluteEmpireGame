@@ -25,6 +25,9 @@ MonoBehaviour:
   silentEvent: 0
   conditions:
   - country_exist;12
+  - country_exist;3
+  - country_exist;24
+  - country_exist;21
   receivers: 
   exceptionsReceivers: 
   aiWillDo_Index: 0

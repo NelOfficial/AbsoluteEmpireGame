@@ -21,6 +21,9 @@ MonoBehaviour:
   moneyCost: 2250
   researchPointsCost: 35
   moves: 5
+  _type: 4
   startReasearched: 0
   optional: 0
   techsNeeded: []
+  _yearUnlock: 0
+  oilBonus: 0

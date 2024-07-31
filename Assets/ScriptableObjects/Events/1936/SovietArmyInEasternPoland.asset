@@ -53,7 +53,6 @@ MonoBehaviour:
   silentEvent: 0
   conditions:
   - country_exist;37
-  - not_in_union;27;37
   receivers: 
   exceptionsReceivers: 
   aiWillDo_Index: 0

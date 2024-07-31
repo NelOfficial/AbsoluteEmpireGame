@@ -203,7 +203,7 @@ public class Army : MonoBehaviour
 
     private void AddUnitHealth(UnitMovement unitMovement, UnitScriptableObject unit)
     {
-        var newUnitHealth = new UnitMovement.UnitHealth
+        var newUnitHealth = new UnitHealth
         {
             unit = unit,
             health = unit.health,
@@ -239,7 +239,7 @@ public class Army : MonoBehaviour
         }
     }
 
-    public void RemoveUnitFromDivision(UnitMovement.UnitHealth batalion, UnitMovement division, bool checkDivisionOnDestroy)
+    public void RemoveUnitFromDivision(UnitHealth batalion, UnitMovement division, bool checkDivisionOnDestroy)
     {
         division.unitsHealth.Remove(batalion);
 
@@ -270,6 +270,17 @@ public class Army : MonoBehaviour
             {
                 AddUnitHealth(unitMovement, unit);
                 UpdateAllUIs(false);
+            }
+        }
+    }
+
+    public void AddUnitToArmy_Save(UnitScriptableObject unit, UnitMovement division)
+    {
+        if (division != null)
+        {
+            if (division.unitsHealth.Count < maxUnits)
+            {
+                AddUnitHealth(division, unit);
             }
         }
     }
@@ -368,7 +379,7 @@ public class Army : MonoBehaviour
 
         UnitMovement division = ReferencesManager.Instance.regionManager.currentRegionManager.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
 
-        foreach (UnitMovement.UnitHealth batalion in division.unitsHealth)
+        foreach (UnitHealth batalion in division.unitsHealth)
         {
             if (batalion.health < batalion.unit.health)
             {
@@ -395,7 +406,7 @@ public class Army : MonoBehaviour
 
             UnitMovement division = ReferencesManager.Instance.regionManager.currentRegionManager.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
 
-            foreach (UnitMovement.UnitHealth batalion in division.unitsHealth)
+            foreach (UnitHealth batalion in division.unitsHealth)
             {
                 if (batalion.health < batalion.unit.health)
                 {

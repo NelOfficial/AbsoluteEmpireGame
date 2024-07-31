@@ -86,7 +86,7 @@ public class UnitUI : MonoBehaviour
         }
     }
 
-    public void SetUnit(UnitScriptableObject unit, UnitMovement movement, UnitMovement.UnitHealth unitHealth)
+    public void SetUnit(UnitScriptableObject unit, UnitMovement movement, UnitHealth unitHealth)
     {
         currentUnit = unit;
         division = movement;

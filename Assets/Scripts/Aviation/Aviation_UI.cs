@@ -153,6 +153,50 @@ public class Aviation_UI : MonoBehaviour
         attackMode = 1;
     }
 
+    public void PlanesAttack()
+    {
+        Color attackColor = ReferencesManager.Instance.gameSettings.redColor;
+
+        ReferencesManager.Instance.gameSettings.regionSelectionMode = true;
+        ReferencesManager.Instance.gameSettings.regionSelectionModeType = "enemies_territories";
+        ReferencesManager.Instance.gameSettings.provincesListColor = attackColor;
+        ReferencesManager.Instance.gameSettings.provincesListMax = 1;
+        ReferencesManager.Instance.gameSettings.provincesList.Clear();
+
+        foreach (RegionManager reg in ReferencesManager.Instance.countryManager.regions)
+        {
+            reg.canSelect = false;
+        }
+
+        foreach (GameObject obj in FindObjectsWithComponent<RegionManager>(new Vector2(airport.transform.position.x, airport.transform.position.y), 0.00375f * SelectedPlane.GetComponent<Aviation_Cell_obj>().MyObject.AirPlane.distance))
+        {
+            RegionManager region = obj.GetComponent<RegionManager>();
+
+            if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(region.currentCountry, ReferencesManager.Instance.countryManager.currentCountry).war)
+            {
+                if (region.currentCountry != ReferencesManager.Instance.countryManager.currentCountry)
+                {
+                    if (region.GetComponent<Aviation_Storage>())
+                    {
+                        if (region.GetComponent<Aviation_Storage>().planes.Count > 0)
+                        {
+                            region.canSelect = true;
+                            obj.GetComponent<SpriteRenderer>().color = attackColor;
+                        }
+                    }
+                }
+            }
+        }
+
+        ReferencesManager.Instance.gameSettings.provincesList.Clear();
+        ReferencesManager.Instance.regionUI.barContent.SetActive(false);
+        RegionManager.aviation = true;
+        RegionManager.chooseCount = 1;
+        cancelbutton.SetActive(true);
+        gameObject.SetActive(false);
+        attackMode = 2;
+    }
+
     List<GameObject> FindObjectsWithComponent<T>(Vector2 center, float searchRadius) where T : Component
     {
         // Найти все коллайдеры в радиусе
@@ -177,7 +221,6 @@ public class Aviation_UI : MonoBehaviour
     public void cancelattack()
     {
         ReferencesManager.Instance.gameSettings.regionSelectionMode = false;
-        ReferencesManager.Instance.gameSettings.provincesList.Clear();
         RegionManager.aviation = false;
 
         foreach (RegionManager region in ReferencesManager.Instance.countryManager.regions)
@@ -186,8 +229,6 @@ public class Aviation_UI : MonoBehaviour
         }
 
         ReferencesManager.Instance.regionManager.UpdateRegions();
-
-        ToggleUI();
     }
 
     public void Select_Plane(GameObject plane)

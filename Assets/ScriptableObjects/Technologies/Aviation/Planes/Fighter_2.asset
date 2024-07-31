@@ -19,8 +19,9 @@ MonoBehaviour:
   moneyCost: 10000
   researchPointsCost: 200
   moves: 15
+  _type: 6
   startReasearched: 0
-  optional: 1
+  optional: 0
   techsNeeded:
   - {fileID: 11400000, guid: 6001f0e184c83904c8b5d55eb1200814, type: 2}
   - {fileID: 11400000, guid: 32fb4a38c9dd337449772463ec186267, type: 2}

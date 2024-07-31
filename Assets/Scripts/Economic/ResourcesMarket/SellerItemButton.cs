@@ -24,6 +24,8 @@ public class SellerItemButton : MonoBehaviour
 
         ResourcesMarketManager.MarketOrder order = ReferencesManager.Instance.resourcesMarketManager.GetPlayerOrder(_sellerData._seller, _sellerData._resource);
 
+        Button _button = GetComponent<Button>();
+
         if (order != null)
         {
             if (order._amountOfRes > 0)
@@ -31,23 +33,33 @@ public class SellerItemButton : MonoBehaviour
                 _currentOrderAmount.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("Market.AlreadyPurchasing")} ({order._amountOfRes})";
 
                 _sellerData._currentResAmount = _sellerData._maxResAmount - order._amountOfRes;
-                GetComponent<Button>().targetGraphic.color = _alreadyPurchased;
+                _button.targetGraphic.color = _alreadyPurchased;
             }
             else
             {
                 _currentOrderAmount.text = "";
                 _sellerData._currentResAmount = _sellerData._maxResAmount;
-                GetComponent<Button>().targetGraphic.color = _defaultColor;
+                _button.targetGraphic.color = _defaultColor;
             }
         }
         else
         {
             _currentOrderAmount.text = "";
             _sellerData._currentResAmount = _sellerData._maxResAmount;
-            GetComponent<Button>().targetGraphic.color = _defaultColor;
+            _button.targetGraphic.color = _defaultColor;
         }
 
         _resourcesMax.text = $"{_sellerData._currentResAmount}/{_sellerData._maxResAmount}";
         _price.text = $"{_sellerData._cost}";
+
+        CountryManager countryManager = ReferencesManager.Instance.countryManager;
+
+        CountrySettings seller = countryManager.FindCountryByID(_sellerData._seller._id);
+
+        Relationships.Relation senderToReceiver = 
+            ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(
+                seller, countryManager.currentCountry);
+
+        _button.interactable = !senderToReceiver.war;
     }
 }

@@ -19,6 +19,7 @@ MonoBehaviour:
   moneyCost: 2000
   researchPointsCost: 5
   moves: 2
+  _type: 5
   startReasearched: 0
   optional: 0
   techsNeeded: []

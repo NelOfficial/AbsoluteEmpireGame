@@ -166,7 +166,7 @@ public class MovePoint : MonoBehaviour
 
             bool hasFuel = false;
 
-            foreach (UnitMovement.UnitHealth unit in unitMovement.unitsHealth)
+            foreach (UnitHealth unit in unitMovement.unitsHealth)
             {
                 if (unit.unit.type == UnitScriptableObject.Type.SOLDIER)
                 {
@@ -256,7 +256,7 @@ public class MovePoint : MonoBehaviour
                 battle.enemyUnits = battle.defenderDivision.unitsHealth;
                 battle.fightRegion = fightRegion;
 
-                foreach (UnitMovement.UnitHealth unit in battle.defenderDivision.unitsHealth)
+                foreach (UnitHealth unit in battle.defenderDivision.unitsHealth)
                 {
                     _armors.Add(unit.unit.armor);
 
@@ -329,7 +329,7 @@ public class MovePoint : MonoBehaviour
 
             try
             {
-                foreach (UnitMovement.UnitHealth unit in fightRegion.currentDefenseUnits)
+                foreach (UnitHealth unit in fightRegion.currentDefenseUnits)
                 {
                     defenderArmors.Add(unit.unit.armor);
 
@@ -393,7 +393,7 @@ public class MovePoint : MonoBehaviour
         battle.myUnits = battle.attackerDivision.unitsHealth;
         battle.fightRegion = fightRegion;
 
-        foreach (UnitMovement.UnitHealth unit in attackerUnit.unitsHealth)
+        foreach (UnitHealth unit in attackerUnit.unitsHealth)
         {
             attackerArmors.Add(unit.unit.armor);
 
@@ -712,7 +712,7 @@ public class MovePoint : MonoBehaviour
 
         CountPlayerUnitData(battle);
 
-        foreach (UnitMovement.UnitHealth unit in battle.enemyUnits)
+        foreach (UnitHealth unit in battle.enemyUnits)
         {
             if (unit.unit.type == UnitScriptableObject.Type.SOLDIER)
             {
@@ -979,7 +979,7 @@ public class MovePoint : MonoBehaviour
 
     private void CountPlayerUnitData(UnitMovement.BattleInfo battle)
     {
-        foreach (UnitMovement.UnitHealth unit in battle.myUnits)
+        foreach (UnitHealth unit in battle.myUnits)
         {
             if (unit.unit.type == UnitScriptableObject.Type.SOLDIER)
             {
@@ -1001,22 +1001,6 @@ public class MovePoint : MonoBehaviour
             {
                 battle.myHeavy++;
             }
-        }
-    }
-
-    private void PlayMoveSFX(UnitMovement.BattleInfo battle)
-    {
-        if (battle.myInfantry >= 5)
-        {
-            UISoundEffect.Instance.PlayAudio(ReferencesManager.Instance.gameSettings.m_infantry_move[Random.Range(0, 1)]);
-        }
-        if (battle.motoInfantry >= 6)
-        {
-            UISoundEffect.Instance.PlayAudio(ReferencesManager.Instance.gameSettings.m_motorized_infantry_move[Random.Range(0, 1)]);
-        }
-        if (battle.myHeavy >= 5)
-        {
-            UISoundEffect.Instance.PlayAudio(ReferencesManager.Instance.gameSettings.m_heavy_move[Random.Range(0, 1)]);
         }
     }
 }

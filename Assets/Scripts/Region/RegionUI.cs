@@ -459,7 +459,7 @@ public class RegionUI : MonoBehaviour
 
         if (division != null)
         {
-            foreach (UnitMovement.UnitHealth unit in division.unitsHealth)
+            foreach (UnitHealth unit in division.unitsHealth)
             {
                 GameObject spawnedUIButton = Instantiate(ReferencesManager.Instance.army.unitUIPrefab, ReferencesManager.Instance.army.armyHorizontalGroup.transform);
                 spawnedUIButton.GetComponent<UnitUI>().unitIcon.sprite = unit.unit.icon;
@@ -495,7 +495,7 @@ public class RegionUI : MonoBehaviour
 
     public void UpdateDivisionUnitsIDs(UnitMovement division)
     {
-        foreach (UnitMovement.UnitHealth batalion in division.unitsHealth)
+        foreach (UnitHealth batalion in division.unitsHealth)
         {
             batalion._id = Random.Range(1, 9999);
         }
@@ -507,7 +507,7 @@ public class RegionUI : MonoBehaviour
         {
             fightRegion.currentDefenseUnits = ReferencesManager.Instance.gameSettings.currentDefenseUnits_FirstLevel;
 
-            foreach (UnitMovement.UnitHealth batalion in fightRegion.currentDefenseUnits)
+            foreach (UnitHealth batalion in fightRegion.currentDefenseUnits)
             {
                 GameObject spawnedUIButton = Instantiate(ReferencesManager.Instance.army.unitUIPrefab, panel);
                 spawnedUIButton.GetComponent<UnitUI>().unitIcon.sprite = batalion.unit.icon;
@@ -522,7 +522,7 @@ public class RegionUI : MonoBehaviour
         {
             if (division.unitsHealth.Count > 0)
             {
-                foreach (UnitMovement.UnitHealth batalion in division.unitsHealth)
+                foreach (UnitHealth batalion in division.unitsHealth)
                 {
                     GameObject spawnedUIButton = Instantiate(ReferencesManager.Instance.army.unitUIPrefab, panel);
                     spawnedUIButton.GetComponent<UnitUI>().unitIcon.sprite = batalion.unit.icon;

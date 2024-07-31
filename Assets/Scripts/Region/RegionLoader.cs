@@ -3,19 +3,17 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using UnityEngine.SceneManagement;
-using System.Collections;
-using Org.BouncyCastle.Asn1.Pkcs;
 
 public class RegionLoader : MonoBehaviour
 {
-    public bool loaded = false;
+    [HideInInspector] public bool loaded = false;
 
     [HideInInspector] public string _currentScenarioData;
-    public int _currentScenarioId;
+    [HideInInspector] public int _currentScenarioId;
 
     [SerializeField] private StringValue _currentScenarioData_Value;
 
-    public List<ModRegionData> regionModIDs = new List<ModRegionData>();
+    [HideInInspector] public List<ModRegionData> regionModIDs = new List<ModRegionData>();
 
     private void Start()
     {
@@ -23,13 +21,20 @@ public class RegionLoader : MonoBehaviour
         {
             if (province.population == 0)
             {
-                province.population = UnityEngine.Random.Range(1000, 300000);
+                if (!province.capital)
+                {
+                    province.population = UnityEngine.Random.Range(100, 150000);
+                }
+                else
+                {
+                    province.population = UnityEngine.Random.Range(70000, 300000);
+                }
             }
 
             province.currentDefenseUnits = ReferencesManager.Instance.gameSettings.currentDefenseUnits_FirstLevel;
         }
 
-        if (SceneManager.GetActiveScene().buildIndex != 2)
+        if (SceneManager.GetActiveScene().buildIndex != 2 && !ReferencesManager.Instance.gameSettings.loadGame.value)
         {
             if (!ReferencesManager.Instance.gameSettings.playMod.value &&
                 !ReferencesManager.Instance.gameSettings.playTestingMod.value &&
@@ -47,9 +52,6 @@ public class RegionLoader : MonoBehaviour
         ReferencesManager.Instance.mainCamera.Map_MoveTouch_IsAllowed = true;
 
         loaded = true;
-
-        //ReferencesManager.Instance.gameSettings._regionOpacity = 0.5f;
-        //ReferencesManager.Instance.regionManager.UpdateRegions();
     }
 
     private void LoadMod(string modData)
@@ -60,12 +62,16 @@ public class RegionLoader : MonoBehaviour
         string[] regionsDataLines = sections[1].Split(';');
         string[] countriesDataLines = sections[3].Split(';');
 
-        LoadScenario(mainModDataLines);
-        LoadCountries(mainModDataLines);
-        var regionModIDs = ParseRegionData(regionsDataLines);
-        UpdateRegions(regionModIDs);
-        SetSelectedCountry();
-        UpdateCountriesData(countriesDataLines);
+
+        if (!ReferencesManager.Instance.gameSettings.loadGame.value)
+        {
+            LoadScenario(mainModDataLines);
+            LoadCountries(mainModDataLines);
+            var regionModIDs = ParseRegionData(regionsDataLines);
+            UpdateRegions(regionModIDs);
+            SetSelectedCountry();
+            UpdateCountriesData(countriesDataLines);
+        }
     }
 
     private void LoadScenario(string[] mainModDataLines)
@@ -89,7 +95,14 @@ public class RegionLoader : MonoBehaviour
                 }
             }
 
-            ReferencesManager.Instance.gameSettings.allowGameEvents = int.Parse(value) == 1;
+            if (ReferencesManager.Instance.gameSettings._currentGameMode.value != "nonhistoric")
+            {
+                ReferencesManager.Instance.gameSettings.allowGameEvents = int.Parse(value) == 1;
+            }
+            else if (ReferencesManager.Instance.gameSettings._currentGameMode.value != "historic")
+            {
+                ReferencesManager.Instance.gameSettings.allowGameEvents = int.Parse(value) == 0;
+            }
         }
         catch (Exception ex)
         {

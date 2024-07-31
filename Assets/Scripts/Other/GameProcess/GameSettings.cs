@@ -87,6 +87,9 @@ public class GameSettings : MonoBehaviour
 	public UnitScriptableObject antitankLVL1;
 	public UnitScriptableObject antitankLVL2;
 
+    public UnitScriptableObject antiairLVL1;
+    public UnitScriptableObject antiairLVL2;
+
     public UnitScriptableObject cavLVL1;
     public UnitScriptableObject cavLVL2;
 
@@ -96,9 +99,7 @@ public class GameSettings : MonoBehaviour
 	public BuildingScriptableObject researchLab;
 	public BuildingScriptableObject dockyard;
 
-	public List<UnitMovement.UnitHealth> currentDefenseUnits_FirstLevel = new List<UnitMovement.UnitHealth>();
-	public List<UnitMovement.UnitHealth> currentDefenseUnits_SecondLevel = new List<UnitMovement.UnitHealth>();
-	public List<UnitMovement.UnitHealth> currentDefenseUnits_ThirdLevel = new List<UnitMovement.UnitHealth>();
+	public List<UnitHealth> currentDefenseUnits_FirstLevel = new(10);
 
 	[HideInInspector]
 	public DiplomatyUI diplomatyUI;
@@ -197,7 +198,7 @@ public class GameSettings : MonoBehaviour
 	public int _bunkersMaxLevel = 15;
 	public int _marineBaseMaxLevel = 15;
 	public int _marineBaseCost = 700;
-	public int _airBaseMaxLevel = 5;
+	public int _airBaseMaxLevel = 4;
 	public int _airBaseCost = 1000;
 
 	[Header("Fleet:")]
@@ -205,6 +206,7 @@ public class GameSettings : MonoBehaviour
 
 	[Header("Aviation:")]
 	public Aviation_ScriptableObj[] _planes;
+	public GameObject _exposionPrefab;
 
     [Header("Translate")]
 	public Translate translate;

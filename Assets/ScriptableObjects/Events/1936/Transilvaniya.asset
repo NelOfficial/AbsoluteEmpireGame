@@ -106,6 +106,7 @@ MonoBehaviour:
   silentEvent: 0
   conditions:
   - country_exist;14
+  - country_exist;29
   receivers: 
   exceptionsReceivers: 1d000000
   aiWillDo_Index: 0
@@ -117,3 +118,4 @@ MonoBehaviour:
     - annex;14;299;304;309;303
     rejectUltimatum: 0
   IS_GAME_MAIN_EVENT: 1
+  OFFICIAL_SCENARIO_ID: 0

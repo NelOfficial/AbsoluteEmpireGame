@@ -98,10 +98,9 @@ MonoBehaviour:
   - name: "\u0423\u0436\u0430\u0441"
     nameEN: Terribly
     actions:
-    - set_res;60;money;2400
+    - set_res;60;money;10400
     - set_res;60;recroots;30000
     - set_res;60;food;560
-    - add_res;49;money;2000
     - war;60;49
     rejectUltimatum: 0
   IS_GAME_MAIN_EVENT: 1

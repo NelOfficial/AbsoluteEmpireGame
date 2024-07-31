@@ -14,6 +14,8 @@ public class Aviation_ScriptableObj : ScriptableObject
     public int recruitsCost;
     public TechnologyScriptableObject _tech;
 
+    public int level;
+
     public string tag;
 
     [Header("Характеристики")]
@@ -26,5 +28,4 @@ public class Aviation_ScriptableObj : ScriptableObject
     public int distance;
     public int fuelMax;
     public int fuelperattack;
-    public int hitprice;
 }

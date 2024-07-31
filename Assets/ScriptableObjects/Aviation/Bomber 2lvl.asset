@@ -12,18 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e079b704cb876374dbe5d08b49508a61, type: 3}
   m_Name: Bomber 2lvl
   m_EditorClassIdentifier: 
-  name: "\u0411\u043E\u043C\u0431\u0430\u0440\u0434\u0438\u0440\u043E\u0432\u0449\u0438\u043A"
-  description: "\u0417\u0430\u0434\u0430\u0447\u0430 \u0431\u043E\u043C\u0431\u0430\u0440\u0434\u0438\u0440\u043E\u0432\u0449\u0438\u043A\u0430
-    \u0437\u0430\u043A\u043B\u044E\u0447\u0430\u0435\u0442\u0441\u044F \u0432 \u043F\u043E\u0434\u0440\u044B\u0432\u0435
-    \u0432\u0440\u0430\u0436\u0435\u0441\u043A\u0438\u0445 \u0441\u043E\u043E\u0440\u0443\u0436\u0435\u043D\u0438\u0439,
-    \u043D\u043E \u043C\u043E\u0436\u043D\u043E \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C
-    \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u0435\u0433\u043E
-    \u043D\u0435\u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u043E..."
-  price: 2500
+  name: "\u0411\u043E\u043C\u0431\u0430\u0440\u0434\u0438\u0440\u043E\u0432\u0449\u0438\u043A
+    II"
+  description: Bomber.Desc
+  price: 6500
   sprite: {fileID: 21300000, guid: 856637c84fe2ec341a4153a651afa8c0, type: 3}
   type: 2
   recruitsCost: 150
   _tech: {fileID: 11400000, guid: 7746ad2a6406b2f4da0bb186b8cc7f18, type: 2}
+  level: 0
+  tag: BOMBER_2
   maxhp: 50
   airplane_damage: 15
   army_damage: 25
@@ -33,4 +31,3 @@ MonoBehaviour:
   distance: 1800
   fuelMax: 12500
   fuelperattack: 7000
-  hitprice: 1000

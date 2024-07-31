@@ -25,7 +25,7 @@ MonoBehaviour:
   health: 12.5
   softAttack: 2.5
   hardAttack: 0.5
-  aviationAttack: 5
+  aviationAttack: 1
   defense: 20
   maxEntrenchment: 0
   armor: 0

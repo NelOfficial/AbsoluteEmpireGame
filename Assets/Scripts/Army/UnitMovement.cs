@@ -6,35 +6,31 @@ using System.Collections;
 
 public class UnitMovement : MonoBehaviour
 {
-    [SerializeField] List<Transform> nearestPoints = new List<Transform>();
+    private List<Transform> nearestPoints = new();
 
     [HideInInspector] public CountryManager countryManager;
     [HideInInspector] public RegionManager regionManager;
-    public RegionManager currentProvince;
+    [HideInInspector] public RegionManager currentProvince;
     [HideInInspector] public Army army;
+    [HideInInspector] public RegionManager moveto;
 
     public CountrySettings currentCountry;
     public List<UnitHealth> unitsHealth = new List<UnitHealth>();
 
     private UnitMovement attackerUnit;
     private UnitMovement defenderUnit;
-    private RegionManager defenderRegion;
-    private bool attackerWon;
 
-    private MovePoint[] movePoints;
+    [HideInInspector] public bool isSelected;
 
-    public bool isSelected;
+    [HideInInspector] public int fortification;
+    [HideInInspector] public int _movePoints;
 
-    public int fortification;
-    public int _movePoints;
-
-    public bool firstMove;
+    [HideInInspector] public bool firstMove;
 
     private int winChance;
-    private int offset;
-    private int motoInfantry;
 
     [SerializeField] Image flagImage;
+    [SerializeField] SpriteRenderer _renderer;
     [SerializeField] GameObject canMoveState;
 
     private void Awake()
@@ -129,7 +125,7 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    public void AIMoveNoHit(RegionManager defenderRegion, UnitMovement division)
+    public bool AIMoveNoHit(RegionManager defenderRegion, UnitMovement division)
     {
         RegionManager attackerRegion = division.currentProvince;
         defenderRegion.CheckRegionUnits(defenderRegion);
@@ -148,6 +144,8 @@ public class UnitMovement : MonoBehaviour
                     attackerRegion.hasArmy = false;
                     defenderRegion.hasArmy = true;
                 }
+
+                return true;
             }
             else
             {
@@ -189,9 +187,10 @@ public class UnitMovement : MonoBehaviour
                         }
                     }
                 }
+                return true;
             }
         }
-
+        return false;
     }
 
     public void MoveUnit(RegionManager regionTo, RegionManager oldRegion, UnitMovement division)
@@ -220,6 +219,49 @@ public class UnitMovement : MonoBehaviour
             {
                 unit.fuel -= 50;
             }
+
+            if (division.currentCountry.isPlayer)
+            {
+                PlayMoveSFX(division);
+            }
+        }
+    }
+
+    private void PlayMoveSFX(UnitMovement division)
+    {
+        int heavy = 0;
+        int infantry = 0;
+        int motorized = 0;
+
+        foreach (var batalion in division.unitsHealth)
+        {
+            if (batalion.unit.type == UnitScriptableObject.Type.SOLDIER || 
+                batalion.unit.type == UnitScriptableObject.Type.ARTILERY ||
+                batalion.unit.type == UnitScriptableObject.Type.CAVALRY)
+            {
+                infantry++;
+            }
+            else if (batalion.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+            {
+                motorized++;
+            }
+            else if (batalion.unit.type == UnitScriptableObject.Type.TANK)
+            {
+                heavy++;
+            }
+        }
+
+        if (infantry / division.unitsHealth.Count >= 0.55f)
+        {
+            UISoundEffect.Instance.PlayAudio(ReferencesManager.Instance.gameSettings.m_infantry_move[Random.Range(0, 1)]);
+        }
+        else if (motorized / division.unitsHealth.Count >= 0.55f)
+        {
+            UISoundEffect.Instance.PlayAudio(ReferencesManager.Instance.gameSettings.m_motorized_infantry_move[Random.Range(0, 1)]);
+        }
+        else if (heavy / division.unitsHealth.Count >= 0.55f)
+        {
+            UISoundEffect.Instance.PlayAudio(ReferencesManager.Instance.gameSettings.m_heavy_move[Random.Range(0, 1)]);
         }
     }
 
@@ -280,7 +322,7 @@ public class UnitMovement : MonoBehaviour
                         battle.enemyUnits = battle.defenderDivision.unitsHealth;
                         battle.fightRegion = fightRegion;
 
-                        foreach (UnitMovement.UnitHealth unit in battle.defenderDivision.unitsHealth)
+                        foreach (UnitHealth unit in battle.defenderDivision.unitsHealth)
                         {
                             _armors.Add(unit.unit.armor);
 
@@ -356,7 +398,7 @@ public class UnitMovement : MonoBehaviour
                 battle.fightRegion = fightRegion;
                 battle.enemyUnits = battle.fightRegion.currentDefenseUnits;
 
-                foreach (UnitMovement.UnitHealth unit in fightRegion.currentDefenseUnits)
+                foreach (UnitHealth unit in fightRegion.currentDefenseUnits)
                 {
                     defenderArmors.Add(unit.unit.armor);
 
@@ -395,7 +437,7 @@ public class UnitMovement : MonoBehaviour
             battle.myUnits = battle.attackerDivision.unitsHealth;
             battle.fightRegion = fightRegion;
 
-            foreach (UnitMovement.UnitHealth unit in attackerUnit.unitsHealth)
+            foreach (UnitHealth unit in attackerUnit.unitsHealth)
             {
                 attackerArmors.Add(unit.unit.armor);
 
@@ -692,7 +734,9 @@ public class UnitMovement : MonoBehaviour
                 }
             }
 
-            if (myMotoInfantry >= 6 || myHeavy >= 6 || myCavlry >= 6)
+            if (myMotoInfantry / unitMovement.unitsHealth.Count >= 0.55f || 
+                myHeavy / unitMovement.unitsHealth.Count >= 0.55f || 
+                myCavlry / unitMovement.unitsHealth.Count >= 0.55f)
             {
                 if (unitMovement.firstMove && hasFuel)
                 {
@@ -883,10 +927,68 @@ public class UnitMovement : MonoBehaviour
         {
             canMoveState.SetActive(false);
         }
+
+        int myInfantry = 0;
+        int myMotoInfantry = 0;
+        int myArtilery = 0;
+        int myHeavy = 0;
+        int myCavlry = 0;
+
+        foreach (UnitHealth unit in unitsHealth)
+        {
+            if (unit.unit.type == UnitScriptableObject.Type.SOLDIER)
+            {
+                myInfantry++;
+            }
+            if (unit.unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+            {
+                myMotoInfantry++;
+            }
+            if (unit.unit.type == UnitScriptableObject.Type.ARTILERY)
+            {
+                myArtilery++;
+            }
+            if (unit.unit.type == UnitScriptableObject.Type.TANK)
+            {
+                myHeavy++;
+            }
+            if (unit.unit.type == UnitScriptableObject.Type.CAVALRY)
+            {
+                myCavlry++;
+            }
+        }
+
+        try
+        {
+            if ((float)myInfantry / (float)unitsHealth.Count >= 0.55f)
+            {
+                _renderer.sprite = ReferencesManager.Instance.gameSettings.soldierLVL2.icon;
+            }
+            else if ((float)myArtilery / (float)unitsHealth.Count >= 0.55f)
+            {
+                _renderer.sprite = ReferencesManager.Instance.gameSettings.artileryLVL1.icon;
+            }
+            else if ((float)myHeavy / (float)unitsHealth.Count >= 0.55f)
+            {
+                _renderer.sprite = ReferencesManager.Instance.gameSettings.tankLVL2.icon;
+            }
+            else if ((float)myMotoInfantry / (float)unitsHealth.Count >= 0.55f)
+            {
+                _renderer.sprite = ReferencesManager.Instance.gameSettings.motoLVL1.icon;
+            }
+            else if ((float)myCavlry / (float)unitsHealth.Count >= 0.55f)
+            {
+                _renderer.sprite = ReferencesManager.Instance.gameSettings.cavLVL2.icon;
+            }
+        }
+        catch (System.Exception) { }
     }
 
     public void Retreat(UnitMovement division)
     {
+        //Debug.Log(division.currentCountry);
+        //Instantiate(ReferencesManager.Instance.army.encircleAnimation, division.currentProvince.transform);
+        //Destroy(division.gameObject);
         RegionManager regionToRetreat;
         RegionManager myRegion = division.transform.parent.GetComponent<RegionManager>();
         MovePoint _point;
@@ -921,7 +1023,6 @@ public class UnitMovement : MonoBehaviour
             {
                 for (int i = 0; i < nearMyPoints.Count; i++) // Есть куда отступать
                 {
-                    bool temp = false;
                     regionToRetreat = nearMyPoints[i].GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
 
                     regionToRetreat.CheckRegionUnits(regionToRetreat);
@@ -933,25 +1034,41 @@ public class UnitMovement : MonoBehaviour
                             division._movePoints++;
                         }
 
-                        AIMoveNoHit(regionToRetreat, division);
-                        temp = true;
-                    }
-
-                    if (temp)
-                    {
-                        break;
+                        if (AIMoveNoHit(regionToRetreat, division))
+                        {
+                            return;
+                        }
                     }
                 }
+
+                foreach (Transform child in division.currentProvince.transform)
+                {
+                    if (child.gameObject.GetComponent<UnitMovement>())
+                    {
+                        Instantiate(ReferencesManager.Instance.army.encircleAnimation, division.currentProvince.transform);
+                        Destroy(child.gameObject);
+                    }
+                }
+
             }
-            //else if (nearRegionsWithArmy.Count > 0 && nearMyPoints.Count < 0)
-            //{
-            //    foreach (var province in nearRegionsWithArmy)
-            //    {
-            //        UnitMovement divisionInOtherReg = province.GetDivision(province);
-            //        divisionInOtherReg.Retreat(divisionInOtherReg);
-            //    }
-            //}
-            else if (nearMyPoints.Count <= 0) // Нет путей вообще (Фактически котел на 1 провинцию)
+            else if (nearRegionsWithArmy.Count > 0 && nearMyPoints.Count < 0)
+            {
+                foreach (var province in nearRegionsWithArmy)
+                {
+                    UnitMovement divisionInOtherReg = province.GetDivision(province);
+                    divisionInOtherReg.Retreat(divisionInOtherReg);
+                    if (!province.hasArmy)
+                    {
+                        if (AIMoveNoHit(province, myRegion.GetDivision(myRegion)))
+                        {
+                            return;
+                        }
+                    }
+                }
+                Instantiate(ReferencesManager.Instance.army.encircleAnimation, myRegion.transform);
+                Destroy(myRegion.gameObject);
+            }
+            else /*if (nearMyPoints.Count <= 0)*/ // Нет путей вообще (Фактически котел на 1 провинцию)
             {
                 division.currentProvince.CheckRegionUnits(division.currentProvince);
 
@@ -970,6 +1087,7 @@ public class UnitMovement : MonoBehaviour
             myRegion.CheckRegionUnits(myRegion);
         }
     }
+
     public List<RegionManager> GetNeiboursOfRegion(RegionManager region)
     {
         var regions = new List<RegionManager>();
@@ -995,6 +1113,7 @@ public class UnitMovement : MonoBehaviour
 
         return regions;
     }
+
     public bool Encircled(RegionManager fightRegion)
     {
         bool isEncircled = false;
@@ -1039,15 +1158,6 @@ public class UnitMovement : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-    }
-
-    [System.Serializable]
-    public class UnitHealth
-    {
-        public int _id;
-        public float health;
-        public UnitScriptableObject unit;
-        public float fuel;
     }
 
     [System.Serializable]
@@ -1106,4 +1216,13 @@ public class UnitMovement : MonoBehaviour
 
         public int winChance;
     }
+}
+
+[System.Serializable]
+public class UnitHealth
+{
+    public int _id;
+    public float health;
+    public UnitScriptableObject unit;
+    public float fuel;
 }

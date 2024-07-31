@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using System.Linq;
 using System.IO;
 using System;
+using System.Collections;
 
 public class CountryManager : MonoBehaviour
 {
@@ -17,8 +18,9 @@ public class CountryManager : MonoBehaviour
     public List<RegionManager> regions = new List<RegionManager>();
 
     public CountrySettings currentCountry;
-    [HideInInspector] public PlayerData currentPlayerData;
+    //[HideInInspector] public PlayerData currentPlayerData;
     [HideInInspector] public string playerNickname;
+    [HideInInspector] public CountrySettings botCountry;
 
     public string[] parts;
     public string secondPart;
@@ -32,6 +34,10 @@ public class CountryManager : MonoBehaviour
 
     private void Start()
     {
+        ReferencesManager.Instance.dateManager.currentDate[0] = 1;
+        ReferencesManager.Instance.dateManager.currentDate[1] = 1;
+
+        ReferencesManager.Instance.dateManager.currentDate[2] = int.Parse(_currentDate.value);
 
         if (ReferencesManager.Instance.gameSettings.onlineGame)
         {
@@ -41,14 +47,14 @@ public class CountryManager : MonoBehaviour
 
             currentCountry.country._name = $"{currentCountry.country._uiName} ({playerNickname})";
 
-            foreach (PlayerData player in ReferencesManager.Instance.gameSettings.multiplayer.roomPlayers)
-            {
-                player.country = countries[player.countryIndex];
-                if (player.currentNickname == playerNickname)
-                {
-                    currentPlayerData = player;
-                }
-            }
+            //foreach (PlayerData player in ReferencesManager.Instance.gameSettings.multiplayer.roomPlayers)
+            //{
+            //    player.country = countries[player.countryIndex];
+            //    if (player.currentNickname == playerNickname)
+            //    {
+            //        currentPlayerData = player;
+            //    }
+            //}
 
             //Debug.Log($"countryManager nickname: {playerNickname}");
             //Debug.Log($"currentPlayerData: {currentPlayerData.currentNickname}");
@@ -118,14 +124,6 @@ public class CountryManager : MonoBehaviour
                 }
             }
 
-            if (ReferencesManager.Instance.gameSettings.loadGame.value)
-            {
-                if (SceneManager.GetActiveScene().name != "Editor")
-                {
-                    Load();
-                }
-            }
-
             if (ReferencesManager.Instance.gameSettings.playMod.value)
             {
                 int currentModID = PlayerPrefs.GetInt("CURRENT_MOD_PLAYING");
@@ -133,12 +131,19 @@ public class CountryManager : MonoBehaviour
                 LoadMod(PlayerPrefs.GetString($"MODIFICATION_{currentModID}"), currentModID, "saved");
             }
 
-            if (ReferencesManager.Instance.gameSettings.playTestingMod.value)
+            else if (ReferencesManager.Instance.gameSettings.playTestingMod.value)
             {
                 LoadMod(PlayerPrefs.GetString($"CURRENT_MOD_PLAYTESTING"), 0, "local");
             }
-        }
 
+            else if (ReferencesManager.Instance.gameSettings.loadGame.value)
+            {
+                if (SceneManager.GetActiveScene().name != "Editor")
+                {
+                    Load();
+                }
+            }
+        }
 
         ReferencesManager.Instance.aiManager.AICountries.Clear();
 
@@ -146,13 +151,12 @@ public class CountryManager : MonoBehaviour
         {
             if (!ReferencesManager.Instance.gameSettings.spectatorMode)
             {
-                if (country.country != currentCountry.country && !country.isPlayer)
+                if (country.country._id != currentCountry.country._id && !country.isPlayer)
                 {
                     ReferencesManager.Instance.aiManager.AICountries.Add(country);
                     country.gameObject.AddComponent<CountryAIManager>();
                 }
             }
-            country.UpdateCapitulation();
         }
 
         if (ReferencesManager.Instance.gameSettings._currentGameMode.value == "tournament")
@@ -184,53 +188,63 @@ public class CountryManager : MonoBehaviour
             ReferencesManager.Instance.gameSettings.allowGameEvents = false;
         }
 
-        UpdateValuesUI();
-        UpdateIncomeValuesUI();
-        UpdateCountryInfo();
-
         foreach (CountrySettings country in countries)
         {
             country.country.countryColor.a = ReferencesManager.Instance.gameSettings._regionOpacity;
         }
 
-        foreach (RegionManager region in regions)
+        if (ReferencesManager.Instance.gameSettings._DEBUG_REGIONS_IDS)
         {
-            region.selectedColor.r = region.currentCountry.country.countryColor.r + 0.2f;
-            region.selectedColor.g = region.currentCountry.country.countryColor.g + 0.2f;
-            region.selectedColor.b = region.currentCountry.country.countryColor.b + 0.2f;
-            region.selectedColor.a = ReferencesManager.Instance.gameSettings._regionOpacity;
-
-            region.hoverColor.r = region.currentCountry.country.countryColor.r + 0.3f;
-            region.hoverColor.g = region.currentCountry.country.countryColor.g + 0.3f;
-            region.hoverColor.b = region.currentCountry.country.countryColor.b + 0.3f;
-            region.hoverColor.a = ReferencesManager.Instance.gameSettings._regionOpacity;
-
-            if (ReferencesManager.Instance.gameSettings._DEBUG_REGIONS_IDS)
+            foreach (RegionManager region in regions)
             {
-                GameObject regionID_text = Instantiate(ReferencesManager.Instance.gameSettings.debugText, region.transform);
-                regionID_text.GetComponentInChildren<TMP_Text>().text = $"{region._id}";
-                if (!region.currentCountry.myRegions.Contains(region))
+                region.selectedColor.r = region.currentCountry.country.countryColor.r + 0.2f;
+                region.selectedColor.g = region.currentCountry.country.countryColor.g + 0.2f;
+                region.selectedColor.b = region.currentCountry.country.countryColor.b + 0.2f;
+                region.selectedColor.a = ReferencesManager.Instance.gameSettings._regionOpacity;
+
+                region.hoverColor.r = region.currentCountry.country.countryColor.r + 0.3f;
+                region.hoverColor.g = region.currentCountry.country.countryColor.g + 0.3f;
+                region.hoverColor.b = region.currentCountry.country.countryColor.b + 0.3f;
+                region.hoverColor.a = ReferencesManager.Instance.gameSettings._regionOpacity;
+
+                if (ReferencesManager.Instance.gameSettings._DEBUG_REGIONS_IDS)
                 {
-                    regionID_text.GetComponentInChildren<TMP_Text>().color = ReferencesManager.Instance.gameSettings.redColor;
+                    GameObject regionID_text = Instantiate(ReferencesManager.Instance.gameSettings.debugText, region.transform);
+                    regionID_text.GetComponentInChildren<TMP_Text>().text = $"{region._id}";
+                    if (!region.currentCountry.myRegions.Contains(region))
+                    {
+                        regionID_text.GetComponentInChildren<TMP_Text>().color = ReferencesManager.Instance.gameSettings.redColor;
+                    }
                 }
             }
         }
 
-        ReferencesManager.Instance.dateManager.currentDate[0] = 1;
-        ReferencesManager.Instance.dateManager.currentDate[1] = 1;
-
-        ReferencesManager.Instance.dateManager.currentDate[2] = int.Parse(_currentDate.value);
         ReferencesManager.Instance.dateManager.UpdateUI();
+        UpdateValuesUI();
+        UpdateIncomeValuesUI();
+        UpdateCountryInfo();
     }
 
     private void Load()
     {
         int currentSaveIndex_INT = int.Parse(currentSaveIndex.value);
 
+        ReferencesManager.Instance.regionLoader._currentScenarioId = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_SCENARIO");
         ReferencesManager.Instance.gameSettings.difficultyValue.value = PlayerPrefs.GetString($"{currentSaveIndex_INT}_DIFFICULTY");
         ReferencesManager.Instance.gameSettings._currentGameMode.value = PlayerPrefs.GetString($"{currentSaveIndex_INT}_GAMEMODE", "historic");
 
         ReferencesManager.Instance.gameSettings._currentTournamentCountries.value = PlayerPrefs.GetString($"{currentSaveIndex_INT}_TOURNAMENT_COUNTRIES");
+
+        var scenarioEvents = ReferencesManager.Instance.gameSettings._scenariosEvents[ReferencesManager.Instance.regionLoader._currentScenarioId];
+
+        if (scenarioEvents != null)
+        {
+            foreach (var _event in scenarioEvents._events)
+            {
+                _event._checked = false;
+                ReferencesManager.Instance.gameSettings.gameEvents.Add(_event);
+            }
+        }
 
         try
         {
@@ -267,132 +281,65 @@ public class CountryManager : MonoBehaviour
             {
                 currentCountry = country;
                 currentCountry.isPlayer = true;
+
+                if (currentCountry.gameObject.GetComponent<CountryAIManager>())
+                {
+                    ReferencesManager.Instance.aiManager.AICountries.Remove(currentCountry);
+                    Destroy(currentCountry.gameObject.GetComponent<CountryAIManager>());
+                }
+            }
+
+            string GetPlayerPrefString(string key) => PlayerPrefs.GetString($"{currentSaveIndex_INT}_COUNTRY_{country.country._id}_{key}");
+
+            int GetPlayerPrefInt(string key) => PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{country.country._id}_{key}");
+
+            float GetPlayerPrefFloat(string key) => PlayerPrefs.GetFloat($"{currentSaveIndex_INT}_COUNTRY_{country.country._id}_{key}");
+
+            country.ideology = GetPlayerPrefString("IDEOLOGY");
+            country.money = GetPlayerPrefInt("MONEY");
+            country.food = GetPlayerPrefInt("FOOD");
+            country.recroots = GetPlayerPrefInt("RECROOTS");
+            country.recruitsLimit = GetPlayerPrefInt("RECROOTS_LIMIT");
+            country.researchPoints = GetPlayerPrefInt("RESEARCH_POINTS");
+            country.fuel = GetPlayerPrefFloat("fuel");
+
+            country.mobilasing = GetPlayerPrefString("MOBILASING") == "TRUE";
+            country.deMobilasing = GetPlayerPrefString("DEMOBILASING") == "TRUE";
+
+            country.startMoneyIncome = GetPlayerPrefInt("startMoneyIncome");
+            country.moneyNaturalIncome = GetPlayerPrefInt("moneyNaturalIncome");
+            country.startFoodIncome = GetPlayerPrefInt("startFoodIncome");
+            country.foodNaturalIncome = GetPlayerPrefInt("foodNaturalIncome");
+            country.recrootsIncome = GetPlayerPrefInt("recrootsIncome");
+            country.researchPointsIncome = GetPlayerPrefInt("researchPointsIncome");
+            country.civFactories = GetPlayerPrefInt("civFactories");
+            country.farms = GetPlayerPrefInt("farms");
+            country.chemicalFarms = GetPlayerPrefInt("cheFarms");
+            country.researchLabs = GetPlayerPrefInt("resLabs");
+
+            country.UpdateCountryFlagOnIdeology(country.ideology);
+
+            for (int techIndex = 0; techIndex < ReferencesManager.Instance.gameSettings.technologies.Length; techIndex++)
+            {
+                if (PlayerPrefs.GetString($"{currentSaveIndex_INT}_COUNTRY_{country.country._id}_TECH_{techIndex}") == "TRUE")
+                {
+                    country.countryTechnologies.Add(ReferencesManager.Instance.gameSettings.technologies[techIndex]);
+                }
             }
         }
 
-        for (int i = 0; i < countries.Count; i++)
+        WarningManager.Instance.Warn($"Countries and techs loaded");
+
+        foreach (RegionManager region in regions)
         {
-            countries[i].ideology = PlayerPrefs.GetString($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_IDEOLOGY");
-            countries[i].money = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_MONEY");
-            countries[i].food = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_FOOD");
-            countries[i].recroots = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_RECROOTS");
-            countries[i].recruitsLimit = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_RECROOTS_LIMIT");
-            countries[i].researchPoints = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_RESEARCH_POINTS");
-            countries[i].fuel = PlayerPrefs.GetFloat($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_fuel");
-
-            bool isMob = false;
-            bool isDeMob = false;
-
-            if (PlayerPrefs.GetString($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_MOBILASING") == "TRUE")
-            {
-                isMob = true;
-            }
-
-            if (PlayerPrefs.GetString($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_DEMOBILASING") == "TRUE")
-            {
-                isDeMob = true;
-            }
-
-            countries[i].mobilasing = isMob;
-            countries[i].deMobilasing = isDeMob;
-
-            countries[i].startMoneyIncome = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_startMoneyIncome");
-            countries[i].moneyNaturalIncome = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_moneyNaturalIncome");
-
-            countries[i].startFoodIncome = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_startFoodIncome");
-            countries[i].foodNaturalIncome = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_foodNaturalIncome");
-
-            countries[i].recrootsIncome = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_recrootsIncome");
-            countries[i].researchPointsIncome = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_researchPointsIncome");
-
-            countries[i].civFactories = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_civFactories");
-            countries[i].farms = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_farms");
-            countries[i].chemicalFarms = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_cheFarms");
-            countries[i].researchLabs = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_resLabs");
-
-            countries[i].UpdateCountryGraphics(countries[i].ideology);
-
-            List<string> _country_trades = new List<string>();
-            List<string> _country_wars = new List<string>();
-            List<string> _country_vassals = new List<string>();
-            List<string> _country_pacts = new List<string>();
-            List<string> _country_rights = new List<string>();
-            List<string> _country_unions = new List<string>();
-
-            _country_trades = PlayerPrefs.GetString($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_TRADES").Split(';').ToList();
-            _country_wars = PlayerPrefs.GetString($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_WARS").Split(';').ToList();
-            _country_vassals = PlayerPrefs.GetString($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_VASSALS").Split(';').ToList();
-            _country_pacts = PlayerPrefs.GetString($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_PACTS").Split(';').ToList();
-            _country_rights = PlayerPrefs.GetString($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_RIGHTS").Split(';').ToList();
-            _country_unions = PlayerPrefs.GetString($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_UNIONS").Split(';').ToList();
-
-            _country_trades.RemoveAll(item => item == "");
-            _country_wars.RemoveAll(item => item == "");
-            _country_vassals.RemoveAll(item => item == "");
-            _country_pacts.RemoveAll(item => item == "");
-            _country_rights.RemoveAll(item => item == "");
-            _country_unions.RemoveAll(item => item == "");
-
-            ReferencesManager.Instance.diplomatyUI.senderId = countries[i].country._id;
-            ReferencesManager.Instance.diplomatyUI.sender = countries[i];
-
-            foreach (string _country in _country_trades)
-            {
-                int countryID = int.Parse(_country.ToString());
-
-                ReferencesManager.Instance.diplomatyUI.AISendOffer("Торговля", countries[i], FindCountryByID(countryID), false);
-
-            }
-
-            foreach (string _country in _country_wars)
-            {
-                int countryID = int.Parse(_country.ToString());
-
-                ReferencesManager.Instance.diplomatyUI.AISendOffer("Объявить войну", countries[i], FindCountryByID(countryID), false);
-
-            }
-
-            foreach (string _country in _country_vassals)
-            {
-                int countryID = int.Parse(_country.ToString());
-
-                ReferencesManager.Instance.diplomatyUI.AISendOffer("Сделать вассалом", countries[i], FindCountryByID(countryID), false);
-
-            }
-
-            foreach (string _country in _country_pacts)
-            {
-                int countryID = int.Parse(_country.ToString());
-
-                ReferencesManager.Instance.diplomatyUI.AISendOffer("Пакт о ненападении", countries[i], FindCountryByID(countryID), false);
-
-            }
-
-            foreach (string _country in _country_rights)
-            {
-                int countryID = int.Parse(_country.ToString());
-
-                ReferencesManager.Instance.diplomatyUI.AISendOffer("Право о проходе войск", countries[i], FindCountryByID(countryID), false);
-
-            }
-
-            foreach (string _country in _country_unions)
-            {
-                int countryID = int.Parse(_country.ToString());
-
-                ReferencesManager.Instance.diplomatyUI.AISendOffer("Союз", countries[i], FindCountryByID(countryID), false);
-            }
-        }
-
-        for (int i = 0; i < regions.Count; i++)
-        {
-            RegionManager region = regions[i];
-
             foreach (CountrySettings country in countries)
             {
                 if (country.country._id == PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_CURRENTCOUNTRY_ID"))
                 {
-                    ReferencesManager.Instance.AnnexRegion(region, country);
+                    if (region.currentCountry != country)
+                    {
+                        ReferencesManager.Instance.AnnexRegion(region, country);
+                    }
                 }
             }
 
@@ -415,33 +362,34 @@ public class CountryManager : MonoBehaviour
             if (airbases > 0)
             {
                 region.gameObject.AddComponent<Aviation_Storage>();
-            }
 
-            Aviation_Storage airStorage = region.gameObject.GetComponent<Aviation_Storage>();
+                Aviation_Storage airStorage = region.gameObject.GetComponent<Aviation_Storage>();
 
-            for (int p = 0; p < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_PLANES"); p++)
-            {
-                Aviation_ScriptableObj plane = null;
-
-                for (int f = 0; f < ReferencesManager.Instance.gameSettings._planes.Length; f++)
+                for (int p = 0; p < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_PLANES"); p++)
                 {
-                    Aviation_ScriptableObj _plane = ReferencesManager.Instance.gameSettings._planes[f];
+                    Aviation_ScriptableObj plane = null;
 
-                    if (_plane.tag == PlayerPrefs.GetString($"{currentSaveIndex_INT}_REGION_{region._id}_PLANE_{p}_TYPE"))
+                    for (int f = 0; f < ReferencesManager.Instance.gameSettings._planes.Length; f++)
                     {
-                        plane = _plane;
+                        Aviation_ScriptableObj _plane = ReferencesManager.Instance.gameSettings._planes[f];
+
+                        if (_plane.tag == PlayerPrefs.GetString($"{currentSaveIndex_INT}_REGION_{region._id}_PLANE_{p}_TYPE"))
+                        {
+                            plane = _plane;
+                            break;
+                        }
                     }
+
+                    CountrySettings owner = FindCountryByID(PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_PLANE_{p}_OWNER"));
+
+                    Aviation_Cell aviation_Cell = new Aviation_Cell(plane, owner)
+                    {
+                        hp = PlayerPrefs.GetFloat($"{currentSaveIndex_INT}_REGION_{region._id}_PLANE_{p}_HP"),
+                        fuel = PlayerPrefs.GetFloat($"{currentSaveIndex_INT}_REGION_{region._id}_PLANE_{p}_FUEL")
+                    };
+
+                    airStorage.planes.Add(aviation_Cell);
                 }
-
-                CountrySettings owner = FindCountryByID(PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_PLANE_{p}_OWNER"));
-
-                Aviation_Cell aviation_Cell = new Aviation_Cell(plane, owner)
-                {
-                    hp = PlayerPrefs.GetFloat($"{currentSaveIndex_INT}_REGION_{region._id}_PLANE_{p}_HP"),
-                    fuel = PlayerPrefs.GetFloat($"{currentSaveIndex_INT}_REGION_{region._id}_PLANE_{p}_FUEL")
-                };
-
-                airStorage.planes.Add(aviation_Cell);
             }
 
             for (int f = 0; f < civFactory_Amount; f++)
@@ -477,84 +425,86 @@ public class CountryManager : MonoBehaviour
             if (PlayerPrefs.GetString($"{currentSaveIndex_INT}_REGION_{region._id}_HAS_ARMY") == "TRUE")
             {
                 region.hasArmy = true;
-                ReferencesManager.Instance.army.CreateUnit_NoCheck(regions[i]);
+                ReferencesManager.Instance.army.CreateUnit_NoCheck(region);
+
+                UnitMovement division = region.GetDivision(region);
 
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_INF_LVL1"); index++)
                 {
-                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.soldierLVL1, region);
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.soldierLVL1, division);
                 }
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_INF_LVL2"); index++)
                 {
-                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.soldierLVL2, region);
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.soldierLVL2, division);
                 }
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_INF_LVL3"); index++)
                 {
-                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.soldierLVL3, region);
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.soldierLVL3, division);
                 }
 
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_ART_LVL1"); index++)
                 {
-                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.artileryLVL1, region);
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.artileryLVL1, division);
                 }
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_ART_LVL2"); index++)
                 {
-                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.artileryLVL2, region);
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.artileryLVL2, division);
+                }
+
+                for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_AAA_LVL1"); index++)
+                {
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.antiairLVL1, division);
+                }
+                for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_AAA_LVL2"); index++)
+                {
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.antiairLVL2, division);
                 }
 
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_TANK_LVL1"); index++)
                 {
-                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.tankLVL1, region);
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.tankLVL1, division);
                 }
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_TANK_LVL2"); index++)
                 {
-                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.tankLVL2, region);
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.tankLVL2, division);
                 }
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_TANK_LVL3"); index++)
                 {
-                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.tankLVL3, region);
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.tankLVL3, division);
                 }
 
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_MOTO_LVL1"); index++)
                 {
-                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.motoLVL1, region);
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.motoLVL1, division);
                 }
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_MOTO_LVL2"); index++)
                 {
-                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.motoLVL2, region);
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.motoLVL2, division);
                 }
 
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_ATI_LVL1"); index++)
                 {
-                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.antitankLVL1, region);
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.antitankLVL1, division);
                 }
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_ATI_LVL2"); index++)
                 {
-                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.antitankLVL2, region);
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.antitankLVL2, division);
                 }
 
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_CAV_LVL1"); index++)
                 {
-                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.cavLVL1, region);
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.cavLVL1, division);
                 }
                 for (int index = 0; index < PlayerPrefs.GetInt($"{currentSaveIndex_INT}_REGION_{region._id}_CAV_LVL2"); index++)
                 {
-                    ReferencesManager.Instance.army.AddUnitToArmy_NoCheck(ReferencesManager.Instance.gameSettings.cavLVL2, region);
+                    ReferencesManager.Instance.army.AddUnitToArmy_Save(ReferencesManager.Instance.gameSettings.cavLVL2, division);
                 }
             }
         }
 
-        UpdateRegionsColor();
+        WarningManager.Instance.Warn($"Loaded regions");
 
-        for (int i = 0; i < countries.Count; i++)
-        {
-            for (int techIndex = 0; techIndex < ReferencesManager.Instance.gameSettings.technologies.Length; techIndex++)
-            {
-                if (PlayerPrefs.GetString($"{currentSaveIndex_INT}_COUNTRY_{countries[i].country._id}_TECH_{techIndex}") == "TRUE")
-                {
-                    countries[i].countryTechnologies.Add(ReferencesManager.Instance.gameSettings.technologies[techIndex]);
-                }
-            }
-        }
+        StartCoroutine(LoadDiplomatyRelations(currentSaveIndex_INT));
 
         ReferencesManager.Instance.dateManager.currentDate[0] = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_DATE_0");
         ReferencesManager.Instance.dateManager.currentDate[1] = PlayerPrefs.GetInt($"{currentSaveIndex_INT}_DATE_1");
@@ -572,6 +522,54 @@ public class CountryManager : MonoBehaviour
                 ReferencesManager.Instance.gameSettings.gameEvents[i]._checked = false;
             }
         }
+    }
+
+    private IEnumerator LoadDiplomatyRelations(int currentSaveIndex_INT)
+    {
+        foreach (CountrySettings country in countries)
+        {
+            var relationshipTypes = new[] { "TRADES", "WARS", "VASSALS", "PACTS", "RIGHTS", "UNIONS" };
+            var countryRelations = new Dictionary<string, List<string>>();
+
+            foreach (var type in relationshipTypes)
+            {
+                var key = $"{currentSaveIndex_INT}_COUNTRY_{country.country._id}_{type}";
+                var relationList = PlayerPrefs.GetString(key).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                countryRelations[type] = relationList;
+            }
+
+            var diplomaty = ReferencesManager.Instance.diplomatyUI;
+            diplomaty.senderId = country.country._id;
+            diplomaty.sender = country;
+
+            var offerTypes = new Dictionary<string, string>
+            {
+                { "TRADES", "Торговля" },
+                { "WARS", "Объявить войну" },
+                { "VASSALS", "Сделать вассалом" },
+                { "PACTS", "Пакт о ненападении" },
+                { "RIGHTS", "Право о проходе войск" },
+                { "UNIONS", "Союз" }
+            };
+
+            foreach (var relationType in relationshipTypes)
+            {
+                if (countryRelations.TryGetValue(relationType, out var relationList))
+                {
+                    foreach (var _country in relationList)
+                    {
+                        if (int.TryParse(_country, out int countryID))
+                        {
+                            diplomaty.AISendOffer(offerTypes[relationType], country, FindCountryByID(countryID), false);
+                        }
+                    }
+                }
+            }
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield break;
     }
 
     public CountrySettings FindCountryByID(int id)

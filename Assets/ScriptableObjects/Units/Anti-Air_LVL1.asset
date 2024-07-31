@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 617fa2bcca24e1f47897baf9f4729f9a, type: 3}
+  m_Name: Anti-Air_LVL1
+  m_EditorClassIdentifier: 
+  type: 3
+  icon: {fileID: 21300000, guid: 708448efab1586940829233ecf18fc26, type: 3}
+  moneyCost: 360
+  foodCost: 30
+  moneyIncomeCost: 10
+  foodIncomeCost: 5
+  recrootsCost: 650
+  level: 1
+  unlockLevel: 61
+  maxFuel: 0
+  health: 2
+  softAttack: 4
+  hardAttack: 2
+  aviationAttack: 12.5
+  defense: 10
+  maxEntrenchment: 0
+  armor: 0
+  armorPiercing: 5
+  hardness: 0
+  unitName: AAA_01

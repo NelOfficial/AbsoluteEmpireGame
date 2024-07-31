@@ -106,6 +106,7 @@ MonoBehaviour:
   - country_not_exist;11
   - country_not_exist;99911
   - country_exist;12
+  - in_war_with;12;11
   receivers: 
   exceptionsReceivers: 0c00000047860100b7260000
   aiWillDo_Index: 0

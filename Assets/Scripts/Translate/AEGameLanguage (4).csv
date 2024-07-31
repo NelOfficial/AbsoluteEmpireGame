@@ -212,7 +212,7 @@ Saxony;Saxony;Саксония;Sajonia;Saxônia;Saxônia
 Scotland;Scotland;Шотландия;Escocia;Escócia;Escócia
 Senegal;Senegal;Сенегал;Senegal;Senegal;Senegal
 Serbia;Serbia;Сербия;Serbia;Sérvia;Sérvia
-Sirya;Sirya;Сирья;siria;Sirya;Sirya
+Sirya;Sirya;Сирия;siria;Sirya;Sirya
 Slovakia;Slovakia;Словакия;Eslovaquia;Eslováquia;Eslováquia
 Slovenia;Slovenia;Словения;Eslovenia;Eslovênia;Eslovênia
 Spain;Spain;Испания;España;Espanha;Espanha
@@ -879,8 +879,10 @@ Buildings.MarineBase;Naval base;Морская база;Base naval;Base naval;Ba
 Производство грузовиков;Truck production;Производство грузовиков;producción de camiones;Produção de caminhões;Produção de caminhões
 Современное снаряжение;Modern equipment;Современное снаряжение;Equipo moderno;Equipamento moderno;Equipamento moderno
 Усовершенствованное оружие;Advanced Weapons;Усовершенствованное оружие;Armas avanzadas;Armas Avançadas;Armas Avançadas
-Раннее ПТО;Early VET;Раннее ПТО;FP temprana;EFP precoce;EFP precoce
-Улучшенное ПТО;Improved PTO;Улучшенное ПТО;Toma de fuerza mejorada;Tomada de força melhorada;Tomada de força melhorada
+Раннее ПТО;Early Anti-tank;Раннее ПТО;Antitanque temprano;Anti-tanque inicial;Antitanque precoce
+Улучшенное ПТО;Improved Anti-tank;Улучшенное ПТО;Antitanque mejorado;Antitanque melhorado;Antitanque aprimorado
+Раннее ПВО;Early Anti-air;Раннее ПВО;Antiaéreo temprano;Antiaéreo precoce;Early Anti-air
+Улучшенное ПВО;Improved Anti-air;Улучшенное ПВО;Antiaéreo mejorado;Melhoria do anti-ar;Anti-ar melhorado
 Стандартная переработка нефти;Standard oil refining;Стандартная переработка нефти;Refinación de petróleo estándar;Refino de petróleo padrão;Refino de petróleo padrão
 Улучшенная переработка нефти;Improved oil refining;Улучшенная переработка нефти;Refinación de petróleo mejorada;Melhor refino de petróleo;Melhor refino de petróleo
 Кавалерия;Cavalry;Кавалерия;Caballería;Cavalaria;Cavalaria
@@ -1050,6 +1052,8 @@ Editor.EnterDatePlaceholder;Enter date...;Введите дату...;Introduce l
 Броня III.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
 Двигатель III.desc;Unlocks the following research;Открывает следующие исследования;Desbloquea la siguiente investigación.;Desbloqueia a seguinte pesquisa;Desbloqueia a seguinte pesquisa
 Тяжелый танк.desc;This technology will open access to a new type of troops - the Heavy Tank. Armored vehicles move twice per turn;Эта технология откроет доступ к новому виду войск - Тяжелый танк. Бронетехника перемещается дважды за ход;Esta tecnología abrirá el acceso a un nuevo tipo de tropas: el tanque pesado. Los vehículos blindados se mueven dos veces por turno.;Esta tecnologia abrirá o acesso a um novo tipo de tropa - o Tanque Pesado. Veículos blindados se movem duas vezes por turno;Esta tecnologia abrirá o acesso a um novo tipo de tropa - o Tanque Pesado. Veículos blindados se movem duas vezes por turno
+Раннее ПВО.desc;This technology will open access to a new type of troops - Early air defense;Эта технология откроет доступ к новому виду войск - Раннее ПВО;Эта технология откроет доступ к новому виду войск - Раннее ПВО;Эта технология откроет доступ к новому виду войск - Раннее ПВО;Эта технология откроет доступ к новому виду войск - Раннее ПВО
+Улучшенное ПВО.desc;This technology will open access to a new type of troops - Improved air defense;Эта технология откроет доступ к новому виду войск - Улучшенное ПВО;Esta tecnología abrirá el acceso a un nuevo tipo de tropas: defensa aérea Mejorada;Esta tecnologia abrirá o acesso a um novo tipo de tropas - melhor defesa aérea;Essa tecnologia abrirá o acesso a um novo tipo de tropa-defesa aérea aprimorada
 SaveText;Save;Сохранение;Guardar;Salvar;Salvar
 UpdateCheck.NewUpdateFound;New update available. Update the game via GooglePlay;Доступно новое обновление. Обновите игру через GooglePlay;Nueva actualización disponible. Actualiza el juego a través de GooglePlay;Nova atualização disponível. Atualize o jogo via GooglePlay;Nova atualização disponível. Atualize o jogo via GooglePlay
 MainMenu.SelectModeWarn_1;You choosed;Вы выбрали;tu elegiste;Você escolheu;Você escolheu
@@ -1072,6 +1076,9 @@ Aviation.Move;Move;Переместить;Trasladar;Deslocar;Move
 Aviation.Disband;Disband;Расформировать;Disolver;Dissolver;Disband
 Aviation.Actions;Actions;Действия;Ações;Ação;Ações
 Aviation.Planes;Aircraft;Самолёты;Avión;Avião;Aeronaves
-Aviation.BuyPanelTitle;Aviation purchase panel; Меню покупки самолётов;ES_NO_TRANSLATE;PT_NO_TRANSLATE;PT-BR_NO_TRANSLATE
+Aviation.BuyPanelTitle;Aviation purchase panel;Меню покупки самолётов;Menú de compra de aviones;Menu de compra de aeronaves;Menu De Compra De Aeronaves
+Bomber.Desc;The task of the bomber is to undermine enemy structures, but you can try to use it outside the box...;Задача бомбардировщика заключается в подрыве вражеских сооружений, но можно попробовать использовать его нестандартно...;La tarea del bombardero es socavar las estructuras enemigas, pero puedes intentar usarlo fuera de la Caja...;A tarefa do bombardeiro é minar as estruturas inimigas, mas você pode tentar usá-lo fora da caixa...;A tarefa do bombardeiro é minar as estruturas inimigas, mas você pode tentar usá-lo fora da caixa...
+Fighter.Desc;The fighter is able to engage in combat with other aircraft, preventing their actions.;Истребитель способен вступать в бой с другими самолётами, предотвращая их действия.;El luchador es capaz de entrar en combate con otros aviones, evitando sus acciones.;O caça é capaz de entrar em combate com outras aeronaves, impedindo suas ações.;O lutador é capaz de entrar em combate com outras aeronaves, impedindo suas ações.
+Stormfighter.Desc;The attack aircraft is designed to attack ground forces, but is also capable of damaging buildings.;Штурмовик рассчитан на атаку по сухопутным войскам, но также способен наносить урон строениям.;El Stormtrooper está diseñado para atacar a las fuerzas terrestres, pero también es capaz de causar daño a las estructuras.;O avião de ataque é projetado para atacar as forças terrestres, mas também é capaz de causar danos a estruturas.;A aeronave de ataque é projetada para atacar forças terrestres, mas também é capaz de danificar edifícios.
 Editor.ModYear;Game year in modification;Игровой год в моде;Año de juego en modificación;Ano de jogo na modificação;Ano do jogo em modificação
 BULKI;Loading...;Съешь ещё этих мягких французских булок, да выпей же чаю;Loading...;Loading...;Loading...

@@ -2,7 +2,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Linq;
 using System.Collections;
 
 
@@ -265,8 +264,8 @@ public class DiplomatyUI : MonoBehaviour
                 senderToReceiver.pact = false;
                 senderToReceiver.union = false;
 
-                sender.enemy = receiver;
-                receiver.enemy = sender;
+                sender.enemies.Add(receiver);
+                receiver.enemies.Add(sender);
 
                 sender.inWar = true;
                 receiver.inWar = true;
@@ -276,6 +275,17 @@ public class DiplomatyUI : MonoBehaviour
                 receiverToSender.right = false;
                 receiverToSender.pact = false;
                 receiverToSender.union = false;
+
+                ResourcesMarketManager market = ReferencesManager.Instance.resourcesMarketManager;
+
+                var order = market.GetOrder(
+                    sender.country, receiver.country, GameSettings.Resource.Oil);
+
+                var orderSecond = market.GetOrder(
+                    receiver.country, sender.country, GameSettings.Resource.Oil);
+
+                market._marketOrders.Remove(order);
+                market._marketOrders.Remove(orderSecond);
 
                 senderToReceiver.relationship -= 100;
                 receiverToSender.relationship -= 100;
@@ -288,16 +298,16 @@ public class DiplomatyUI : MonoBehaviour
                 Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
                 Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
 
-                if (countRandom) random = Random.Range(0, 100);
+                if (countRandom) random = Random.Range(0, 25);
                 else random = 100;
 
                 if (sender.score >= receiver.score)
                 {
-                    random += 40;
+                    random += Random.Range(10, 30);
                 }
                 else if (sender.score < receiver.score)
                 {
-                    random -= 45;
+                    random -= Random.Range(10, 30);
                 }
 
                 if (ReferencesManager.Instance.gameSettings.diplomatyCheats)
@@ -499,7 +509,7 @@ public class DiplomatyUI : MonoBehaviour
                 Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
                 Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
 
-                if (countRandom) random = Random.Range(0, 100);
+                if (countRandom) random = Random.Range(10, 100);
                 else random = 100;
 
                 if (sender.ideology != receiver.ideology)
@@ -543,7 +553,7 @@ public class DiplomatyUI : MonoBehaviour
                     random = 9999;
                 }
 
-                if (random >= 100)
+                if (random >= 70)
                 {
                     accept = true;
 
@@ -1172,6 +1182,14 @@ public class DiplomatyUI : MonoBehaviour
                 accept = false;
             }
 
+            if (accept)
+            {
+                for (int i = 0; i < _selectedCountries.Count; i++)
+                {
+                    AISendOffer("Объявить войну", receiver, _selectedCountries[i], false);
+                }
+            }
+
             ShowResultPanel();
 
             UpdateDiplomatyUI(sender, receiver);
@@ -1303,408 +1321,102 @@ public class DiplomatyUI : MonoBehaviour
 
     public void AISendOffer(string offer, CountrySettings sender, CountrySettings receiver, bool countRandom)
     {
-        if (offer == "Объявить войну")
+        Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
+        Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
+        ResourcesMarketManager market = ReferencesManager.Instance.resourcesMarketManager;
+        int random = countRandom ? Random.Range(0, 100) : 9999999;
+        bool accept = random >= 50;
+
+        switch (offer)
         {
-            Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
-            Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
+            case "Объявить войну":
+                senderToReceiver.war = receiverToSender.war = true;
+                senderToReceiver.trade = receiverToSender.trade = false;
+                senderToReceiver.right = receiverToSender.right = false;
+                senderToReceiver.pact = receiverToSender.pact = false;
+                senderToReceiver.union = receiverToSender.union = false;
+                senderToReceiver.vassal = receiverToSender.vassal = false;
 
-            senderToReceiver.war = true;
-            senderToReceiver.trade = false;
-            senderToReceiver.right = false;
+                sender.enemies.Add(receiver);
+                receiver.enemies.Add(sender);
+                sender.inWar = receiver.inWar = true;
 
-            sender.enemy = receiver;
-            receiver.enemy = sender;
+                // Удаление всех связанных с обоими странами заказов
+                market._marketOrders.RemoveAll(order =>
+                    (order._seller == sender.country && order._customer == receiver.country) ||
+                    (order._seller == receiver.country && order._customer == sender.country));
 
-            sender.inWar = true;
-            receiver.inWar = true;
+                senderToReceiver.relationship -= 100;
+                receiverToSender.relationship -= 100;
+                break;
 
-            receiverToSender.war = true;
-            receiverToSender.trade = false;
-            receiverToSender.right = false;
+            case "Заключить мир":
+                senderToReceiver.war = receiverToSender.war = false;
+                senderToReceiver.trade = receiverToSender.trade = false;
+                senderToReceiver.right = receiverToSender.right = false;
+                senderToReceiver.pact = receiverToSender.pact = false;
+                senderToReceiver.union = receiverToSender.union = false;
+                senderToReceiver.vassal = receiverToSender.vassal = false;
+                senderToReceiver.relationship = receiverToSender.relationship = 0;
+                break;
 
-            senderToReceiver.relationship -= 100;
-            receiverToSender.relationship -= 100;
+            case "Торговля":
+                if (accept)
+                {
+                    senderToReceiver.trade = receiverToSender.trade = true;
+                    senderToReceiver.relationship += 12;
+                    receiverToSender.relationship += 12;
+                }
+                break;
 
-            acceptationStatePanel.SetActive(true);
-            string currentLanguage = "";
+            case "Пакт о ненападении":
+                if (accept)
+                {
+                    senderToReceiver.pact = receiverToSender.pact = true;
+                    senderToReceiver.relationship += 18;
+                    receiverToSender.relationship += 18;
+                }
+                break;
 
-            if (PlayerPrefs.GetInt("languageId") == 0)
-            {
-                currentLanguage = "EN";
-            }
-            else if (PlayerPrefs.GetInt("languageId") == 1)
-            {
-                currentLanguage = "RU";
-            }
+            case "Союз":
+                if (accept)
+                {
+                    senderToReceiver.union = receiverToSender.union = true;
+                    senderToReceiver.relationship += 60;
+                    receiverToSender.relationship += 60;
+                }
+                break;
 
-            acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
+            case "Право прохода войск":
+                if (accept)
+                {
+                    senderToReceiver.right = receiverToSender.right = true;
+                    senderToReceiver.relationship += 18;
+                    receiverToSender.relationship += 18;
+                }
+                break;
 
-            if (currentLanguage == "EN")
-            {
-                acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-            }
+            case "Сделать вассалом":
+                if (accept)
+                {
+                    senderToReceiver.vassal = receiverToSender.vassal = true;
+                    senderToReceiver.relationship += 60;
+                    receiverToSender.relationship += 60;
+                }
+                break;
         }
 
-        else if (offer == "Заключить мир")
-        {
-            Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
-            Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
-
-            senderToReceiver.war = false;
-            senderToReceiver.trade = false;
-            senderToReceiver.right = false;
-
-
-            receiverToSender.war = false;
-            receiverToSender.trade = false;
-            receiverToSender.right = false;
-
-            senderToReceiver.relationship = 0;
-            receiverToSender.relationship = 0;
-        }
-
-        else if (offer == "Торговля")
-        {
-            Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
-            Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
-
-            int random = Random.Range(0, 100);
-
-            if (!countRandom)
-            {
-                random = 9999999;
-            }
-
-            if (random >= 50)
-            {
-                accept = true;
-
-                senderToReceiver.trade = true;
-                receiverToSender.trade = true;
-
-                senderToReceiver.relationship += 12;
-                receiverToSender.relationship += 12;
-
-                acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                }
-            }
-            else if (random < 50)
-            {
-                accept = false;
-
-                acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"red\">отклонили</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"red\">rejected</color></b> your offer";
-                }
-            }
-        }
-
-        else if (offer == "Пакт о ненападении")
-        {
-            Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
-            Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
-
-            int random = Random.Range(0, 100);
-
-            if (!countRandom)
-            {
-                random = 9999999;
-            }
-
-            if (random >= 50)
-            {
-                accept = true;
-
-                senderToReceiver.pact = true;
-                receiverToSender.pact = true;
-
-                senderToReceiver.relationship += 18;
-                receiverToSender.relationship += 18;
-
-                acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                }
-            }
-            else if (random < 50)
-            {
-                accept = false;
-
-                acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"red\">отклонили</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"red\">rejected</color></b> your offer";
-                }
-            }
-        }
-
-        else if (offer == "Союз")
-        {
-            Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
-            Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
-
-
-            int random = Random.Range(0, 100);
-
-            if (!countRandom)
-            {
-                random = 9999999;
-            }
-
-            if (random >= 50)
-            {
-                accept = true;
-
-                senderToReceiver.union = true;
-                receiverToSender.union = true;
-
-                senderToReceiver.relationship += 60;
-                receiverToSender.relationship += 60;
-
-                acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                }
-            }
-            else if (random < 50)
-            {
-                accept = false;
-
-                acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"red\">отклонили</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"red\">rejected</color></b> your offer";
-                }
-            }
-        }
-
-        else if (offer == "Право прохода войск")
-        {
-            Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
-            Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
-
-            int random = Random.Range(0, 100);
-
-            if (!countRandom)
-            {
-                random = 9999999;
-            }
-
-            if (random >= 50)
-            {
-                accept = true;
-
-                senderToReceiver.right = true;
-                receiverToSender.right = true;
-
-                senderToReceiver.relationship += 18;
-                receiverToSender.relationship += 18;
-
-                acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                }
-            }
-            else if (random < 50)
-            {
-                accept = false;
-
-                acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                if (string.IsNullOrEmpty(currentLanguage))
-                {
-                    currentLanguage = "EN";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                }
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"red\">rejected</color></b> your offer";
-                }
-            }
-        }
-
-        else if (offer == "Сделать вассалом")
-        {
-            Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
-            Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
-
-
-            int random = Random.Range(0, 100);
-
-            if (!countRandom)
-            {
-                random = 9999999;
-            }
-
-            if (random >= 50)
-            {
-                accept = true;
-
-                senderToReceiver.vassal = true;
-                receiverToSender.vassal = true;
-
-                senderToReceiver.relationship += 60;
-                receiverToSender.relationship += 60;
-
-                acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"green\">приняли</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
-                }
-            }
-            else if (random < 50)
-            {
-                accept = false;
-
-                acceptationStatePanel.SetActive(true);
-                string currentLanguage = "";
-
-                if (PlayerPrefs.GetInt("languageId") == 0)
-                {
-                    currentLanguage = "EN";
-                }
-                else if (PlayerPrefs.GetInt("languageId") == 1)
-                {
-                    currentLanguage = "RU";
-                }
-
-                acceptationStateText.text = "Они <b><color=\"red\">отклонили</color></b> ваше предложение";
-
-                if (currentLanguage == "EN")
-                {
-                    acceptationStateText.text = "They are <b><color=\"red\">rejected</color></b> your offer";
-                }
-            }
-        }
-
-        UpdateDiplomatyUI(sender, receiver);
+        //if (offer != "Заключить мир")
+        //{
+        //    acceptationStatePanel.SetActive(true);
+        //    string message = accept ? "приняли" : "отклонили";
+        //    string color = accept ? "green" : "red";
+        //    string languageText = PlayerPrefs.GetInt("languageId") == 0 ? (accept ? "accepted" : "rejected") : message;
+
+        //    acceptationStateText.text = $"They <b><color=\"{color}\">{languageText}</color></b> your offer";
+        //}
+
+        //UpdateDiplomatyUI(sender, receiver);
     }
 
     private IEnumerator UpdateUI_Co(CountrySettings sender, CountrySettings receiver)
@@ -1745,6 +1457,7 @@ public class DiplomatyUI : MonoBehaviour
         relationPointsText.text = FindCountriesRelation(receiver, sender).relationship.ToString();
 
         yield return new WaitForSeconds(0.1f);
+        yield break;
     }
 
     public void SetDiploRegionSelectionMode(string type)

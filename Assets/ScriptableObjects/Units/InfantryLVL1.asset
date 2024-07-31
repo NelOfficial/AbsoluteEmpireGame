@@ -21,11 +21,11 @@ MonoBehaviour:
   recrootsCost: 1000
   level: 1
   unlockLevel: 1
-  rank: 1
   maxFuel: 0
   health: 10
   softAttack: 2
   hardAttack: 0.5
+  aviationAttack: 0.2
   defense: 20
   maxEntrenchment: 0
   armor: 0

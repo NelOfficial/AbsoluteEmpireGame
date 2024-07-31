@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ReferencesManager : MonoBehaviour
@@ -47,6 +48,7 @@ public class ReferencesManager : MonoBehaviour
     public Interpretate languageManager;
 
     public Aviation_UI aviationUI;
+    public AviationManager aviationManager;
 
     public string debugString;
 
@@ -124,7 +126,7 @@ public class ReferencesManager : MonoBehaviour
         createdCountry.GetComponent<CountrySettings>().country = countryScriptableObject;
 
         createdCountry.name = countryScriptableObject._nameEN;
-        createdCountry.GetComponent<CountrySettings>().enemy = null;
+        createdCountry.GetComponent<CountrySettings>().enemies = new List<CountrySettings>();
         createdCountry.GetComponent<CountrySettings>().inWar = false;
 
         foreach (CountrySettings country in countryManager.countries)
@@ -392,5 +394,26 @@ public class ReferencesManager : MonoBehaviour
         }
 
         return _country;
+    }
+
+    public void AnnexCountry()
+    {
+        CountrySettings country = regionManager.currentRegionManager.currentCountry;
+
+        if (country != countryManager.currentCountry)
+        {
+            while (country.myRegions.Count > 0)
+            {
+                for (int i = 0; i < country.myRegions.Count; i++)
+                {
+                    AnnexRegion(country.myRegions[i], countryManager.currentCountry);
+                }
+            }
+
+            if (!country.isPlayer)
+            {
+                aiManager.AICountries.Remove(country);
+            }
+        }
     }
 }

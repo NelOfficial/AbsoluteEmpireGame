@@ -233,9 +233,9 @@ MonoBehaviour:
   m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 36
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 4096
@@ -370,7 +370,7 @@ MonoBehaviour:
   _moneyCostText: {fileID: 3703603168451598525}
   _recruitsCostText: {fileID: 6367996101740862325}
   _buyButton: {fileID: 5222385155490739340}
-  _plane: {fileID: 0}
+  _plane: {fileID: 11400000, guid: df86483e1b4e6174c9d6b4b0000c8474, type: 2}
 --- !u!1 &4702879627536346070
 GameObject:
   m_ObjectHideFlags: 0
@@ -728,9 +728,9 @@ MonoBehaviour:
   m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 36
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 4096

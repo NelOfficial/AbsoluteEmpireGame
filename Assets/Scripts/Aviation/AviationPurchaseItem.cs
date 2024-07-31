@@ -22,8 +22,8 @@ public class AviationPurchaseItem : MonoBehaviour
             var refMan = ReferencesManager.Instance;
             var langManager = refMan.languageManager;
 
-            _itemName.text = _plane.name;
-            _itemDesc.text = _plane.description;
+            _itemName.text = langManager.GetTranslation(_plane.name);
+            _itemDesc.text = langManager.GetTranslation(_plane.description);
 
             _moneyCostText.text = refMan.GoodNumberString(_plane.price);
             _recruitsCostText.text = _plane.recruitsCost.ToString();
@@ -47,26 +47,34 @@ public class AviationPurchaseItem : MonoBehaviour
 
     public void Buy()
     {
-        var airport = ReferencesManager.Instance.regionManager.currentRegionManager.GetComponent<Aviation_Storage>();
+        var region = ReferencesManager.Instance.regionManager.currentRegionManager;
+        var airport = region.GetComponent<Aviation_Storage>();
 
-        if (airport.planes.Count < 4)
+        if (airport.planes.Count < region._airBaseLevel)
         {
             var countryManager = ReferencesManager.Instance.countryManager;
             var country = countryManager.currentCountry;
 
-            country.money -= _plane.price;
-            country.recroots -= _plane.recruitsCost;
-
-            countryManager.UpdateIncomeValuesUI();
-            countryManager.UpdateValuesUI();
-
-            Aviation_Cell cell = new Aviation_Cell(_plane, country);
-
-            airport.planes.Add(cell);
-
-            if (airport.planes.Count >= 4)
+            if (country.money >= _plane.price && country.recroots >= _plane.recruitsCost)
             {
-                _buyButton.interactable = false;
+                country.money -= _plane.price;
+                country.recroots -= _plane.recruitsCost;
+
+                countryManager.UpdateIncomeValuesUI();
+                countryManager.UpdateValuesUI();
+
+                Aviation_Cell cell = new Aviation_Cell(_plane, country);
+
+                airport.planes.Add(cell);
+
+                if (airport.planes.Count >= region._airBaseLevel)
+                {
+                    _buyButton.interactable = false;
+                }
+            }
+            else
+            {
+                WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NotEnoughtResources"));
             }
         }
     }

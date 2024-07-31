@@ -34,8 +34,7 @@ public class RegionManager : MonoBehaviour
 
     [Space(10f)]
     [Header("RegionArmy")]
-    //[HideInInspector] public List<UnitScriptableObject> regionUnits = new List<UnitScriptableObject>();
-    [HideInInspector] public List<UnitMovement.UnitHealth> currentDefenseUnits = new List<UnitMovement.UnitHealth>();
+    [HideInInspector] public List<UnitHealth> currentDefenseUnits = new(10);
     public List<Transform> movePoints = new List<Transform>();
     [HideInInspector] public bool moveMode = false;
     public bool hasArmy;
@@ -347,14 +346,6 @@ public class RegionManager : MonoBehaviour
         if (defenseLevel == 1)
         {
             currentDefenseUnits = ReferencesManager.Instance.gameSettings.currentDefenseUnits_FirstLevel;
-        }
-        else if (defenseLevel == 2)
-        {
-            currentDefenseUnits = ReferencesManager.Instance.gameSettings.currentDefenseUnits_SecondLevel;
-        }
-        else if (defenseLevel == 3)
-        {
-            currentDefenseUnits = ReferencesManager.Instance.gameSettings.currentDefenseUnits_ThirdLevel;
         }
     }
 
@@ -1332,7 +1323,7 @@ public class RegionManager : MonoBehaviour
                 _upgrade_costValue = ReferencesManager.Instance.gameSettings._marineBaseCost;
                 _upgrade_currentLevel = province._marineBaseLevel;
             }
-            else if (_upgradeType == "marineBase")
+            else if (_upgradeType == "airBase")
             {
                 _upgrade_costValue = ReferencesManager.Instance.gameSettings._airBaseCost;
                 _upgrade_currentLevel = province._airBaseLevel;

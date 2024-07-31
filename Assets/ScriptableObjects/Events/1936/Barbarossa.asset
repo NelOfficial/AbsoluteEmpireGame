@@ -88,6 +88,7 @@ MonoBehaviour:
   silentEvent: 0
   conditions:
   - country_exist;37
+  - not_in_war_with;12;37
   receivers: 
   exceptionsReceivers: 25000000
   aiWillDo_Index: 0

@@ -124,7 +124,7 @@ MonoBehaviour:
   silentEvent: 0
   conditions:
   - country_exist;12
-  - country_exist;12
+  - country_exist;27
   receivers: 
   exceptionsReceivers: 1b000000
   aiWillDo_Index: 0

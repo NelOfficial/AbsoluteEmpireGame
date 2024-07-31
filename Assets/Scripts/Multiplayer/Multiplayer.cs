@@ -9,7 +9,7 @@ public class Multiplayer : MonoBehaviour
     [HideInInspector] public static Multiplayer Instance;
     public int m_ReadyPlayers = 0;
 
-    public List<PlayerData> roomPlayers = new List<PlayerData>();
+    //public List<PlayerData> roomPlayers = new List<PlayerData>();
 
     RegionManager fromRegion;
     RegionManager toRegion;
@@ -424,7 +424,7 @@ public class Multiplayer : MonoBehaviour
                         region.currentCountry.moneyNaturalIncome -= unit.moneyIncomeCost;
                         region.currentCountry.foodNaturalIncome -= unit.foodIncomeCost;
 
-                        UnitMovement.UnitHealth newUnitHealth = new UnitMovement.UnitHealth();
+                        UnitHealth newUnitHealth = new UnitHealth();
                         newUnitHealth.unit = unit;
                         newUnitHealth.health = unit.health;
                         if (unitMovement.unitsHealth.Count > 0)
@@ -589,8 +589,8 @@ public class Multiplayer : MonoBehaviour
                     senderToReceiver.pact = false;
                     senderToReceiver.union = false;
 
-                    sender.enemy = receiver;
-                    receiver.enemy = sender;
+                    sender.enemies.Add(receiver);
+                    receiver.enemies.Add(sender);
 
                     sender.inWar = true;
                     receiver.inWar = true;
@@ -614,8 +614,8 @@ public class Multiplayer : MonoBehaviour
 
                     senderToReceiver.war = false;
 
-                    sender.enemy = null;
-                    receiver.enemy = null;
+                    sender.enemies.Remove(receiver);
+                    receiver.enemies.Remove(sender);
 
                     sender.inWar = false;
                     receiver.inWar = false;

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class AIManager : MonoBehaviour
 {
@@ -32,51 +33,59 @@ public class AIManager : MonoBehaviour
 
     public void OnNextMove()
     {
+        StartCoroutine(Coroutine());
+    }
+
+    IEnumerator Coroutine()
+    {
         progressManager.countryMovePanel.SetActive(true);
 
-        foreach (CountrySettings countrySettings in AICountries)
+        for (int a = 0; a < AICountries.Count; a++)
         {
-            progressManager.countryMoveName.text = countrySettings.country._name;
-            progressManager.countryMoveImage.sprite = countrySettings.country.countryFlag;
+            CountrySettings countrySettings = AICountries[a];
 
-            var aiManager = countrySettings.GetComponent<CountryAIManager>();
-            if (aiManager != null)
+            if (countrySettings.myRegions.Count > 0)
             {
-                aiManager.Process(countrySettings, mode);
+                progressManager.countryMoveName.text = ReferencesManager.Instance.languageManager.GetTranslation(countrySettings.country._nameEN);
+                progressManager.countryMoveImage.sprite = countrySettings.country.countryFlag;
 
-                if (aiManager.currentTech?.tech != null)
+                if (countrySettings.TryGetComponent<CountryAIManager>(out var aiManager))
                 {
-                    aiManager.currentTech.moves--;
+                    aiManager.Process(countrySettings, mode);
 
-                    if (aiManager.currentTech.moves <= 0)
+                    if (aiManager.currentTech?.tech != null)
                     {
-                        if (ReferencesManager.Instance.gameSettings.onlineGame)
+                        aiManager.currentTech.moves--;
+
+                        if (aiManager.currentTech.moves <= 0)
                         {
-                            for (int i = 0; i < countrySettings.countryTechnologies.Count; i++)
+                            if (ReferencesManager.Instance.gameSettings.onlineGame)
                             {
-                                if (countrySettings.countryTechnologies[i] == aiManager.currentTech.tech)
+                                for (int i = 0; i < countrySettings.countryTechnologies.Count; i++)
                                 {
-                                    Multiplayer.Instance.AddTechnology(countrySettings.country._id, i);
+                                    if (countrySettings.countryTechnologies[i] == aiManager.currentTech.tech)
+                                    {
+                                        Multiplayer.Instance.AddTechnology(countrySettings.country._id, i);
+                                    }
                                 }
                             }
-                        }
-                        else
-                        {
-                            countrySettings.countryTechnologies.Add(aiManager.currentTech.tech);
-                            aiManager.currentTech = null;
-                            aiManager.researching = false;
+                            else
+                            {
+                                countrySettings.countryTechnologies.Add(aiManager.currentTech.tech);
+                                aiManager.currentTech = null;
+                                aiManager.researching = false;
+                            }
                         }
                     }
                 }
+                yield return new WaitForSecondsRealtime(0);
             }
-
-            countrySettings.UpdateCapitulation();
         }
-
         progressManager.countryMovePanel.SetActive(false);
+
+        yield break;
     }
 
-    
 
     public void DisableAI(CountrySettings countryToDisable)
     {

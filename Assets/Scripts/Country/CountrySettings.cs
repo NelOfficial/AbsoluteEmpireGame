@@ -65,7 +65,7 @@ public class CountrySettings : MonoBehaviour
     [Header("Army/Military")]
     public bool inWar;
 
-    public CountrySettings enemy;
+    public List<CountrySettings> enemies;
     public List<TechnologyScriptableObject> countryTechnologies = new List<TechnologyScriptableObject>();
     public List<UnitMovement> countryUnits = new List<UnitMovement>();
 
@@ -162,7 +162,7 @@ public class CountrySettings : MonoBehaviour
                 }
             }
 
-            if (capitulated == true && exist && enemy != null)
+            if (capitulated == true && exist && enemies.Count > 0)
             {
                 StartCoroutine(Capitulation_Co());
             }
@@ -222,49 +222,46 @@ public class CountrySettings : MonoBehaviour
     {
         if (ReferencesManager.Instance.gameSettings.loadGame.value == false && ReferencesManager.Instance.gameSettings.playMod.value == false && ReferencesManager.Instance.gameSettings.playTestingMod.value == false)
         {
-            if (country.countryType == CountryScriptableObject.CountryType.Poor)
+            if (money <= 0 || food <= 0 || recroots <= 0)
             {
-                money = 3750;
-                food = 500;
-                recroots = 12000;
-            }
-            else if (country.countryType == CountryScriptableObject.CountryType.SemiPoor)
-            {
-                money = 5500;
-                food = 1000;
-                recroots = 25000;
-            }
-            else if (country.countryType == CountryScriptableObject.CountryType.Middle)
-            {
-                money = 10750;
-                food = 2050;
-                recroots = 34000;
-            }
-            else if (country.countryType == CountryScriptableObject.CountryType.SemiRich)
-            {
-                money = 28000;
-                food = 6000;
-                recroots = 50040;
-            }
-            else if (country.countryType == CountryScriptableObject.CountryType.Rich)
-            {
-                money = 34500;
-                food = 9000;
-                recroots = 78080;
-            }
-            else if (country.countryType == CountryScriptableObject.CountryType.Ussr)
-            {
-                money = 50000;
-                food = 17000;
-                recroots = 156000;
-            }
-        }
 
-        if (isPlayer)
-        {
-            ReferencesManager.Instance.countryManager.UpdateCountryInfo();
-            ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
-            ReferencesManager.Instance.countryManager.UpdateValuesUI();
+                if (country.countryType == CountryScriptableObject.CountryType.Poor)
+                {
+                    money = 3750;
+                    food = 500;
+                    recroots = 12000;
+                }
+                else if (country.countryType == CountryScriptableObject.CountryType.SemiPoor)
+                {
+                    money = 5500;
+                    food = 1000;
+                    recroots = 25000;
+                }
+                else if (country.countryType == CountryScriptableObject.CountryType.Middle)
+                {
+                    money = 10750;
+                    food = 2050;
+                    recroots = 34000;
+                }
+                else if (country.countryType == CountryScriptableObject.CountryType.SemiRich)
+                {
+                    money = 28000;
+                    food = 6000;
+                    recroots = 50040;
+                }
+                else if (country.countryType == CountryScriptableObject.CountryType.Rich)
+                {
+                    money = 34500;
+                    food = 9000;
+                    recroots = 78080;
+                }
+                else if (country.countryType == CountryScriptableObject.CountryType.Ussr)
+                {
+                    money = 50000;
+                    food = 17000;
+                    recroots = 156000;
+                }
+            }
         }
 
         startFoodIncome = foodNaturalIncome;
@@ -325,26 +322,63 @@ public class CountrySettings : MonoBehaviour
         }
 
         UpdateCountryGraphics(this.ideology);
+
+        if (isPlayer)
+        {
+            ReferencesManager.Instance.countryManager.UpdateCountryInfo();
+            ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
+            ReferencesManager.Instance.countryManager.UpdateValuesUI();
+        }
     }
 
     private IEnumerator Capitulation_Co()
     {
-        if (enemy != null)
+        if (enemies.Count > 0)
         {
-            foreach (UnitMovement unit in countryUnits)
+            CountrySettings playerEnemy = null;
+
+            foreach (CountrySettings enemy in enemies)
             {
-                if (unit.currentCountry == this)
+                if (enemy.isPlayer)
                 {
-                    Destroy(unit);
+                    playerEnemy = enemy;
                 }
             }
+
+            foreach (UnitMovement unit in countryUnits)
+            {
+                if (unit.currentCountry == this && unit != null)
+                {
+                    Destroy(unit.gameObject);
+                }
+            }
+
             countryUnits.Clear();
+
+            if (!isPlayer)
+            {
+                ReferencesManager.Instance.aiManager.AICountries.Remove(this);
+            }
 
             for (int v = 0; v < myRegions.Count; v++)
             {
-                myRegions[v].CheckRegionUnits(myRegions[v]);
-                AnnexRegion(myRegions[v], enemy);
+                if (playerEnemy != null)
+                {
+                    AnnexCountry(myRegions.ToArray(), playerEnemy);
+                }
+                else
+                {
+                    CountrySettings winnerCountry = enemies[Random.Range(0, enemies.Count)];
+
+                    while (!winnerCountry.exist && winnerCountry.myRegions.Count <= 0)
+                    {
+                        winnerCountry = enemies[Random.Range(0, enemies.Count)];
+                    }
+
+                    AnnexCountry(myRegions.ToArray(), winnerCountry);
+                }
             }
+
             if (isPlayer)
             {
                 yield return new WaitForSeconds(1.5f);
@@ -355,6 +389,14 @@ public class CountrySettings : MonoBehaviour
         exist = false;
 
         yield break;
+    }
+
+    private void AnnexCountry(RegionManager[] provinces, CountrySettings winner)
+    {
+        for (int i = 0; i < provinces.Length; i++)
+        {
+            AnnexRegion(provinces[i], winner);
+        }
     }
 
     private void AnnexRegion(RegionManager annexedRegion, CountrySettings newCountry)
@@ -437,6 +479,35 @@ public class CountrySettings : MonoBehaviour
             }
 
             ReferencesManager.Instance.countryManager.UpdateRegionsColor();
+        }
+    }
+
+    public void UpdateCountryFlagOnIdeology(string ideology)
+    {
+        if (ideology == "Неопределённый")
+        {
+            country.countryColor = country.countryIdeologyColors[1];
+            country.countryFlag = country.countryIdeologyFlags[1];
+        }
+        else if (ideology == "Демократия")
+        {
+            country.countryColor = country.countryIdeologyColors[1];
+            country.countryFlag = country.countryIdeologyFlags[1];
+        }
+        else if (ideology == "Монархия")
+        {
+            country.countryColor = country.countryIdeologyColors[2];
+            country.countryFlag = country.countryIdeologyFlags[2];
+        }
+        else if (ideology == "Фашизм")
+        {
+            country.countryColor = country.countryIdeologyColors[4];
+            country.countryFlag = country.countryIdeologyFlags[4];
+        }
+        else if (ideology == "Коммунизм")
+        {
+            country.countryColor = country.countryIdeologyColors[5];
+            country.countryFlag = country.countryIdeologyFlags[5];
         }
     }
 }

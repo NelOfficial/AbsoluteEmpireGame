@@ -69,6 +69,7 @@ public class SaveManager : MonoBehaviour
             string date_time = $"{DateTime.Now}";
 
             PlayerPrefs.SetString($"{saveId}_DATETIME", date_time);
+            PlayerPrefs.SetInt($"{saveId}_SCENARIO", ReferencesManager.Instance.regionLoader._currentScenarioId);
             PlayerPrefs.SetString($"{saveId}_DIFFICULTY", ReferencesManager.Instance.gameSettings.difficultyValue.value);
 
             PlayerPrefs.SetString($"{saveId}_GAMEMODE", ReferencesManager.Instance.gameSettings._currentGameMode.value);
@@ -193,6 +194,9 @@ public class SaveManager : MonoBehaviour
                     int atiLVL1 = 0;
                     int atiLVL2 = 0;
 
+                    int aaaLVL1 = 0;
+                    int aaaLVL2 = 0;
+
                     int tankLVL1 = 0;
                     int tankLVL2 = 0;
                     int tankLVL3 = 0;
@@ -277,6 +281,15 @@ public class SaveManager : MonoBehaviour
                         {
                             cavLVL2++;
                         }
+
+                        else if (unit.unitName == "AAA_01")
+                        {
+                            aaaLVL1++;
+                        }
+                        else if (unit.unitName == "AAA_02")
+                        {
+                            aaaLVL2++;
+                        }
                     }
 
                     PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_INF_LVL1", infLVL1);
@@ -298,6 +311,9 @@ public class SaveManager : MonoBehaviour
 
                     PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_CAV_LVL1", cavLVL1);
                     PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_CAV_LVL2", cavLVL2);
+
+                    PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_AAA_LVL1", aaaLVL1);
+                    PlayerPrefs.SetInt($"{saveId}_REGION_{region._id}_AAA_LVL2", aaaLVL2);
                 }
                 else if (!region.hasArmy)
                 {

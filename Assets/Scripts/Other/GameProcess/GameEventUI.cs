@@ -1097,8 +1097,8 @@ public class GameEventUI : MonoBehaviour
             senderToReceiver.pact = false;
             senderToReceiver.union = false;
 
-            sender.enemy = receiver;
-            receiver.enemy = sender;
+            sender.enemies.Add(receiver);
+            receiver.enemies.Add(sender);
 
             sender.inWar = true;
             receiver.inWar = true;
@@ -1111,6 +1111,17 @@ public class GameEventUI : MonoBehaviour
 
             senderToReceiver.relationship -= 100;
             receiverToSender.relationship -= 100;
+
+            ResourcesMarketManager market = ReferencesManager.Instance.resourcesMarketManager;
+
+            var order = market.GetOrder(
+                sender.country, receiver.country, GameSettings.Resource.Oil);
+
+            var orderSecond = market.GetOrder(
+                receiver.country, sender.country, GameSettings.Resource.Oil);
+
+            market._marketOrders.Remove(order);
+            market._marketOrders.Remove(orderSecond);
 
             SmallNewsManager.Instance.countrySender = sender.country;
 
@@ -1126,8 +1137,8 @@ public class GameEventUI : MonoBehaviour
 
             senderToReceiver.war = false;
 
-            sender.enemy = null;
-            receiver.enemy = null;
+            sender.enemies.Remove(receiver);
+            receiver.enemies.Remove(sender);
 
             sender.inWar = false;
             receiver.inWar = false;
