@@ -141,7 +141,7 @@ public class RewardedAds : MonoBehaviour
             }
             else if (rewardDatas[0] == "recroots")
             {
-                ReferencesManager.Instance.countryManager.currentCountry.recroots += int.Parse(rewardDatas[1]);
+                ReferencesManager.Instance.countryManager.currentCountry.recruits += int.Parse(rewardDatas[1]);
             }
             else if (rewardDatas[0] == "points")
             {

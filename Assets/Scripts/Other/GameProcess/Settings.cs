@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class Settings : MonoBehaviour
 {
     private RegionUI regionUI;
-    private GameSettings gameSettings;
 
     public Camera mainCamera;
     public Camera renderCamera;
@@ -14,10 +13,12 @@ public class Settings : MonoBehaviour
     public Color[] colorsHigh;
     public Color[] colorsDeco;
     public Sprite[] maps;
+    public Sprite[] _americaMaps;
 
     [SerializeField] Image waterImage;
     [SerializeField] Image waterDecoImage;
     [SerializeField] Image mapImage;
+    [SerializeField] private Image _americaMapImage;
     [SerializeField] Image seaMapImage;
 
     public TMP_Text songNameText;
@@ -48,8 +49,7 @@ public class Settings : MonoBehaviour
         songNameText.text = musicSource.clip.name;
         songNameText.text = musicSource.clip.name;
 
-        regionUI = FindObjectOfType<RegionUI>();
-        gameSettings = FindObjectOfType<GameSettings>();
+        regionUI = ReferencesManager.Instance.regionUI;
 
         CheckButtonUI();
     }
@@ -99,6 +99,7 @@ public class Settings : MonoBehaviour
     public void ChangeMapSprite(int index)
     {
         mapImage.sprite = maps[index];
+        _americaMapImage.sprite = _americaMaps[index];
         UISoundEffect.Instance.PlayAudio(regionUI.click_01);
     }
 

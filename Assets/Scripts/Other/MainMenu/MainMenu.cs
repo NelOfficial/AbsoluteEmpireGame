@@ -9,13 +9,10 @@ public class MainMenu : MonoBehaviour
 {
     public string newsJson;
 
-    // û
-    public GameObject currentRoomMenu;
+    public CurrentRoomInfo currentRoomMenu;
     public GameObject loadingMenu;
 
     public TMP_Text connectionText;
-    public TMP_Text currentRoomText;
-    public TMP_Text currentScenariyText;
 
     public TMP_Text nicknameText;
     public TMP_Text secondNicknameText;
@@ -97,6 +94,7 @@ public class MainMenu : MonoBehaviour
         secondNicknameText.text = nickname;
 
         PlayerPrefs.SetString("nickname", nickname);
+        Photon.Pun.PhotonNetwork.NickName = nickname;
     }
 
     public void DeveloperMode(bool state)

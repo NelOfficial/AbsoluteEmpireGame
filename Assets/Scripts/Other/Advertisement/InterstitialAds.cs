@@ -41,23 +41,29 @@ public class InterstitialAds : MonoBehaviour
             this.interstitial.Destroy();
         }
 
-        this.interstitialAdLoader.LoadAd(this.CreateAdRequest(adUnitId));
+        if (!ReferencesManager.Instance.gameSettings._isPremium.value)
+        {
+            this.interstitialAdLoader.LoadAd(this.CreateAdRequest(adUnitId));
+        }
     }
 
     public void ShowInterstitial()
     {
-        if (this.interstitial == null)
+        if (ReferencesManager.Instance.gameSettings._isPremium.value == false)
         {
-            return;
+            if (this.interstitial == null)
+            {
+                return;
+            }
+
+            this.interstitial.OnAdClicked += this.HandleAdClicked;
+            this.interstitial.OnAdShown += this.HandleAdShown;
+            this.interstitial.OnAdFailedToShow += this.HandleAdFailedToShow;
+            this.interstitial.OnAdImpression += this.HandleImpression;
+            this.interstitial.OnAdDismissed += this.HandleAdDismissed;
+
+            this.interstitial.Show();
         }
-
-        this.interstitial.OnAdClicked += this.HandleAdClicked;
-        this.interstitial.OnAdShown += this.HandleAdShown;
-        this.interstitial.OnAdFailedToShow += this.HandleAdFailedToShow;
-        this.interstitial.OnAdImpression += this.HandleImpression;
-        this.interstitial.OnAdDismissed += this.HandleAdDismissed;
-
-        this.interstitial.Show();
     }
 
     private AdRequestConfiguration CreateAdRequest(string adUnitId)

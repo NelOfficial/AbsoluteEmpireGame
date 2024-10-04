@@ -271,12 +271,14 @@ Empire Of The North Sea;Empire Of The North Sea;Империя Северног�
 Diplomaty.WarsWithMyParticipation;Wars with your participation;Войны с вашим участием;Guerras con su participación;Guerras com a sua participação;Guerras com sua participação
 Diplomaty.Accepted;They are <b><color="green">accepted</color></b> your offer;Они <b><color="green">приняли</color></b> ваше предложение;Han <b><color="green">aceptado</color></b> tu oferta;Eles <b><color="green">aceitaram</color></b> sua oferta;Eles <b><color="green">aceitaram</color></b> sua oferta
 Diplomaty.Declined;They are <b><color="red">rejected</color></b> your offer;Они <b><color="red">отклонили</color></b> ваше предложение;Han <b><color="red">rechazada</color></b> tu oferta.;Eles <b><color="red">rejeitaram</color></b> sua oferta;Eles <b><color="red">rejeitaram</color></b> sua oferta
-Diplomaty.SendMoney;Send gold;Отправить золото;enviar oro;Enviar ouro;Enviar ouro
-Diplomaty.AskMoney;Ask for gold;Попросить золото;pedir oro;Peça ouro;Peça ouro
-Diplomaty.SendFood;Send food;Отправить провизию;enviar comida;Enviar comida;Enviar comida
-Diplomaty.AskFood;Ask for food;Попросить провизию;pedir comida;Peça comida;Peça comida
-Diplomaty.SendRecruits;Send recruits;Отправить рекрутов;enviar reclutas;Enviar recrutas;Enviar recrutas
+Diplomaty.SendMoney;Send gold;Отправить золото;Enviar oro;Enviar ouro;Enviar ouro
+Diplomaty.AskMoney;Ask for gold;Попросить золото;Pedir oro;Peça ouro;Peça ouro
+Diplomaty.SendFood;Send food;Отправить провизию;Enviar comida;Enviar comida;Enviar comida
+Diplomaty.AskFood;Ask for food;Попросить провизию;Pedir comida;Peça comida;Peça comida
+Diplomaty.SendRecruits;Send recruits;Отправить рекрутов;Enviar reclutas;Enviar recrutas;Enviar recrutas
 Diplomaty.AskRecruits;Ask for recruits;Попросить рекрутов;Preguntar por reclutas;Peça recrutas;Peça recrutas
+Diplomaty.SendFuel;Send fuel;Отправить топливо;Enviar combustible;Enviar combustível;Enviar combustível
+Diplomaty.AskFuel;Ask for fuel;Попросить топливо;Pedir combustible;Pedir combustível;Peça combustível
 Diplomaty.SendWar;Declare war;Объявить войну;Declarar la guerra;Declarar guerra;Declarar guerra
 Diplomaty.Peace;Peace;Заключить мир;Paz;Paz;Paz
 Diplomaty.AskForWar;Call to war with ...;Призвать в войну с ...;Llamado a la guerra con...;Chame para a guerra com ...;Chame para a guerra com ...
@@ -313,6 +315,7 @@ CountryInfo.CreateDivisionTemplateButton;Create a template;Создать шаб
 CountryInfo.CreateVassalButton;Create vassal;Создать вассала;Crear vasallo;Criar vassalo;Criar vassalo
 CountryInfo.PoliticalParties;Parties;Партии;Fiestas;Festas;Festas
 CountryInfo.IncomesTitle;Income;Доходы;Ingreso;Renda;Renda
+CountryInfo.StabilityTitle;Stability;Стабильность;Estabilidad;Estabilidade;Estabilidade
 CountryInfo.ExpensesTitle;Expenses;Расходы;Gastos;Despesas;Despesas
 CountryInfo.Expenses.Inflation;Inflation;Инфляция;Inflación;Inflação;Inflação
 Settings.GraphicsTitle;Graphics;Графика;Gráficos;Gráficos;Gráficos

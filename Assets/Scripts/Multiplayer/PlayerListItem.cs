@@ -1,94 +1,80 @@
-//using Mirror;
-//using TMPro;
-//using UnityEngine;
-//using UnityEngine.UI;
+using TMPro;
+using Photon.Pun;
+using UnityEngine;
+using UnityEngine.UI;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
-//public class PlayerListItem : NetworkBehaviour
-//{
-//    private Launcher launcher;
+public class PlayerListItem : MonoBehaviourPunCallbacks
+{
+    private Player _player;
+    private Launcher _launcher;
 
-//    [SyncVar(hook = nameof(OnNameChanged))]
-//    public string _nickname;
+    [HideInInspector] public string _nickname;
 
-//    public Image selectedCountryFlag;
-//    public TMP_Text nicknameText;
+    public Image selectedCountryFlag;
+    public TMP_Text nicknameText;
 
-//    public int countryIndex;
+    public int countryId;
 
-//    [SyncVar(hook = nameof(OnCountryChanged))]
-//    public int countryId;
+    readonly Hashtable playerProperties = new();
 
-//    private void OnNameChanged(string oldName, string newName)
-//    {
-//        nicknameText.text = newName;
-//    }
+    public void SelectCountry(int id)
+    {
+        playerProperties["playerCountryId"] = id;
+        PhotonNetwork.SetPlayerCustomProperties(playerProperties);
+    }
 
-//    private void OnCountryChanged(int oldCountryIndex, int newCountryIndex)
-//    {
-//        countryId = newCountryIndex;
-//        UpdateCountryFlag();
-//    }
+    public void SetUp(Player player)
+    {
+        _launcher = FindObjectOfType<Launcher>();
 
-//    public override void OnStartClient()
-//    {
-//        base.OnStartClient();
+        _player = player;
+        _nickname = _player.NickName;
+        nicknameText.text = _nickname;
 
-//        if (isLocalPlayer)
-//        {
-//            CmdSetPlayerName(PlayerPrefs.GetString("nickname"));
-//        }
-//    }
+        playerProperties["playerNickname"] = _nickname;
 
-//    public void ChangeCountry()
-//    {
-//        if (isLocalPlayer)
-//        {
-//            CmdSelectCountry();
-//        }
-//    }
+        SelectCountry(_launcher.countriesList[0]._id);
+        UpdatePlayerCountry(_player);
+    }
 
-//    [Command]
-//    public void CmdSetPlayerName(string name)
-//    {
-//        _nickname = name;
-//    }
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (_player == otherPlayer)
+        {
+            Destroy(gameObject);
+        }
+    }
 
-//    [Command]
-//    public void CmdSelectCountry()
-//    {
-//        OfflineGameSettings.Scenario scenario =
-//            ReferencesManager.Instance.offlineGameSettings.GetScenario(
-//                ReferencesManager.Instance.offlineGameSettings.currentScenarioId);
+    public override void OnLeftRoom()
+    {
+        Destroy(gameObject);
+    }
 
-//        if (countryIndex + 1 < scenario.countries.Length)
-//        {
-//            countryIndex++;
-//        }
-//        else
-//        {
-//            countryIndex = 0;
-//        }
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    {
+        if (_player == targetPlayer)
+        {
+            UpdatePlayerCountry(targetPlayer);
+        }
+    }
 
-//        countryId = scenario.countries[countryIndex]._id;
-//    }
+    private void UpdatePlayerCountry(Player _player)
+    {
+        if (_player.CustomProperties.ContainsKey("playerCountryId"))
+        {
+            int countryId = (int)_player.CustomProperties["playerCountryId"];
+            CountryScriptableObject country = ReferencesManager.Instance.FindCountryObjectByID(countryId, _launcher.countriesList);
 
-//    public void SetUp()
-//    {
-//        launcher = FindObjectOfType<Launcher>();
+            selectedCountryFlag.sprite = country.countryFlag;
+            playerProperties["playerCountryId"] = _player.CustomProperties["playerCountryId"];
+        }
+        else
+        {
+            int randomCountry = Random.Range(0, _launcher.countriesList.Length);
 
-//        nicknameText.text = _nickname;
-
-//        UpdateCountryFlag();
-//    }
-
-//    private void UpdateCountryFlag()
-//    {
-//        foreach (CountryScriptableObject country in ReferencesManager.Instance.globalCountries)
-//        {
-//            if (country._id == countryId)
-//            {
-//                selectedCountryFlag.sprite = country.countryFlag;
-//            }
-//        }
-//    }
-//}
+            playerProperties["playerCountryId"] = randomCountry;
+        }
+    }
+}

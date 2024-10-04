@@ -126,14 +126,7 @@ public class MapEditor : MonoBehaviour
 
     public void OpenCountryEditPanel()
     {
-        if (PlayerPrefs.GetInt("languageId") == 0)
-        {
-            countryNameText.text = editingCountry.country._nameEN;
-        }
-        else if (PlayerPrefs.GetInt("languageId") == 1)
-        {
-            countryNameText.text = editingCountry.country._name;
-        }
+        countryNameText.text = ReferencesManager.Instance.languageManager.GetTranslation(editingCountry.country._nameEN);
 
         bool alreadyContainsCountryData = localCountryInfoDataList.Any(item => item.countryID == editingCountry.country._id);
 
@@ -182,7 +175,7 @@ public class MapEditor : MonoBehaviour
 
             countryMoneyInputfield.text = editingCountry.money.ToString();
             countryFoodInputfield.text = editingCountry.food.ToString();
-            countryRecrootsInputfield.text = editingCountry.recroots.ToString();
+            countryRecrootsInputfield.text = editingCountry.recruits.ToString();
 
             if (editingCountry.ideology == "Неопределено" || editingCountry.ideology == "Неопределённый")
             {
@@ -714,9 +707,16 @@ public class MapEditor : MonoBehaviour
             publishRequiestForm.AddField("data", currentModText);
             publishRequiestForm.AddField("author_id", PlayerPrefs.GetString("nickname"));
 
+            WWWForm createFolderRequiestForm = new WWWForm();
+
+            createFolderRequiestForm.AddField("mod_name", nameInputField.text);
+            createFolderRequiestForm.AddField("mod_data", currentModText);
+
             WWW publishRequiest = new WWW("https://absolute-empire.space/core/publishMod.php", publishRequiestForm);
+            WWW createFolderRequest = new WWW("https://absolute-empire.space/create_mod_directory.php", createFolderRequiestForm);
 
             yield return publishRequiest;
+            yield return createFolderRequest;
 
             UploadEventFiles();
             UploadPictures();

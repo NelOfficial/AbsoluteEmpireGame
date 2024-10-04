@@ -1,24 +1,39 @@
-//using Mirror;
+using UnityEngine;
+using Photon.Realtime;
+using Photon.Pun;
 
-//public class PlayerData : NetworkBehaviour
-//{
-//    public string currentNickname;
-//    public int countryIndex;
-//    public bool readyToMove;
+public class PlayerData : MonoBehaviour
+{
+    [HideInInspector] public Player player;
 
-//    public int _connectionID;
+    [HideInInspector] public string currentNickname;
+    [HideInInspector] public int countryId;
 
-//    public CountrySettings country;
+    public bool readyToMove;
+    [HideInInspector] public CountrySettings country;
 
+    private GameSettings gameSettings;
+    private CountryManager countryManager;
 
-//    private void Awake()
-//    {
-//        ReferencesManager.Instance.launcher.playersData.Add(this);
+    private void Awake()
+    {
+        gameSettings = ReferencesManager.Instance.gameSettings;
+        countryManager = ReferencesManager.Instance.countryManager;
 
-//        //string _name = gameObject.name;
+        currentNickname = GetComponent<PhotonView>().Owner.NickName;
 
-//        //string[] _nameData = _name.Split('=');
+        gameSettings.multiplayer.roomPlayers.Add(this);
+        player = GetComponent<PhotonView>().Owner;
 
-//        //_connectionID = int.Parse(_nameData[1].Trim(']'));
-//    }
-//}
+        int playerCountryId = (int)this.GetComponent<PhotonView>().Owner.CustomProperties["playerCountryId"];
+        countryId = playerCountryId;
+
+        country = countryManager.FindCountryByID(countryId);
+
+        country.isPlayer = true;
+        country.onlinePlayer = true;
+        country._countryPlayer = player;
+
+        readyToMove = false;
+    }
+}

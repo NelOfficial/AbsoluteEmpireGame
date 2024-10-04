@@ -16,6 +16,8 @@ public class FleetManager : MonoBehaviour
 
     [SerializeField] private Color _seaRegionHighlight_color;
 
+    public Sprite _destroyerSprite; 
+
 
     public void CreateFleet()
     {

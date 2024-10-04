@@ -222,7 +222,7 @@ public class RegionLoader : MonoBehaviour
                         {
                             country.money = int.Parse(values[1]);
                             country.food = int.Parse(values[2]);
-                            country.recroots = int.Parse(values[3]);
+                            country.recruits = int.Parse(values[3]);
                             country.ideology = values[4];
 
                             country.UpdateCountryGraphics(country.ideology);

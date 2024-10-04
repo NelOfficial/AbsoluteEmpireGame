@@ -243,7 +243,7 @@ public class TechnologyManager : MonoBehaviour
             countryManager.currentCountry.country._id,
             countryManager.currentCountry.money,
             countryManager.currentCountry.food,
-            countryManager.currentCountry.recroots);
+            countryManager.currentCountry.recruits);
     }
 
     private void CheckConnectors()
@@ -330,7 +330,7 @@ public class TechnologyManager : MonoBehaviour
             countryManager.currentCountry.country._id,
             countryManager.currentCountry.money,
             countryManager.currentCountry.food,
-            countryManager.currentCountry.recroots);
+            countryManager.currentCountry.recruits);
     }
 
     [System.Serializable]

@@ -30,39 +30,49 @@ public class MovePoint : MonoBehaviour
 
     private void OnMouseDown()
     {
-        UnitAction();
+        if (!ReferencesManager.Instance.mainCamera.IsMouseOverUI)
+        {
+            UnitAction();
+        }
     }
 
     private void Start()
     {
-        SetRegionInPoint();
+        //SetRegionInPoint();
     }
 
-    private void SetRegionInPoint()
+    public void SetRegionInPoint()
     {
-        RaycastHit2D _hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.down);
-        if (_hit.collider.gameObject.GetComponent<RegionManager>())
+        try
         {
-            if (!noAutoRegionTo)
+            RaycastHit2D _hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.down);
+            if (_hit.collider.gameObject.GetComponent<RegionManager>())
             {
-                regionTo = _hit.collider.transform;
-            }
-
-            parentRegion = transform.parent.GetComponent<RegionManager>();
-            if (!noAutoCollider)
-            {
-                this.GetComponent<PolygonCollider2D>().points = regionTo.GetComponent<PolygonCollider2D>().points;
-                this.transform.position = new Vector3(regionTo.position.x, regionTo.position.y, -1);
-            }
-
-            parentRegion.movePoints.Clear();
-            foreach (Transform child in parentRegion.transform)
-            {
-                if (child.GetComponent<MovePoint>() != null)
+                if (!noAutoRegionTo)
                 {
-                    parentRegion.movePoints.Add(child);
+                    regionTo = _hit.collider.transform;
+                }
+
+                parentRegion = transform.parent.GetComponent<RegionManager>();
+                if (!noAutoCollider)
+                {
+                    this.GetComponent<PolygonCollider2D>().points = regionTo.GetComponent<PolygonCollider2D>().points;
+                    this.transform.position = new Vector3(regionTo.position.x, regionTo.position.y, -1);
+                }
+
+                parentRegion.movePoints.Clear();
+                foreach (Transform child in parentRegion.transform)
+                {
+                    if (child.GetComponent<MovePoint>() != null)
+                    {
+                        parentRegion.movePoints.Add(child);
+                    }
                 }
             }
+        }
+        catch (System.Exception)
+        {
+            Debug.LogError($"Error: {this.gameObject.name} / Parent {this.transform.parent.name} / {this.transform.parent.gameObject.GetComponent<RegionManager>().currentCountry.country._nameEN}");
         }
     }
 
@@ -76,77 +86,80 @@ public class MovePoint : MonoBehaviour
         if (hit.collider)
         {
             currentMovePoint = this;
-            UnitMovement dzharahov = ReferencesManager.Instance.regionManager.currentRegionManager.GetDivision(ReferencesManager.Instance.regionManager.currentRegionManager);
-
-            if (regionTo.GetComponent<RegionManager>().currentCountry == ReferencesManager.Instance.countryManager.currentCountry) // Just move
-            { // my country
-                dzharahov.AIMoveNoHit(regionTo.GetComponent<RegionManager>(), dzharahov);
-
-                ReferencesManager.Instance.regionManager.moveMode = false;
-                ReferencesManager.Instance.regionUI.barContent.SetActive(true);
-
-                ReferencesManager.Instance.regionManager.UpdateRegions();
-                ReferencesManager.Instance.regionUI.DeMoveUnitMode(false);
-                ReferencesManager.Instance.regionManager.SelectRegionNoHit(regionTo.GetComponent<RegionManager>());
-            }
-            else
+            if (ReferencesManager.Instance.regionManager.currentRegionManager != null)
             {
-                foreach (Relationships.Relation realtion in ReferencesManager.Instance.countryManager.currentCountry.
-                GetComponent<Relationships>().relationship)
+                UnitMovement dzharahov = ReferencesManager.Instance.regionManager.currentRegionManager.GetDivision(ReferencesManager.Instance.regionManager.currentRegionManager);
+
+                if (regionTo.GetComponent<RegionManager>().currentCountry == ReferencesManager.Instance.countryManager.currentCountry) // Just move
+                { // my country
+                    dzharahov.AIMoveNoHit(regionTo.GetComponent<RegionManager>(), dzharahov);
+
+                    ReferencesManager.Instance.regionManager.moveMode = false;
+                    ReferencesManager.Instance.regionUI.barContent.SetActive(true);
+
+                    ReferencesManager.Instance.regionManager.UpdateRegions();
+                    ReferencesManager.Instance.regionUI.DeMoveUnitMode(false);
+                    ReferencesManager.Instance.regionManager.SelectRegionNoHit(regionTo.GetComponent<RegionManager>());
+                }
+                else
                 {
-                    if (realtion.country == regionTo.GetComponent<RegionManager>().
-                        currentCountry)
+                    foreach (Relationships.Relation realtion in ReferencesManager.Instance.countryManager.currentCountry.
+                    GetComponent<Relationships>().relationship)
                     {
-                        if (realtion.war) // war
+                        if (realtion.country == regionTo.GetComponent<RegionManager>().
+                            currentCountry)
                         {
-                            newRegion = regionTo.GetComponent<RegionManager>();
-                            attackerRegion = this.transform.parent.GetComponent<RegionManager>();
-
-                            foreach (Transform child in attackerRegion.transform)
+                            if (realtion.war) // war
                             {
-                                if (child.GetComponent<UnitMovement>())
-                                {
-                                    attackerUnit = child.GetComponent<UnitMovement>();
-                                }
-                            }
+                                newRegion = regionTo.GetComponent<RegionManager>();
+                                attackerRegion = this.transform.parent.GetComponent<RegionManager>();
 
-                            if (newRegion.hasArmy)
-                            {
-                                foreach (Transform child in regionTo)
+                                foreach (Transform child in attackerRegion.transform)
                                 {
                                     if (child.GetComponent<UnitMovement>())
                                     {
-                                        defenderUnit = child.GetComponent<UnitMovement>();
+                                        attackerUnit = child.GetComponent<UnitMovement>();
                                     }
                                 }
+
+                                if (newRegion.hasArmy)
+                                {
+                                    foreach (Transform child in regionTo)
+                                    {
+                                        if (child.GetComponent<UnitMovement>())
+                                        {
+                                            defenderUnit = child.GetComponent<UnitMovement>();
+                                        }
+                                    }
+                                }
+
+                                Fight(newRegion);
+                                attackerUnit.UpdateInfo();
+
+                                ReferencesManager.Instance.regionManager.moveMode = false;
+                                ReferencesManager.Instance.regionUI.barContent.SetActive(true);
+                                ReferencesManager.Instance.regionUI.DeMoveUnitMode(false);
+                                ReferencesManager.Instance.regionManager.UpdateRegions();
                             }
+                            else if (realtion.right)
+                            {
+                                dzharahov.AIMoveNoHit(regionTo.GetComponent<RegionManager>(), dzharahov);
 
-                            Fight(newRegion);
-                            attackerUnit.UpdateInfo();
+                                ReferencesManager.Instance.regionManager.moveMode = false;
+                                ReferencesManager.Instance.regionUI.barContent.SetActive(true);
 
-                            ReferencesManager.Instance.regionManager.moveMode = false;
-                            ReferencesManager.Instance.regionUI.barContent.SetActive(true);
-                            ReferencesManager.Instance.regionUI.DeMoveUnitMode(false);
-                            ReferencesManager.Instance.regionManager.UpdateRegions();
-                        }
-                        else if (realtion.right)
-                        {
-                            dzharahov.AIMoveNoHit(regionTo.GetComponent<RegionManager>(), dzharahov);
+                                ReferencesManager.Instance.regionManager.UpdateRegions();
+                                ReferencesManager.Instance.regionUI.DeMoveUnitMode(false);
+                                ReferencesManager.Instance.regionManager.SelectRegionNoHit(regionTo.GetComponent<RegionManager>());
+                            }
+                            else if (!realtion.right)
+                            {
+                                ReferencesManager.Instance.regionUI.DeMoveUnitMode(false);
+                                ReferencesManager.Instance.regionManager.UpdateRegions();
+                                ReferencesManager.Instance.regionManager.moveMode = false;
 
-                            ReferencesManager.Instance.regionManager.moveMode = false;
-                            ReferencesManager.Instance.regionUI.barContent.SetActive(true);
-
-                            ReferencesManager.Instance.regionManager.UpdateRegions();
-                            ReferencesManager.Instance.regionUI.DeMoveUnitMode(false);
-                            ReferencesManager.Instance.regionManager.SelectRegionNoHit(regionTo.GetComponent<RegionManager>());
-                        }
-                        else if (!realtion.right)
-                        {
-                            ReferencesManager.Instance.regionUI.DeMoveUnitMode(false);
-                            ReferencesManager.Instance.regionManager.UpdateRegions();
-                            ReferencesManager.Instance.regionManager.moveMode = false;
-
-                            ReferencesManager.Instance.diplomatyUI.OpenUINoClick(realtion.country.country._id);
+                                ReferencesManager.Instance.diplomatyUI.OpenUINoClick(realtion.country.country._id);
+                            }
                         }
                     }
                 }

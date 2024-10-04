@@ -60,7 +60,7 @@ public class UnitUI : MonoBehaviour
     {
         if (ReferencesManager.Instance.gameSettings.onlineGame)
         {
-            Multiplayer.Instance.RemoveUnitFromArmy(currentUnit.unitName, ReferencesManager.Instance.regionManager.currentRegionManager._id);
+            Multiplayer.Instance.RemoveUnitFromArmy(id, ReferencesManager.Instance.regionManager.currentRegionManager._id);
         }
         else
         {
@@ -70,7 +70,7 @@ public class UnitUI : MonoBehaviour
                 {
                     division.unitsHealth.Remove(division.unitsHealth[i]);
 
-                    ReferencesManager.Instance.countryManager.currentCountry.recroots += Mathf.CeilToInt(currentUnit.recrootsCost * 0.7f);
+                    ReferencesManager.Instance.countryManager.currentCountry.recruits += Mathf.CeilToInt(currentUnit.recrootsCost * 0.7f);
                     ReferencesManager.Instance.countryManager.currentCountry.moneyNaturalIncome += currentUnit.moneyIncomeCost;
                     ReferencesManager.Instance.countryManager.currentCountry.foodNaturalIncome += currentUnit.foodIncomeCost;
                 }
@@ -78,7 +78,6 @@ public class UnitUI : MonoBehaviour
 
             ReferencesManager.Instance.countryManager.UpdateValuesUI();
             ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
-
 
             ReferencesManager.Instance.regionUI.UpdateDivisionUnitsIDs(division);
 

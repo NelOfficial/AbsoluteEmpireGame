@@ -32,7 +32,7 @@ public class AviationPurchaseItem : MonoBehaviour
 
             var country = refMan.countryManager.currentCountry;
 
-            if (country.money >= _plane.price && country.recroots >= _plane.recruitsCost)
+            if (country.money >= _plane.price && country.recruits >= _plane.recruitsCost)
             {
                 bool hasTech = ReferencesManager.Instance.aviationUI.HasPlaneTech(_plane, country);
 
@@ -55,10 +55,10 @@ public class AviationPurchaseItem : MonoBehaviour
             var countryManager = ReferencesManager.Instance.countryManager;
             var country = countryManager.currentCountry;
 
-            if (country.money >= _plane.price && country.recroots >= _plane.recruitsCost)
+            if (country.money >= _plane.price && country.recruits >= _plane.recruitsCost)
             {
                 country.money -= _plane.price;
-                country.recroots -= _plane.recruitsCost;
+                country.recruits -= _plane.recruitsCost;
 
                 countryManager.UpdateIncomeValuesUI();
                 countryManager.UpdateValuesUI();

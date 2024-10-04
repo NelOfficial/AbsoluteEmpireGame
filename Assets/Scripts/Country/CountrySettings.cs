@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using Photon.Realtime;
 
 public class CountrySettings : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class CountrySettings : MonoBehaviour
 
     public bool isPlayer;
     public bool onlinePlayer;
+    public Player _countryPlayer;
     public string ideology;
 
     public CountryInfoAdvanced.Nation[] formableNations;
@@ -25,7 +27,7 @@ public class CountrySettings : MonoBehaviour
     [Header("Values")]
     public int money;
     public int food;
-    public int recroots;
+    public int recruits;
     public int researchPoints;
     public int recruitsLimit;
     public int population;
@@ -38,13 +40,15 @@ public class CountrySettings : MonoBehaviour
     public int foodTradeIncome;
     public int foodNaturalIncome;
     public int startFoodIncome;
-    public int recrootsIncome;
+    public int recruitsIncome;
 
     public float fuelIncome;
 
     public int researchPointsIncome;
 
     public int mobilizationLaw;
+
+    public Stability stability = null;
 
     [Header("Resources")]
     public int oil;
@@ -94,6 +98,16 @@ public class CountrySettings : MonoBehaviour
 
     public List<MilitaryEquipmentScriptableObject> _fleet = new List<MilitaryEquipmentScriptableObject>();
 
+    public List<Guild> guilds = new(10);
+
+    public Relationships relations;
+
+
+    private void Awake()
+    {
+        relations = GetComponent<Relationships>();
+    }
+
     public void UpdateCapitulation()
     {
         int totalScore = 0;
@@ -112,14 +126,10 @@ public class CountrySettings : MonoBehaviour
             maxScore = score;
         }
 
-        if (money > 0 && moneyIncomeUI > 0)
+        if (moneyNaturalIncome + moneyTradeIncome > 0)
         {
-            inflation = money / moneyIncomeUI;
+            inflation = (money / (moneyNaturalIncome + moneyTradeIncome)) / ((stability.value + 25f) / 100);
             inflation = Mathf.Abs(inflation);
-        }
-        else
-        {
-            inflation = 0;
         }
 
         if (exist)
@@ -171,6 +181,13 @@ public class CountrySettings : MonoBehaviour
         if (myRegions.Count == 0)
         {
             exist = false;
+            inWar = false;
+            foreach (CountrySettings country in enemies)
+            {
+                country.enemies.Remove(this);
+
+                country.inWar = country.enemies.Count > 0;
+            }
         }
         else if (myRegions.Count > 0)
         {
@@ -213,6 +230,9 @@ public class CountrySettings : MonoBehaviour
                 }
 
             }
+
+            inWar = false;
+            enemies.Clear();
         }
 
         moneyIncomeUI = moneyTradeIncome + moneyNaturalIncome - Mathf.FloorToInt(inflationDebuff) - regionCosts;
@@ -222,44 +242,44 @@ public class CountrySettings : MonoBehaviour
     {
         if (ReferencesManager.Instance.gameSettings.loadGame.value == false && ReferencesManager.Instance.gameSettings.playMod.value == false && ReferencesManager.Instance.gameSettings.playTestingMod.value == false)
         {
-            if (money <= 0 || food <= 0 || recroots <= 0)
+            if (money <= 0 || food <= 0 || recruits <= 0)
             {
 
                 if (country.countryType == CountryScriptableObject.CountryType.Poor)
                 {
                     money = 3750;
                     food = 500;
-                    recroots = 12000;
+                    recruits = 12000;
                 }
                 else if (country.countryType == CountryScriptableObject.CountryType.SemiPoor)
                 {
                     money = 5500;
                     food = 1000;
-                    recroots = 25000;
+                    recruits = 25000;
                 }
                 else if (country.countryType == CountryScriptableObject.CountryType.Middle)
                 {
                     money = 10750;
                     food = 2050;
-                    recroots = 34000;
+                    recruits = 34000;
                 }
                 else if (country.countryType == CountryScriptableObject.CountryType.SemiRich)
                 {
                     money = 28000;
                     food = 6000;
-                    recroots = 50040;
+                    recruits = 50040;
                 }
                 else if (country.countryType == CountryScriptableObject.CountryType.Rich)
                 {
                     money = 34500;
                     food = 9000;
-                    recroots = 78080;
+                    recruits = 78080;
                 }
                 else if (country.countryType == CountryScriptableObject.CountryType.Ussr)
                 {
                     money = 50000;
                     food = 17000;
-                    recroots = 156000;
+                    recruits = 156000;
                 }
             }
         }
@@ -306,19 +326,21 @@ public class CountrySettings : MonoBehaviour
 
         aiAccuracy *= _aiAccuracy_increment;
 
+        stability = new Stability(this);
+
         if (aiAccuracy > 1) aiAccuracy = 1;
 
         if (isPlayer)
         {
             money += money / 100 * difficulty_PLAYER_BUFF;
             food += money / 100 * difficulty_PLAYER_BUFF;
-            recroots += money / 100 * difficulty_PLAYER_BUFF;
+            recruits += money / 100 * difficulty_PLAYER_BUFF;
         }
         else
         {
             money += money / 100 * difficulty_AI_BUFF;
             food += money / 100 * difficulty_AI_BUFF;
-            recroots += money / 100 * difficulty_AI_BUFF;
+            recruits += money / 100 * difficulty_AI_BUFF;
         }
 
         UpdateCountryGraphics(this.ideology);
@@ -440,7 +462,10 @@ public class CountrySettings : MonoBehaviour
     {
         if (ReferencesManager.Instance.gameSettings.onlineGame)
         {
-            Multiplayer.Instance.M_UpdateCountryGraphics(country._id, ideology);
+            if (country != null)
+            {
+                Multiplayer.Instance.M_UpdateCountryGraphics(country._id, ideology);
+            }
         }
         else
         {

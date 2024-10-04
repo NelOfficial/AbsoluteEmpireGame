@@ -22,9 +22,10 @@ MonoBehaviour:
   level: 2
   unlockLevel: 26
   maxFuel: 1400
-  health: 16.5
+  health: 8
   softAttack: 17
   hardAttack: 14
+  aviationAttack: 0
   defense: 5
   maxEntrenchment: 0
   armor: 60

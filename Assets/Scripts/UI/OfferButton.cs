@@ -216,12 +216,20 @@ public class OfferButton : MonoBehaviour
             {
                 text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.AskRecruits");
             }
+            else if (data == "Отправить топливо")
+            {
+                text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.SendFuel");
+            }
+            else if (data == "Попросить топливо")
+            {
+                text.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.AskFuel");
+            }
         }
         catch (System.Exception) { }
     }
 
     public void SendData()
     {
-        diplomatyUI.Execute_SendOffer(data);
+        diplomatyUI.Execute_SendOffer(data, ReferencesManager.Instance);
     }
 }

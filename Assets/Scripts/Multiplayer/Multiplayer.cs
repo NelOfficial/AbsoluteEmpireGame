@@ -1,15 +1,19 @@
-using TMPro;
 using UnityEngine;
 using System.Collections.Generic;
+using Photon.Pun;
+using Photon.Realtime;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using static GameSettings;
 
-
-public class Multiplayer : MonoBehaviour
+public class Multiplayer : MonoBehaviourPunCallbacks
 {
+    private PhotonView _photonView;
+
     [HideInInspector] public static Multiplayer Instance;
     public int m_ReadyPlayers = 0;
 
-    //public List<PlayerData> roomPlayers = new List<PlayerData>();
+    public List<PlayerData> roomPlayers = new List<PlayerData>();
 
     RegionManager fromRegion;
     RegionManager toRegion;
@@ -19,45 +23,56 @@ public class Multiplayer : MonoBehaviour
 
     [SerializeField] GameObject _playerListButton;
 
+    private CountryManager countryManager;
+
+
+    private void Awake()
+    {
+        Instance = this;
+        _photonView = GetComponent<PhotonView>();
+
+        countryManager = ReferencesManager.Instance.countryManager;
+    }
 
     private void Start()
     {
-        Instance = this;
-
         _playerListButton.SetActive(ReferencesManager.Instance.gameSettings.onlineGame);
     }
 
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        
+    }
 
     public void UpdatePlayerListUI()
     {
+        roomPlayers = FindObjectsOfType<PlayerData>().ToList();
+
         foreach (Transform child in ReferencesManager.Instance.gameSettings.playersListContent)
         {
             Destroy(child.gameObject);
         }
 
-        //for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-        //{
-        //    int playerCountryIndex = (int)player.CustomProperties["playerCountryIndex"];
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            Player player = PhotonNetwork.PlayerList[i];
+            PlayerData targetPlayer = roomPlayers.Find(x => x.player == player);
 
-        //    GameObject spawnedPlayerListPrefab = Instantiate(ReferencesManager.Instance.gameSettings.playerListPrefab, ReferencesManager.Instance.gameSettings.playersListContent);
-        //    spawnedPlayerListPrefab.transform.GetChild(0).GetComponent<TMP_Text>().text = player.NickName;
+            GameObject spawnedPlayerListPrefab = Instantiate(ReferencesManager.Instance.gameSettings.playerListPrefab, ReferencesManager.Instance.gameSettings.playersListContent);
+            PlayerListItem_InGame playerListItem = spawnedPlayerListPrefab.GetComponent<PlayerListItem_InGame>();
 
-        //    spawnedPlayerListPrefab.transform.GetChild(1).GetComponent<FillCountryFlag>().country = ReferencesManager.Instance.countryManager.countries[playerCountryIndex].country;
-        //    spawnedPlayerListPrefab.transform.GetChild(1).GetComponent<FillCountryFlag>().FillInfo();
-        //    spawnedPlayerListPrefab.transform.GetChild(1).GetComponent<FillCountryFlag>().InDiplomatyUI = true;
+            playerListItem._country = targetPlayer.country;
+            playerListItem._nickname = targetPlayer.currentNickname;
+            playerListItem.isReady = targetPlayer.readyToMove;
+            playerListItem.UpdateUI();
 
-        //    roomPlayers = FindObjectsOfType<PlayerData>().ToList();
-
-        //    foreach (var _player in roomPlayers)
-        //    {
-        //        if (spawnedPlayerListPrefab.transform.GetChild(0).GetComponent<TMP_Text>().text == _player.currentNickname)
-        //        {
-        //            spawnedPlayerListPrefab.transform.GetChild(2).gameObject.SetActive(_player.readyToMove);
-        //        }
-        //    }
-
-        //    spawnedPlayerListPrefab.transform.localScale = new Vector3(1, 1, 1);
-        //}
+            spawnedPlayerListPrefab.transform.localScale = new Vector3(1, 1, 1);
+        }
     }
 
 
@@ -65,16 +80,23 @@ public class Multiplayer : MonoBehaviour
 
     public void SetCountryValues(int countryID, int money, int food, int recroots)
     {
+        if (ReferencesManager.Instance.gameSettings.onlineGame)
+            _photonView.RPC("RPC_SetCountryValues", RpcTarget.All, countryID, money, food, recroots);
     }
 
     public void SetCountryIncomeValues(int countryID, int moneyIncome, int foodIncome, int recrootsIncome)
     {
+        if (ReferencesManager.Instance.gameSettings.onlineGame)
+            _photonView.RPC("RPC_SetCountryIncomeValues", RpcTarget.All, countryID, moneyIncome, foodIncome, recrootsIncome);
     }
 
     public void SetCountryNaturalIncomeValues(int countryID, int moneyIncome, int foodIncome)
     {
+        if (ReferencesManager.Instance.gameSettings.onlineGame)
+            _photonView.RPC("RPC_SetCountryNaturalIncomeValues", RpcTarget.All, countryID, moneyIncome, foodIncome);
     }
 
+    [PunRPC]
     private void RPC_SetCountryValues(int countryID, int money, int food, int recroots)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
@@ -85,11 +107,12 @@ public class Multiplayer : MonoBehaviour
             {
                 country.money = money;
                 country.food = food;
-                country.recroots = recroots;
+                country.recruits = recroots;
             }
         }
     }
 
+    [PunRPC]
     private void RPC_SetCountryIncomeValues(int countryID, int moneyIncome, int foodIncome, int recrootsIncome)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
@@ -100,11 +123,12 @@ public class Multiplayer : MonoBehaviour
             {
                 country.moneyNaturalIncome = moneyIncome;
                 country.foodNaturalIncome = foodIncome;
-                country.recrootsIncome = recrootsIncome;
+                country.recruitsIncome = recrootsIncome;
             }
         }
     }
 
+    [PunRPC]
     private void RPC_SetCountryNaturalIncomeValues(int countryID, int moneyIncome, int foodIncome)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
@@ -125,46 +149,46 @@ public class Multiplayer : MonoBehaviour
 
     public void M_UpdateCountryGraphics(int countryID, string ideology)
     {
+        if (ReferencesManager.Instance.gameSettings.onlineGame)
+            _photonView.RPC("RPC_UpdateCountryGraphics", RpcTarget.All, countryID, ideology);
     }
 
+    [PunRPC]
     private void RPC_UpdateCountryGraphics(int countryID, string ideology)
     {
-        for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
-        {
-            CountrySettings currentCountry = ReferencesManager.Instance.countryManager.countries[i];
+        CountrySettings currentCountry = ReferencesManager.Instance.countryManager.FindCountryByID(countryID);
 
-            if (currentCountry.country._id == countryID)
+        if (currentCountry.country._id == countryID)
+        {
+            if (ideology == "Неопределённый")
             {
-                if (ideology == "Неопределённый")
-                {
-                    currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[1];
-                    currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[1];
-                }
-                else if (ideology == "Демократия")
-                {
-                    currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[1];
-                    currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[1];
-                }
-                else if (ideology == "Монархия")
-                {
-                    currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[2];
-                    currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[2];
-                }
-                else if (ideology == "Фашизм")
-                {
-                    currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[4];
-                    currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[4];
-                }
-                else if (ideology == "Коммунизм")
-                {
-                    currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[5];
-                    currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[5];
-                }
+                currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[1];
+                currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[1];
+            }
+            else if (ideology == "Демократия")
+            {
+                currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[1];
+                currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[1];
+            }
+            else if (ideology == "Монархия")
+            {
+                currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[2];
+                currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[2];
+            }
+            else if (ideology == "Фашизм")
+            {
+                currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[4];
+                currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[4];
+            }
+            else if (ideology == "Коммунизм")
+            {
+                currentCountry.country.countryColor = currentCountry.country.countryIdeologyColors[5];
+                currentCountry.country.countryFlag = currentCountry.country.countryIdeologyFlags[5];
             }
         }
 
         // Новый цвет
-        foreach (RegionManager region in ReferencesManager.Instance.countryManager.regions)
+        foreach (RegionManager region in currentCountry.myRegions)
         {
             region.selectedColor.r = region.currentCountry.country.countryColor.r + 0.1f;
             region.selectedColor.g = region.currentCountry.country.countryColor.g + 0.1f;
@@ -181,12 +205,18 @@ public class Multiplayer : MonoBehaviour
     public void SetRegionValues(int regionID, int population, bool hasArmy, int goldIncome,
         int foodIncome, int civFactory_Amount, int infrastructure_Amount, int farms_Amount, int cheFarms, int regionScore)
     {
+        if (ReferencesManager.Instance.gameSettings.onlineGame)
+            _photonView.RPC("RPC_SetRegionValues", RpcTarget.All, regionID, population, hasArmy, goldIncome,
+                foodIncome, civFactory_Amount, infrastructure_Amount, farms_Amount, cheFarms, regionScore);
     }
 
     public void AnnexRegion(int regionID, int newCountryID)
     {
+        if (ReferencesManager.Instance.gameSettings.onlineGame)
+            _photonView.RPC("RPC_AnnexRegion", RpcTarget.All, regionID, newCountryID);
     }
 
+    [PunRPC]
     private void RPC_SetRegionValues(int regionID, int population, bool hasArmy, int goldIncome,
         int foodIncome, int civFactory_Amount, int infrastructure_Amount, int farms_Amount, int cheFarms, int regionScore)
     {
@@ -230,6 +260,7 @@ public class Multiplayer : MonoBehaviour
     }
 
 
+    [PunRPC]
     private void RPC_AnnexRegion(int regionID, int newCountryID)
     {
         foreach (var country in ReferencesManager.Instance.countryManager.countries)
@@ -257,8 +288,6 @@ public class Multiplayer : MonoBehaviour
                         region.selectedColor.r = region.currentCountry.country.countryColor.r + 0.1f;
                         region.selectedColor.g = region.currentCountry.country.countryColor.g + 0.1f;
                         region.selectedColor.b = region.currentCountry.country.countryColor.b + 0.1f;
-
-                        region.SelectRegionNoHit(region);
                     }
                 }
             }
@@ -271,8 +300,11 @@ public class Multiplayer : MonoBehaviour
 
     public void AddTechnology(int countryID, int technologyID)
     {
+        if (ReferencesManager.Instance.gameSettings.onlineGame)
+            _photonView.RPC("RPC_AddTechnology", RpcTarget.All, countryID, technologyID);
     }
 
+    [PunRPC]
     private void RPC_AddTechnology(int countryID, int technologyID)
     {
         foreach (CountrySettings country in ReferencesManager.Instance.countryManager.countries)
@@ -290,20 +322,30 @@ public class Multiplayer : MonoBehaviour
 
     public void AddUnitToArmy(string unitName, int regionId)
     {
+        _photonView.RPC("RPC_AddUnitToArmy", RpcTarget.All, unitName, regionId);
     }
 
     public void CreateUnit(int regionId)
     {
+        _photonView.RPC("RPC_CreateUnit", RpcTarget.All, regionId);
     }
 
-    public void RemoveUnitFromArmy(string unitName, int regionId)
+    public void RemoveUnitFromArmy(int id, int regionId)
     {
+        _photonView.RPC("RPC_RemoveUnitFromArmy", RpcTarget.All, id, regionId);
     }
 
     public void MoveUnit(int fromRegionId, int toRegionId)
     {
+        _photonView.RPC("RPC_MoveUnit", RpcTarget.All, fromRegionId, toRegionId);
     }
 
+    public void DisbandDivision(int regionId, int ownerId)
+    {
+        _photonView.RPC("RPC_DisbandDivision", RpcTarget.All, regionId, ownerId);
+    }
+
+    [PunRPC]
     private void RPC_RemoveUnitFromArmy(int unitId, int regionId)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
@@ -323,17 +365,13 @@ public class Multiplayer : MonoBehaviour
                     {
                         if (unitMovement.unitsHealth[j]._id == unitId)
                         {
-                            region.currentCountry.recroots += unitMovement.unitsHealth[j].unit.recrootsCost;
+                            region.currentCountry.recruits += unitMovement.unitsHealth[j].unit.recrootsCost;
                             region.currentCountry.moneyNaturalIncome += unitMovement.unitsHealth[j].unit.moneyIncomeCost;
                             region.currentCountry.foodNaturalIncome += unitMovement.unitsHealth[j].unit.foodIncomeCost;
 
                             unitMovement.unitsHealth.Remove(unitMovement.unitsHealth[j]);
                         }
                     }
-
-
-                    ReferencesManager.Instance.countryManager.UpdateValuesUI();
-                    ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
 
                     if (unitMovement.unitsHealth.Count <= 0)
                     {
@@ -348,20 +386,23 @@ public class Multiplayer : MonoBehaviour
                     }
                 }
 
-                ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
-
                 SetCountryValues(
                     region.currentCountry.country._id,
                     region.currentCountry.money,
                     region.currentCountry.food,
-                    region.currentCountry.recroots);
+                    region.currentCountry.recruits);
 
-                ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
                 ReferencesManager.Instance.countryManager.UpdateValuesUI();
+                ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
+
+                ReferencesManager.Instance.regionUI.UpdateDivisionUnitsIDs(unitMovement);
+
+                ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
             }
         }
     }
 
+    [PunRPC]
     private void RPC_AddUnitToArmy(string unitName, int regionId)
     {
         UnitScriptableObject unit = ReferencesManager.Instance.gameSettings.soldierLVL1;
@@ -415,12 +456,12 @@ public class Multiplayer : MonoBehaviour
                 if (unitMovement.unitsHealth.Count < 10)
                 {
                     if (region.currentCountry.money >= unit.moneyCost &&
-                        region.currentCountry.recroots >= unit.recrootsCost &&
+                        region.currentCountry.recruits >= unit.recrootsCost &&
                         region.currentCountry.food >= unit.foodCost)
                     {
                         region.currentCountry.money -= unit.moneyCost;
                         region.currentCountry.food -= unit.foodCost;
-                        region.currentCountry.recroots -= unit.recrootsCost;
+                        region.currentCountry.recruits -= unit.recrootsCost;
                         region.currentCountry.moneyNaturalIncome -= unit.moneyIncomeCost;
                         region.currentCountry.foodNaturalIncome -= unit.foodIncomeCost;
 
@@ -438,30 +479,18 @@ public class Multiplayer : MonoBehaviour
 
                         unitMovement.unitsHealth.Add(newUnitHealth);
                     }
-                    else
-                    {
-                        Debug.Log($"{region.currentCountry.money}");
-                        Debug.Log($"{region.currentCountry.recroots}");
-                    }
-                }
-                else
-                {
-                    Debug.Log("Limit 10");
                 }
 
                 SetCountryValues(
                     region.currentCountry.country._id,
                     region.currentCountry.money,
                     region.currentCountry.food,
-                    region.currentCountry.recroots);
-
-                ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
-                ReferencesManager.Instance.countryManager.UpdateValuesUI();
-                ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
+                    region.currentCountry.recruits);
             }
         }
     }
 
+    [PunRPC]
     private void RPC_CreateUnit(int regionId)
     {
         UnitScriptableObject unit = ReferencesManager.Instance.gameSettings.soldierLVL1;
@@ -472,7 +501,7 @@ public class Multiplayer : MonoBehaviour
             {
                 RegionManager region = ReferencesManager.Instance.countryManager.regions[i];
 
-                if (region.currentCountry.money >= unit.moneyCost && region.currentCountry.recroots >= unit.recrootsCost)
+                if (region.currentCountry.money >= unit.moneyCost && region.currentCountry.recruits >= unit.recrootsCost)
                 {
                     GameObject spawnedUnit = Instantiate(ReferencesManager.Instance.army.unitPrefab, region.transform);
 
@@ -481,10 +510,13 @@ public class Multiplayer : MonoBehaviour
                         ReferencesManager.Instance.army.unitPrefab.transform.localScale.y);
 
                     spawnedUnit.GetComponent<UnitMovement>().currentCountry = region.currentCountry;
+                    spawnedUnit.GetComponent<UnitMovement>().currentProvince = region;
+                    spawnedUnit.GetComponent<UnitMovement>().UpdateInfo();
                     region.hasArmy = true;
 
                     region.currentCountry.countryUnits.Add(spawnedUnit.GetComponent<UnitMovement>());
-                    AddUnitToArmy(ReferencesManager.Instance.gameSettings.soldierLVL1.name, region._id);
+
+                    AddUnitToArmy(unit.unitName, regionId);
                 }
 
                 region.CheckRegionUnits(region);
@@ -493,14 +525,12 @@ public class Multiplayer : MonoBehaviour
                     region.currentCountry.country._id,
                     region.currentCountry.money,
                     region.currentCountry.food,
-                    region.currentCountry.recroots);
-
-                ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
-                ReferencesManager.Instance.countryManager.UpdateValuesUI();
+                    region.currentCountry.recruits);
             }
         }
     }
 
+    [PunRPC]
     private void RPC_MoveUnit(int fromRegionId, int toRegionId)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.regions.Count; i++)
@@ -509,7 +539,7 @@ public class Multiplayer : MonoBehaviour
             {
                 fromRegion = ReferencesManager.Instance.countryManager.regions[i];
             }
-            else if (ReferencesManager.Instance.countryManager.regions[i]._id == toRegionId)
+            if (ReferencesManager.Instance.countryManager.regions[i]._id == toRegionId)
             {
                 toRegion = ReferencesManager.Instance.countryManager.regions[i];
             }
@@ -524,10 +554,45 @@ public class Multiplayer : MonoBehaviour
 
         unitTransform.SetParent(toRegion.transform);
 
+        UnitMovement division = fromRegion.GetDivision(fromRegion);
+        division.UpdateInfo();
+
         toRegion.hasArmy = true;
         toRegion.CheckRegionUnits(toRegion);
+    }
 
-        ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
+    [PunRPC]
+    private void RPC_DisbandDivision(int regionId, int ownerId)
+    {
+        RegionManager _region = new();
+        CountrySettings _owner = countryManager.FindCountryByID(ownerId);
+
+        foreach (RegionManager region in countryManager.regions)
+        {
+            if (region._id == regionId)
+            {
+                _region = region;
+            }
+        }
+
+        foreach (Transform child in _region.transform)
+        {
+            if (child.GetComponent<UnitMovement>())
+            {
+                UnitMovement division = child.GetComponent<UnitMovement>();
+
+                for (int i = 0; i < division.unitsHealth.Count; i++)
+                {
+                    _owner.recruits += Mathf.CeilToInt(division.unitsHealth[i].unit.recrootsCost * 0.7f);
+                    _owner.moneyNaturalIncome += division.unitsHealth[i].unit.moneyIncomeCost;
+                    _owner.foodNaturalIncome += division.unitsHealth[i].unit.foodIncomeCost;
+                }
+
+                division.unitsHealth.Clear();
+            }
+        }
+
+        ReferencesManager.Instance.regionManager.CheckRegionUnits(ReferencesManager.Instance.regionManager.currentRegionManager);
     }
 
     #endregion
@@ -536,23 +601,24 @@ public class Multiplayer : MonoBehaviour
 
     public void SendOffer(int senderId, int receiverId, string offer)
     {
+        _photonView.RPC("RPC_SendOffer", RpcTarget.All, senderId, receiverId, offer);
     }
 
     public void AcceptOffer(int senderId, int receiverId, string offer)
     {
+        _photonView.RPC("RPC_AcceptOffer", RpcTarget.All, senderId, receiverId, offer);
     }
 
+    [PunRPC]
     private void RPC_SendOffer(int senderId, int receiverId, string offer)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
         {
-            int index = 0; //playercountryindex
+            int index = (int)PhotonNetwork.LocalPlayer.CustomProperties["playerCountryId"];
 
-            Debug.Log(senderId);
             if (ReferencesManager.Instance.countryManager.countries[i].country._id == senderId)
             {
                 sender = ReferencesManager.Instance.countryManager.countries[i];
-                Debug.Log(sender.country._id);
             }
             if (ReferencesManager.Instance.countryManager.countries[i].country._id == receiverId)
             {
@@ -589,6 +655,11 @@ public class Multiplayer : MonoBehaviour
                     senderToReceiver.pact = false;
                     senderToReceiver.union = false;
 
+                    if (sender.myRegions.Count > 0 && receiver.myRegions.Count > 0)
+                    {
+                        sender.stability.buffs.Add(new Stability_buff("Наступательная война", (-15 * (receiver.myRegions.Count / sender.myRegions.Count)) * (1 / receiver.enemies.Count), new List<string>() { $"not;ongoing_war;{sender.country._id}" }, null, ReferencesManager.Instance.sprites.Find("offensive_war")));
+                        receiver.stability.buffs.Add(new Stability_buff("Оборонительная война", -5f, new List<string>() { $"not;ongoing_war;{receiver.country._id}" }, null, ReferencesManager.Instance.sprites.Find("defensive_war")));
+                    }
                     sender.enemies.Add(receiver);
                     receiver.enemies.Add(sender);
 
@@ -615,7 +686,7 @@ public class Multiplayer : MonoBehaviour
                     senderToReceiver.war = false;
 
                     sender.enemies.Remove(receiver);
-                    receiver.enemies.Remove(sender);
+                    receiver.enemies.Remove(receiver);
 
                     sender.inWar = false;
                     receiver.inWar = false;
@@ -730,15 +801,14 @@ public class Multiplayer : MonoBehaviour
         }
     }
 
+    [PunRPC]
     private void RPC_AcceptOffer(int senderId, int receiverId, string offer)
     {
         for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
         {
-            Debug.Log(senderId);
             if (ReferencesManager.Instance.countryManager.countries[i].country._id == senderId)
             {
                 sender = ReferencesManager.Instance.countryManager.countries[i];
-                Debug.Log(sender.country._id);
             }
             if (ReferencesManager.Instance.countryManager.countries[i].country._id == receiverId)
             {
@@ -812,14 +882,47 @@ public class Multiplayer : MonoBehaviour
             sender.country._id,
             sender.money,
             sender.food,
-            sender.recroots);
+            sender.recruits);
 
         SetCountryValues(
             receiver.country._id,
             receiver.money,
             receiver.food,
-            receiver.recroots);
+            receiver.recruits);
     }
 
     #endregion
+
+    public void MainProcess()
+    {
+        _photonView.RPC("RPC_MainProcess", RpcTarget.All);
+    }
+
+    public void SetPlayerReadyState(string nickname, bool state)
+    {
+        _photonView.RPC("RPC_SetPlayerReadyState", RpcTarget.All, nickname, state);
+    }
+
+    public void SetReadyPlayersCount(int count)
+    {
+        _photonView.RPC("RPC_SetReadyPlayersCount", RpcTarget.All, count);
+    }
+
+    [PunRPC]
+    private void RPC_MainProcess()
+    {
+        ReferencesManager.Instance.aiManager.progressManager.NextProgress();
+    }
+
+    [PunRPC]
+    private void RPC_SetPlayerReadyState(string nickname, bool state)
+    {
+        roomPlayers.Find(x => x.currentNickname == nickname).readyToMove = state;
+    }
+
+    [PunRPC]
+    private void RPC_SetReadyPlayersCount(int count)
+    {
+        m_ReadyPlayers = count;
+    }
 }

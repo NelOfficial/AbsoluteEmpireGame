@@ -3,6 +3,8 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static Army;
+using R = ReferencesManager;
 
 public class CountryInfoAdvanced : MonoBehaviour
 {
@@ -49,6 +51,10 @@ public class CountryInfoAdvanced : MonoBehaviour
     [SerializeField] GameObject _templateUnitPrefab;
     public GameObject _templatePrefab;
 
+    [SerializeField] private Sprite[] _templatesIcons;
+    [SerializeField] private TMP_InputField _templateName_Inputfield;
+    [SerializeField] private Image _template_customIconHolder;
+
     [SerializeField] GameObject _templatePanel;
     [SerializeField] GameObject _templateBatalionPanel;
 
@@ -59,11 +65,18 @@ public class CountryInfoAdvanced : MonoBehaviour
 
     [HideInInspector] public CountrySettings newVassal;
 
+    [Header("# Stability Settings: ")]
+    [SerializeField] private StabilityUI_Item _stabilityPrefab;
+    [SerializeField] private TMP_Text _stabilityValue;
+    [SerializeField] private Transform _stabilityBuffsContainer;
+
+    private int currentTemplateIconSelected;
+
     private void Awake()
     {
-        regionManager = FindObjectOfType<RegionManager>();
-        countryManager = FindObjectOfType<CountryManager>();
-        regionUI = FindObjectOfType<RegionUI>();
+        regionManager = ReferencesManager.Instance.regionManager;
+        countryManager = ReferencesManager.Instance.countryManager;
+        regionUI = ReferencesManager.Instance.regionUI;
     }
 
     public void SetValues(float[] valuesToSet)
@@ -141,7 +154,7 @@ public class CountryInfoAdvanced : MonoBehaviour
             countryManager.currentCountry.country._id,
             countryManager.currentCountry.money,
             countryManager.currentCountry.food,
-            countryManager.currentCountry.recroots);
+            countryManager.currentCountry.recruits);
 
         countryManager.UpdateValuesUI();
         countryManager.UpdateIncomeValuesUI();
@@ -179,7 +192,7 @@ public class CountryInfoAdvanced : MonoBehaviour
         foodIncomes[1].text = $"{countryManager.currentCountry.chemicalFarms * ReferencesManager.Instance.gameSettings.chefarm.foodIncome}";
 
         expenses[0].text = $"-{countryManager.currentCountry.regionCosts + ReferencesManager.Instance.resourcesMarketManager.CountAllCustomerExpenses(countryManager.currentCountry.country)}";
-        expenses[1].text = $"{countryManager.currentCountry.inflation}%";
+        expenses[1].text = $"{Mathf.Round(countryManager.currentCountry.inflation)}%";
         expenses[2].text = $"-{countryManager.currentCountry.inflationDebuff}";
 
         oilCount.text = $"{countryManager.currentCountry.oil}";
@@ -207,7 +220,47 @@ public class CountryInfoAdvanced : MonoBehaviour
             countryRegionCountText.text = countryManager.currentCountry.myRegions.Count.ToString();
             countryPopulationCountText.text = ReferencesManager.Instance.GoodNumberString(countryManager.currentCountry.population);
 
+            double stability = Mathf.Round(countryManager.currentCountry.stability.value);
+
+            _stabilityValue.text = $"{stability}%";
+
+            if (stability >= 60)
+            {
+                _stabilityValue.color = Color.green;
+            }
+            else if (stability <= 40)
+            {
+                _stabilityValue.color = Color.red;
+            }
+            else
+            {
+                _stabilityValue.color = Color.yellow;
+            }
+
+            UpdateStabilityBuffs();
+
             UpdateDiplomatyUI(countryManager.currentCountry);
+        }
+    }
+
+    private void UpdateStabilityBuffs()
+    {
+        foreach (Transform item in _stabilityBuffsContainer)
+        {
+            Destroy(item.gameObject);
+        }
+
+        foreach (Stability_buff buff in countryManager.currentCountry.stability.buffs)
+        {
+            if (buff != null)
+            {
+                GameObject prefab = Instantiate(_stabilityPrefab.gameObject, _stabilityBuffsContainer);
+
+                StabilityUI_Item stabilityUI_Item = prefab.gameObject.GetComponent<StabilityUI_Item>();
+                stabilityUI_Item._bonus = buff;
+
+                stabilityUI_Item.SetUp();
+            }
         }
     }
 
@@ -337,7 +390,29 @@ public class CountryInfoAdvanced : MonoBehaviour
         countryManager.UpdateCountryGraphics(ideologyName);
         countryManager.UpdateCountryInfo();
 
+        if (countryManager.currentCountry.ideology == "Демократия")
+        {
+            countryManager.currentCountry.stability.buffs.Add(new Stability_buff("Бюрократические издержки", -5f, new List<string>() { $"date_before;{R.Instance.dateManager.currentDate[0]}-{R.Instance.dateManager.currentDate[1]}-{R.Instance.dateManager.currentDate[2] + 1}" }, null, R.Instance.sprites.Find("bureaucratic_costs")));
+            countryManager.currentCountry.stability.buffs.Add(new Stability_buff("Изменение идеологии", -10f, new List<string>() { $"date_before;{R.Instance.dateManager.currentDate[0]}-{R.Instance.dateManager.currentDate[1]}-{R.Instance.dateManager.currentDate[2] + 1}" }, null, R.Instance.sprites.Find("ideology_change")));
+
+            countryManager.currentCountry.stability.buffs.Add(new Stability_buff("Свобода слова", 10f, new List<string>() { $"not;is_ideology;{countryManager.currentCountry.country._id};d" }, new List<string>() { $"DEV_UPD_IDEOLOGY_STABILITY_BUFFS;{countryManager.currentCountry.country._id}" }, R.Instance.sprites.Find("freedom_of_speech")));
+        }
+        else if (countryManager.currentCountry.ideology == "Фашизм")
+        {
+            countryManager.currentCountry.stability.buffs.Add(new Stability_buff("Сила нации", 15f, new List<string>() { $"not;is_ideology;{countryManager.currentCountry.country._id};f" }, new List<string>() { $"DEV_UPD_IDEOLOGY_STABILITY_BUFFS;{countryManager.currentCountry.country._id}" }, R.Instance.sprites.Find("power_of_nation")));
+            countryManager.currentCountry.stability.buffs.Add(new Stability_buff("Изменение идеологии", -10f, new List<string>() { $"date_before;{R.Instance.dateManager.currentDate[0]}-{R.Instance.dateManager.currentDate[1]}-{R.Instance.dateManager.currentDate[2] + 1}" }, null, R.Instance.sprites.Find("ideology_change")));
+        }
+        else if (countryManager.currentCountry.ideology == "Коммунизм")
+        {
+            countryManager.currentCountry.stability.buffs.Add(new Stability_buff("Плановая экономика", 7.5f, new List<string>() { $"not;is_ideology;{countryManager.currentCountry.country._id};c" }, new List<string>() { $"DEV_UPD_IDEOLOGY_STABILITY_BUFFS;{countryManager.currentCountry.country._id}" }, R.Instance.sprites.Find("planned_economy")));
+            countryManager.currentCountry.stability.buffs.Add(new Stability_buff("Изменение идеологии", -10f, new List<string>() { $"date_before;{R.Instance.dateManager.currentDate[0]}-{R.Instance.dateManager.currentDate[1]}-{R.Instance.dateManager.currentDate[2] + 1}" }, null, R.Instance.sprites.Find("ideology_change")));
+        }
+
         UpdateUI();
+        UpdateStabilityBuffs();
+
+        ToggleUI();
+        ToggleUI();
     }
 
     public void ChangeMobilizationLaw(int id)
@@ -391,12 +466,13 @@ public class CountryInfoAdvanced : MonoBehaviour
             ArmyTemplateItem_UI armyTemplateItem = newTemplateObject.GetComponent<ArmyTemplateItem_UI>();
             armyTemplateItem._index = i;
             armyTemplateItem._name = ReferencesManager.Instance.army.templates[i]._name;
+            armyTemplateItem._icon = ReferencesManager.Instance.army.templates[i]._icon;
 
             armyTemplateItem.SetUp();
         }
     }
 
-    public void UpdateTemplateUI()
+    public void UpdateTemplateUnits()
     {
         _templatePanel.SetActive(false);
         _templateBatalionPanel.SetActive(true);
@@ -426,6 +502,15 @@ public class CountryInfoAdvanced : MonoBehaviour
         }
     }
 
+    public void UpdateTemplateUI()
+    {
+        _templatePanel.SetActive(false);
+        _templateBatalionPanel.SetActive(true);
+
+        _templateName_Inputfield.text = ReferencesManager.Instance.army.templates[_currentTemplateIndex]._name;
+        _template_customIconHolder.sprite = ReferencesManager.Instance.army.templates[_currentTemplateIndex]._icon;
+    }
+
     public void CreateTemplate()
     {
         Army.Template template = new Army.Template();
@@ -435,9 +520,46 @@ public class CountryInfoAdvanced : MonoBehaviour
         int templatesCount = ReferencesManager.Instance.army.templates.Count + 1;
 
         template._name = $"{newName} ({templatesCount})";
-        template._batalions.Add(ReferencesManager.Instance.gameSettings.soldierLVL1);
+        template._icon = ReferencesManager.Instance.gameSettings.soldierLVL1.icon;
 
-        ReferencesManager.Instance.army.templates.Add(template);
+        if (!string.IsNullOrEmpty(template._name))
+        {
+            template._batalions.Add(ReferencesManager.Instance.gameSettings.soldierLVL1);
+
+            ReferencesManager.Instance.army.templates.Add(template);
+
+            UpdateTemplatesUI();
+        }
+    }
+
+    public void ChangeTemplateIcon(int increment)
+    {
+        currentTemplateIconSelected += increment;
+
+        if (currentTemplateIconSelected > _templatesIcons.Length)
+        {
+            currentTemplateIconSelected = 0;
+        }
+        else if (currentTemplateIconSelected < 0)
+        {
+            currentTemplateIconSelected = _templatesIcons.Length; 
+        }
+
+        _template_customIconHolder.sprite = _templatesIcons[currentTemplateIconSelected];
+    }
+
+
+    public void UpdateCustomization()
+    {
+        Template template = ReferencesManager.Instance.army.templates[_currentTemplateIndex];
+
+        template._icon = _template_customIconHolder.sprite;
+
+        if (!string.IsNullOrEmpty(_templateName_Inputfield.text) ||
+            !string.IsNullOrWhiteSpace(_templateName_Inputfield.text))
+        {
+            template._name = _templateName_Inputfield.text;
+        }
 
         UpdateTemplatesUI();
     }
@@ -447,7 +569,7 @@ public class CountryInfoAdvanced : MonoBehaviour
         if (ReferencesManager.Instance.army.templates[_currentTemplateIndex]._batalions.Count + 1 <= 10)
         {
             ReferencesManager.Instance.army.templates[_currentTemplateIndex]._batalions.Add(unit);
-            UpdateTemplateUI();
+            UpdateTemplateUnits();
         }
         else
         {

@@ -21,6 +21,7 @@ public class ReferencesManager : MonoBehaviour
     public MapEditor mEditor;
     public DiplomatyUI diplomatyUI;
     public EventsContainer eventsContainer;
+    public GameEventUI eventUI;
     public MapType mapType;
     public MainMenu mainMenu;
     public ProfileManager profileManager;
@@ -28,6 +29,8 @@ public class ReferencesManager : MonoBehaviour
     public OfflineGameSettings offlineGameSettings;
 
     public ResourcesMarketManager resourcesMarketManager;
+
+    public Dict<Sprite> sprites;
 
     public FleetManager fleetManager;
     public Launcher launcher;
@@ -52,6 +55,8 @@ public class ReferencesManager : MonoBehaviour
 
     public string debugString;
 
+    public Guild.FlagSprite[] guildImages;
+
     private void Awake()
     {
         Instance = this;
@@ -62,7 +67,23 @@ public class ReferencesManager : MonoBehaviour
         }
     }
 
-    public void CreateCountry(CountryScriptableObject countryScriptableObject, string ideology)
+    public CountryScriptableObject FindCountryObjectByID(int id, CountryScriptableObject[] _countries)
+    {
+        CountryScriptableObject _foundedCountry = null;
+
+        foreach (CountryScriptableObject country in _countries)
+        {
+            if (country._id == id)
+            {
+                _foundedCountry = country;
+                break;
+            }
+        }
+
+        return _foundedCountry;
+    }
+
+    public CountrySettings CreateCountry(CountryScriptableObject countryScriptableObject, string ideology)
     {
         GameObject createdCountry = Instantiate(countrySettingsPrefab.gameObject, countriesParent);
 
@@ -117,6 +138,8 @@ public class ReferencesManager : MonoBehaviour
         }
 
         countryManager.UpdateRegionsColor();
+
+        return createdCountry.GetComponent<CountrySettings>();
     }
 
     public CountrySettings CreateCountry_Component(CountryScriptableObject countryScriptableObject, string ideology)
@@ -225,12 +248,12 @@ public class ReferencesManager : MonoBehaviour
         {
             int newManpower = country.population / 100 * Instance.gameSettings.mobilizationPercent[id];
 
-            if (country.recroots < 0)
+            if (country.recruits < 0)
             {
-                country.recroots = 0;
+                country.recruits = 0;
             }
 
-            country.manpower = country.recroots + country.armyPersonnel;
+            country.manpower = country.recruits + country.armyPersonnel;
 
             if (newManpower > country.manpower)
             {
@@ -247,7 +270,7 @@ public class ReferencesManager : MonoBehaviour
 
             int recruitsNeeded = country.recruitsLimit - country.manpower;
 
-            country.recrootsIncome = recruitsNeeded / 25;
+            country.recruitsIncome = recruitsNeeded / 25;
 
             country.mobilizationLaw = id;
 

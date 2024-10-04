@@ -24,6 +24,9 @@ public class ModificationPanel : MonoBehaviour
 
     [SerializeField] TMP_Text modName_TMP;
     [SerializeField] TMP_Text modDesc_TMP;
+    [SerializeField] TMP_Text modViews_TMP;
+    [SerializeField] TMP_Text modDownloads_TMP;
+    [SerializeField] TMP_Text modAuthor_TMP;
 
     public bool updatingFeed;
     public int lastScenarios;
@@ -330,10 +333,77 @@ public class ModificationPanel : MonoBehaviour
         }
     }
 
+    private void UpdateModInfo(int id)
+    {
+        StartCoroutine(UpdateModInfo_Co(id));
+    }
+
+    private IEnumerator UpdateModInfo_Co(int id)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("id", id);
+
+        // делаем запрос на сайт мой и оттуда нам возвращают данные об айдишниках модов
+        WWW getPostRequest = new WWW("https://absolute-empire.space/core/getPostById.php", form);
+
+        yield return getPostRequest;
+
+        string[] request = getPostRequest.text.Split('\t');
+
+        //далее мы по айдишникам находим моды и еще тут можно их выкладывать
+        if (!string.IsNullOrEmpty(request[0]))
+        {
+            Modification newModification = new Modification();
+
+            try
+            {
+                newModification.id = int.Parse(request[0]);
+                newModification.currentScenarioName = request[1];
+                newModification.currentScenarioDescription = request[2];
+                newModification.currentScenarioDate = request[3];
+                newModification.currentScenarioData = request[4];
+                newModification.currentScenarioAuthorId = request[5];
+                newModification.verified = int.Parse(request[6]);
+                newModification.views = int.Parse(request[7]);
+                newModification.likes = int.Parse(request[8]);
+                newModification.version = int.Parse(request[9]);
+            }
+            catch (System.Exception)
+            {
+                Debug.Log(getPostRequest.text);
+            }
+
+            foreach (var mod in loadedModifications)
+            {
+                if (mod.id == newModification.id)
+                {
+                    mod.currentScenarioName = newModification.currentScenarioName;
+                    mod.currentScenarioDescription = newModification.currentScenarioDescription;
+                    mod.currentScenarioDate = newModification.currentScenarioDate;
+                    mod.currentScenarioData = newModification.currentScenarioData;
+                    mod.currentScenarioAuthorId = newModification.currentScenarioAuthorId;
+                    mod.verified = newModification.verified;
+                    mod.views = newModification.views;
+                    mod.likes = newModification.likes;
+                    mod.version = newModification.version;
+
+                    currentLoadedModification = mod;
+
+                    modName_TMP.text = currentLoadedModification.currentScenarioName;
+                    modDesc_TMP.text = $"{currentLoadedModification.currentScenarioDescription}";
+                    modViews_TMP.text = currentLoadedModification.views.ToString();
+                    modDownloads_TMP.text = currentLoadedModification.likes.ToString();
+                    modAuthor_TMP.text = $"{currentLoadedModification.currentScenarioAuthorId}";
+                }
+            }
+        }
+    }
+
     public void UpdateModUI()
     {
-        modName_TMP.text = currentLoadedModification.currentScenarioName;
-        modDesc_TMP.text = $"{currentLoadedModification.currentScenarioDescription} \n{ReferencesManager.Instance.languageManager.GetTranslation("MainMenu.ModsList.MadeBy")}: {currentLoadedModification.currentScenarioAuthorId}";
+        UpdateViews(currentLoadedModification.id, ReferencesManager.Instance.profileManager.userId);
+
+        UpdateModInfo(currentLoadedModification.id);
 
         bool alreadyDownloaded = downloadedModsIds.list.Any(item => item.id == currentLoadedModification.id);
 
@@ -526,6 +596,10 @@ public class ModificationPanel : MonoBehaviour
             mod.version = currentLoadedModification.version;
 
             downloadedModsIds.list.Add(mod);
+
+            UpdateDownloads(currentLoadedModification.id, ReferencesManager.Instance.profileManager.userId);
+
+            UpdateModInfo(currentLoadedModification.id);
         }
 
         PlayerPrefs.SetString($"MODIFICATION_{currentLoadedModification.id}", $"{currentLoadedModification.currentScenarioName}");
@@ -535,6 +609,64 @@ public class ModificationPanel : MonoBehaviour
         UpdateSavedIds();
 
         UpdateModUI();
+    }
+
+    public void UpdateViews(int modId, int playerId)
+    {
+        StartCoroutine(SendViewRequest(modId, playerId));
+    }
+
+    private IEnumerator SendViewRequest(int modId, int playerId)
+    {
+        // Подготавливаем данные для отправки
+        WWWForm form = new WWWForm();
+        form.AddField("mod_id", modId);
+        form.AddField("player_id", playerId);
+
+        // Отправляем запрос на сервер
+        using (UnityWebRequest www = UnityWebRequest.Post("https://absolute-empire.space/core/update_views.php", form))
+        {
+            yield return www.SendWebRequest();
+
+            // Обработка результата
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log("response: " + www.downloadHandler.text);
+            }
+            else
+            {
+                Debug.Log("error: " + www.error);
+            }
+        }
+    }
+
+    public void UpdateDownloads(int modId, int playerId)
+    {
+        StartCoroutine(SendDownloadRequest(modId, playerId));
+    }
+
+    private IEnumerator SendDownloadRequest(int modId, int playerId)
+    {
+        // Подготавливаем данные для отправки
+        WWWForm form = new WWWForm();
+        form.AddField("mod_id", modId);
+        form.AddField("player_id", playerId);
+
+        // Отправляем запрос на сервер
+        using (UnityWebRequest www = UnityWebRequest.Post("https://absolute-empire.space/core/update_downloads.php", form))
+        {
+            yield return www.SendWebRequest();
+
+            // Обработка результата
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log("response: " + www.downloadHandler.text);
+            }
+            else
+            {
+                Debug.LogError("error: " + www.error);
+            }
+        }
     }
 
     public void UpdateSavedIds()

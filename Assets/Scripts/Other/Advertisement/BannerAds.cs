@@ -13,36 +13,42 @@ public class BannerAds : MonoBehaviour
 
     private void Awake()
     {
-        RequestBanner();
+        if (ReferencesManager.Instance.gameSettings._isPremium.value == false)
+        {
+            RequestBanner();
+        }
     }
 
     private void RequestBanner()
     {
-        //Sets COPPA restriction for user age under 13
-        MobileAds.SetAgeRestrictedUser(true);
-
-        string adUnitId = "R-M-2659272-6";
-
-        if (this.banner != null)
+        if (ReferencesManager.Instance.gameSettings._isPremium.value == false)
         {
-            this.banner.Destroy();
+            //Sets COPPA restriction for user age under 13
+            MobileAds.SetAgeRestrictedUser(true);
+
+            string adUnitId = "R-M-2659272-6";
+
+            if (this.banner != null)
+            {
+                this.banner.Destroy();
+            }
+
+            // Set sticky banner width
+            //BannerAdSize bannerSize = BannerAdSize.StickySize(GetScreenWidthDp());
+
+            // Or set inline banner maximum width and height
+            BannerAdSize bannerSize = BannerAdSize.InlineSize(GetScreenWidthDp() / 3, 50);
+            this.banner = new Banner(adUnitId, bannerSize, AdPosition.BottomRight);
+
+            this.banner.OnAdLoaded += this.HandleAdLoaded;
+            this.banner.OnAdFailedToLoad += this.HandleAdFailedToLoad;
+            this.banner.OnReturnedToApplication += this.HandleReturnedToApplication;
+            this.banner.OnLeftApplication += this.HandleLeftApplication;
+            this.banner.OnAdClicked += this.HandleAdClicked;
+            this.banner.OnImpression += this.HandleImpression;
+
+            this.banner.LoadAd(this.CreateAdRequest());
         }
-
-        // Set sticky banner width
-        //BannerAdSize bannerSize = BannerAdSize.StickySize(GetScreenWidthDp());
-
-        // Or set inline banner maximum width and height
-        BannerAdSize bannerSize = BannerAdSize.InlineSize(GetScreenWidthDp() / 3, 50);
-        this.banner = new Banner(adUnitId, bannerSize, AdPosition.BottomRight);
-
-        this.banner.OnAdLoaded += this.HandleAdLoaded;
-        this.banner.OnAdFailedToLoad += this.HandleAdFailedToLoad;
-        this.banner.OnReturnedToApplication += this.HandleReturnedToApplication;
-        this.banner.OnLeftApplication += this.HandleLeftApplication;
-        this.banner.OnAdClicked += this.HandleAdClicked;
-        this.banner.OnImpression += this.HandleImpression;
-
-        this.banner.LoadAd(this.CreateAdRequest());
     }
 
     // Example how to get screen width for request

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
   m_Name: EU
   m_EditorClassIdentifier: 
-  _id: 1046
+  _id: 1049
   _name: "\u0415\u0432\u0440\u043E\u043F\u0435\u0439\u0441\u043A\u0438\u0439 \u0441\u043E\u044E\u0437"
   _nameEN: European Union
   _uiName: European Union

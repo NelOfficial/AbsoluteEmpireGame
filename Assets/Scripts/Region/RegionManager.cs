@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
+using System.Linq;
 
 public class RegionManager : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class RegionManager : MonoBehaviour
 
     public int _id;
     public TerrainScriptableObject regionTerrain;
+
+    public CountryScriptableObject startCountry;
 
     [HideInInspector] public int regionLevel;
     [HideInInspector] public int armyLevel;
@@ -249,17 +252,6 @@ public class RegionManager : MonoBehaviour
             ReferencesManager.Instance.regionUI.regionCost.text = currentRegionManager.regionCostsPerLevel[labelRegionLevel].ToString();
         }
 
-        if (currentRegionManager.armyLevel == armyMaxLevel)
-        {
-            ReferencesManager.Instance.regionUI.armyButtonUpgrade.interactable = false;
-            ReferencesManager.Instance.regionUI.armyCost.text = "Макс.";
-        }
-        else
-        {
-            ReferencesManager.Instance.regionUI.armyButtonUpgrade.interactable = true;
-            ReferencesManager.Instance.regionUI.armyCost.text = currentRegionManager.armyCostsPerLevel[labelArmyLevel].ToString();
-        }
-
         if (currentRegionManager.defenseLevel == defenseMaxLevel)
         {
             ReferencesManager.Instance.regionUI.defenseButtonUpgrade.interactable = false;
@@ -376,7 +368,7 @@ public class RegionManager : MonoBehaviour
                 currentRegionManager.currentCountry.country._id,
                 currentRegionManager.currentCountry.money,
                 currentRegionManager.currentCountry.food,
-                currentRegionManager.currentCountry.recroots);
+                currentRegionManager.currentCountry.recruits);
         }
     }
 
@@ -406,7 +398,7 @@ public class RegionManager : MonoBehaviour
                 region.currentCountry.country._id,
                 region.currentCountry.money,
                 region.currentCountry.food,
-                region.currentCountry.recroots);
+                region.currentCountry.recruits);
         }
     }
 
@@ -448,6 +440,18 @@ public class RegionManager : MonoBehaviour
                     }
                 }
 
+                foreach (SeaMovePoint seaPoint in FindObjectsOfType(typeof(SeaMovePoint)).Cast<SeaMovePoint>())
+                {
+                    Destroy(seaPoint.gameObject.GetComponent<SpriteRenderer>());
+                    seaPoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+                }
+
+                foreach (FromSeaToGround_MovePoint groundPoint in FindObjectsOfType(typeof(FromSeaToGround_MovePoint)).Cast<FromSeaToGround_MovePoint>())
+                {
+                    Destroy(groundPoint.gameObject.GetComponent<SpriteRenderer>());
+                    groundPoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+                }
+
                 foreach (RegionManager region in ReferencesManager.Instance.countryManager.regions)
                 {
                     region.isSelected = false;
@@ -462,6 +466,10 @@ public class RegionManager : MonoBehaviour
                     region.currentRegionManager = hit.collider.GetComponent<RegionManager>();
                 }
                 ReferencesManager.Instance.regionUI.CloseTabs();
+                if (ReferencesManager.Instance.regionUI.seaBarContent.activeSelf)
+                {
+                    ReferencesManager.Instance.regionUI.regionUIContainer.SetActive(false);
+                }
 
                 ReferencesManager.Instance.regionUI.regionInfoCountryFlag.sprite = currentRegionManager.currentCountry.country.countryFlag;
                 currentRegionManager.GetComponent<SpriteRenderer>().color = currentRegionManager.selectedColor;
@@ -473,57 +481,43 @@ public class RegionManager : MonoBehaviour
 
                 currentRegionManager.isSelected = true;
                 ReferencesManager.Instance.regionUI.regionBarContainer.SetActive(true);
+                ReferencesManager.Instance.regionUI.seaBarContent.SetActive(false);
                 ReferencesManager.Instance.regionUI.regionUIContainer.SetActive(true);
 
+                Relationships.Relation relations = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(
+                    currentRegionManager.currentCountry, ReferencesManager.Instance.countryManager.currentCountry);
 
                 if (currentRegionManager.currentCountry != ReferencesManager.Instance.countryManager.currentCountry)
                 {
-                    ReferencesManager.Instance.regionUI.armyButton.interactable = false;
+                    ReferencesManager.Instance.regionUI.divisionButton.interactable = false;
                     ReferencesManager.Instance.regionUI.buildButton.interactable = false;
                     ReferencesManager.Instance.regionUI.defenseButton.interactable = false;
-                    ReferencesManager.Instance.regionUI.regionUpgradeButton.interactable = true;
+                    ReferencesManager.Instance.regionUI.regionUpgradeButton.interactable = false;
 
-                    ReferencesManager.Instance.regionUI.regionButtonUpgrade.interactable = true;
-                    ReferencesManager.Instance.regionUI.armyButtonUpgrade.interactable = false;
+                    ReferencesManager.Instance.regionUI.regionButtonUpgrade.interactable = false;
                     ReferencesManager.Instance.regionUI.defenseButtonUpgrade.interactable = false;
+
                     ReferencesManager.Instance.regionUI.moveButton.interactable = false;
                     ReferencesManager.Instance.regionUI.aviationButton.interactable = false;
+
+                    if (currentRegionManager.GetDivision(currentRegionManager).currentCountry == ReferencesManager.Instance.countryManager.currentCountry
+                        || relations.right || relations.union)
+                    {
+                        ReferencesManager.Instance.regionUI.divisionButton.interactable = !currentRegionManager.demilitarized;
+                        ReferencesManager.Instance.regionUI.buildButton.interactable = false;
+                        ReferencesManager.Instance.regionUI.defenseButton.interactable = false;
+                        ReferencesManager.Instance.regionUI.regionUpgradeButton.interactable = false;
+
+                        ReferencesManager.Instance.regionUI.regionButtonUpgrade.interactable = false;
+                        ReferencesManager.Instance.regionUI.defenseButtonUpgrade.interactable = false;
+
+                        ReferencesManager.Instance.regionUI.moveButton.interactable = currentRegionManager.hasArmy;
+                        ReferencesManager.Instance.regionUI.aviationButton.interactable = false;
+                    }
                 }
                 else
                 {
-                    ReferencesManager.Instance.regionUI.armyButton.interactable = false;
-                    ReferencesManager.Instance.regionUI.buildButton.interactable = true;
-                    ReferencesManager.Instance.regionUI.defenseButton.interactable = !demilitarized;
-                    ReferencesManager.Instance.regionUI.regionUpgradeButton.interactable = true;
-
-                    ReferencesManager.Instance.regionUI.regionButtonUpgrade.interactable = true;
-                    ReferencesManager.Instance.regionUI.armyButtonUpgrade.interactable = true;
-                    ReferencesManager.Instance.regionUI.defenseButtonUpgrade.interactable = true;
-                    ReferencesManager.Instance.regionUI.moveButton.interactable = true;
-                    ReferencesManager.Instance.regionUI.aviationButton.interactable = true;
-                }
-
-                if (currentRegionManager.hasArmy && !currentRegionManager.demilitarized)
-                {
-                    try
-                    {
-                        Transform unitTransform = currentRegionManager.transform.Find("Unit(Clone)");
-
-                        if (unitTransform.gameObject != null && unitTransform.gameObject.GetComponent<UnitMovement>() != null)
-                        {
-                            if (unitTransform.gameObject.GetComponent<UnitMovement>().currentCountry ==
-                                ReferencesManager.Instance.countryManager.currentCountry)
-                            {
-                                ReferencesManager.Instance.regionUI.armyButton.interactable = !demilitarized;
-                                ReferencesManager.Instance.regionUI.defenseButton.interactable = true;
-                                ReferencesManager.Instance.regionUI.moveButton.interactable = true;
-                            }
-                        }
-                    }
-                    catch (System.NullReferenceException)
-                    {
-                        currentRegionManager.hasArmy = false;
-                    }
+                    MyCountryUIButtons();
                 }
 
                 ReferencesManager.Instance.regionUI.DeMoveUnitMode(false);
@@ -741,70 +735,89 @@ public class RegionManager : MonoBehaviour
 
     public void SelectRegionNoHit(RegionManager selectedRegion)
     {
-        try
+        if (selectedRegion != null)
         {
-            ReferencesManager.Instance.seaRegionManager.DeselectRegions();
-        }
-        catch (System.Exception) { }
-
-        ReferencesManager.Instance.regionUI.regionButtonUpgrade.interactable = true;
-        ReferencesManager.Instance.regionUI.armyButtonUpgrade.interactable = true;
-        ReferencesManager.Instance.regionUI.defenseButtonUpgrade.interactable = true;
-
-        foreach (RegionManager region in ReferencesManager.Instance.countryManager.regions)
-        {
-            region.isSelected = false;
-
-            Color provinceColor = new Color(
-                region.currentCountry.country.countryColor.r,
-                region.currentCountry.country.countryColor.g,
-                region.currentCountry.country.countryColor.b,
-                ReferencesManager.Instance.gameSettings._regionOpacity);
-
-            region.GetComponent<SpriteRenderer>().color = provinceColor;
-            region.currentRegionManager = selectedRegion;
-        }
-
-        ReferencesManager.Instance.regionUI.regionInfoCountryFlag.sprite = currentRegionManager.currentCountry.country.countryFlag;
-        selectedRegion.GetComponent<SpriteRenderer>().color = currentRegionManager.selectedColor;
-        selectedRegion.isSelected = true;
-        ReferencesManager.Instance.regionUI.regionBarContainer.SetActive(true);
-
-        if (currentRegionManager.currentCountry != ReferencesManager.Instance.countryManager.currentCountry)
-        {
-            ReferencesManager.Instance.regionUI.armyButton.interactable = false;
-            ReferencesManager.Instance.regionUI.buildButton.interactable = false;
-            ReferencesManager.Instance.regionUI.defenseButton.interactable = false;
-            ReferencesManager.Instance.regionUI.regionUpgradeButton.interactable = false;
-        }
-        else
-        {
-            ReferencesManager.Instance.regionUI.armyButton.interactable = !demilitarized;
-            ReferencesManager.Instance.regionUI.buildButton.interactable = true;
-            ReferencesManager.Instance.regionUI.defenseButton.interactable = true;
-            ReferencesManager.Instance.regionUI.regionUpgradeButton.interactable = true;
-        }
-
-        if (currentRegionManager.currentCountry != ReferencesManager.Instance.countryManager.currentCountry)
-        {
-            if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(currentRegionManager.currentCountry, ReferencesManager.Instance.countryManager.currentCountry).right)
+            try
             {
-                ReferencesManager.Instance.regionUI.moveButton.interactable = true;
+                ReferencesManager.Instance.seaRegionManager.DeselectRegions();
+            }
+            catch (System.Exception) { }
+
+            ReferencesManager.Instance.regionUI.regionButtonUpgrade.interactable = true;
+            ReferencesManager.Instance.regionUI.defenseButtonUpgrade.interactable = true;
+
+            foreach (RegionManager region in ReferencesManager.Instance.countryManager.regions)
+            {
+                region.isSelected = false;
+
+                Color provinceColor = new Color(
+                    region.currentCountry.country.countryColor.r,
+                    region.currentCountry.country.countryColor.g,
+                    region.currentCountry.country.countryColor.b,
+                    ReferencesManager.Instance.gameSettings._regionOpacity);
+
+                region.GetComponent<SpriteRenderer>().color = provinceColor;
+                region.currentRegionManager = selectedRegion;
+            }
+
+            ReferencesManager.Instance.regionUI.regionInfoCountryFlag.sprite = selectedRegion.currentCountry.country.countryFlag;
+            selectedRegion.GetComponent<SpriteRenderer>().color = selectedRegion.selectedColor;
+            selectedRegion.isSelected = true;
+            ReferencesManager.Instance.regionUI.regionBarContainer.SetActive(true);
+
+            foreach (SeaMovePoint seaPoint in FindObjectsOfType(typeof(SeaMovePoint)).Cast<SeaMovePoint>())
+            {
+                Destroy(seaPoint.gameObject.GetComponent<SpriteRenderer>());
+                seaPoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+            }
+
+            foreach (FromSeaToGround_MovePoint groundPoint in FindObjectsOfType(typeof(FromSeaToGround_MovePoint)).Cast<FromSeaToGround_MovePoint>())
+            {
+                Destroy(groundPoint.gameObject.GetComponent<SpriteRenderer>());
+                groundPoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+            }
+
+            Relationships.Relation relations = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(
+                currentRegionManager.currentCountry, ReferencesManager.Instance.countryManager.currentCountry);
+
+            if (currentRegionManager.currentCountry != ReferencesManager.Instance.countryManager.currentCountry)
+            {
+                ReferencesManager.Instance.regionUI.divisionButton.interactable = false;
+                ReferencesManager.Instance.regionUI.buildButton.interactable = false;
+                ReferencesManager.Instance.regionUI.defenseButton.interactable = false;
+                ReferencesManager.Instance.regionUI.regionUpgradeButton.interactable = false;
+
+                ReferencesManager.Instance.regionUI.regionButtonUpgrade.interactable = false;
+                ReferencesManager.Instance.regionUI.defenseButtonUpgrade.interactable = false;
+
+                ReferencesManager.Instance.regionUI.moveButton.interactable = false;
+                ReferencesManager.Instance.regionUI.aviationButton.interactable = false;
+
+                if (currentRegionManager.GetDivision(currentRegionManager).currentCountry == ReferencesManager.Instance.countryManager.currentCountry
+                    || relations.right || relations.union)
+                {
+                    ReferencesManager.Instance.regionUI.divisionButton.interactable = !currentRegionManager.demilitarized;
+                    ReferencesManager.Instance.regionUI.buildButton.interactable = false;
+                    ReferencesManager.Instance.regionUI.defenseButton.interactable = false;
+                    ReferencesManager.Instance.regionUI.regionUpgradeButton.interactable = false;
+
+                    ReferencesManager.Instance.regionUI.regionButtonUpgrade.interactable = false;
+                    ReferencesManager.Instance.regionUI.defenseButtonUpgrade.interactable = false;
+
+                    ReferencesManager.Instance.regionUI.moveButton.interactable = currentRegionManager.hasArmy;
+                    ReferencesManager.Instance.regionUI.aviationButton.interactable = false;
+                }
             }
             else
             {
-                ReferencesManager.Instance.regionUI.moveButton.interactable = false;
+                MyCountryUIButtons();
             }
-        }
-        else
-        {
-            ReferencesManager.Instance.regionUI.moveButton.interactable = true;
-        }
 
-        ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
-        UpdateRegionUI();
-        ReferencesManager.Instance.regionUI.UpdateBuildingUI();
-        CheckRegionUnits(currentRegionManager);
+            ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
+            UpdateRegionUI();
+            ReferencesManager.Instance.regionUI.UpdateBuildingUI();
+            CheckRegionUnits(currentRegionManager);
+        }
     }
 
 
@@ -993,7 +1006,7 @@ public class RegionManager : MonoBehaviour
                     currentRegionManager.currentCountry.country._id,
                     currentRegionManager.currentCountry.money,
                     currentRegionManager.currentCountry.food,
-                    currentRegionManager.currentCountry.recroots);
+                    currentRegionManager.currentCountry.recruits);
 
             }
         }
@@ -1044,15 +1057,6 @@ public class RegionManager : MonoBehaviour
 
             region.buildingsQueue.Add(buildingQueueItem);
             region.currentCountry.money -= building.goldCost;
-
-            if (ReferencesManager.Instance.gameSettings.onlineGame)
-            {
-                Multiplayer.Instance.SetCountryValues(
-                    buildingQueueItem.region.currentCountry.country._id,
-                    buildingQueueItem.region.currentCountry.money,
-                    buildingQueueItem.region.currentCountry.food,
-                    buildingQueueItem.region.currentCountry.recroots);
-            }
 
             if ((buildingQueueItem.movesLasts -= buildSpeed) <= 0)
             {
@@ -1117,7 +1121,7 @@ public class RegionManager : MonoBehaviour
         {
             region.currentCountry.moneyNaturalIncome += building.goldIncome;
             region.currentCountry.foodNaturalIncome += building.foodIncome;
-            region.currentCountry.recrootsIncome += building.recrootsIncome;
+            region.currentCountry.recruitsIncome += building.recrootsIncome;
             region.currentCountry.researchPointsIncome += building.researchPointsIncome;
         }
 
@@ -1178,6 +1182,20 @@ public class RegionManager : MonoBehaviour
 
         // Настройка PolygonCollider2D для работы с CompositeCollider2D
         polygonCollider.usedByComposite = true;
+    }
+
+    private void MyCountryUIButtons()
+    {
+        ReferencesManager.Instance.regionUI.divisionButton.interactable = !currentRegionManager.demilitarized;
+        ReferencesManager.Instance.regionUI.buildButton.interactable = true;
+        ReferencesManager.Instance.regionUI.defenseButton.interactable = true;
+        ReferencesManager.Instance.regionUI.regionUpgradeButton.interactable = true;
+
+        ReferencesManager.Instance.regionUI.regionButtonUpgrade.interactable = true;
+        ReferencesManager.Instance.regionUI.defenseButtonUpgrade.interactable = true;
+
+        ReferencesManager.Instance.regionUI.moveButton.interactable = currentRegionManager.hasArmy;
+        ReferencesManager.Instance.regionUI.aviationButton.interactable = true;
     }
 
 

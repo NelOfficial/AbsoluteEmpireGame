@@ -59,6 +59,10 @@ public class EventPanel : MonoBehaviour
         {
             offer_text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.SendWar");
         }
+        else if (currentEventItem.offer == "GuildInvite")
+        {
+            offer_text = $"{ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.GuildInviteAsk")}{Guild.GetGuild(currentEventItem.guildId)._name}";
+        }
 
         offerText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.TheyOffersToYou")} {offer_text}";
     }
@@ -120,6 +124,44 @@ public class EventPanel : MonoBehaviour
 
                 senderToReceiver.relationship += relationsRandom;
                 receiverToSender.relationship += relationsRandom;
+
+                Destroy(eventItem.gameObject);
+            }
+            else if (eventItem.offer == "GuildInvite")
+            {
+                int relationsRandom = Random.Range(10, 30);
+
+                Relationships.Relation senderToReceiver = diplomatyUI.FindCountriesRelation(eventItem.sender, eventItem.receiver);
+                Relationships.Relation receiverToSender = diplomatyUI.FindCountriesRelation(eventItem.receiver, eventItem.sender);
+
+                Guild.Join(Guild.GetGuild(currentEventItem.guildId), eventItem.receiver);
+
+                senderToReceiver.relationship += relationsRandom;
+                receiverToSender.relationship += relationsRandom;
+
+                Destroy(eventItem.gameObject);
+            }
+            else if (eventItem.offer == "GuildPromote")
+            {
+                int relationsRandom = Random.Range(5, 10);
+
+                Relationships.Relation senderToReceiver = diplomatyUI.FindCountriesRelation(eventItem.sender, eventItem.receiver);
+                Relationships.Relation receiverToSender = diplomatyUI.FindCountriesRelation(eventItem.receiver, eventItem.sender);
+
+                senderToReceiver.relationship += relationsRandom;
+                receiverToSender.relationship += relationsRandom;
+
+                Destroy(eventItem.gameObject);
+            }
+            else if (eventItem.offer == "GuildDemote")
+            {
+                int relationsRandom = Random.Range(5, 15);
+
+                Relationships.Relation senderToReceiver = diplomatyUI.FindCountriesRelation(eventItem.sender, eventItem.receiver);
+                Relationships.Relation receiverToSender = diplomatyUI.FindCountriesRelation(eventItem.receiver, eventItem.sender);
+
+                senderToReceiver.relationship -= relationsRandom;
+                receiverToSender.relationship -= relationsRandom;
 
                 Destroy(eventItem.gameObject);
             }

@@ -16,6 +16,8 @@ public class EventItem : MonoBehaviour
 
     public bool canDecline = true;
 
+    public int guildId = -1;
+
     private void Awake()
     {
         eventPanel = FindObjectOfType<EventPanel>();

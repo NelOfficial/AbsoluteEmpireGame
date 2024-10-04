@@ -46,6 +46,8 @@ public class GameSettings : MonoBehaviour
 	public bool jsonTest;
 	public bool regionSelectionMode;
 
+	public BoolValue _isPremium;
+
 	public string regionSelectionModeType;
 
 	public List<RegionManager> provincesList = new List<RegionManager>();
@@ -61,8 +63,9 @@ public class GameSettings : MonoBehaviour
 	public bool _DEBUG_REGIONS_IDS;
 	public GameObject debugText;
 
+	public Color _yellowColor = new(0.81f, 0.26f, 0.125f, 1f);
 	public Color greenColor;
-	public Color blueColor;
+	public Color blueColor = new (0.21f, 0.78f, 0.1f, 1f);
 	public Color redColor;
 
 	public GameObject playersListsPanel;
@@ -190,7 +193,7 @@ public class GameSettings : MonoBehaviour
 	public Color _seaDefaultColor;
 
 	[Header("AI Settings:")]
-	public List<Division> _divisionTemplates = new List<Division>();
+	public List<Division> _divisionTemplates = new();
 
 	[Header("Value Settings:")]
 	public int dockyardProduction = 15;
@@ -249,6 +252,18 @@ public class GameSettings : MonoBehaviour
 
 		playerListButton.SetActive(false);
 
+		if (PlayerPrefs.HasKey("IS_PREMIUM"))
+		{
+			if (PlayerPrefs.GetString("IS_PREMIUM") == "TRUE")
+			{
+				_isPremium.value = true;
+			}
+			else
+			{
+                _isPremium.value = false;
+            }
+        }
+
         _regionOpacity = PlayerPrefs.GetFloat("REGION_OPACITY", 0.5f);
 
         if (PlayerPrefs.GetInt("languageId") == 0)
@@ -259,6 +274,8 @@ public class GameSettings : MonoBehaviour
         {
             _language = Language.RU;
         }
+
+		Guild._guilds.Clear();
     }
 
 	public void SetGameEvents()

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: Greenland
+  m_EditorClassIdentifier: 
+  _id: 110
+  _name: "\u0413\u0440\u0435\u043D\u043B\u0430\u043D\u0434\u0438\u044F"
+  _nameEN: Greenland
+  _uiName: "\u0413\u0440\u0435\u043D\u043B\u0430\u043D\u0434\u0438\u044F"
+  _tag: GRL
+  countryType: 0
+  countryFlag: {fileID: 21300000, guid: c80d36170e230d847b807ce7d2ded686, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0, g: 0, b: 0, a: 0}
+  countryIdeologyColors:
+  - {r: 0.58873266, g: 0.8490566, b: 0.67240304, a: 0.5019608}
+  - {r: 0.58873266, g: 0.8490566, b: 0.67240304, a: 0.5019608}
+  - {r: 0.35510856, g: 0.7924528, b: 0.49218667, a: 0.5019608}
+  - {r: 0.7921569, g: 0.60871387, b: 0.35686275, a: 0.5019608}
+  - {r: 0.7921569, g: 0.60871387, b: 0.35686275, a: 0.5019608}
+  - {r: 0.7921569, g: 0.39592114, b: 0.35686275, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: c80d36170e230d847b807ce7d2ded686, type: 3}
+  - {fileID: 21300000, guid: c80d36170e230d847b807ce7d2ded686, type: 3}
+  - {fileID: 21300000, guid: 061a6bc72fa6f094a89b458815c23adc, type: 3}
+  - {fileID: 21300000, guid: fc9888042893acc45b05f17018c4dbac, type: 3}
+  - {fileID: 21300000, guid: fc9888042893acc45b05f17018c4dbac, type: 3}
+  - {fileID: 21300000, guid: 2cbc1fe5059153b43bfe1a9075654384, type: 3}

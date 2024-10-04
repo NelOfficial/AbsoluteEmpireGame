@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -12,16 +13,18 @@ public class SeaRegion : MonoBehaviour
 	}
 
     public int _id;
-	public SeaTerrain _terrain;
+	public TerrainScriptableObject _terrain;
 
     private bool _isSelected = false;
     [HideInInspector] public SeaRegion _currentSeaRegion;
 
     [Space(10f)]
     [Header("RegionArmy")]
-    public List<SeaMovePoint> _movePoints = new List<SeaMovePoint>();
+    public List<SeaMovePoint> _movePoints = new();
+    public List<FromSeaToGround_MovePoint> _toGroundMovePoints = new();
 
-    public List<Fleet> _fleets = new List<Fleet>();
+    public List<Fleet> _fleets = new();
+    public UnitMovement _division;
 
     private Vector3 StartPos;
     private Vector3 PosAfter;
@@ -99,9 +102,28 @@ public class SeaRegion : MonoBehaviour
 
     public void SelectRegion()
     {
+        ReferencesManager.Instance.regionUI.CloseTabs();
         ReferencesManager.Instance.regionManager.DeselectRegions();
 
-        ReferencesManager.Instance.regionUI.regionUIContainer.GetComponent<UI_Panel>().ClosePanel();
+        foreach (SeaMovePoint seaPoint in FindObjectsOfType(typeof(SeaMovePoint)).Cast<SeaMovePoint>())
+        {
+            Destroy(seaPoint.gameObject.GetComponent<SpriteRenderer>());
+            seaPoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+        }
+
+        foreach (FromSeaToGround_MovePoint groundPoint in FindObjectsOfType(typeof(FromSeaToGround_MovePoint)).Cast<FromSeaToGround_MovePoint>())
+        {
+            Destroy(groundPoint.gameObject.GetComponent<SpriteRenderer>());
+            groundPoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+        }
+
+        foreach (MovePoint movePoint in FindObjectsOfType(typeof(MovePoint)).Cast<MovePoint>())
+        {
+            Destroy(movePoint.gameObject.GetComponent<SpriteRenderer>());
+            movePoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+        }
+
+        ReferencesManager.Instance.regionUI.regionUIContainer.SetActive(false);
 
         Vector2 mainCamera = ReferencesManager.Instance.mainCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(mainCamera, Input.mousePosition);
@@ -142,12 +164,15 @@ public class SeaRegion : MonoBehaviour
                 region.GetComponent<SpriteRenderer>().color = ReferencesManager.Instance.gameSettings._seaDefaultColor;
             }
 
-            ReferencesManager.Instance.regionUI.CloseTabs();
-
             if (UISoundEffect.Instance != null)
             {
                 UISoundEffect.Instance.PlayAudio(ReferencesManager.Instance.regionUI.click_01);
             }
+
+            ReferencesManager.Instance.regionUI.regionUIContainer.SetActive(true);
+            ReferencesManager.Instance.regionUI.seaBarContent.SetActive(true);
+            ReferencesManager.Instance.regionUI.regionBarContainer.SetActive(false);
+            ReferencesManager.Instance.regionUI._seaRegion_TerrainImage.sprite = _currentSeaRegion._terrain.icon;
 
             _currentSeaRegion.GetComponent<SpriteRenderer>().color = ReferencesManager.Instance.gameSettings._seaSelectedColor;
             _currentSeaRegion._isSelected = true;
@@ -155,6 +180,55 @@ public class SeaRegion : MonoBehaviour
             //ReferencesManager.Instance.regionUI.regionBarContainer.SetActive(true);
             //ReferencesManager.Instance.regionUI.regionUIContainer.SetActive(true);
         }
+    }
+
+    public void SelectRegion_ByObject(SeaRegion region)
+    {
+        ReferencesManager.Instance.regionUI.CloseTabs();
+        ReferencesManager.Instance.regionManager.DeselectRegions();
+
+        foreach (SeaMovePoint seaPoint in FindObjectsOfType(typeof(SeaMovePoint)).Cast<SeaMovePoint>())
+        {
+            Destroy(seaPoint.gameObject.GetComponent<SpriteRenderer>());
+            seaPoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+        }
+
+        foreach (FromSeaToGround_MovePoint groundPoint in FindObjectsOfType(typeof(FromSeaToGround_MovePoint)).Cast<FromSeaToGround_MovePoint>())
+        {
+            Destroy(groundPoint.gameObject.GetComponent<SpriteRenderer>());
+            groundPoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+        }
+
+        foreach (MovePoint movePoint in FindObjectsOfType(typeof(MovePoint)).Cast<MovePoint>())
+        {
+            Destroy(movePoint.gameObject.GetComponent<SpriteRenderer>());
+            movePoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+        }
+
+        ReferencesManager.Instance.regionUI.regionUIContainer.SetActive(false);
+
+        foreach (SeaRegion rg in ReferencesManager.Instance.gameSettings._seaRegions)
+        {
+            rg._isSelected = false;
+            rg._currentSeaRegion = region;
+            rg.GetComponent<SpriteRenderer>().color = ReferencesManager.Instance.gameSettings._seaDefaultColor;
+        }
+
+        if (UISoundEffect.Instance != null)
+        {
+            UISoundEffect.Instance.PlayAudio(ReferencesManager.Instance.regionUI.click_01);
+        }
+
+        ReferencesManager.Instance.regionUI.regionUIContainer.SetActive(true);
+        ReferencesManager.Instance.regionUI.seaBarContent.SetActive(true);
+        ReferencesManager.Instance.regionUI.regionBarContainer.SetActive(false);
+        ReferencesManager.Instance.regionUI._seaRegion_TerrainImage.sprite = _currentSeaRegion._terrain.icon;
+
+        _currentSeaRegion.GetComponent<SpriteRenderer>().color = ReferencesManager.Instance.gameSettings._seaSelectedColor;
+        _currentSeaRegion._isSelected = true;
+
+        //ReferencesManager.Instance.regionUI.regionBarContainer.SetActive(true);
+        //ReferencesManager.Instance.regionUI.regionUIContainer.SetActive(true);
     }
 
     public void DeselectRegions()
@@ -165,5 +239,20 @@ public class SeaRegion : MonoBehaviour
             region.GetComponent<SpriteRenderer>().color = ReferencesManager.Instance.gameSettings._seaDefaultColor;
             region._currentSeaRegion = null;
         }
+    }
+
+    public UnitMovement GetDivision(SeaRegion region)
+    {
+        UnitMovement division = new UnitMovement();
+
+        foreach (Transform item in region.transform)
+        {
+            if (item.GetComponent<UnitMovement>())
+            {
+                division = item.GetComponent<UnitMovement>();
+            }
+        }
+
+        return division;
     }
 }

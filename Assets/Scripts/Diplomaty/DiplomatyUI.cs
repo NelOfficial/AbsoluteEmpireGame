@@ -3,12 +3,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
-
+using System.Linq;
+using System;
 
 public class DiplomatyUI : MonoBehaviour
 {
-    public int senderId;
-    public int receiverId;
+    [HideInInspector] public int senderId;
+    [HideInInspector] public int receiverId;
 
     public GameObject diplomatyContainer;
     public GameObject messageReceiver;
@@ -20,9 +21,10 @@ public class DiplomatyUI : MonoBehaviour
     [HideInInspector] public RegionManager regionManager;
     [HideInInspector] public RegionUI regionUI;
     [HideInInspector] public CountryInfoAdvanced countryInfoAdvanced;
+    [HideInInspector] public Interpretate languageManager;
 
-    public List<LocalOffer> localOffers = new List<LocalOffer>();
-    public List<LocalOffer> aiOffers = new List<LocalOffer>();
+    [HideInInspector] public List<LocalOffer> localOffers = new();
+    [HideInInspector] public List<LocalOffer> aiOffers = new();
 
     [SerializeField] Image senderCountryFlag;
     [SerializeField] Image receiverCountryFlag;
@@ -51,10 +53,10 @@ public class DiplomatyUI : MonoBehaviour
 
     [HideInInspector] public int _messageOfferId;
 
-    public List<CountrySettings> senderWars = new List<CountrySettings>();
-    private List<CountrySettings> receiverWars = new List<CountrySettings>();
+    [HideInInspector] public List<CountrySettings> senderWars = new();
+    private List<CountrySettings> receiverWars = new();
 
-    public List<TradeBuff> globalTrades = new List<TradeBuff>();
+    public List<TradeBuff> globalTrades = new();
 
     [SerializeField] OfferButton[] offerButtons;
 
@@ -70,21 +72,26 @@ public class DiplomatyUI : MonoBehaviour
     [SerializeField] private Transform senderWarsContainer;
     [SerializeField] private GameObject senderWarsItem;
 
-    public string regionTransferType;
+    [HideInInspector] public string regionTransferType;
 
-    public List<CountrySettings> _selectedCountries = new List<CountrySettings>();
+    [HideInInspector] public List<CountrySettings> _selectedCountries = new();
 
     private void Start()
     {
-        countryManager = FindObjectOfType<CountryManager>();
-        countryInfoAdvanced = FindObjectOfType<CountryInfoAdvanced>();
-        regionUI = FindObjectOfType<RegionUI>();
-        regionManager = FindObjectOfType<RegionManager>();
+        countryManager = ReferencesManager.Instance.countryManager;
+        countryInfoAdvanced = ReferencesManager.Instance.countryInfo;
+        regionUI = ReferencesManager.Instance.regionUI;
+        regionManager = ReferencesManager.Instance.regionManager;
+        languageManager = ReferencesManager.Instance.languageManager;
     }
 
     public void OpenUI()
     {
-        countryManager = FindObjectOfType<CountryManager>();
+        if (countryManager == null)
+        {
+            countryManager = ReferencesManager.Instance.countryManager;
+        }
+
         DestroyChildrens();
 
         _warCallPanel.SetActive(false);
@@ -102,31 +109,18 @@ public class DiplomatyUI : MonoBehaviour
         senderId = countryManager.currentCountry.country._id;
         receiverId = regionManager.currentRegionManager.currentCountry.country._id;
 
-        ReferencesManager.Instance.regionUI.barContent.SetActive(false);
+        regionUI.barContent.SetActive(false);
 
         if (senderId != receiverId)
         {
-            for (int i = 0; i < countryManager.countries.Count; i++)
-            {
-                if (countryManager.countries[i].country._id == senderId)
-                {
-                    sender = countryManager.countries[i];
-                }
-
-                else if (countryManager.countries[i].country._id == receiverId)
-                {
-                    receiver = countryManager.countries[i];
-                }
-            }
-
+            sender = FindCountryById(senderId);
+            receiver = FindCountryById(receiverId);
 
             diplomatyContainer.SetActive(true);
 
             receiverCountryFlag.sprite = receiver.country.countryFlag;
-
-            receiverCountryNameText.text = ReferencesManager.Instance.languageManager.GetTranslation(receiver.country._nameEN);
-
-            senderCountryNameText.text = ReferencesManager.Instance.languageManager.GetTranslation(sender.country._nameEN);
+            receiverCountryNameText.text = languageManager.GetTranslation(receiver.country._nameEN);
+            senderCountryNameText.text = languageManager.GetTranslation(sender.country._nameEN);
 
             senderCountryFlag.sprite = sender.country.countryFlag;
 
@@ -157,33 +151,30 @@ public class DiplomatyUI : MonoBehaviour
         acceptationStatePanel.SetActive(false);
         receiverInfo.SetActive(false);
 
-        senderId = ReferencesManager.Instance.countryManager.currentCountry.country._id;
+        senderId = countryManager.currentCountry.country._id;
         receiverId = _receiverId;
 
-        ReferencesManager.Instance.regionUI.barContent.SetActive(false);
+        regionUI.barContent.SetActive(false);
 
         if (senderId != receiverId)
         {
-            for (int i = 0; i < ReferencesManager.Instance.countryManager.countries.Count; i++)
+            for (int i = 0; i < countryManager.countries.Count; i++)
             {
-                if (ReferencesManager.Instance.countryManager.countries[i].country._id == senderId)
+                if (countryManager.countries[i].country._id == senderId)
                 {
-                    sender = ReferencesManager.Instance.countryManager.countries[i];
+                    sender = countryManager.countries[i];
                 }
 
-                else if (ReferencesManager.Instance.countryManager.countries[i].country._id == receiverId)
+                else if (countryManager.countries[i].country._id == receiverId)
                 {
-                    receiver = ReferencesManager.Instance.countryManager.countries[i];
+                    receiver = countryManager.countries[i];
                 }
             }
 
             receiverCountryFlag.sprite = receiver.country.countryFlag;
-
-            receiverCountryNameText.text = ReferencesManager.Instance.languageManager.GetTranslation(receiver.country._nameEN);
-
             senderCountryFlag.sprite = sender.country.countryFlag;
-
-            senderCountryNameText.text = ReferencesManager.Instance.languageManager.GetTranslation(sender.country._nameEN);
+            receiverCountryNameText.text = languageManager.GetTranslation(receiver.country._nameEN);
+            senderCountryNameText.text = languageManager.GetTranslation(sender.country._nameEN);
 
             UpdateDiplomatyUI(sender, receiver);
 
@@ -201,12 +192,13 @@ public class DiplomatyUI : MonoBehaviour
 
     public void ClsoeUI()
     {
-        ReferencesManager.Instance.regionUI.barContent.SetActive(true);
+        regionUI.barContent.SetActive(true);
 
         if (diplomatyContainer.activeSelf)
         {
             diplomatyContainer.GetComponent<UI_Panel>().ClosePanel();
         }
+
         BackgroundUI_Overlay.Instance.CloseOverlay();
     }
 
@@ -223,7 +215,7 @@ public class DiplomatyUI : MonoBehaviour
         }
     }
 
-    public void Execute_SendOffer(string offer, bool countRandom = true)
+    public void Execute_SendOffer(string offer, ReferencesManager referencesManager, bool countRandom = true)
     {
         receiver = FindCountryById(receiverId);
         sender = FindCountryById(senderId);
@@ -267,8 +259,17 @@ public class DiplomatyUI : MonoBehaviour
                 sender.enemies.Add(receiver);
                 receiver.enemies.Add(sender);
 
+                if (sender.myRegions.Count > 0 && receiver.myRegions.Count > 0)
+                {
+                    sender.stability.buffs.Add(new Stability_buff("Наступательная война", (-15 * (receiver.myRegions.Count / sender.myRegions.Count)) * (1 / receiver.enemies.Count), new List<string>() { $"not;ongoing_war;{sender.country._id}" }, null, ReferencesManager.Instance.sprites.Find("offensive_war")));
+                    receiver.stability.buffs.Add(new Stability_buff("Оборонительная война", -5f, new List<string>() { $"not;ongoing_war;{receiver.country._id}" }, null, ReferencesManager.Instance.sprites.Find("defensive_war")));
+                }
+
                 sender.inWar = true;
                 receiver.inWar = true;
+
+                sender.inWar = sender.enemies.Count > 0;
+                receiver.inWar = receiver.enemies.Count > 0;
 
                 receiverToSender.war = true;
                 receiverToSender.trade = false;
@@ -298,16 +299,16 @@ public class DiplomatyUI : MonoBehaviour
                 Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
                 Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
 
-                if (countRandom) random = Random.Range(0, 25);
+                if (countRandom) random = UnityEngine.Random.Range(0, 25);
                 else random = 100;
 
                 if (sender.score >= receiver.score)
                 {
-                    random += Random.Range(10, 30);
+                    random += UnityEngine.Random.Range(10, 30);
                 }
                 else if (sender.score < receiver.score)
                 {
-                    random -= Random.Range(10, 30);
+                    random -= UnityEngine.Random.Range(10, 30);
                 }
 
                 if (ReferencesManager.Instance.gameSettings.diplomatyCheats)
@@ -321,6 +322,12 @@ public class DiplomatyUI : MonoBehaviour
 
                     senderToReceiver.war = false;
                     receiverToSender.war = false;
+
+                    sender.enemies.Remove(receiver);
+                    receiver.enemies.Remove(sender);
+
+                    sender.inWar = sender.enemies.Count > 0;
+                    receiver.inWar = receiver.enemies.Count > 0;
 
                     senderToReceiver.relationship += 25;
                     receiverToSender.relationship += 25;
@@ -357,7 +364,7 @@ public class DiplomatyUI : MonoBehaviour
                 Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
                 Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
 
-                if (countRandom) random = Random.Range(0, 100);
+                if (countRandom) random = UnityEngine.Random.Range(0, 100);
                 else random = 100;
 
                 if (sender.ideology != receiver.ideology)
@@ -449,7 +456,7 @@ public class DiplomatyUI : MonoBehaviour
                 Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
                 Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
 
-                if (countRandom) random = Random.Range(0, 100);
+                if (countRandom) random = UnityEngine.Random.Range(0, 100);
                 else random = 100;
 
                 if (senderToReceiver.relationship <= 12)
@@ -509,7 +516,7 @@ public class DiplomatyUI : MonoBehaviour
                 Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
                 Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
 
-                if (countRandom) random = Random.Range(10, 100);
+                if (countRandom) random = UnityEngine.Random.Range(10, 100);
                 else random = 100;
 
                 if (sender.ideology != receiver.ideology)
@@ -611,7 +618,7 @@ public class DiplomatyUI : MonoBehaviour
                 Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
                 Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
 
-                if (countRandom) random = Random.Range(0, 100);
+                if (countRandom) random = UnityEngine.Random.Range(0, 100);
                 else random = 100;
 
                 if (sender.ideology != receiver.ideology)
@@ -688,41 +695,41 @@ public class DiplomatyUI : MonoBehaviour
                 Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
                 Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
 
-                if (countRandom) random = Random.Range(0, 20);
+                if (countRandom) random = UnityEngine.Random.Range(0, 20);
                 else random = 100;
 
-                if (sender.myRegions.Count / receiver.myRegions.Count >= Random.Range(2f, 4f))
+                if (sender.myRegions.Count / receiver.myRegions.Count >= UnityEngine.Random.Range(2f, 4f))
                 {
-                    random += Random.Range(5, 20);
+                    random += UnityEngine.Random.Range(5, 20);
                 }
 
                 if (receiver.civFactories > 0)
                 {
-                    if (sender.civFactories / receiver.civFactories >= Random.Range(2f, 3f))
+                    if (sender.civFactories / receiver.civFactories >= UnityEngine.Random.Range(2f, 3f))
                     {
-                        random += Random.Range(5, 30);
+                        random += UnityEngine.Random.Range(5, 30);
                     }
                 }
 
                 if (receiver.farms > 0)
                 {
-                    if (sender.farms / receiver.farms >= Random.Range(2f, 3f))
+                    if (sender.farms / receiver.farms >= UnityEngine.Random.Range(2f, 3f))
                     {
-                        random += Random.Range(0, 30);
+                        random += UnityEngine.Random.Range(0, 30);
                     }
                 }
 
                 if (receiver.chemicalFarms > 0)
                 {
-                    if (sender.chemicalFarms / receiver.chemicalFarms >= Random.Range(2f, 3f))
+                    if (sender.chemicalFarms / receiver.chemicalFarms >= UnityEngine.Random.Range(2f, 3f))
                     {
-                        random += Random.Range(0, 30);
+                        random += UnityEngine.Random.Range(0, 30);
                     }
                 }
 
                 if (receiver.vassalOf != null)
                 {
-                    random -= Random.Range(0, 15);
+                    random -= UnityEngine.Random.Range(0, 15);
                 }
 
 
@@ -825,11 +832,11 @@ public class DiplomatyUI : MonoBehaviour
 
             if (accept)
             {
-                acceptationStateText.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Accepted");
+                acceptationStateText.text = languageManager.GetTranslation("Diplomaty.Accepted");
             }
             else
             {
-                acceptationStateText.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Declined");
+                acceptationStateText.text = languageManager.GetTranslation("Diplomaty.Declined");
             }
         }
 
@@ -849,13 +856,13 @@ public class DiplomatyUI : MonoBehaviour
         {
             if (data[1] == "send")
             {
-                textValueField.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.SendMoney");
+                textValueField.text = languageManager.GetTranslation("Diplomaty.SendMoney");
 
                 valueSlider.maxValue = sender.money;
             }
             else if (data[1] == "ask")
             {
-                textValueField.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.AskMoney");
+                textValueField.text = languageManager.GetTranslation("Diplomaty.AskMoney");
 
                 valueSlider.maxValue = receiver.money;
             }
@@ -864,13 +871,13 @@ public class DiplomatyUI : MonoBehaviour
         {
             if (data[1] == "send")
             {
-                textValueField.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.SendFood");
+                textValueField.text = languageManager.GetTranslation("Diplomaty.SendFood");
 
                 valueSlider.maxValue = sender.food;
             }
             else if (data[1] == "ask")
             {
-                textValueField.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.AskFood");
+                textValueField.text = languageManager.GetTranslation("Diplomaty.AskFood");
 
                 valueSlider.maxValue = receiver.food;
             }
@@ -879,15 +886,30 @@ public class DiplomatyUI : MonoBehaviour
         {
             if (data[1] == "send")
             {
-                textValueField.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.SendRecruits");
+                textValueField.text = languageManager.GetTranslation("Diplomaty.SendRecruits");
 
-                valueSlider.maxValue = sender.recroots;
+                valueSlider.maxValue = sender.recruits;
             }
             else if (data[1] == "ask")
             {
-                textValueField.text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.AskRecruits");
+                textValueField.text = languageManager.GetTranslation("Diplomaty.AskRecruits");
 
-                valueSlider.maxValue = receiver.recroots;
+                valueSlider.maxValue = receiver.recruits;
+            }
+        }
+        else if (data[0] == "fuel")
+        {
+            if (data[1] == "send")
+            {
+                textValueField.text = languageManager.GetTranslation("Diplomaty.SendFuel");
+
+                valueSlider.maxValue = sender.fuel;
+            }
+            else if (data[1] == "ask")
+            {
+                textValueField.text = languageManager.GetTranslation("Diplomaty.AskFuel");
+
+                valueSlider.maxValue = receiver.fuel;
             }
         }
     }
@@ -913,7 +935,7 @@ public class DiplomatyUI : MonoBehaviour
             {
                 if (int.Parse(valueField.text) > sender.food)
                 {
-                    valueField.text = sender.money.ToString();
+                    valueField.text = sender.food.ToString();
                 }
             }
         }
@@ -921,9 +943,19 @@ public class DiplomatyUI : MonoBehaviour
         {
             if (!string.IsNullOrEmpty(valueField.text))
             {
-                if (int.Parse(valueField.text) > sender.recroots)
+                if (int.Parse(valueField.text) > sender.recruits)
                 {
-                    valueField.text = sender.money.ToString();
+                    valueField.text = sender.recruits.ToString();
+                }
+            }
+        }
+        else if (data[0] == "fuel")
+        {
+            if (!string.IsNullOrEmpty(valueField.text))
+            {
+                if (int.Parse(valueField.text) > sender.fuel)
+                {
+                    valueField.text = sender.fuel.ToString();
                 }
             }
         }
@@ -936,7 +968,7 @@ public class DiplomatyUI : MonoBehaviour
             valueField.text = valueSlider.value.ToString();
             value = int.Parse(valueField.text);
         }
-        catch (System.Exception) { }
+        catch (Exception) { }
     }
 
     public void LinkSliderToInputField()
@@ -946,7 +978,7 @@ public class DiplomatyUI : MonoBehaviour
             valueSlider.value = int.Parse(valueField.text);
             value = (int)valueSlider.value;
         }
-        catch (System.Exception) { }
+        catch (Exception) { }
     }
 
     public void ApplyValue()
@@ -954,8 +986,8 @@ public class DiplomatyUI : MonoBehaviour
         Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
         Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
 
-        int random = Random.Range(1, 10);
-        int randomDiplomaty = Random.Range(0, 100);
+        int random = UnityEngine.Random.Range(1, 10);
+        int randomDiplomaty = UnityEngine.Random.Range(0, 100);
 
         string[] data = valueType.Split(' ');
 
@@ -1016,22 +1048,48 @@ public class DiplomatyUI : MonoBehaviour
             if (data[1] == "send")
             {
                 accept = true;
-                sender.recroots -= value;
-                receiver.recroots += value;
+                sender.recruits -= value;
+                receiver.recruits += value;
                 receiverToSender.relationship += value / 1200;
                 senderToReceiver.relationship += value / 1200;
             }
             else if (data[1] == "ask")
             {
-                if (receiver.recroots >= value)
+                if (receiver.recruits >= value)
                 {
                     if (receiverToSender.relationship >= 60)
                     {
                         accept = true;
-                        sender.recroots += value;
-                        receiver.recroots -= value;
+                        sender.recruits += value;
+                        receiver.recruits -= value;
                         receiverToSender.relationship -= value / 1200;
                         senderToReceiver.relationship -= value / 1200;
+                    }
+                    else accept = false;
+                }
+            }
+        }
+        else if (data[0] == "fuel")
+        {
+            if (data[1] == "send")
+            {
+                accept = true;
+                sender.fuel -= value;
+                receiver.fuel += value;
+                receiverToSender.relationship += value / 750;
+                senderToReceiver.relationship += value / 750;
+            }
+            else if (data[1] == "ask")
+            {
+                if (receiver.recruits >= value)
+                {
+                    if (receiverToSender.relationship >= 60)
+                    {
+                        accept = true;
+                        sender.fuel += value;
+                        receiver.fuel -= value;
+                        receiverToSender.relationship -= value / 750;
+                        senderToReceiver.relationship -= value / 750;
                     }
                     else accept = false;
                 }
@@ -1044,13 +1102,13 @@ public class DiplomatyUI : MonoBehaviour
             sender.country._id,
             sender.money,
             sender.food,
-            sender.recroots);
+            sender.recruits);
 
         Multiplayer.Instance.SetCountryValues(
             receiver.country._id,
             receiver.money,
             receiver.food,
-            receiver.recroots);
+            receiver.recruits);
 
         ShowResultPanel();
 
@@ -1065,14 +1123,14 @@ public class DiplomatyUI : MonoBehaviour
         {
             acceptationStatePanel.SetActive(true);
 
-            string text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Accepted");
+            string text = languageManager.GetTranslation("Diplomaty.Accepted");
             acceptationStateText.text = text;
         }
         else
         {
             acceptationStatePanel.SetActive(true);
 
-            string _text = ReferencesManager.Instance.languageManager.GetTranslation("Diplomaty.Declined");
+            string _text = languageManager.GetTranslation("Diplomaty.Declined");
             acceptationStateText.text = _text;
         }
     }
@@ -1098,7 +1156,7 @@ public class DiplomatyUI : MonoBehaviour
 
         foreach (CountrySettings country in senderWars)
         {
-            GameObject _senderWarCountryButton = Instantiate(senderWarsItem, senderWarsContainer);
+            SelectCountryButton _senderWarCountryButton = Instantiate(senderWarsItem, senderWarsContainer).GetComponent<SelectCountryButton>();
             Relationships.Relation receiverRelations = FindCountriesRelation(receiver, country);
 
             if (receiverRelations.war)
@@ -1110,21 +1168,21 @@ public class DiplomatyUI : MonoBehaviour
                 _senderWarCountryButton.GetComponent<Button>().interactable = true;
             }
 
-            _senderWarCountryButton.GetComponent<SelectCountryButton>().askOfWar = true;
-            _senderWarCountryButton.GetComponent<SelectCountryButton>().country_ScriptableObject = country.country;
-            _senderWarCountryButton.GetComponent<SelectCountryButton>().country = country;
-            _senderWarCountryButton.GetComponent<SelectCountryButton>().UpdateUI();
+            _senderWarCountryButton.askOfWar = true;
+            _senderWarCountryButton.country_ScriptableObject = country.country;
+            _senderWarCountryButton.country = country;
+            _senderWarCountryButton.UpdateUI();
         }
     }
 
     public void SelectCountry(int countryID)
     {
-        _selectedCountries.Add(ReferencesManager.Instance.countryManager.FindCountryByID(countryID));
+        _selectedCountries.Add(countryManager.FindCountryByID(countryID));
     }
 
     public void DeSelectCountry(int countryID)
     {
-        _selectedCountries.Remove(ReferencesManager.Instance.countryManager.FindCountryByID(countryID));
+        _selectedCountries.Remove(countryManager.FindCountryByID(countryID));
     }
 
     public void ApplySelectionOfCountries(string a)
@@ -1138,7 +1196,7 @@ public class DiplomatyUI : MonoBehaviour
             Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
             Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
 
-            int _random = Random.Range(0, 30);
+            int _random = UnityEngine.Random.Range(0, 30);
 
             if (ReferencesManager.Instance.gameSettings.diplomatyCheats)
             {
@@ -1147,31 +1205,23 @@ public class DiplomatyUI : MonoBehaviour
 
             if (senderToReceiver.union)
             {
-                _random += Random.Range(20, 50);
+                _random += UnityEngine.Random.Range(20, 50);
             }
 
             if (senderToReceiver.trade)
             {
-                _random += Random.Range(1, 5);
+                _random += UnityEngine.Random.Range(1, 5);
             }
 
             if (senderToReceiver.pact)
             {
-                _random += Random.Range(1, 10);
+                _random += UnityEngine.Random.Range(1, 10);
             }
 
             if (senderToReceiver.right)
             {
-                _random += Random.Range(1, 10);
+                _random += UnityEngine.Random.Range(1, 10);
             }
-
-            //foreach (CountrySettings country in _selectedCountries)
-            //{
-            //    if (ReferencesManager.Instance.isCountryHasClaims(receiver, country))
-            //    {
-            //        random += Random.Range(0, 10);
-            //    }
-            //}
 
             if (_random >= 50)
             {
@@ -1209,7 +1259,7 @@ public class DiplomatyUI : MonoBehaviour
                 }
             }
         }
-        catch (System.Exception)
+        catch (Exception)
         {
             Debug.LogError($"Who: {who.country._name} toFind {toFind.country._name}");
         }
@@ -1234,71 +1284,44 @@ public class DiplomatyUI : MonoBehaviour
 
     private void UpdateCountryRelationsUI(GameObject horizontalScroll, CountrySettings country, string data)
     {
-        if (data == "vassal")
+        Dictionary<string, Func<Relationships.Relation, bool>> relationCheckers = new()
         {
-            foreach (Relationships.Relation relation in country.GetComponent<Relationships>().relationship)
-            {
-                if (relation.vassal)
-                {
-                    GameObject spawnedItem = Instantiate(countryItem, horizontalScroll.transform);
-                    spawnedItem.GetComponent<FillCountryFlag>().country = relation.country.country;
-                    spawnedItem.GetComponent<FillCountryFlag>().InDiplomatyUI = true;
-                    spawnedItem.GetComponent<FillCountryFlag>().FillInfo();
-                }
-            }
+            { "vassal", relation => relation.vassal },
+            { "union", relation => relation.union },
+            { "trade", relation => relation.trade },
+            { "wars", relation => relation.war }
+        };
 
-            horizontalScroll.GetComponent<RectTransform>().sizeDelta = new Vector2(80 * horizontalScroll.transform.childCount, 75);
-        }
-        else if (data == "union")
-        {
-            foreach (Relationships.Relation relation in country.GetComponent<Relationships>().relationship)
-            {
-                if (relation.union)
-                {
-                    GameObject spawnedItem = Instantiate(countryItem, horizontalScroll.transform);
-                    spawnedItem.GetComponent<FillCountryFlag>().country = relation.country.country;
-                    spawnedItem.GetComponent<FillCountryFlag>().InDiplomatyUI = true;
-                    spawnedItem.GetComponent<FillCountryFlag>().FillInfo();
-                }
-            }
+        if (!relationCheckers.ContainsKey(data))
+            return;
 
-            horizontalScroll.GetComponent<RectTransform>().sizeDelta = new Vector2(80 * horizontalScroll.transform.childCount, 75);
-        }
-        else if (data == "trade")
+        foreach (Relationships.Relation relation in country.GetComponent<Relationships>().relationship)
         {
-            foreach (Relationships.Relation relation in country.GetComponent<Relationships>().relationship)
+            if (relationCheckers[data](relation))
             {
-                if (relation.trade)
-                {
-                    GameObject spawnedItem = Instantiate(countryItem, horizontalScroll.transform);
-                    spawnedItem.GetComponent<FillCountryFlag>().country = relation.country.country;
-                    spawnedItem.GetComponent<FillCountryFlag>().InDiplomatyUI = true;
-                    spawnedItem.GetComponent<FillCountryFlag>().FillInfo();
-                }
+                FillCountryFlag spawnedItem = Instantiate(countryItem, horizontalScroll.transform).GetComponent<FillCountryFlag>();
+                spawnedItem.country = relation.country.country;
+                spawnedItem.InDiplomatyUI = true;
+                spawnedItem.FillInfo();
             }
-            horizontalScroll.GetComponent<RectTransform>().sizeDelta = new Vector2(80 * horizontalScroll.transform.childCount, 75);
         }
-        else if (data == "wars")
-        {
-            foreach (Relationships.Relation relation in country.GetComponent<Relationships>().relationship)
-            {
-                if (relation.war)
-                {
-                    GameObject spawnedItem = Instantiate(countryItem, horizontalScroll.transform);
-                    spawnedItem.GetComponent<FillCountryFlag>().country = relation.country.country;
-                    spawnedItem.GetComponent<FillCountryFlag>().InDiplomatyUI = true;
-                    spawnedItem.GetComponent<FillCountryFlag>().FillInfo();
-                }
-            }
-            horizontalScroll.GetComponent<RectTransform>().sizeDelta = new Vector2(80 * horizontalScroll.transform.childCount, 75);
-        }
+
+        horizontalScroll.GetComponent<RectTransform>().sizeDelta = new Vector2(80 * horizontalScroll.transform.childCount, 75);
     }
 
     private void DestroyChildrens(Transform parent)
     {
-        foreach (Transform child in parent)
+        List<GameObject> childrens = new List<GameObject>();
+
+        foreach (Transform child in parent.Cast<Transform>().ToArray())
         {
-            Destroy(child.gameObject);
+            childrens.Add(child.gameObject);
+        }
+
+        foreach (GameObject child in childrens)
+        {
+            child.transform.SetParent(null);
+            DestroyImmediate(child);
         }
     }
 
@@ -1324,30 +1347,36 @@ public class DiplomatyUI : MonoBehaviour
         Relationships.Relation senderToReceiver = FindCountriesRelation(sender, receiver);
         Relationships.Relation receiverToSender = FindCountriesRelation(receiver, sender);
         ResourcesMarketManager market = ReferencesManager.Instance.resourcesMarketManager;
-        int random = countRandom ? Random.Range(0, 100) : 9999999;
+        int random = countRandom ? UnityEngine.Random.Range(0, 100) : 9999999;
         bool accept = random >= 50;
 
         switch (offer)
         {
             case "Объявить войну":
-                senderToReceiver.war = receiverToSender.war = true;
-                senderToReceiver.trade = receiverToSender.trade = false;
-                senderToReceiver.right = receiverToSender.right = false;
-                senderToReceiver.pact = receiverToSender.pact = false;
-                senderToReceiver.union = receiverToSender.union = false;
-                senderToReceiver.vassal = receiverToSender.vassal = false;
+                if (receiver.myRegions.Count > 0 && sender.myRegions.Count > 0)
+                {
+                    senderToReceiver.war = receiverToSender.war = true;
+                    senderToReceiver.trade = receiverToSender.trade = false;
+                    senderToReceiver.right = receiverToSender.right = false;
+                    senderToReceiver.pact = receiverToSender.pact = false;
+                    senderToReceiver.union = receiverToSender.union = false;
+                    senderToReceiver.vassal = receiverToSender.vassal = false;
 
-                sender.enemies.Add(receiver);
-                receiver.enemies.Add(sender);
-                sender.inWar = receiver.inWar = true;
+                    sender.enemies.Add(receiver);
+                    receiver.enemies.Add(sender);
+                    sender.inWar = receiver.inWar = true;
 
-                // Удаление всех связанных с обоими странами заказов
-                market._marketOrders.RemoveAll(order =>
-                    (order._seller == sender.country && order._customer == receiver.country) ||
-                    (order._seller == receiver.country && order._customer == sender.country));
+                    sender.stability.buffs.Add(new Stability_buff("Наступательная война", (-15 * (receiver.myRegions.Count / sender.myRegions.Count)) * (1 / receiver.enemies.Count), new List<string>() { $"not;ongoing_war;{sender.country._id}" }, null, ReferencesManager.Instance.sprites.Find("offensive_war")));
+                    receiver.stability.buffs.Add(new Stability_buff("Оборонительная война", -5f, new List<string>() { $"not;ongoing_war;{receiver.country._id}" }, null, ReferencesManager.Instance.sprites.Find("defensive_war")));
 
-                senderToReceiver.relationship -= 100;
-                receiverToSender.relationship -= 100;
+                    // Удаление всех связанных с обоими странами заказов
+                    market._marketOrders.RemoveAll(order =>
+                        (order._seller == sender.country && order._customer == receiver.country) ||
+                        (order._seller == receiver.country && order._customer == sender.country));
+
+                    senderToReceiver.relationship -= 100;
+                    receiverToSender.relationship -= 100;
+                }
                 break;
 
             case "Заключить мир":
@@ -1417,6 +1446,69 @@ public class DiplomatyUI : MonoBehaviour
         //}
 
         //UpdateDiplomatyUI(sender, receiver);
+    }
+
+    public void SpawnEvent(string offer, CountrySettings sender, CountrySettings receiver, bool canDecline)
+    {
+        GameObject spawned = Instantiate(ReferencesManager.Instance.regionUI.messageEvent);
+        spawned.transform.SetParent(ReferencesManager.Instance.regionUI.messageReceiver);
+        spawned.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+        spawned.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+
+        spawned.GetComponent<EventItem>().sender = sender;
+        spawned.GetComponent<EventItem>().receiver = receiver;
+        spawned.GetComponent<EventItem>().offer = offer;
+        spawned.GetComponent<EventItem>().canDecline = canDecline;
+        spawned.GetComponent<EventItem>().guildId = -1;
+
+        spawned.GetComponent<EventItem>().senderImage.sprite = sender.country.countryFlag;
+
+
+        if (offer == "Торговля")
+        {
+            spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.tradeSprite;
+        }
+        else if (offer == "Объявить войну")
+        {
+            spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.warSprite;
+        }
+        else if (offer == "Пакт о ненападении")
+        {
+            spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.pactSprite;
+        }
+        else if (offer == "Право прохода войск")
+        {
+            spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.moveSprite;
+        }
+        else if (offer == "Разорвать пакт о ненападении")
+        {
+            spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.AntipactSprite;
+        }
+        else if (offer == "GuildInvite")
+        {
+            spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.unionSprite;
+        }
+    }
+
+    public void SpawnGuildMessage(MessageSettings settings)
+    {
+        if (ReferencesManager.Instance.countryManager.currentCountry == settings.receiver)
+        {
+            GameObject spawned = Instantiate(ReferencesManager.Instance.regionUI.messageEvent);
+            spawned.transform.SetParent(ReferencesManager.Instance.regionUI.messageReceiver);
+            spawned.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+            spawned.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+
+            EventItem messageItem = spawned.GetComponent<EventItem>();
+
+            messageItem.sender = settings.sender;
+            messageItem.receiver = settings.receiver;
+            messageItem.offer = settings.offer;
+            messageItem.canDecline = settings.isCanDecline;
+            messageItem.guildId = settings.guildId;
+
+            messageItem.senderImage.sprite = settings.sender.country.countryFlag;
+        }
     }
 
     private IEnumerator UpdateUI_Co(CountrySettings sender, CountrySettings receiver)
@@ -1510,19 +1602,19 @@ public class DiplomatyUI : MonoBehaviour
                 currentLanguage = "RU";
             }
 
-            if (countRandom) random = Random.Range(0, 100);
+            if (countRandom) random = UnityEngine.Random.Range(0, 100);
             else random = 9999;
 
             random = 50;
 
             if (senderToReceiver.relationship > 50)
             {
-                random += Random.Range(10, 20);
+                random += UnityEngine.Random.Range(10, 20);
             }
 
             if (sender.ideology == receiver.ideology)
             {
-                random += Random.Range(10, 15);
+                random += UnityEngine.Random.Range(10, 15);
             }
 
             foreach (RegionManager province in ReferencesManager.Instance.gameSettings.provincesList)
@@ -1531,11 +1623,11 @@ public class DiplomatyUI : MonoBehaviour
                 {
                     if (country._id == receiverId)
                     {
-                        random += Random.Range(20, 40);
+                        random += UnityEngine.Random.Range(20, 40);
                     }
                     //else if (country._id != receiverId)
                     //{
-                    //    random -= Random.Range(20, 40);
+                    //    random -= UnityEngine.Random.Range(20, 40);
                     //}
                 }
             }
@@ -1551,7 +1643,7 @@ public class DiplomatyUI : MonoBehaviour
                     acceptationStateText.text = "They are <b><color=\"green\">accepted</color></b> your offer";
                 }
 
-                int randomRelations = Random.Range(5, 15);
+                int randomRelations = UnityEngine.Random.Range(5, 15);
 
                 senderToReceiver.relationship += ReferencesManager.Instance.gameSettings.provincesList.Count * randomRelations;
                 receiverToSender.relationship += ReferencesManager.Instance.gameSettings.provincesList.Count * randomRelations;
@@ -1577,7 +1669,7 @@ public class DiplomatyUI : MonoBehaviour
         else if (regionTransferType == "ask")
         {
             accept = false;
-            random = Random.Range(0, 10);
+            random = UnityEngine.Random.Range(0, 10);
 
             acceptationStatePanel.SetActive(true);
             string currentLanguage = "";
@@ -1593,17 +1685,17 @@ public class DiplomatyUI : MonoBehaviour
 
             if (senderToReceiver.relationship > 50)
             {
-                random += Random.Range(5, 15);
+                random += UnityEngine.Random.Range(5, 15);
             }
 
             if (sender.ideology == receiver.ideology)
             {
-                random += Random.Range(5, 10);
+                random += UnityEngine.Random.Range(5, 10);
             }
 
             if (sender.ideology != receiver.ideology)
             {
-                random -= Random.Range(20, 25);
+                random -= UnityEngine.Random.Range(20, 25);
             }
 
             if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(sender, receiver).vassal)
@@ -1617,11 +1709,11 @@ public class DiplomatyUI : MonoBehaviour
                 {
                     if (country._id == senderId)
                     {
-                        random += Random.Range(20, 40);
+                        random += UnityEngine.Random.Range(20, 40);
                     }
                     else if (country._id != senderId)
                     {
-                        random -= Random.Range(20, 40);
+                        random -= UnityEngine.Random.Range(20, 40);
                     }
                 }
             }
@@ -1670,6 +1762,25 @@ public class DiplomatyUI : MonoBehaviour
 
         public CountrySettings sender;
         public CountrySettings receiver;
+    }
+
+    public class MessageSettings
+    {
+        public CountrySettings sender;
+        public CountrySettings receiver;
+
+        public int guildId;
+        public string offer;
+        public bool isCanDecline;
+
+        public MessageSettings(CountrySettings _sender, CountrySettings _receiver, int _guildId, string _offer, bool _isCanDecline)
+        {
+            this.sender = _sender;
+            this.receiver = _receiver;
+            this.guildId = _guildId;
+            this.offer = _offer;
+            this.isCanDecline = _isCanDecline;
+        }
     }
 }
 

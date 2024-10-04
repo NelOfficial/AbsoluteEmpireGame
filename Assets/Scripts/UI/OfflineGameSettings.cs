@@ -5,24 +5,22 @@ using TMPro;
 
 public class OfflineGameSettings : MonoBehaviour
 {
-    [SerializeField] Transform slideContent;
-    [SerializeField] Transform _tournamentCountriesContainer;
-    [SerializeField] GameObject selectCountryButtonPrefab;
-    [SerializeField] GameObject selectCountryButtonPrefabWithCheckMark;
-    [SerializeField] Image imagePreview;
+    [SerializeField] private Transform slideContent;
+    [SerializeField] private Transform _tournamentCountriesContainer;
+    public GameObject selectCountryButtonPrefab;
+    [SerializeField] private GameObject selectCountryButtonPrefabWithCheckMark;
+    [SerializeField] private Image imagePreview;
 
     [SerializeField] int currentMapId;
     [HideInInspector] public int currentScenarioId;
 
     [SerializeField] private Scenario[] scenarios;
-    [SerializeField] private List<Team> teams = new List<Team>();
-
-    private MainMenu mainMenu;
+    [SerializeField] private List<Team> teams = new(0);
 
     [SerializeField] private StringValue _currentScenarioData;
     [SerializeField] private StringValue _currentDate;
 
-    [HideInInspector] public List<CountryScriptableObject> _tournamentCountries = new List<CountryScriptableObject>();
+    [HideInInspector] public List<CountryScriptableObject> _tournamentCountries = new();
 
     [SerializeField] private Button _tournament_ConfirmButton;
     [SerializeField] private TMP_Text _tournament_ConfirmButton_Text;
@@ -30,6 +28,8 @@ public class OfflineGameSettings : MonoBehaviour
     [SerializeField] private Image[] _gameTypeButtonTargetImages;
 
     [SerializeField] private Color _gameType_Color_selected;
+
+    private MainMenu mainMenu;
 
     private void Start()
     {

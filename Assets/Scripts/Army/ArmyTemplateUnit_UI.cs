@@ -19,6 +19,6 @@ public class ArmyTemplateUnit_UI : MonoBehaviour
         Army.Template template = ReferencesManager.Instance.army.templates[ReferencesManager.Instance.countryInfo._currentTemplateIndex];
         template._batalions.Remove(template._batalions[index]);
 
-        ReferencesManager.Instance.countryInfo.UpdateTemplateUI();
+        ReferencesManager.Instance.countryInfo.UpdateTemplateUnits();
     }
 }

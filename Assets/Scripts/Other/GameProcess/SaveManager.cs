@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System;
+using UnityEditor;
 
 public class SaveManager : MonoBehaviour
 {
@@ -94,7 +95,7 @@ public class SaveManager : MonoBehaviour
                 PlayerPrefs.SetString($"{saveId}_COUNTRY_{country.country._id}_IDEOLOGY", country.ideology);
                 PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_MONEY", country.money);
                 PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_FOOD", country.food);
-                PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_RECROOTS", country.recroots);
+                PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_RECROOTS", country.recruits);
                 PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_RESEARCH_POINTS", country.researchPoints);
                 PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_RECROOTS_LIMIT", country.recruitsLimit);
 
@@ -112,7 +113,7 @@ public class SaveManager : MonoBehaviour
 
                 #endregion
 
-                PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_recrootsIncome", country.recrootsIncome);
+                PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_recrootsIncome", country.recruitsIncome);
 
                 PlayerPrefs.SetInt($"{saveId}_COUNTRY_{country.country._id}_researchPointsIncome", country.researchPointsIncome);
 
@@ -422,6 +423,119 @@ public class SaveManager : MonoBehaviour
 
             #endregion
 
+            #region Guilds
+
+            if (Guild._guilds.Count > 0)
+            {
+                string _guilds = "";
+
+                foreach (Guild _guild in Guild._guilds)
+                {
+                    if (_guild.GetCountries().Count > 0)
+                    {
+                        _guilds = string.Join(";", _guild.GetCountries().Select(_ => $"{_guild._id}"));
+
+                        string hasUnion = "FALSE";
+                        string hasRights = "FALSE";
+                        string hasPact = "FALSE";
+                        string hasTrade = "FALSE";
+
+                        string countries = "";
+                        string offers = "";
+
+                        if (_guild._countries.Count > 0)
+                        {
+                            countries = string.Join(";", _guild._countries.Select(_country =>
+                                $"{_country.country.country._id}role{(int)_country.role}"
+                            ));
+                        }
+
+                        if (_guild._offers.Count > 0)
+                        {
+                            for (int i = 0; i < _guild._offers.Count; i++)
+                            {
+                                Guild.Offer offer = _guild._offers[i];
+
+                                int argCountryId = 0;
+                                int starterCountryId = offer.starter.country._id;
+
+                                string _agreeCountries = "";
+                                string _disagreeCountries = "";
+
+                                string arg_type = "";
+
+                                int action = (int)offer.action;
+
+                                if (offer.agree.Count > 0)
+                                {
+                                    _agreeCountries = string.Join(";", offer.agree.Select(country =>
+                                        $"{country.country.country._id}"
+                                    ));
+                                }
+
+                                if (offer.disagree.Count > 0)
+                                {
+                                    _disagreeCountries = string.Join(";", offer.disagree.Select(country =>
+                                        $"{country.country.country._id}"
+                                    ));
+                                }
+
+                                if (offer.arg is Guild.Country _guildCountryArg)
+                                {
+                                    argCountryId = _guildCountryArg.country.country._id;
+                                    arg_type = "country";
+                                }
+                                else if (offer.arg is CountrySettings _countryArg)
+                                {
+                                    argCountryId = _countryArg.country._id;
+                                    arg_type = "countrySettings";
+                                }
+
+                                string _offerData = $"{argCountryId},{starterCountryId},{_agreeCountries},{_disagreeCountries},{action},{arg_type}";
+
+                                PlayerPrefs.SetString($"{saveId}_GUILD_{_guild._id}_OFFER_{i}", $"{_offerData}");
+                            }
+                        }
+
+                        if (_guild._relations.trade)
+                        {
+                            hasTrade = "TRUE";
+                        }
+                        if (_guild._relations.union)
+                        {
+                            hasUnion = "TRUE";
+                        }
+                        if (_guild._relations.pact)
+                        {
+                            hasPact = "TRUE";
+                        }
+                        if (_guild._relations.right)
+                        {
+                            hasRights = "TRUE";
+                        }
+
+                        PlayerPrefs.SetString($"{saveId}_GUILD_{_guild._id}_NAME", $"{_guild._name}");
+                        PlayerPrefs.SetString($"{saveId}_GUILD_{_guild._id}_IDEOLOGY", $"{_guild._ideology}");
+                        PlayerPrefs.SetInt($"{saveId}_GUILD_{_guild._id}_TYPE", (int)_guild._type);
+                        PlayerPrefs.SetString($"{saveId}_GUILD_{_guild._id}_TRADE", hasTrade);
+                        PlayerPrefs.SetString($"{saveId}_GUILD_{_guild._id}_RIGHTS", hasRights);
+                        PlayerPrefs.SetString($"{saveId}_GUILD_{_guild._id}_UNION", hasUnion);
+                        PlayerPrefs.SetString($"{saveId}_GUILD_{_guild._id}_PACT", hasPact);
+                        PlayerPrefs.SetString($"{saveId}_GUILD_{_guild._id}_countries", countries);
+                        PlayerPrefs.SetInt($"{saveId}_GUILD_{_guild._id}_money", _guild._storage.gold);
+                        PlayerPrefs.SetInt($"{saveId}_GUILD_{_guild._id}_food", _guild._storage.food);
+                        PlayerPrefs.SetInt($"{saveId}_GUILD_{_guild._id}_recruits", _guild._storage.recruits);
+                        PlayerPrefs.SetInt($"{saveId}_GUILD_{_guild._id}_fuel", _guild._storage.fuel);
+                        PlayerPrefs.SetInt($"{saveId}_GUILD_{_guild._id}_OWNER", Guild.GetGuildOwner(_guild._id).country._id);
+                        PlayerPrefs.SetString($"{saveId}_GUILD_{_guild._id}_OFFERS", $"{_guild._offers.Count}");
+                    }
+                }
+
+                PlayerPrefs.SetString($"{saveId}_GUILDS", _guilds);
+            }
+
+            #endregion
+
             PlayerPrefs.SetInt($"{saveId}_SCENARIO_ID", ReferencesManager.Instance.regionLoader._currentScenarioId);
 
             localSavesIds.list.Add(saveId);
@@ -437,7 +551,7 @@ public class SaveManager : MonoBehaviour
         }
         catch (Exception ex)
         {
-            WarningManager.Instance.Warn($"Error: {ex.Message}");
+            WarningManager.Instance.Warn($"Error on save: {ex.Message}");
             ReferencesManager.Instance.regionUI._autoSaveMessage.SetActive(false);
         }
     }

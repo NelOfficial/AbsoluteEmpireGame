@@ -18,7 +18,7 @@ MonoBehaviour:
   buildType: 0
   icon: {fileID: 21300000, guid: 2e50dc2f4fdce74458de1ba73c4e9c7b, type: 3}
   goldCost: 600
-  goldIncome: 36
+  goldIncome: 30
   foodIncome: 0
   recrootsIncome: 0
   researchPointsIncome: 0

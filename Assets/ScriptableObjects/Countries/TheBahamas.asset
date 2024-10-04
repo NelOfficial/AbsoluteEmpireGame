@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03388064ed1ae324ca54d814dcdeb890, type: 3}
+  m_Name: TheBahamas
+  m_EditorClassIdentifier: 
+  _id: 112
+  _name: "\u0411\u0430\u0433\u0430\u043C\u0441\u043A\u0438\u0435 \u041E\u0441\u0442\u0440\u043E\u0432\u0430"
+  _nameEN: The Bahamas
+  _uiName: "\u0411\u0430\u0433\u0430\u043C\u0441\u043A\u0438\u0435 \u041E\u0441\u0442\u0440\u043E\u0432\u0430"
+  _tag: BHM
+  countryType: 0
+  countryFlag: {fileID: 21300000, guid: 37ef629ac54d3a448b5c50090d0f9984, type: 3}
+  ally: 
+  capitulateLimit: 20
+  countryColor: {r: 0.6156863, g: 0.4156863, b: 0.7058824, a: 0.5019608}
+  countryIdeologyColors:
+  - {r: 0.61524916, g: 0.41718584, b: 0.7075472, a: 0.5019608}
+  - {r: 0.6156863, g: 0.4156863, b: 0.7058824, a: 0.5019608}
+  - {r: 0.47860652, g: 0.41568628, b: 0.7058824, a: 0.5019608}
+  - {r: 0.41568628, g: 0.4554746, b: 0.7058824, a: 0.5019608}
+  - {r: 0.41568628, g: 0.45882353, b: 0.7058824, a: 0.5019608}
+  - {r: 0.8113208, g: 0.35590956, b: 0.49651697, a: 0.5019608}
+  countryIdeologyFlags:
+  - {fileID: 21300000, guid: 37ef629ac54d3a448b5c50090d0f9984, type: 3}
+  - {fileID: 21300000, guid: 37ef629ac54d3a448b5c50090d0f9984, type: 3}
+  - {fileID: 21300000, guid: 1ce67be0b5985c44f8474183dfaad088, type: 3}
+  - {fileID: 21300000, guid: 26296eedcf4a2ce4dac47a1b4fd14c9b, type: 3}
+  - {fileID: 21300000, guid: 26296eedcf4a2ce4dac47a1b4fd14c9b, type: 3}
+  - {fileID: 21300000, guid: 361215ba38c53d544b3089636f1fd627, type: 3}

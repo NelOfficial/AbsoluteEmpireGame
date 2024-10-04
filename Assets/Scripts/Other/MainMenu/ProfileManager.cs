@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -194,62 +193,69 @@ public class ProfileManager : MonoBehaviour
         {
             if (accountLoginRequest.text == "AUTH_ERROR.INCORRECT_DATA")
             {
-                login_MessageText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("AUTH_ERROR.INCORRECT_DATA")}";
+                login_MessageText.text = ReferencesManager.Instance.languageManager.GetTranslation("AUTH_ERROR.INCORRECT_DATA");
             }
             else if (accountLoginRequest.text == "AUTH_ERROR.ACCOUNT_NOT_EXIST")
             {
-                login_MessageText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("AUTH_ERROR.ACCOUNT_NOT_EXIST")}";
+                login_MessageText.text = ReferencesManager.Instance.languageManager.GetTranslation("AUTH_ERROR.ACCOUNT_NOT_EXIST");
             }
             else if (accountLoginRequest.text == "AUTH_ERROR.NO_HASHED_PASSWORD")
             {
-                login_MessageText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("AUTH_ERROR.NO_HASHED_PASSWORD")}";
+                login_MessageText.text = ReferencesManager.Instance.languageManager.GetTranslation("AUTH_ERROR.NO_HASHED_PASSWORD");
             }
 
             if (accountLoginRequest.text != "AUTH_ERROR.INCORRECT_DATA" && accountLoginRequest.text != "AUTH_ERROR.ACCOUNT_NOT_EXIST" &&
                 accountLoginRequest.text != "AUTH_ERROR.NO_HASHED_PASSWORD")
             {
                 accountData = accountLoginRequest.text.Split('\t');
+                userId = int.Parse(accountData[0]);
+                _profileName = accountData[1];
+                _profileEmail = accountData[2];
+                _profilePassword = accountData[3];
+                _profileRegDate = accountData[4];
+                _profileIp = accountData[5];
+                isPremium = int.Parse(accountData[6]);
+                isBanned = int.Parse(accountData[7]);
+                _profileStatus = accountData[8];
+                currentExp = int.Parse(accountData[9]);
+                currentLvl = int.Parse(accountData[10]);
+
+                _LOGGED_IN = true;
+                loggedInValue.value = true;
+                PlayerPrefs.SetString("LOGGED_IN", "TRUE");
 
                 try
                 {
-                    userId = int.Parse(accountData[0]);
-                    _profileName = accountData[1];
-                    _profileEmail = accountData[2];
-                    _profilePassword = accountData[3];
-                    _profileRegDate = accountData[4];
-                    _profileIp = accountData[5];
-                    isPremium = int.Parse(accountData[6]);
-                    isBanned = int.Parse(accountData[7]);
-                    _profileStatus = accountData[8];
-                    currentExp = int.Parse(accountData[9]);
-                    currentLvl = int.Parse(accountData[10]);
-
-                    _LOGGED_IN = true;
-                    loggedInValue.value = true;
-                    PlayerPrefs.SetString("LOGGED_IN", "TRUE");
-
-                    PlayerPrefs.SetString("PASSWORD", $"{password}");
-                    PlayerPrefs.SetString("nickname", $"{_profileName}");
-
-                    ReferencesManager.Instance.mainMenu.UpdateNickname(_profileName);
-                    StartCoroutine(DownloadImage(accountData[11]));
-
-                    loginButton.SetActive(false);
-                    profileButton.SetActive(true);
-
-                    _loginForm.SetActive(false);
-
-                    if (!string.IsNullOrEmpty(login_AccountNameInputField.text))
+                    if (isPremium == 0)
                     {
-                        _profilePanel.SetActive(true);
+                        ReferencesManager.Instance.gameSettings._isPremium.value = false;
+                        PlayerPrefs.SetString("IS_PREMIUM", "FALSE");
                     }
+                    else
+                    {
+                        ReferencesManager.Instance.gameSettings._isPremium.value = true;
+                        PlayerPrefs.SetString("IS_PREMIUM", "TRUE");
+                    }
+                }
+                catch (System.Exception) { }
 
-                    createModButton.interactable = true;
-                }
-                catch (System.Exception)
+                PlayerPrefs.SetString("PASSWORD", $"{password}");
+                PlayerPrefs.SetString("nickname", $"{_profileName}");
+
+                ReferencesManager.Instance.mainMenu.UpdateNickname(_profileName);
+                StartCoroutine(DownloadImage(accountData[11]));
+
+                loginButton.SetActive(false);
+                profileButton.SetActive(true);
+
+                _loginForm.SetActive(false);
+
+                if (!string.IsNullOrEmpty(login_AccountNameInputField.text))
                 {
-                    login_MessageText.text = $"{ReferencesManager.Instance.languageManager.GetTranslation("Error")}: \n {accountLoginRequest.text}";
+                    _profilePanel.SetActive(true);
                 }
+
+                createModButton.interactable = true;
             }
 
             loginAnimationUI.SetActive(false);

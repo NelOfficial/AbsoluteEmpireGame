@@ -43,8 +43,9 @@ public class AIManager : MonoBehaviour
         for (int a = 0; a < AICountries.Count; a++)
         {
             CountrySettings countrySettings = AICountries[a];
+            countrySettings.UpdateCapitulation();
 
-            if (countrySettings.myRegions.Count > 0)
+            if (countrySettings.exist)
             {
                 progressManager.countryMoveName.text = ReferencesManager.Instance.languageManager.GetTranslation(countrySettings.country._nameEN);
                 progressManager.countryMoveImage.sprite = countrySettings.country.countryFlag;

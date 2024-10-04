@@ -163,82 +163,89 @@ public class DateManager : MonoBehaviour
 
 	private void StartEvent(EventScriptableObject eventScriptableObject)
     {
-		string[] array = eventScriptableObject.date.Split(new char[] { '-' });
-		int num = int.Parse(array[2]);
-		int num2 = int.Parse(array[1]);
-		int num3 = int.Parse(array[0]);
-
-		if (currentDate[0] >= num3 && num2 <= this.currentDate[1] && this.currentDate[2] >= num && !eventScriptableObject._checked)
+		try
 		{
-			bool allowEvents = gameEventUI.CheckConditions(eventScriptableObject);
+			string[] array = eventScriptableObject.date.Split(new char[] { '-' });
+			int num = int.Parse(array[2]);
+			int num2 = int.Parse(array[1]);
+			int num3 = int.Parse(array[0]);
 
-            if (allowEvents)
+			if (currentDate[0] >= num3 && num2 <= this.currentDate[1] && this.currentDate[2] >= num && !eventScriptableObject._checked)
 			{
-				if (eventScriptableObject.receivers.Count > 0)
-				{
-					if (eventScriptableObject.receivers.Contains(ReferencesManager.Instance.countryManager.currentCountry.country._id))
-					{
-						if (eventScriptableObject.exceptionsReceivers.Count > 0)
-						{
-							foreach (int exceptId in eventScriptableObject.exceptionsReceivers)
-							{
-								if (exceptId != ReferencesManager.Instance.countryManager.currentCountry.country._id)
-								{
-									if (!eventScriptableObject.silentEvent)
-									{
-										gameEventUI.gameObject.SetActive(true);
-										UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
-										UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
-									}
-									else
-									{
-										gameEventUI.ProceedEvent(0);
-									}
+				bool allowEvents = gameEventUI.CheckConditions(eventScriptableObject);
 
-									gameEventUI.currentGameEvent = eventScriptableObject;
-									eventScriptableObject._checked = true;
-									gameEventUI.UpdateUI();
-								}
-							}
-						}
-						else
+				if (allowEvents)
+				{
+					if (eventScriptableObject.receivers.Count > 0)
+					{
+						if (eventScriptableObject.receivers.Contains(ReferencesManager.Instance.countryManager.currentCountry.country._id))
 						{
-							if (!eventScriptableObject.silentEvent)
+							if (eventScriptableObject.exceptionsReceivers.Count > 0)
 							{
-								gameEventUI.gameObject.SetActive(true);
-								UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
-								UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
+								foreach (int exceptId in eventScriptableObject.exceptionsReceivers)
+								{
+									if (exceptId != ReferencesManager.Instance.countryManager.currentCountry.country._id)
+									{
+										if (!eventScriptableObject.silentEvent)
+										{
+											gameEventUI.gameObject.SetActive(true);
+											UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
+											UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
+										}
+										else
+										{
+											gameEventUI.ProceedEvent(0);
+										}
+
+										gameEventUI.currentGameEvent = eventScriptableObject;
+										eventScriptableObject._checked = true;
+										gameEventUI.UpdateUI();
+									}
+								}
 							}
 							else
 							{
-								gameEventUI.ProceedEvent(0);
+								if (!eventScriptableObject.silentEvent)
+								{
+									gameEventUI.gameObject.SetActive(true);
+									UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
+									UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
+								}
+								else
+								{
+									gameEventUI.ProceedEvent(0);
+								}
+
+								gameEventUI.currentGameEvent = eventScriptableObject;
+								eventScriptableObject._checked = true;
+								gameEventUI.UpdateUI();
 							}
 
-							gameEventUI.currentGameEvent = eventScriptableObject;
-							eventScriptableObject._checked = true;
-							gameEventUI.UpdateUI();
 						}
-
-					}
-				}
-				else
-				{
-					if (!eventScriptableObject.silentEvent)
-					{
-						gameEventUI.gameObject.SetActive(true);
-						UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
-						UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
 					}
 					else
 					{
-						gameEventUI.ProceedEvent(0);
-					}
+						if (!eventScriptableObject.silentEvent)
+						{
+							gameEventUI.gameObject.SetActive(true);
+							UISoundEffect.Instance.PlayAudio(this.gameSettings.m_new_event_01);
+							UISoundEffect.Instance.PlayAudio(this.gameSettings.m_paper_01);
+						}
+						else
+						{
+							gameEventUI.ProceedEvent(0);
+						}
 
-					gameEventUI.currentGameEvent = eventScriptableObject;
-					eventScriptableObject._checked = true;
-					gameEventUI.UpdateUI();
+						gameEventUI.currentGameEvent = eventScriptableObject;
+						eventScriptableObject._checked = true;
+						gameEventUI.UpdateUI();
+					}
 				}
 			}
 		}
-	}
+		catch (System.Exception ex)
+		{
+			Debug.LogError($"Error: {ex}");
+		}
+    }
 }

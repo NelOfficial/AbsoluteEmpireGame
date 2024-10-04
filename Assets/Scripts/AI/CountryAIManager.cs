@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using static Guild;
 
 public class CountryAIManager : MonoBehaviour
 {
@@ -55,6 +55,15 @@ public class CountryAIManager : MonoBehaviour
             civilExpenses = country.money / 100 * 50; // 50% на стройку
             buildingExpenses = civilExpenses;
 
+            if (country.enemies.Count > 0)
+            {
+                country.inWar = true;
+            }
+            else
+            {
+                country.inWar = false;
+            }
+
             if (country.inWar)
             {
                 switch (country.ideology)
@@ -93,183 +102,31 @@ public class CountryAIManager : MonoBehaviour
             List<RegionManager> calmBorderingRegions = new(50);
             //
             //List<Decisions_ScriptableObj> decs = new(0);
-            Thread thread = new(() =>
+
+            if (ReferencesManager.Instance.gameSettings.onlineGame)
             {
-                // for (int k = 0; k < country.myRegions.Count; k++)
-                Parallel.ForEach(country.myRegions, reg =>
+                foreach (RegionManager region in country.myRegions)
                 {
-                    RegionManager region = reg;
-                    if (buildingExpenses >= 0)
+                    ProcessRegions(region, country);
+                }
+            }
+            else
+            {
+                Thread thread = new(() =>
+                {
+                    Parallel.ForEach(country.myRegions, reg =>
                     {
-                        if (country.foodIncomeUI < 0)
-                        {
-                            if (country.money >= ReferencesManager.Instance.gameSettings.chefarm.goldCost)
-                            {
-                                region.buildings.Remove(ReferencesManager.Instance.gameSettings.fabric);
+                        RegionManager region = reg;
 
-                                region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.chefarm, region);
-                                buildingExpenses -= ReferencesManager.Instance.gameSettings.chefarm.goldCost;
-                            }
-
-                        }
-                        if (country.moneyIncomeUI < 0)
-                        {
-                            if (region.buildings.Contains(ReferencesManager.Instance.gameSettings.farm))
-                            {
-                                region.buildings.Remove(ReferencesManager.Instance.gameSettings.farm);
-                            }
-                            if (region.buildings.Contains(ReferencesManager.Instance.gameSettings.chefarm))
-                            {
-                                region.buildings.Remove(ReferencesManager.Instance.gameSettings.chefarm);
-                            }
-
-                            region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.fabric, region);
-                            buildingExpenses -= ReferencesManager.Instance.gameSettings.farm.goldCost;
-                        }
-                        if (country.money >= ReferencesManager.Instance.gameSettings.fabric.goldCost &&
-                            buildingExpenses >= ReferencesManager.Instance.gameSettings.fabric.goldCost)
-                        {
-                            if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
-                            {
-                                region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.fabric, region);
-                                buildingExpenses -= ReferencesManager.Instance.gameSettings.fabric.goldCost;
-                            }
-                            else
-                            {
-                                UpgradeInfrastructure(region);
-                            }
-                        }
-                        if (country.money >= ReferencesManager.Instance.gameSettings.farm.goldCost &&
-                        buildingExpenses >= ReferencesManager.Instance.gameSettings.farm.goldCost &&
-                            country.foodNaturalIncome <= 0 || country.foodIncomeUI <= 0)
-                        {
-                            if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
-                            {
-                                region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.farm, region);
-                                buildingExpenses -= ReferencesManager.Instance.gameSettings.farm.goldCost;
-                            }
-                        }
-
-                        if (country.money >= ReferencesManager.Instance.gameSettings.chefarm.goldCost &&
-                        buildingExpenses >= ReferencesManager.Instance.gameSettings.chefarm.goldCost &&
-                            country.foodNaturalIncome <= 0 || country.foodIncomeUI <= 0)
-                        {
-                            if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
-                            {
-                                region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.chefarm, region);
-                                buildingExpenses -= ReferencesManager.Instance.gameSettings.chefarm.goldCost;
-                            }
-                        }
-
-                        if (country.money >= ReferencesManager.Instance.gameSettings.researchLab.goldCost &&
-                            buildingExpenses >= ReferencesManager.Instance.gameSettings.researchLab.goldCost &&
-                            country.researchPointsIncome <= 0)
-                        {
-                            if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
-                            {
-                                region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.researchLab, region);
-                                buildingExpenses -= ReferencesManager.Instance.gameSettings.researchLab.goldCost;
-                            }
-                        }
-                    }
+                        ProcessRegions(region, country);
+                    });
                 });
-            });
-            thread.Start();
 
-            Thread thread2 = new(() =>
-            {
-                researchingExpenses = country.money / 100 * 90; // 90% of all country budget
+                thread.Start();
+                thread.Join();
+            }
 
-                for (int i = 0; i < ReferencesManager.Instance.gameSettings.technologies.Length; i++)
-                {
-                    TechnologyScriptableObject tech = ReferencesManager.Instance.gameSettings.technologies[i];
-
-                    if (country.countryTechnologies.Any(item => item._type == TechnologyScriptableObject.TechType.Heavy))
-                    {
-                        if (country.moneyNaturalIncome >= new System.Random().Next(4000, 6000))
-                        {
-                            if (country.researchPointsIncome >= new System.Random().Next(5, 15))
-                            {
-                                if (tech._type == TechnologyScriptableObject.TechType.Heavy &&
-                                !Researched(country, tech))
-                                {
-                                    if (CanResearch(country, tech))
-                                    {
-                                        while (!researching)
-                                        {
-                                            if (!researching)
-                                            {
-                                                StartRecearch(country, tech);
-                                            }
-                                        }
-                                    }
-                                }
-                                else if (tech._type == TechnologyScriptableObject.TechType.Aviation ||
-                                tech._type == TechnologyScriptableObject.TechType.AirPlane &&
-                                !Researched(country, tech))
-                                {
-                                    if (CanResearch(country, tech))
-                                    {
-                                        while (!researching)
-                                        {
-                                            if (!researching)
-                                            {
-                                                StartRecearch(country, tech);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-
-                if (!researching)
-                {
-                    moneySaving += researchingExpenses;
-                }
-
-
-                if (country.myRegions.Count > 0 && ReferencesManager.Instance.dateManager.currentDate[0] > 1)
-                {
-                    float preferedMP = country.myRegions.Count * new System.Random().Next(5000, 10000);
-
-                    if (country.inWar)
-                    {
-                        preferedMP *= 5;
-                    }
-
-                    if (country.ideology == "Коммунизм" || country.ideology == "Фашизм")
-                    {
-                        preferedMP *= (new System.Random()).Next(2, 5);
-                    }
-
-                    if (country.recroots <= preferedMP)
-                    {
-                        if (!country.inWar)
-                        {
-                            if (!country.mobilasing)
-                            {
-                                if (country.mobilizationLaw + 1 < ReferencesManager.Instance.gameSettings.mobilizationPercent.Length)
-                                {
-                                    ReferencesManager.Instance.SetRecroots(country.mobilizationLaw + 1, country);
-                                    //Debug.Log($"{country.country._name} начинает мобилизацию, устанавливая закон {country.mobilizationLaw} | {country.recroots} людей => {preferedMP} людей");
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (country.mobilizationLaw + 1 < ReferencesManager.Instance.gameSettings.mobilizationPercent.Length)
-                            {
-                                ReferencesManager.Instance.SetRecroots(country.mobilizationLaw + 1, country);
-                                //Debug.Log($"{country.country._name} начинает мобилизацию, устанавливая закон {country.mobilizationLaw} | {country.recroots} людей => {preferedMP} людей");
-                            }
-                        }
-                    }
-                }
-            });
-            thread2.Start();
+            ProcessTechnologies(country);
 
             //decs = DecisionsManager.Enable(country);
             //for (int i = 0; i < decs.Count; i++)
@@ -327,11 +184,11 @@ public class CountryAIManager : MonoBehaviour
                         {
                             if (cell.AirPlane.type == Aviation_ScriptableObj.Type.bomber)
                             {
-                                List<RegionManager> regs = new List<RegionManager>(3);
+                                List<RegionManager> regs = new(3);
                                 foreach (GameObject obj in FindObjectsWithComponent<RegionManager>(new Vector2(reg.transform.position.x, reg.transform.position.y), 0.00375f * cell.AirPlane.distance))
                                 {
                                     if (obj.GetComponent<RegionManager>().currentCountry != country && ReferencesManager.Instance.diplomatyUI.
-                                    FindCountriesRelation(country, obj.GetComponent<RegionManager>().currentCountry).war)
+                                    FindCountriesRelation(country, obj.GetComponent<RegionManager>().currentCountry).war && new System.Random().Next(0, 10) == 0)
                                     {
                                         if (regs.Count < 3 && obj.GetComponent<RegionManager>().buildings.Count > 0)
                                         {
@@ -439,7 +296,7 @@ public class CountryAIManager : MonoBehaviour
                                 }
                             }
                         }
-                        if (region._isCoast && country.money >= 40000 && country.recroots > 20000)
+                        if (region._isCoast && country.money >= 40000 && country.recruits >= 20000)
                         {
                             calmBorderingRegions.Add(region);
                         }
@@ -651,7 +508,7 @@ public class CountryAIManager : MonoBehaviour
                                         {
                                             if (relations.pact)
                                             {
-                                                SendOffer("Разорвать пакт о ненападении", country, countryOther);
+                                                SendOffer("Расторгнуть пакт о ненападении", country, countryOther);
                                             }
                                             else
                                             {
@@ -737,7 +594,7 @@ public class CountryAIManager : MonoBehaviour
                         }
                         if (Random.value > 0.95f && !country.inWar)
                         {
-                            Destroy(division.gameObject);
+                            DisbandDivision(division);
                         }
                         else
                         {
@@ -822,7 +679,7 @@ public class CountryAIManager : MonoBehaviour
                             {
                                 _region.DestroyRegionDivision(_region);
                             }
-                            else
+                            else if(!relation.right && !relation.war)
                             {
                                 division.Retreat(division);
                             }
@@ -838,8 +695,407 @@ public class CountryAIManager : MonoBehaviour
                 }
             }
 
-            thread.Join();
-            thread2.Join();
+            Parallel.ForEach(country.guilds, guild =>
+            {
+                foreach (Guild.Offer offer in guild._offers)
+                {
+                    if (!offer.Voted(country))
+                    {
+                        float base_value = 50f;
+
+                        CountrySettings other_country;
+                        switch (offer.action)
+                        {
+                            case Guild.Action.Kick:
+
+                                other_country = ((Guild.Country)offer.arg).country;
+
+                                base_value -= 15f;
+
+                                if (other_country.ideology != country.ideology)
+                                {
+                                    base_value += 10f;
+                                }
+                                else
+                                {
+                                    base_value -= 5f;
+                                }
+
+                                if (other_country.ideology != guild._ideology)
+                                {
+                                    base_value += 5f;
+                                }
+
+                                if (((Guild.Country)offer.arg).role == Guild.Role.Owner)
+                                {
+                                    base_value -= 10f;
+                                }
+
+                                if (guild._type == Guild.GuildType.Alliance)
+                                {
+                                    base_value -= 5f;
+                                }
+                                break;
+                            case Guild.Action.Invite:
+                                other_country = (CountrySettings)offer.arg;
+
+                                if (other_country.ideology != country.ideology)
+                                {
+                                    base_value -= 10f;
+                                }
+                                else
+                                {
+                                    base_value += 5f;
+                                }
+
+                                if (guild._type == Guild.GuildType.Alliance)
+                                {
+                                    base_value -= 5f;
+                                }
+                                else
+                                {
+                                    base_value += 10f;
+                                }
+                                break;
+                            case Guild.Action.Join:
+                                other_country = (CountrySettings)offer.arg;
+
+                                if (other_country.ideology != country.ideology)
+                                {
+                                    base_value -= 10f;
+                                }
+                                else
+                                {
+                                    base_value += 5f;
+                                }
+
+                                if (guild._type == Guild.GuildType.Alliance)
+                                {
+                                    base_value -= 5f;
+                                }
+                                else
+                                {
+                                    base_value += 10f;
+                                }
+                                break;
+                            case Guild.Action.AskGold:
+                                other_country = offer.starter;
+                                base_value -= (int)offer.arg / (float)guild._storage.gold * 50f;
+
+                                if (other_country.ideology != country.ideology)
+                                {
+                                    base_value -= 5f;
+                                }
+                                else
+                                {
+                                    base_value += 10f;
+                                }
+
+                                if (guild._type == Guild.GuildType.Alliance)
+                                {
+                                    base_value += 25f;
+                                }
+
+                                if (other_country.inWar)
+                                {
+                                    base_value += 10f;
+                                }
+                                break;
+                            case Guild.Action.AskFood:
+                                other_country = offer.starter;
+                                base_value -= (int)offer.arg / (float)guild._storage.food * 15f;
+
+                                if (other_country.ideology != country.ideology)
+                                {
+                                    base_value -= 5f;
+                                }
+                                else
+                                {
+                                    base_value += 10f;
+                                }
+
+                                if (guild._type == Guild.GuildType.Alliance)
+                                {
+                                    base_value += 25f;
+                                }
+
+                                if (other_country.inWar)
+                                {
+                                    base_value += 5f;
+                                }
+                                break;
+                            case Guild.Action.AskRecruits:
+                                other_country = offer.starter;
+                                base_value -= (int)offer.arg / (float)guild._storage.recruits * 40f;
+
+                                if (other_country.ideology != country.ideology)
+                                {
+                                    base_value -= 5f;
+                                }
+                                else
+                                {
+                                    base_value += 10f;
+                                }
+
+                                if (guild._type == Guild.GuildType.Alliance)
+                                {
+                                    base_value += 25f;
+                                }
+                                else
+                                {
+                                    base_value -= 10f;
+                                }
+
+                                if (other_country.inWar)
+                                {
+                                    base_value += 10f;
+                                }
+                                break;
+                            case Guild.Action.AskFuel:
+                                other_country = offer.starter;
+                                base_value -= (int)offer.arg / (float)guild._storage.fuel * 25f;
+
+                                if (other_country.ideology != country.ideology)
+                                {
+                                    base_value -= 5f;
+                                }
+                                else
+                                {
+                                    base_value += 10f;
+                                }
+
+                                if (guild._type == Guild.GuildType.Alliance)
+                                {
+                                    base_value += 25f;
+                                }
+
+                                if (other_country.inWar)
+                                {
+                                    base_value += 10f;
+                                }
+                                break;
+                            case Guild.Action.Attack:
+                                if (offer.arg is CountrySettings)
+                                {
+                                    other_country = (CountrySettings)offer.arg;
+
+                                    Relationships.Relation relations = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(country, other_country);
+
+                                    if (relations.war)
+                                    {
+                                        base_value += 1000f;
+                                    }
+                                    if (relations.union)
+                                    {
+                                        base_value -= 25f;
+                                    }
+                                    if (relations.right)
+                                    {
+                                        base_value -= 10f;
+                                    }
+                                    if (relations.pact)
+                                    {
+                                        base_value -= 5f;
+                                    }
+                                    if (other_country.ideology != country.ideology)
+                                    {
+                                        base_value += 10f;
+                                    }
+                                }
+                                break;
+                            case Guild.Action.Peace:
+                                if (offer.arg is CountrySettings)
+                                {
+                                    other_country = (CountrySettings)offer.arg;
+
+                                    base_value -= 10f;
+                                    if (other_country.ideology != country.ideology)
+                                    {
+                                        base_value -= 10f;
+                                    }
+                                }
+                                break;
+                            case Guild.Action.Promote:
+                                Country _countryToPromote;
+
+                                if (offer.arg is Guild.Country)
+                                {
+                                    _countryToPromote = (Country)offer.arg;
+
+                                    if (_countryToPromote.country.ideology == country.ideology)
+                                    {
+                                        base_value += 10f;
+                                    }
+
+                                    base_value += ((_countryToPromote.country.myRegions.Count / 25f) - 1) * 20f;
+                                    if (_countryToPromote.country.myRegions.Count < country.myRegions.Count)
+                                    {
+                                        base_value -= _countryToPromote.country.myRegions.Count / (float)country.myRegions.Count * 2f;
+                                    }
+                                }
+
+                                break;
+                            case Guild.Action.Demote:
+                                Country _countryToDemote;
+
+                                if (offer.arg is Guild.Country)
+                                {
+                                    _countryToDemote = (Country)offer.arg;
+
+                                    if (_countryToDemote.country.ideology != country.ideology)
+                                    {
+                                        base_value += 10f;
+                                    }
+
+                                    if (_countryToDemote.country.myRegions.Count < country.myRegions.Count / 1.5f)
+                                    {
+                                        base_value -= 1000f;
+                                    }
+                                }
+
+                                break;
+                            default:
+                                break;
+                        } // расчёт
+
+                        base_value *= (new System.Random().Next(8, 12) / 10f);
+
+                        if (base_value > 50f)
+                        {
+                            offer.agree.Add(guild.GetCountry(country));
+                        }
+                        else
+                        {
+                            offer.disagree.Add(guild.GetCountry(country));
+                        }
+                    }
+                }
+                Guild.Country cou = guild.GetCountry(country);
+                // просит повышение
+                if (cou.role != Guild.Role.Owner && cou.role != Guild.Role.Puppet)
+                {
+                    if (cou.country.myRegions.Count > guild.CountSize() / guild._countries.Count && new System.Random().Next(0, 15) == 0)
+                    {
+                        guild._offers.Add(new Guild.Offer(guild, country, cou, Guild.Action.Promote));
+                    }
+                }
+                if (country.inWar)
+                {
+                    foreach (CountrySettings countryOther in ReferencesManager.Instance.countryManager.countries)
+                    {
+                        if (ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(countryOther, country).war)
+                        {
+                            if (new System.Random().Next(0, 7) == 0)
+                            {
+                                guild._offers.Add(new Guild.Offer(guild, country, countryOther, Guild.Action.Attack));
+                            }
+                        }
+
+                    }
+                }
+                if (country.money < 5000 && new System.Random().Next(0, 3) == 0 && guild._storage.gold > 500)
+                {
+                    float percent = 0.25f;
+                    if (country.inWar)
+                    {
+                        percent += 0.15f;
+                    }
+                    if (guild._type == Guild.GuildType.Alliance)
+                    {
+                        percent += 0.20f;
+                    }
+                    int toAsk = Mathf.CeilToInt(guild._storage.gold * percent / 100 * new System.Random().Next(8, 10) / 10) * 100;
+                    if (toAsk > 100)
+                    {
+                        guild._offers.Add(new Guild.Offer(guild, country, toAsk, Guild.Action.AskGold));
+                    }
+                }
+                if (country.food < 500 && new System.Random().Next(0, 2) == 0 && guild._storage.food > 100)
+                {
+                    float percent = 0.20f;
+                    if (country.inWar)
+                    {
+                        percent += 0.10f;
+                    }
+                    int toAsk = Mathf.CeilToInt(guild._storage.food * percent / 50 * new System.Random().Next(8, 10) / 10) * 50;
+                    if (toAsk > 50)
+                    {
+                        guild._offers.Add(new Guild.Offer(guild, country, toAsk, Guild.Action.AskFood));
+                    }
+                }
+                if (country.recruits < 10000 && new System.Random().Next(0, 5) == 0 && guild._storage.recruits > 500)
+                {
+                    float percent = 0.20f;
+                    if (country.inWar)
+                    {
+                        percent += 0.05f;
+                    }
+                    if (guild._type == Guild.GuildType.Alliance)
+                    {
+                        percent += 0.15f;
+                    }
+                    int toAsk = Mathf.CeilToInt(guild._storage.recruits * percent / 100 * new System.Random().Next(8, 10) / 10) * 100;
+                    if (toAsk > 250)
+                    {
+                        guild._offers.Add(new Guild.Offer(guild, country, toAsk, Guild.Action.AskRecruits));
+                    }
+                }
+                if (country.fuel < 20000 && new System.Random().Next(0, 10) == 0 && guild._storage.fuel > 1000)
+                {
+                    float percent = 0.10f;
+                    if (country.inWar)
+                    {
+                        percent += 0.05f;
+                    }
+                    if (guild._type == Guild.GuildType.Alliance)
+                    {
+                        percent += 0.10f;
+                    }
+                    int toAsk = Mathf.CeilToInt(guild._storage.fuel * percent / 100 * new System.Random().Next(8, 10) / 10) * 100;
+                    if (toAsk > 1000)
+                    {
+                        guild._offers.Add(new Guild.Offer(guild, country, toAsk, Guild.Action.AskFuel));
+                    }
+                }
+
+                if (country.money > 15000)
+                {
+                    int count = (int)Mathf.Round(country.money / 50f);
+
+                    country.money -= count;
+                    guild._storage.gold += count;
+                }
+                if (country.food > 2500)
+                {
+                    int count = (int)Mathf.Round(country.food / 10f);
+
+                    country.food -= count;
+                    guild._storage.food += count;
+                }
+                if (country.recruits > 50000)
+                {
+                    int count = (int)Mathf.Round(country.recruits / 100f);
+
+                    country.recruits -= count;
+                    guild._storage.recruits += count;
+                }
+                if (country.fuel > 15000)
+                {
+                    int count = (int)Mathf.Round(country.fuel / 100f);
+
+                    country.fuel -= count;
+                    guild._storage.fuel += count;
+                }
+            });
+
+            for (int i = 0; i < country.guilds.Count; i++)
+            {
+                for (int j = 0; j < country.guilds[i]._offers.Count; j++)
+                {
+                    country.guilds[i]._offers[j].Execute();
+                }
+            }
+
             country.UpdateCapitulation();
             ReferencesManager.Instance.eventsContainer.UpdateEvents();
         }
@@ -849,7 +1105,164 @@ public class CountryAIManager : MonoBehaviour
         }
     }
 
-    void attack(Aviation_Cell plane, List<RegionManager> regs, int mode, RegionManager regg)
+    private void ProcessRegions(RegionManager region, CountrySettings country)
+    {
+        if (buildingExpenses >= 0)
+        {
+            if (country.foodIncomeUI < 0)
+            {
+                if (country.money >= ReferencesManager.Instance.gameSettings.chefarm.goldCost)
+                {
+                    region.buildings.Remove(ReferencesManager.Instance.gameSettings.fabric);
+
+                    region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.chefarm, region);
+                    buildingExpenses -= ReferencesManager.Instance.gameSettings.chefarm.goldCost;
+                }
+            }
+
+            if (country.moneyIncomeUI < 0)
+            {
+                if (region.buildings.Contains(ReferencesManager.Instance.gameSettings.farm))
+                {
+                    region.buildings.Remove(ReferencesManager.Instance.gameSettings.farm);
+                }
+                if (region.buildings.Contains(ReferencesManager.Instance.gameSettings.chefarm))
+                {
+                    region.buildings.Remove(ReferencesManager.Instance.gameSettings.chefarm);
+                }
+
+                region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.fabric, region);
+                buildingExpenses -= ReferencesManager.Instance.gameSettings.farm.goldCost;
+            }
+            if (country.money >= ReferencesManager.Instance.gameSettings.fabric.goldCost &&
+                buildingExpenses >= ReferencesManager.Instance.gameSettings.fabric.goldCost)
+            {
+                if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
+                {
+                    region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.fabric, region);
+                    buildingExpenses -= ReferencesManager.Instance.gameSettings.fabric.goldCost;
+                }
+                else
+                {
+                    UpgradeInfrastructure(region);
+                }
+            }
+            if (country.money >= ReferencesManager.Instance.gameSettings.farm.goldCost &&
+            buildingExpenses >= ReferencesManager.Instance.gameSettings.farm.goldCost &&
+                country.foodNaturalIncome <= 0 || country.foodIncomeUI <= 0)
+            {
+                if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
+                {
+                    region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.farm, region);
+                    buildingExpenses -= ReferencesManager.Instance.gameSettings.farm.goldCost;
+                }
+            }
+
+            if (country.money >= ReferencesManager.Instance.gameSettings.chefarm.goldCost &&
+            buildingExpenses >= ReferencesManager.Instance.gameSettings.chefarm.goldCost &&
+                country.foodNaturalIncome <= 0 || country.foodIncomeUI <= 0)
+            {
+                if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
+                {
+                    region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.chefarm, region);
+                    buildingExpenses -= ReferencesManager.Instance.gameSettings.chefarm.goldCost;
+                }
+            }
+
+            if (country.money >= ReferencesManager.Instance.gameSettings.researchLab.goldCost &&
+                buildingExpenses >= ReferencesManager.Instance.gameSettings.researchLab.goldCost &&
+                country.researchPointsIncome <= 0)
+            {
+                if (region.buildings.Count + region.buildingsQueue.Count + 1 <= 4)
+                {
+                    region.AddBuildingToQueueForce(ReferencesManager.Instance.gameSettings.researchLab, region);
+                    buildingExpenses -= ReferencesManager.Instance.gameSettings.researchLab.goldCost;
+                }
+            }
+        }
+    }
+
+    private void ProcessTechnologies(CountrySettings country)
+    {
+        researchingExpenses = country.money / 100 * 90; // 90% of all country budget
+
+        for (int i = 0; i < ReferencesManager.Instance.gameSettings.technologies.Length; i++)
+        {
+            TechnologyScriptableObject tech = ReferencesManager.Instance.gameSettings.technologies[i];
+
+            if (country.countryTechnologies.Any(item => item._type == TechnologyScriptableObject.TechType.Heavy))
+            {
+                if (country.moneyNaturalIncome >= new System.Random().Next(4000, 6000))
+                {
+                    if (country.researchPointsIncome >= new System.Random().Next(5, 15))
+                    {
+                        if (tech._type == TechnologyScriptableObject.TechType.Heavy &&
+                        !Researched(country, tech))
+                        {
+                            if (CanResearch(country, tech))
+                            {
+                                while (!researching)
+                                {
+                                    if (!researching)
+                                    {
+                                        StartRecearch(country, tech);
+                                    }
+                                }
+                            }
+                        }
+                        else if (tech._type == TechnologyScriptableObject.TechType.Aviation ||
+                        tech._type == TechnologyScriptableObject.TechType.AirPlane &&
+                        !Researched(country, tech))
+                        {
+                            if (CanResearch(country, tech))
+                            {
+                                while (!researching)
+                                {
+                                    if (!researching)
+                                    {
+                                        StartRecearch(country, tech);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if (!researching)
+        {
+            moneySaving += researchingExpenses;
+        }
+
+
+        if (country.myRegions.Count > 0)
+        {
+            int recruits_needs = country.myRegions.Count * new System.Random().Next(150, 300);
+            if (country.inWar)
+            {
+                recruits_needs *= 5;
+            }
+            if (country.recruits < recruits_needs / 2)
+            {
+                country.mobilizationLaw = Mathf.Clamp(country.mobilizationLaw + new System.Random().Next(1, 3), 0, ReferencesManager.Instance.gameSettings.mobilizationPercent.Length - 1);
+                ReferencesManager.Instance.SetRecroots(country.mobilizationLaw, country);
+            }
+            else if (country.recruits < recruits_needs)
+            {
+                country.mobilizationLaw = Mathf.Clamp(country.mobilizationLaw + new System.Random().Next(2), 0, ReferencesManager.Instance.gameSettings.mobilizationPercent.Length - 1);
+                ReferencesManager.Instance.SetRecroots(country.mobilizationLaw, country);
+            }
+            else if (country.recruits > recruits_needs && country.recruitsIncome > 0)
+            {
+                country.mobilizationLaw = Mathf.Clamp(country.mobilizationLaw - 2, 0, ReferencesManager.Instance.gameSettings.mobilizationPercent.Length - 1);
+                ReferencesManager.Instance.SetRecroots(country.mobilizationLaw, country);
+            }
+        }
+    }
+
+    private void attack(Aviation_Cell plane, List<RegionManager> regs, int mode, RegionManager regg)
     {
         if (plane.fuel >= plane.AirPlane.fuelperattack)
         {
@@ -889,7 +1302,7 @@ public class CountryAIManager : MonoBehaviour
                             if (reg.GetDivision(reg).unitsHealth.Count <= 0 || !reg.GetDivision(reg))
                             {
                                 reg.hasArmy = false;
-                                Destroy(reg.GetDivision(reg).gameObject);
+                                DisbandDivision(reg.GetDivision(reg));
 
                                 damage = 0;
                             }
@@ -986,10 +1399,17 @@ public class CountryAIManager : MonoBehaviour
             MovePoint movePointComponent = movePoint.GetComponent<MovePoint>();
             if (movePointComponent != null)
             {
-                RegionManager _region = movePointComponent.regionTo.GetComponent<RegionManager>();
-                if (_region != null)
+                try
+                    {
+                    RegionManager _region = movePointComponent.regionTo.GetComponent<RegionManager>();
+                    if (_region != null)
+                    {
+                        regions.Add(_region);
+                    }
+                }
+                catch (System.Exception)
                 {
-                    regions.Add(_region);
+                    Debug.LogError($"Error: RegionTo is null {region.gameObject.name}/{movePointComponent.gameObject.name}");
                 }
             }
             else
@@ -1062,7 +1482,7 @@ public class CountryAIManager : MonoBehaviour
     {
         Aviation_Storage airBase = region.GetComponent<Aviation_Storage>();
 
-        if (country.money >= plane.price && country.recroots >= plane.recruitsCost)
+        if (country.money >= plane.price && country.recruits >= plane.recruitsCost)
         {
             if (airBase.planes.Count + 1 <= region._airBaseLevel)
             {
@@ -1076,7 +1496,7 @@ public class CountryAIManager : MonoBehaviour
     {
         bool result = false;
 
-        if (country.money >= plane.price && country.recroots >= plane.recruitsCost)
+        if (country.money >= plane.price && country.recruits >= plane.recruitsCost)
         {
             if (country.countryTechnologies.Contains(plane._tech))
             {
@@ -1112,37 +1532,40 @@ public class CountryAIManager : MonoBehaviour
 
     private RegionManager GetRoute(RegionManager regionTo, UnitMovement division)
     {
-        List<float> foundedRoutesDistances = new List<float>(10);
-        List<RegionManager> foundedRoutesProvinces = new List<RegionManager>(10);
+        RegionManager regionToReturn = null;
 
-        RegionManager regionToReturn = new RegionManager();
-
-        for (int v = 0; v < division.currentProvince.movePoints.Count; v++)
+        if (!division.inSea)
         {
-            RegionManager inDivisionPointRegion = division.currentProvince.movePoints[v].GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
+            List<float> foundedRoutesDistances = new List<float>(10);
+            List<RegionManager> foundedRoutesProvinces = new List<RegionManager>(10);
 
-            if (!inDivisionPointRegion.hasArmy)
+            for (int v = 0; v < division.currentProvince.movePoints.Count; v++)
             {
-                float routeDistance = GetDistance(inDivisionPointRegion, regionTo);
-                foundedRoutesDistances.Add(routeDistance);
-                foundedRoutesProvinces.Add(inDivisionPointRegion);
-            }
-        }
+                RegionManager inDivisionPointRegion = division.currentProvince.movePoints[v].GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
 
-        if (foundedRoutesDistances.Count > 0)
-        {
-            float minDistance = foundedRoutesDistances.Min();
-            foreach (RegionManager province in foundedRoutesProvinces)
-            {
-                if (GetDistance(province, regionTo) == minDistance)
+                if (!inDivisionPointRegion.hasArmy)
                 {
-                    if (!province.hasArmy)
+                    float routeDistance = GetDistance(inDivisionPointRegion, regionTo);
+                    foundedRoutesDistances.Add(routeDistance);
+                    foundedRoutesProvinces.Add(inDivisionPointRegion);
+                }
+            }
+
+            if (foundedRoutesDistances.Count > 0)
+            {
+                float minDistance = foundedRoutesDistances.Min();
+                foreach (RegionManager province in foundedRoutesProvinces)
+                {
+                    if (GetDistance(province, regionTo) == minDistance)
                     {
-                        if (division != null)
+                        if (!province.hasArmy)
                         {
-                            if (isRegionBorderSecondRegion(division.currentProvince, province))
+                            if (division != null)
                             {
-                                regionToReturn = province;
+                                if (isRegionBorderSecondRegion(division.currentProvince, province))
+                                {
+                                    regionToReturn = province;
+                                }
                             }
                         }
                     }
@@ -1177,26 +1600,33 @@ public class CountryAIManager : MonoBehaviour
 
             if (warExpenses >= unit.moneyCost)
             {
-                if (country.money >= unit.moneyCost && country.recroots >= unit.recrootsCost && country.food >= unit.foodCost)
+                if (country.money >= unit.moneyCost && country.recruits >= unit.recrootsCost && country.food >= unit.foodCost)
                 {
-                    GameObject spawnedUnit = Instantiate(ReferencesManager.Instance.army.unitPrefab, region.transform);
-                    spawnedUnit.transform.localScale = ReferencesManager.Instance.army.unitPrefab.transform.localScale;
-                    UnitMovement division = spawnedUnit.GetComponent<UnitMovement>();
+                    if (ReferencesManager.Instance.gameSettings.onlineGame)
+                    {
+                        Multiplayer.Instance.CreateUnit(region._id);
+                    }
+                    else
+                    {
+                        GameObject spawnedUnit = Instantiate(ReferencesManager.Instance.army.unitPrefab, region.transform);
+                        spawnedUnit.transform.localScale = ReferencesManager.Instance.army.unitPrefab.transform.localScale;
+                        UnitMovement division = spawnedUnit.GetComponent<UnitMovement>();
 
-                    division.currentCountry = country;
-                    division.currentProvince = region;
-                    division.UpdateInfo();
+                        division.currentCountry = country;
+                        division.currentProvince = region;
+                        division.UpdateInfo();
 
-                    region.hasArmy = true;
-                    country.countryUnits.Add(division);
+                        region.hasArmy = true;
+                        country.countryUnits.Add(division);
 
-                    AddUnitToArmy(country, ReferencesManager.Instance.gameSettings.soldierLVL1, region, division);
+                        AddUnitToArmy(country, ReferencesManager.Instance.gameSettings.soldierLVL1, region, division);
 
-                    CreateDivision(country, region, division);
+                        CreateDivision(country, region, division);
 
-                    region.CheckRegionUnits(region);
-                    ReferencesManager.Instance.countryManager.UpdateValuesUI();
-                    ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
+                        region.CheckRegionUnits(region);
+                        ReferencesManager.Instance.countryManager.UpdateValuesUI();
+                        ReferencesManager.Instance.countryManager.UpdateIncomeValuesUI();
+                    }
                 }
             }
         }
@@ -1594,7 +2024,7 @@ public class CountryAIManager : MonoBehaviour
 
         if (buildingExpenses >= 200)
         {
-            if (region.currentCountry.money >= 200 && check <= (new System.Random()).Next(5, 10))
+            if (region.currentCountry.money >= 200 && check <= (new System.Random()).Next(5, 11))
             {
                 region.infrastructure_Amount++;
                 region.currentCountry.money -= 200;
@@ -1609,7 +2039,7 @@ public class CountryAIManager : MonoBehaviour
                     region.currentCountry.country._id,
                     region.currentCountry.money,
                     region.currentCountry.food,
-                    region.currentCountry.recroots);
+                    region.currentCountry.recruits);
             }
         }
     }
@@ -1647,7 +2077,7 @@ public class CountryAIManager : MonoBehaviour
                     region.currentCountry.country._id,
                     region.currentCountry.money,
                     region.currentCountry.food,
-                    region.currentCountry.recroots
+                    region.currentCountry.recruits
                 );
             }
         }
@@ -1684,7 +2114,7 @@ public class CountryAIManager : MonoBehaviour
                     region.currentCountry.country._id,
                     region.currentCountry.money,
                     region.currentCountry.food,
-                    region.currentCountry.recroots);
+                    region.currentCountry.recruits);
             }
         }
     }
@@ -1889,12 +2319,12 @@ public class CountryAIManager : MonoBehaviour
                     if (warExpenses >= unit.moneyCost)
                     {
                         if (country.money >= unit.moneyCost &&
-                            country.recroots >= unit.recrootsCost &&
+                            country.recruits >= unit.recrootsCost &&
                             country.food >= unit.foodCost)
                         {
                             country.money -= unit.moneyCost;
                             country.food -= unit.foodCost;
-                            country.recroots -= unit.recrootsCost;
+                            country.recruits -= unit.recrootsCost;
                             country.moneyNaturalIncome -= unit.moneyIncomeCost;
                             country.foodNaturalIncome -= unit.foodIncomeCost;
 
@@ -1924,12 +2354,33 @@ public class CountryAIManager : MonoBehaviour
 
     private void RemoveUnitFromArmy(CountrySettings country, int index, RegionManager region, UnitMovement unitMovement)
     {
-        if (region.currentCountry.country._id == country.country._id)
+        if (ReferencesManager.Instance.gameSettings.onlineGame)
         {
-            if (unitMovement.unitsHealth.Count > 0)
+            Multiplayer.Instance.RemoveUnitFromArmy(unitMovement.unitsHealth[index]._id, region._id);
+        }
+        else
+        {
+            if (region.currentCountry.country._id == country.country._id)
             {
-                unitMovement.unitsHealth.Remove(unitMovement.unitsHealth[index]);
+                if (unitMovement.unitsHealth.Count > 0)
+                {
+                    unitMovement.unitsHealth.Remove(unitMovement.unitsHealth[index]);
+                }
             }
+        }
+    }
+
+    private void DisbandDivision(UnitMovement division)
+    {
+        if (ReferencesManager.Instance.gameSettings.onlineGame)
+        {
+            Multiplayer.Instance.DisbandDivision(
+                division.currentProvince._id,
+                division.currentCountry.country._id);
+        }
+        else
+        {
+            Destroy(division.gameObject);
         }
     }
 
@@ -2028,7 +2479,7 @@ public class CountryAIManager : MonoBehaviour
             country.country._id,
             country.money,
             country.food,
-            country.recroots);
+            country.recruits);
     }
 
     public void SendOffer(string offer, CountrySettings sender, CountrySettings receiver)
@@ -2052,7 +2503,7 @@ public class CountryAIManager : MonoBehaviour
             }
             else if (receiver.isPlayer)
             {
-                SpawnEvent("Торговля", sender, receiver, true);
+                diplomatyUI.SpawnEvent("Торговля", sender, receiver, true);
             }
         }
         else if (offer == "Пакт о ненападении")
@@ -2073,7 +2524,7 @@ public class CountryAIManager : MonoBehaviour
             }
             else if (receiver.isPlayer)
             {
-                SpawnEvent("Пакт о ненападении", sender, receiver, true);
+                diplomatyUI.SpawnEvent("Пакт о ненападении", sender, receiver, true);
             }
         }
         else if (offer == "Разорвать пакт о ненападении")
@@ -2094,7 +2545,7 @@ public class CountryAIManager : MonoBehaviour
             }
             else if (receiver.isPlayer)
             {
-                SpawnEvent("Разорвать пакт о ненападении", sender, receiver, false);
+                diplomatyUI.SpawnEvent("Разорвать пакт о ненападении", sender, receiver, false);
             }
         }
         else if (offer == "Право прохода войск")
@@ -2115,7 +2566,7 @@ public class CountryAIManager : MonoBehaviour
             }
             else if (receiver.isPlayer)
             {
-                SpawnEvent("Право прохода войск", sender, receiver, true);
+                diplomatyUI.SpawnEvent("Право прохода войск", sender, receiver, true);
             }
         }
         else if (offer == "Объявить войну")
@@ -2132,6 +2583,12 @@ public class CountryAIManager : MonoBehaviour
             sender.enemies.Add(receiver);
             receiver.enemies.Add(sender);
 
+            if (sender.myRegions.Count > 0 && receiver.myRegions.Count > 0)
+            {
+                sender.stability.buffs.Add(new Stability_buff("Наступательная война", (-15 * (receiver.myRegions.Count / sender.myRegions.Count)) * (1 / receiver.enemies.Count), new List<string>() { $"not;ongoing_war;{sender.country._id}" }, null, ReferencesManager.Instance.sprites.Find("offensive_war")));
+                receiver.stability.buffs.Add(new Stability_buff("Оборонительная война", -5f, new List<string>() { $"not;ongoing_war;{receiver.country._id}" }, null, ReferencesManager.Instance.sprites.Find("defensive_war")));
+            }
+
             sender.inWar = true;
             receiver.inWar = true;
 
@@ -2146,7 +2603,7 @@ public class CountryAIManager : MonoBehaviour
 
             if (receiver.isPlayer)
             {
-                SpawnEvent("Объявить войну", sender, receiver, false);
+                diplomatyUI.SpawnEvent("Объявить войну", sender, receiver, false);
             }
         }
         else if (offer == "Союз")
@@ -2167,47 +2624,11 @@ public class CountryAIManager : MonoBehaviour
             }
             else if (receiver.isPlayer)
             {
-                SpawnEvent("Союз", sender, receiver, true);
+                diplomatyUI.SpawnEvent("Союз", sender, receiver, true);
             }
         }
     }
 
-    private void SpawnEvent(string offer, CountrySettings sender, CountrySettings receiver, bool canDecline)
-    {
-        GameObject spawned = Instantiate(ReferencesManager.Instance.regionUI.messageEvent);
-        spawned.transform.SetParent(ReferencesManager.Instance.regionUI.messageReceiver);
-        spawned.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-        spawned.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-
-        spawned.GetComponent<EventItem>().sender = sender;
-        spawned.GetComponent<EventItem>().receiver = receiver;
-        spawned.GetComponent<EventItem>().offer = offer;
-        spawned.GetComponent<EventItem>().canDecline = canDecline;
-
-        spawned.GetComponent<EventItem>().senderImage.sprite = sender.country.countryFlag;
-
-
-        if (offer == "Торговля")
-        {
-            spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.tradeSprite;
-        }
-        else if (offer == "Объявить войну")
-        {
-            spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.warSprite;
-        }
-        else if (offer == "Пакт о ненападении")
-        {
-            spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.pactSprite;
-        }
-        else if (offer == "Право прохода войск")
-        {
-            spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.moveSprite;
-        }
-        else if (offer == "Разорвать пакт о ненападении")
-        {
-            spawned.GetComponent<EventItem>().offerImage.sprite = ReferencesManager.Instance.regionUI.AntipactSprite;
-        }
-    }
     private bool isCountriesAreNeibours(CountrySettings countryA, CountrySettings countryB)
     {
         bool result = false;

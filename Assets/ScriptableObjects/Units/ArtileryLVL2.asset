@@ -22,13 +22,13 @@ MonoBehaviour:
   level: 2
   unlockLevel: 5
   maxFuel: 0
-  health: 2.5
+  health: 4.5
   softAttack: 5
-  hardAttack: 2.5
+  hardAttack: 25
   aviationAttack: 0
   defense: 10
   maxEntrenchment: 0
   armor: 0
-  armorPiercing: 5
+  armorPiercing: 35
   hardness: 0
   unitName: ART_02

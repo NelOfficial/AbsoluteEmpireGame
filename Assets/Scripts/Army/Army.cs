@@ -104,7 +104,7 @@ public class Army : MonoBehaviour
         UnitScriptableObject unit = ReferencesManager.Instance.gameSettings.soldierLVL1;
         var country = ReferencesManager.Instance.countryManager.currentCountry;
 
-        if (country.money >= unit.moneyCost && country.recroots >= unit.recrootsCost && country.food >= unit.foodCost)
+        if (country.money >= unit.moneyCost && country.recruits >= unit.recrootsCost && country.food >= unit.foodCost)
         {
             InstantiateUnit(unitPrefab, region.transform);
             AddUnitToArmy(unit);
@@ -133,14 +133,7 @@ public class Army : MonoBehaviour
 
     public void AddUnitToArmy(UnitScriptableObject unit)
     {
-        if (ReferencesManager.Instance.gameSettings.onlineGame)
-        {
-            Multiplayer.Instance.AddUnitToArmy(unit.unitName, ReferencesManager.Instance.regionManager.currentRegionManager._id);
-        }
-        else
-        {
-            ProcessUnitAddition(unit);
-        }
+        ProcessUnitAddition(unit);
     }
 
     private void ProcessUnitAddition(UnitScriptableObject unit)
@@ -157,7 +150,16 @@ public class Army : MonoBehaviour
                 if (HasSufficientResources(country, unit))
                 {
                     DeductResources(country, unit);
-                    AddUnitHealth(unitMovement, unit);
+
+                    if (ReferencesManager.Instance.gameSettings.onlineGame)
+                    {
+                        Multiplayer.Instance.AddUnitToArmy(unit.unitName, ReferencesManager.Instance.regionManager.currentRegionManager._id);
+                    }
+                    else
+                    {
+                        AddUnitHealth(unitMovement, unit);
+                    }
+
                     UpdateAllUIs(false);
                 }
                 else
@@ -189,14 +191,14 @@ public class Army : MonoBehaviour
 
     private bool HasSufficientResources(CountrySettings country, UnitScriptableObject unit)
     {
-        return country.money >= unit.moneyCost && country.recroots >= unit.recrootsCost && country.food >= unit.foodCost;
+        return country.money >= unit.moneyCost && country.recruits >= unit.recrootsCost && country.food >= unit.foodCost;
     }
 
     private void DeductResources(CountrySettings country, UnitScriptableObject unit)
     {
         country.money -= unit.moneyCost;
         country.food -= unit.foodCost;
-        country.recroots -= unit.recrootsCost;
+        country.recruits -= unit.recrootsCost;
         country.foodNaturalIncome -= unit.foodIncomeCost;
         country.moneyNaturalIncome -= unit.moneyIncomeCost;
     }
@@ -219,7 +221,7 @@ public class Army : MonoBehaviour
         {
             WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoMoney"));
         }
-        else if (country.recroots < unit.recrootsCost)
+        else if (country.recruits < unit.recrootsCost)
         {
             WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoRecruits"));
         }
@@ -235,8 +237,9 @@ public class Army : MonoBehaviour
         if (ReferencesManager.Instance.regionManager.currentRegionManager != null)
         {
             ReferencesManager.Instance.regionManager.CheckRegionUnits(ReferencesManager.Instance.regionManager.currentRegionManager);
-            ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
         }
+
+        ReferencesManager.Instance.regionUI.UpdateUnitsUI(true);
     }
 
     public void RemoveUnitFromDivision(UnitHealth batalion, UnitMovement division, bool checkDivisionOnDestroy)
@@ -244,7 +247,7 @@ public class Army : MonoBehaviour
         division.unitsHealth.Remove(batalion);
 
         var country = division.currentCountry;
-        country.recroots += Mathf.CeilToInt(batalion.unit.recrootsCost * 0.7f);
+        country.recruits += Mathf.CeilToInt(batalion.unit.recrootsCost * 0.7f);
         country.moneyNaturalIncome += batalion.unit.moneyIncomeCost;
         country.foodNaturalIncome += batalion.unit.foodIncomeCost;
 
@@ -377,7 +380,16 @@ public class Army : MonoBehaviour
         money = 0;
         countOfBatalions = 0;
 
-        UnitMovement division = ReferencesManager.Instance.regionManager.currentRegionManager.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
+        UnitMovement division = null;
+
+        if (ReferencesManager.Instance.regionManager.currentRegionManager != null)
+        {
+            division = ReferencesManager.Instance.regionManager.GetDivision(ReferencesManager.Instance.regionManager.currentRegionManager);
+        }
+        else if (ReferencesManager.Instance.seaRegionManager._currentSeaRegion != null)
+        {
+            division = ReferencesManager.Instance.seaRegionManager._currentSeaRegion._division;
+        }
 
         foreach (UnitHealth batalion in division.unitsHealth)
         {
@@ -396,15 +408,24 @@ public class Army : MonoBehaviour
 
     public void HealDivision()
     {
-        if (ReferencesManager.Instance.countryManager.currentCountry.recroots >= recruits &&
+        if (ReferencesManager.Instance.countryManager.currentCountry.recruits >= recruits &&
             ReferencesManager.Instance.countryManager.currentCountry.food >= food &&
             ReferencesManager.Instance.countryManager.currentCountry.money >= money)
         {
-            ReferencesManager.Instance.countryManager.currentCountry.recroots -= Mathf.FloorToInt(recruits);
+            ReferencesManager.Instance.countryManager.currentCountry.recruits -= Mathf.FloorToInt(recruits);
             ReferencesManager.Instance.countryManager.currentCountry.food -= Mathf.FloorToInt(food);
             ReferencesManager.Instance.countryManager.currentCountry.money -= Mathf.FloorToInt(money);
 
-            UnitMovement division = ReferencesManager.Instance.regionManager.currentRegionManager.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
+            UnitMovement division = null;
+
+            if (ReferencesManager.Instance.regionManager.currentRegionManager != null)
+            {
+                division = ReferencesManager.Instance.regionManager.currentRegionManager.GetDivision(ReferencesManager.Instance.regionManager.currentRegionManager);
+            }
+            else if (ReferencesManager.Instance.seaRegionManager._currentSeaRegion != null)
+            {
+                division = ReferencesManager.Instance.seaRegionManager._currentSeaRegion._division;
+            }
 
             foreach (UnitHealth batalion in division.unitsHealth)
             {
@@ -426,23 +447,41 @@ public class Army : MonoBehaviour
 
     public void DisbandDivision()
     {
-        foreach (Transform child in ReferencesManager.Instance.regionManager.currentRegionManager.transform)
+        if (ReferencesManager.Instance.gameSettings.onlineGame)
         {
-            if (child.GetComponent<UnitMovement>())
-            {
-                UnitMovement division = child.GetComponent<UnitMovement>();
-
-                for (int i = 0; i < division.unitsHealth.Count; i++)
-                {
-                    ReferencesManager.Instance.countryManager.currentCountry.recroots += Mathf.CeilToInt(division.unitsHealth[i].unit.recrootsCost * 0.7f);
-                    ReferencesManager.Instance.countryManager.currentCountry.moneyNaturalIncome += division.unitsHealth[i].unit.moneyIncomeCost;
-                    ReferencesManager.Instance.countryManager.currentCountry.foodNaturalIncome += division.unitsHealth[i].unit.foodIncomeCost;
-                }
-                division.unitsHealth.Clear();
-
-            }
+            Multiplayer.Instance.DisbandDivision(
+                ReferencesManager.Instance.regionManager.currentRegionManager._id,
+                ReferencesManager.Instance.countryManager.currentCountry.country._id);
         }
-        ReferencesManager.Instance.regionManager.CheckRegionUnits(ReferencesManager.Instance.regionManager.currentRegionManager);
+        else
+        {
+            UnitMovement division = null;
+
+            if (ReferencesManager.Instance.regionManager.currentRegionManager != null)
+            {
+                division = ReferencesManager.Instance.regionManager.GetDivision(ReferencesManager.Instance.regionManager.currentRegionManager);
+            }
+            else if (ReferencesManager.Instance.seaRegionManager._currentSeaRegion != null)
+            {
+                division = ReferencesManager.Instance.seaRegionManager._currentSeaRegion._division;
+            }
+
+            for (int i = 0; i < division.unitsHealth.Count; i++)
+            {
+                ReferencesManager.Instance.countryManager.currentCountry.recruits += Mathf.CeilToInt(division.unitsHealth[i].unit.recrootsCost * 0.7f);
+                ReferencesManager.Instance.countryManager.currentCountry.moneyNaturalIncome += division.unitsHealth[i].unit.moneyIncomeCost;
+                ReferencesManager.Instance.countryManager.currentCountry.foodNaturalIncome += division.unitsHealth[i].unit.foodIncomeCost;
+            }
+            division.unitsHealth.Clear();
+
+            if (ReferencesManager.Instance.regionManager.currentRegionManager != null)
+            {
+                ReferencesManager.Instance.regionManager.CheckRegionUnits(ReferencesManager.Instance.regionManager.currentRegionManager);
+            }
+
+            Destroy(division.gameObject);
+        }
+
         ReferencesManager.Instance.regionUI.CloseAllUI();
 
         ReferencesManager.Instance.countryManager.UpdateValuesUI();
@@ -452,6 +491,7 @@ public class Army : MonoBehaviour
     public class Template
     {
         public string _name;
+        public Sprite _icon;
 
         public List<UnitScriptableObject> _batalions = new List<UnitScriptableObject>();
     }

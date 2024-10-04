@@ -1,17 +1,22 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using UnityEngine.UI;
 
 public class ArmyTemplateItem_UI : MonoBehaviour
 {
     [HideInInspector] public int _index;
     [HideInInspector] public string _name;
+    [HideInInspector] public Sprite _icon;
+
+    [SerializeField] private Image _iconImage;
 
     [SerializeField] TMP_Text _templateText;
 
     public void SetUp()
     {
         _templateText.text = _name;
+        _iconImage.sprite = _icon;
     }
 
     public void RemoveTemplate()
@@ -26,6 +31,7 @@ public class ArmyTemplateItem_UI : MonoBehaviour
     {
         ReferencesManager.Instance.countryInfo._currentTemplateIndex = _index;
         ReferencesManager.Instance.countryInfo.UpdateTemplateUI();
+        ReferencesManager.Instance.countryInfo.UpdateTemplateUnits();
     }
 
     public void BuyTemplate()

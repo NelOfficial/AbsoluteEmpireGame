@@ -34,7 +34,7 @@ public class UI_VerifyBuildingPanel : MonoBehaviour
         regionManager.currentRegionManager.buildings.Remove(currentBuilding);
         regionManager.currentRegionManager.currentCountry.moneyNaturalIncome -= currentBuilding.goldIncome;
         regionManager.currentRegionManager.currentCountry.foodNaturalIncome -= currentBuilding.foodIncome;
-        regionManager.currentRegionManager.currentCountry.recrootsIncome -= currentBuilding.recrootsIncome;
+        regionManager.currentRegionManager.currentCountry.recruitsIncome -= currentBuilding.recrootsIncome;
         regionManager.currentRegionManager.currentCountry.researchPointsIncome -= currentBuilding.researchPointsIncome;
         ReferencesManager.Instance.regionUI.UpdateBuildingUI();
 
@@ -47,6 +47,6 @@ public class UI_VerifyBuildingPanel : MonoBehaviour
             regionManager.currentRegionManager.currentCountry.country._id,
             regionManager.currentRegionManager.currentCountry.money,
             regionManager.currentRegionManager.currentCountry.food,
-            regionManager.currentRegionManager.currentCountry.recroots);
+            regionManager.currentRegionManager.currentCountry.recruits);
     }
 }

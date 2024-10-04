@@ -3,10 +3,12 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using System.Linq;
+using Photon.Realtime;
 
 public class RegionUI : MonoBehaviour
 {
     [Header("UI References: ")]
+    public GameObject _guildContainerPanel;
     public Button fightCloseOverlay;
     public GameObject blockPanel;
     public GameObject countryInfoPanel;
@@ -18,6 +20,8 @@ public class RegionUI : MonoBehaviour
     public GameObject countryFlagPrefab;
     public GameObject countryInfoAdvanced;
     [SerializeField] GameObject armyHorizontalAnimationUI;
+    public GameObject seaBarContent;
+    public Image _seaRegion_TerrainImage;
 
     public Button _upgradeFortificationButton;
     public TMP_Text _upgradeFortificationButton_Text;
@@ -56,13 +60,12 @@ public class RegionUI : MonoBehaviour
 
     public Button regionUpgradeButton;
     public Button buildButton;
-    public Button armyButton;
+    public Button divisionButton;
     public Button defenseButton;
     public Button addArmyButton;
     public Button aviationButton;
 
     public Button regionButtonUpgrade;
-    public Button armyButtonUpgrade;
     public Button defenseButtonUpgrade;
     public Button moveButton;
 
@@ -159,6 +162,8 @@ public class RegionUI : MonoBehaviour
     public GameObject _autoSaveMessage;
 
     [SerializeField] private NavyAddButton[] navyAddButtons;
+    [Header("Guilds")]
+    public GameObject _guildNotification;
 
 
     private void Awake()
@@ -229,7 +234,64 @@ public class RegionUI : MonoBehaviour
 
     public void OpenArmyTab()
     {
-        if (!ReferencesManager.Instance.regionManager.currentRegionManager.demilitarized)
+        if (ReferencesManager.Instance.regionManager.currentRegionManager != null)
+        {
+            if (!ReferencesManager.Instance.regionManager.currentRegionManager.demilitarized)
+            {
+                for (int i = 0; i < tabs.Length; i++)
+                {
+                    tabs[i].SetActive(false);
+                }
+
+                unitsShopContainer.SetActive(false);
+                navyUnitsShopContainer.SetActive(false);
+
+                buildingsShopContainer.SetActive(false);
+
+                if (ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy)
+                {
+                    addArmyTab.SetActive(true);
+                }
+                else if (!ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy && ReferencesManager.Instance.regionManager.currentRegionManager.currentCountry == ReferencesManager.Instance.countryManager.currentCountry)
+                {
+                    if (ReferencesManager.Instance.countryManager.currentCountry.money >= ReferencesManager.Instance.gameSettings.soldierLVL1.moneyCost)
+                    {
+                        if (ReferencesManager.Instance.countryManager.currentCountry.food >= ReferencesManager.Instance.gameSettings.soldierLVL1.foodCost)
+                        {
+                            if (ReferencesManager.Instance.countryManager.currentCountry.recruits >= ReferencesManager.Instance.gameSettings.soldierLVL1.recrootsCost)
+                            {
+                                createArmyTab.SetActive(true);
+
+                                foreach (Transform container in createArmyTab.transform)
+                                {
+                                    container.gameObject.SetActive(true);
+                                }
+
+                                UISoundEffect.Instance.PlayAudio(paper_01);
+                            }
+                            else
+                            {
+                                WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoRecruits"));
+                            }
+                        }
+                        else
+                        {
+                            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoFood"));
+
+                        }
+                    }
+                    else
+                    {
+                        WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoMoney"));
+                    }
+                }
+            }
+            else
+            {
+                WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.Demil"));
+            }
+        }
+        else if (ReferencesManager.Instance.seaRegionManager._currentSeaRegion != null)
         {
             for (int i = 0; i < tabs.Length; i++)
             {
@@ -241,47 +303,10 @@ public class RegionUI : MonoBehaviour
 
             buildingsShopContainer.SetActive(false);
 
-            if (ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy && ReferencesManager.Instance.regionManager.currentRegionManager.currentCountry == ReferencesManager.Instance.countryManager.currentCountry)
+            if (ReferencesManager.Instance.seaRegionManager._currentSeaRegion._division != null)
             {
                 addArmyTab.SetActive(true);
             }
-            else if (!ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy && ReferencesManager.Instance.regionManager.currentRegionManager.currentCountry == ReferencesManager.Instance.countryManager.currentCountry)
-            {
-                if (ReferencesManager.Instance.countryManager.currentCountry.money >= ReferencesManager.Instance.gameSettings.soldierLVL1.moneyCost)
-                {
-                    if (ReferencesManager.Instance.countryManager.currentCountry.food >= ReferencesManager.Instance.gameSettings.soldierLVL1.foodCost)
-                    {
-                        if (ReferencesManager.Instance.countryManager.currentCountry.recroots >= ReferencesManager.Instance.gameSettings.soldierLVL1.recrootsCost)
-                        {
-                            createArmyTab.SetActive(true);
-
-                            foreach (Transform container in createArmyTab.transform)
-                            {
-                                container.gameObject.SetActive(true);
-                            }
-
-                            UISoundEffect.Instance.PlayAudio(paper_01);
-                        }
-                        else
-                        {
-                            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoRecruits"));
-                        }
-                    }
-                    else
-                    {
-                        WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoFood"));
-
-                    }
-                }
-                else
-                {
-                    WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoMoney"));
-                }
-            }
-        }
-        else
-        {
-            WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.Demil"));
         }
     }
 
@@ -294,8 +319,8 @@ public class RegionUI : MonoBehaviour
             if (ReferencesManager.Instance.regionManager.currentRegionManager._marineBaseLevel > 0)
             {
                 if (ReferencesManager.Instance.regionManager.currentRegionManager._hasFleet &&
-    ReferencesManager.Instance.regionManager.currentRegionManager.currentCountry ==
-    ReferencesManager.Instance.countryManager.currentCountry)
+                    ReferencesManager.Instance.regionManager.currentRegionManager.currentCountry ==
+                    ReferencesManager.Instance.countryManager.currentCountry)
                 {
                     addFleetTab.SetActive(true);
                 }
@@ -347,6 +372,7 @@ public class RegionUI : MonoBehaviour
 
             newTemplateObject.GetComponent<ArmyTemplateItem_UI>()._index = i;
             newTemplateObject.GetComponent<ArmyTemplateItem_UI>()._name = ReferencesManager.Instance.army.templates[i]._name;
+            newTemplateObject.GetComponent<ArmyTemplateItem_UI>()._icon = ReferencesManager.Instance.army.templates[i]._icon;
             newTemplateObject.GetComponent<ArmyTemplateItem_UI>().SetUp();
 
             newTemplateObject.GetComponent<Button>().onClick.AddListener(newTemplateObject.GetComponent<ArmyTemplateItem_UI>().BuyTemplate);
@@ -367,11 +393,54 @@ public class RegionUI : MonoBehaviour
 
     public void MoveUnitMode()
     {
-        if (ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy)
+        if (ReferencesManager.Instance.regionManager.currentRegionManager != null)
         {
-            UnitMovement unitMovement = ReferencesManager.Instance.regionManager.currentRegionManager.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
+            if (ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy)
+            {
+                UnitMovement unitMovement = ReferencesManager.Instance.regionManager.currentRegionManager.transform.Find("Unit(Clone)").GetComponent<UnitMovement>();
 
-            if (unitMovement._movePoints > 0)
+                if (unitMovement._movePoints > 0)
+                {
+                    ReferencesManager.Instance.regionManager.moveMode = true;
+
+                    for (int i = 0; i < tabs.Length; i++)
+                    {
+                        tabs[i].SetActive(false);
+                    }
+                    unitsShopContainer.SetActive(false);
+                    navyUnitsShopContainer.SetActive(false);
+
+                    barContent.SetActive(false);
+
+                    UnitMovement[] unitsMovements = FindObjectsOfType<UnitMovement>();
+
+                    for (int i = 0; i < unitsMovements.Length; i++)
+                    {
+                        unitsMovements[i].isSelected = false;
+                    }
+
+                    foreach (Transform movePoint in ReferencesManager.Instance.regionManager.currentRegionManager.movePoints)
+                    {
+                        movePoint.GetComponent<PolygonCollider2D>().enabled = true;
+                        movePoint.GetComponent<MovePoint>().attackerUnit = unitMovement;
+                    }
+
+                    unitMovement.isSelected = true;
+                    unitMovement.ShowClosestsPoints();
+
+                    UISoundEffect.Instance.PlayAudio(click_01);
+                }
+                else
+                {
+                    WarningManager.Instance.Warn(ReferencesManager.Instance.languageManager.GetTranslation("Warn.NoMovePoints"));
+                }
+            }
+        }
+        else
+        {
+            UnitMovement unitMovement = ReferencesManager.Instance.seaRegionManager._currentSeaRegion._division;
+
+            if (unitMovement != null && unitMovement._movePoints > 0)
             {
                 ReferencesManager.Instance.regionManager.moveMode = true;
 
@@ -389,12 +458,6 @@ public class RegionUI : MonoBehaviour
                 for (int i = 0; i < unitsMovements.Length; i++)
                 {
                     unitsMovements[i].isSelected = false;
-                }
-
-                foreach (Transform movePoint in ReferencesManager.Instance.regionManager.currentRegionManager.movePoints)
-                {
-                    movePoint.GetComponent<PolygonCollider2D>().enabled = true;
-                    movePoint.GetComponent<MovePoint>().attackerUnit = unitMovement;
                 }
 
                 unitMovement.isSelected = true;
@@ -455,7 +518,16 @@ public class RegionUI : MonoBehaviour
 
         unitUIs.Clear();
 
-        UnitMovement division = ReferencesManager.Instance.regionManager.currentRegionManager.GetDivision(ReferencesManager.Instance.regionManager.currentRegionManager);
+        UnitMovement division = null;
+
+        if (ReferencesManager.Instance.regionManager.currentRegionManager != null)
+        {
+            division = ReferencesManager.Instance.regionManager.currentRegionManager.GetDivision(ReferencesManager.Instance.regionManager.currentRegionManager);
+        }
+        else if (ReferencesManager.Instance.seaRegionManager._currentSeaRegion != null)
+        {
+            division = ReferencesManager.Instance.seaRegionManager._currentSeaRegion.GetDivision(ReferencesManager.Instance.seaRegionManager._currentSeaRegion);
+        }
 
         if (division != null)
         {
@@ -477,12 +549,25 @@ public class RegionUI : MonoBehaviour
                     ReferencesManager.Instance.army.addArmyButton.SetActive(true);
                 }
 
+                if (division.inSea)
+                {
+                    addArmyButton.gameObject.SetActive(false);
+                }
+
                 ReferencesManager.Instance.army.addArmyButton.transform.SetAsLastSibling();
             }
 
             if (division.unitsHealth.Count <= 0 && checkUnits)
             {
-                ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy = false;
+                if (ReferencesManager.Instance.regionManager.currentRegionManager != null)
+                {
+                    ReferencesManager.Instance.regionManager.currentRegionManager.hasArmy = false;
+                }
+                else if (ReferencesManager.Instance.seaRegionManager._currentSeaRegion != null)
+                {
+                    ReferencesManager.Instance.seaRegionManager._currentSeaRegion._division = null;
+                }
+
                 division.unitsHealth.Clear();
                 armyContainer.SetActive(false);
                 unitShop.SetActive(false);
@@ -536,7 +621,7 @@ public class RegionUI : MonoBehaviour
         }
     }
 
-    public void FightProceed(float winChance, RegionManager fightRegion)
+    public void FightProceed()
     {
         if (winChance >= 50)
         {
@@ -552,9 +637,17 @@ public class RegionUI : MonoBehaviour
 
             RegionManager _actionRegion = ReferencesManager.Instance.gameSettings.currentBattle.fightRegion;
 
-
-
-            djarahov.AIMoveNoHit(_actionRegion, djarahov);
+            if (!djarahov.inSea)
+            {
+                djarahov.AIMoveNoHit(_actionRegion, djarahov);
+            }
+            else
+            {
+                ReferencesManager.Instance.AnnexRegion(_actionRegion, djarahov.currentCountry);
+                ReferencesManager.Instance.regionManager.SelectRegionNoHit(_actionRegion);
+                djarahov.FromSeaToGroundMove(djarahov, _actionRegion);
+                djarahov.UpdateInfo();
+            }
         }
         else if (winChance < 50)
         {
@@ -568,19 +661,212 @@ public class RegionUI : MonoBehaviour
         }
     }
 
+    public void Sea_FightProceed()
+    {
+        if (ReferencesManager.Instance.gameSettings.currentBattle.winChance >= 50)
+        {
+            Victory();
+
+            UnitMovement loserDivision = ReferencesManager.Instance.gameSettings.currentBattle.defenderDivision;
+            UnitMovement djarahov = ReferencesManager.Instance.gameSettings.currentBattle.attackerDivision;
+
+            if (loserDivision != null)
+            {
+                loserDivision.Retreat(loserDivision);
+            }
+
+            SeaRegion _actionRegion = ReferencesManager.Instance.gameSettings.currentBattle.seaFightRegion;
+
+            djarahov.SeaMove(djarahov, _actionRegion);
+        }
+        else if (ReferencesManager.Instance.gameSettings.currentBattle.winChance < 50)
+        {
+            Defeat();
+
+            UnitMovement attackerDivision = ReferencesManager.Instance.gameSettings.currentBattle.attackerDivision;
+
+            attackerDivision.firstMove = false;
+            attackerDivision._movePoints--;
+            attackerDivision.UpdateInfo();
+        }
+    }
+
+
     public void ConfirmResult()
     {
-        if (winChance >= 50)
+        if (ReferencesManager.Instance.gameSettings.currentBattle.fightRegion != null)
         {
-            ReferencesManager.Instance.regionManager.SelectRegionNoHit(actionRegion);
+            if (winChance >= 50)
+            {
+                ReferencesManager.Instance.regionManager.SelectRegionNoHit(actionRegion);
+            }
         }
+        else if (ReferencesManager.Instance.gameSettings.currentBattle.seaFightRegion != null)
+        {
+            Sea_ConfirmResult(ReferencesManager.Instance.gameSettings.currentBattle);
+        }
+
         fightCloseOverlay.interactable = true;
     }
 
+    public void Sea_ConfirmResult(UnitMovement.BattleInfo battle)
+    {
+        if (battle.winChance >= 50)
+        {
+            battle.defenderDivision.Retreat(battle.defenderDivision);
+
+            battle.attackerDivision.SeaMove(battle.attackerDivision, battle.seaFightRegion);
+        }
+
+        Sea_ApplyDamage(battle);
+
+        battle.attackerDivision.UpdateInfo();
+        battle.defenderDivision.UpdateInfo();
+    }
+
+    private void Sea_ApplyDamage(UnitMovement.BattleInfo battle)
+    {
+        int att_inf_losses = 0;
+        int att_art_losses = 0;
+        int att_hvy_losses = 0;
+
+        int def_inf_losses = 0;
+        int def_art_losses = 0;
+        int def_hvy_losses = 0;
+
+        float defender_losses_factor = 1;
+        float attacker_losses_factor = 1;
+
+        bool defenderWin = false;
+        bool attackerWin = false;
+
+        if (battle.winChance >= 50) attackerWin = true;
+        else defenderWin = true;
+
+        if (battle.winChance <= 0)
+        {
+            battle.winChance = Random.Range(1, 5);
+        }
+
+        if (attackerWin)
+        {
+            defender_losses_factor = 1 / (battle.winChance / (101f - battle.winChance));
+            attacker_losses_factor = ((101f - battle.winChance) / battle.winChance);
+        }
+        else if (defenderWin)
+        {
+            attacker_losses_factor = ((101f - battle.winChance) / battle.winChance);
+            defender_losses_factor = 1 / (battle.winChance / (101f - battle.winChance));
+        }
+
+        float attackerDamage_Soft = battle.defenderSoftAttack * attacker_losses_factor;
+        float defenderDamage_Soft = battle.attackerSoftAttack * defender_losses_factor;
+
+        float attackerDamage_Hard = battle.defenderHardAttack * attacker_losses_factor;
+        float defenderDamage_Hard = battle.attackerHardAttack * defender_losses_factor;
+
+        #region Defender Losses
+
+        if (battle.defenderDivision != null)
+        {
+            for (int j = 0; j < battle.defenderDivision.unitsHealth.Count; j++)
+            {
+                if (battle.defenderDivision.unitsHealth[j].unit.hardness <= 15)
+                {
+                    battle.defenderDivision.unitsHealth[j].health -= defenderDamage_Soft;
+                }
+                else if (battle.defenderDivision.unitsHealth[j].unit.hardness > 15)
+                {
+                    battle.defenderDivision.unitsHealth[j].health -= defenderDamage_Hard;
+                }
+
+                if (battle.defenderDivision.unitsHealth[j].health <= 0)
+                {
+                    battle.defenderDivision.currentCountry.moneyNaturalIncome += battle.defenderDivision.unitsHealth[j].unit.moneyIncomeCost;
+                    battle.defenderDivision.currentCountry.foodNaturalIncome += battle.defenderDivision.unitsHealth[j].unit.foodIncomeCost;
+
+                    if (battle.defenderDivision.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER)
+                    {
+                        def_inf_losses++;
+                    }
+                    else if (battle.defenderDivision.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+                    {
+                        def_inf_losses++;
+                    }
+                    else if (battle.defenderDivision.unitsHealth[j].unit.type == UnitScriptableObject.Type.ARTILERY)
+                    {
+                        def_art_losses++;
+                    }
+                    else if (battle.defenderDivision.unitsHealth[j].unit.type == UnitScriptableObject.Type.TANK)
+                    {
+                        def_hvy_losses++;
+                    }
+
+                    battle.defenderDivision.currentCountry.myRegions[Random.Range(0, battle.defenderDivision.currentCountry.myRegions.Count)].population -= battle.attackerDivision.unitsHealth[j].unit.recrootsCost;
+                    battle.defenderDivision.unitsHealth.Remove(battle.defenderDivision.unitsHealth[j]);
+                }
+            }
+            if (battle.defenderDivision.unitsHealth.Count < 1)
+            {
+                battle.defenderDivision.currentProvince = transform.parent.GetComponent<RegionManager>();
+                StartCoroutine(battle.defenderDivision.DestroyDivision_Co());
+            }
+        }
+
+        #endregion
+
+        #region Attacker Losses
+
+        for (int j = 0; j < battle.attackerDivision.unitsHealth.Count; j++)
+        {
+            if (battle.attackerDivision.unitsHealth[j].unit.hardness <= 15)
+            {
+                battle.attackerDivision.unitsHealth[j].health -= attackerDamage_Soft;
+            }
+            else if (battle.attackerDivision.unitsHealth[j].unit.hardness > 15)
+            {
+                battle.attackerDivision.unitsHealth[j].health -= attackerDamage_Hard;
+            }
+
+            if (battle.attackerDivision.unitsHealth[j].health <= 0)
+            {
+                battle.attackerDivision.currentCountry.moneyNaturalIncome += battle.attackerDivision.unitsHealth[j].unit.moneyIncomeCost;
+                battle.attackerDivision.currentCountry.foodNaturalIncome += battle.attackerDivision.unitsHealth[j].unit.foodIncomeCost;
+
+                if (battle.attackerDivision.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER)
+                {
+                    att_inf_losses++;
+                }
+                else if (battle.attackerDivision.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+                {
+                    att_inf_losses++;
+                }
+                else if (battle.attackerDivision.unitsHealth[j].unit.type == UnitScriptableObject.Type.ARTILERY)
+                {
+                    att_art_losses++;
+                }
+                else if (battle.attackerDivision.unitsHealth[j].unit.type == UnitScriptableObject.Type.TANK)
+                {
+                    att_hvy_losses++;
+                }
+
+                battle.attackerDivision.currentCountry.myRegions[Random.Range(0, battle.attackerDivision.currentCountry.myRegions.Count)].population -= battle.attackerDivision.unitsHealth[j].unit.recrootsCost;
+                battle.attackerDivision.unitsHealth.Remove(battle.attackerDivision.unitsHealth[j]);
+            }
+        }
+        if (battle.attackerDivision.unitsHealth.Count < 1)
+        {
+            battle.attackerDivision.currentProvince = transform.parent.GetComponent<RegionManager>();
+            StartCoroutine(battle.attackerDivision.DestroyDivision_Co());
+        }
+
+        #endregion
+    }
+
+
     public void CloseAllUI()
     {
-        List<RegionInfoCanvas> regionInfoCanvases = new List<RegionInfoCanvas>();
-        regionInfoCanvases = FindObjectsOfType<RegionInfoCanvas>().ToList();
+        List<RegionInfoCanvas> regionInfoCanvases = FindObjectsOfType<RegionInfoCanvas>().ToList();
 
         for (int i = 0; i < regionInfoCanvases.Count; i++)
         {
@@ -599,7 +885,16 @@ public class RegionUI : MonoBehaviour
         navyUnitsShopContainer.SetActive(false);
         createFleetTab.SetActive(false);
         buildingsShopContainer.SetActive(false);
+
         ReferencesManager.Instance.diplomatyUI.diplomatyContainer.SetActive(false);
+
+
+        if (GuildManageMenu.Instance != null)
+        {
+            GuildManageMenu.Instance.Disable();
+        }
+
+        _guildContainerPanel.SetActive(false);
         countryInfoAdvanced.SetActive(false);
     }
 
@@ -699,20 +994,249 @@ public class RegionUI : MonoBehaviour
 
     public void FightConfirm()
     {
-        currentMovePoint.ConfirmFight();
         cancelFightButton.SetActive(false);
         fightCloseOverlay.interactable = false;
 
-        FightProceed(winChance, actionRegion);
+        if (ReferencesManager.Instance.gameSettings.currentBattle.defenderDivision != null)
+        {
+            if (!ReferencesManager.Instance.gameSettings.currentBattle.defenderDivision.inSea)
+            {
+                currentMovePoint.ConfirmFight();
+
+                FightProceed();
+            }
+            else
+            {
+                Sea_FightProceed();
+            }
+        }
+        else
+        {
+            if (ReferencesManager.Instance.gameSettings.currentBattle.fightRegion != null)
+            {
+                for (int i = 0; i < ReferencesManager.Instance.army.defenderArmyLossesValue.Length; i++)
+                {
+                    ReferencesManager.Instance.army.defenderArmyLossesValue[i] = 0;
+                }
+                for (int i = 0; i < ReferencesManager.Instance.army.attackerArmyLossesValue.Length; i++)
+                {
+                    ReferencesManager.Instance.army.defenderArmyLossesValue[i] = 0;
+                }
+
+                ApplyDamage(ReferencesManager.Instance.gameSettings.currentBattle);
+
+                if (ReferencesManager.Instance.gameSettings.currentBattle.winChance >= 50)
+                {
+                    RegionManager annexedRegion = ReferencesManager.Instance.gameSettings.currentBattle.fightRegion;
+
+                    int annexedRegionGoldIncome = (ReferencesManager.Instance.gameSettings.fabric.goldIncome * annexedRegion.civFactory_Amount) + (ReferencesManager.Instance.gameSettings.farm.goldIncome * annexedRegion.farms_Amount) + (8 * annexedRegion.infrastructure_Amount);
+                    int annexedRegionFoodIncome = ReferencesManager.Instance.gameSettings.farm.foodIncome * annexedRegion.farms_Amount;
+
+                    ReferencesManager.Instance.army.attackerEconomyValue[0] = annexedRegionGoldIncome;
+                    ReferencesManager.Instance.army.attackerEconomyValue[1] = annexedRegionFoodIncome;
+                    ReferencesManager.Instance.army.attackerEconomyValue[2] = annexedRegion.population;
+                    ReferencesManager.Instance.army.attackerEconomyValue[3] = annexedRegion.civFactory_Amount;
+                    ReferencesManager.Instance.army.attackerEconomyValue[4] = annexedRegion.farms_Amount;
+
+                    ReferencesManager.Instance.regionUI._annexedRegion = _annexedRegion;
+                }
+
+                FightProceed();
+            }
+        }
     }
+
+    private void ApplyDamage(UnitMovement.BattleInfo battle)
+    {
+        int att_inf_losses = 0;
+        int att_art_losses = 0;
+        int att_hvy_losses = 0;
+        int att_cav_losses = 0;
+
+        int def_inf_losses = 0;
+        int def_art_losses = 0;
+        int def_hvy_losses = 0;
+        int def_cav_losses = 0;
+
+        float defender_losses_factor = 1;
+        float attacker_losses_factor = 1;
+
+        bool defenderWin = false;
+        bool attackerWin = false;
+
+        if (battle.winChance >= 50) attackerWin = true;
+        else defenderWin = true;
+
+        if (attackerWin)
+        {
+            defender_losses_factor = 1 / (winChance / (100 - winChance));
+            attacker_losses_factor = ((100 - winChance) / winChance);
+        }
+        else if (defenderWin)
+        {
+            attacker_losses_factor = ((100 - winChance) / winChance);
+            defender_losses_factor = 1 / (winChance / (100 - winChance));
+        }
+
+        float attackerDamage_Soft = battle.defenderSoftAttack * attacker_losses_factor;
+        float defenderDamage_Soft = battle.attackerSoftAttack * defender_losses_factor;
+
+        float attackerDamage_Hard = battle.defenderHardAttack * attacker_losses_factor;
+        float defenderDamage_Hard = battle.attackerHardAttack * defender_losses_factor;
+
+        #region Defender Losses
+
+        UnitMovement defenderUnit = ReferencesManager.Instance.gameSettings.currentBattle.defenderDivision;
+        UnitMovement attackerUnit = ReferencesManager.Instance.gameSettings.currentBattle.attackerDivision;
+
+        if (defenderUnit != null)
+        {
+            for (int j = 0; j < defenderUnit.unitsHealth.Count; j++)
+            {
+                if (defenderUnit.unitsHealth[j].unit.hardness <= 15)
+                {
+                    defenderUnit.unitsHealth[j].health -= defenderDamage_Soft;
+                }
+                else if (defenderUnit.unitsHealth[j].unit.hardness > 15)
+                {
+                    defenderUnit.unitsHealth[j].health -= defenderDamage_Hard;
+                }
+
+                if (defenderUnit.unitsHealth[j].health <= 0)
+                {
+                    defenderUnit.currentCountry.moneyNaturalIncome += defenderUnit.unitsHealth[j].unit.moneyIncomeCost;
+                    defenderUnit.currentCountry.foodNaturalIncome += defenderUnit.unitsHealth[j].unit.foodIncomeCost;
+
+                    if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER)
+                    {
+                        def_inf_losses++;
+                    }
+                    else if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+                    {
+                        def_inf_losses++;
+                    }
+                    else if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.ARTILERY)
+                    {
+                        def_art_losses++;
+                    }
+                    else if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.TANK)
+                    {
+                        def_hvy_losses++;
+                    }
+                    else if (defenderUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.CAVALRY)
+                    {
+                        def_cav_losses++;
+                    }
+
+                    defenderUnit.currentCountry.myRegions[Random.Range(0, defenderUnit.currentCountry.myRegions.Count)].population -= defenderUnit.unitsHealth[j].unit.recrootsCost;
+                    defenderUnit.unitsHealth.Remove(defenderUnit.unitsHealth[j]);
+                }
+            }
+            if (defenderUnit.unitsHealth.Count < 1)
+            {
+                defenderUnit.currentProvince = transform.parent.GetComponent<RegionManager>();
+                StartCoroutine(defenderUnit.DestroyDivision_Co());
+            }
+        }
+
+        #endregion
+
+        #region Attacker Losses
+
+        for (int j = 0; j < attackerUnit.unitsHealth.Count; j++)
+        {
+            if (attackerUnit.unitsHealth[j].unit.hardness <= 15)
+            {
+                attackerUnit.unitsHealth[j].health -= attackerDamage_Soft;
+            }
+            else if (attackerUnit.unitsHealth[j].unit.hardness > 15)
+            {
+                attackerUnit.unitsHealth[j].health -= attackerDamage_Hard;
+            }
+
+            if (attackerUnit.unitsHealth[j].health <= 0)
+            {
+                attackerUnit.currentCountry.moneyNaturalIncome += attackerUnit.unitsHealth[j].unit.moneyIncomeCost;
+                attackerUnit.currentCountry.foodNaturalIncome += attackerUnit.unitsHealth[j].unit.foodIncomeCost;
+
+                if (attackerUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER)
+                {
+                    att_inf_losses++;
+                }
+                else if (attackerUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.SOLDIER_MOTORIZED)
+                {
+                    att_inf_losses++;
+                }
+                else if (attackerUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.ARTILERY)
+                {
+                    att_art_losses++;
+                }
+                else if (attackerUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.TANK)
+                {
+                    att_hvy_losses++;
+                }
+                else if (attackerUnit.unitsHealth[j].unit.type == UnitScriptableObject.Type.CAVALRY)
+                {
+                    att_cav_losses++;
+                }
+
+                attackerUnit.currentCountry.myRegions[Random.Range(0, attackerUnit.currentCountry.myRegions.Count)].population -= attackerUnit.unitsHealth[j].unit.recrootsCost;
+                attackerUnit.unitsHealth.Remove(attackerUnit.unitsHealth[j]);
+            }
+        }
+        if (attackerUnit.unitsHealth.Count < 1)
+        {
+            attackerUnit.currentProvince = transform.parent.GetComponent<RegionManager>();
+            StartCoroutine(attackerUnit.DestroyDivision_Co());
+        }
+
+        #endregion
+
+        ReferencesManager.Instance.army.defenderArmyLossesValue[0] = def_inf_losses;
+        ReferencesManager.Instance.army.defenderArmyLossesValue[1] = def_art_losses;
+        ReferencesManager.Instance.army.defenderArmyLossesValue[2] = def_hvy_losses;
+        ReferencesManager.Instance.army.defenderArmyLossesValue[3] = def_cav_losses;
+
+        ReferencesManager.Instance.army.attackerArmyLossesValue[0] = att_inf_losses;
+        ReferencesManager.Instance.army.attackerArmyLossesValue[1] = att_art_losses;
+        ReferencesManager.Instance.army.attackerArmyLossesValue[2] = att_hvy_losses;
+        ReferencesManager.Instance.army.attackerArmyLossesValue[3] = att_cav_losses;
+    }
+
 
     public void CancelFight()
     {
-        currentMovePoint.CancelFight();
+        ReferencesManager.Instance.regionUI.fightPanelContainer.SetActive(false);
+
+        if (ReferencesManager.Instance.regionManager.currentRegionManager != null)
+        {
+            ReferencesManager.Instance.regionManager.SelectRegionNoHit(ReferencesManager.Instance.regionManager.currentRegionManager);
+        }
+        else if (ReferencesManager.Instance.seaRegionManager._currentSeaRegion != null)
+        {
+            ReferencesManager.Instance.seaRegionManager.SelectRegion_ByObject(ReferencesManager.Instance.seaRegionManager._currentSeaRegion);
+        }
 
         unitMovement.UpdateInfo();
 
         DeMoveUnitMode(true);
+        foreach (SeaMovePoint seaPoint in FindObjectsOfType(typeof(SeaMovePoint)).Cast<SeaMovePoint>())
+        {
+            Destroy(seaPoint.gameObject.GetComponent<SpriteRenderer>());
+            seaPoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+        }
+
+        foreach (FromSeaToGround_MovePoint groundPoint in FindObjectsOfType(typeof(FromSeaToGround_MovePoint)).Cast<FromSeaToGround_MovePoint>())
+        {
+            Destroy(groundPoint.gameObject.GetComponent<SpriteRenderer>());
+            groundPoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+        }
+
+        foreach (MovePoint movePoint in FindObjectsOfType(typeof(MovePoint)).Cast<MovePoint>())
+        {
+            Destroy(movePoint.gameObject.GetComponent<SpriteRenderer>());
+            movePoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+        }
     }
 
     public void UpdateBuildingUI()

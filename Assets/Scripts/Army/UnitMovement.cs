@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using static GameSettings;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class UnitMovement : MonoBehaviour
 {
@@ -26,6 +28,8 @@ public class UnitMovement : MonoBehaviour
     [HideInInspector] public int _movePoints;
 
     [HideInInspector] public bool firstMove;
+    public bool inSea = false;
+    public SeaRegion _currentSeaRegion;
 
     private int winChance;
 
@@ -49,56 +53,262 @@ public class UnitMovement : MonoBehaviour
         //currentProvince = this.transform.parent.GetComponent<RegionManager>();
     }
 
+    private CountrySettings GetEnemyInRegion_Unit(CountrySettings me, SeaRegion seaRegion)
+    {
+        CountrySettings country = null;
+
+        if (seaRegion._division != null)
+        {
+            Relationships.Relation relation = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(me, seaRegion._division.currentCountry);
+
+            if (relation.war)
+            {
+                country = relation.country;
+            }
+        }
+
+        return country;
+    }
+
+    private bool HasEnemyInRegion_Unit(CountrySettings me, SeaRegion seaRegion)
+    {
+        bool result = GetEnemyInRegion_Unit(me, seaRegion);
+
+        return result;
+    }
+
+    public void SeaMove(UnitMovement actionUnit, SeaRegion destinationRegion)
+    {
+        if (actionUnit != null)
+        {
+            if (HasEnemyInRegion_Unit(actionUnit.currentCountry, destinationRegion))
+            {
+                //Fight(destinationRegion);
+            }
+            else
+            {
+                if (actionUnit.currentProvince != null)
+                {
+                    if (actionUnit._movePoints > 0 && destinationRegion._division == null)
+                    {
+                        actionUnit.inSea = true;
+                        actionUnit._currentSeaRegion = destinationRegion;
+
+                        actionUnit._movePoints--;
+                        actionUnit.transform.position = destinationRegion.transform.position;
+
+                        destinationRegion._division = actionUnit;
+                        actionUnit.RemoveClosestsPoints();
+
+                        actionUnit.transform.parent = destinationRegion.transform;
+
+                        actionUnit.currentProvince.CheckRegionUnits(actionUnit.currentProvince);
+                        actionUnit.currentProvince = null;
+                        actionUnit.UpdateInfo();
+                    }
+                }
+                else if (actionUnit._currentSeaRegion != null)
+                {
+                    if (actionUnit._movePoints > 0 && destinationRegion._division == null)
+                    {
+                        actionUnit.inSea = true;
+                        actionUnit._currentSeaRegion._division = null;
+                        actionUnit._currentSeaRegion = destinationRegion;
+                        actionUnit.currentProvince = null;
+
+                        actionUnit._movePoints--;
+                        actionUnit.transform.position = destinationRegion.transform.position;
+
+                        destinationRegion._division = actionUnit;
+                        actionUnit.RemoveClosestsPoints();
+
+                        actionUnit.transform.parent = destinationRegion.transform;
+
+                        actionUnit.UpdateInfo();
+                    }
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError($"ERROR: Action target is null");
+        }
+    }
+
+    public void FromSeaToGroundMove(UnitMovement actionUnit, RegionManager _destinationRegion)
+    {
+        if (actionUnit._currentSeaRegion != null)
+        {
+            _destinationRegion.CheckRegionUnits(_destinationRegion);
+
+            if (_destinationRegion.currentCountry == actionUnit.currentCountry)
+            {
+                _destinationRegion.CheckRegionUnits(_destinationRegion);
+
+                if (actionUnit._movePoints > 0 && _destinationRegion.hasArmy == false)
+                {
+                    actionUnit.inSea = false;
+                    actionUnit._currentSeaRegion._division = null;
+                    actionUnit._currentSeaRegion = null;
+
+                    actionUnit._movePoints--;
+                    actionUnit.transform.position = _destinationRegion.transform.position;
+
+                    _destinationRegion.hasArmy = true;
+                    actionUnit.RemoveClosestsPoints();
+
+                    actionUnit.transform.parent = _destinationRegion.transform;
+
+                    actionUnit.currentProvince = _destinationRegion;
+                    actionUnit.currentProvince.CheckRegionUnits(actionUnit.currentProvince);
+                    actionUnit.UpdateInfo();
+                }
+            }
+            else
+            {
+                Relationships.Relation relations = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(actionUnit.currentCountry, _destinationRegion.currentCountry);
+
+                if (relations.war)
+                {
+                    //Fight(_destinationRegion, actionUnit);
+                }
+                else if (relations.right)
+                {
+                    actionUnit.inSea = false;
+                    actionUnit._currentSeaRegion._division = null;
+                    actionUnit._currentSeaRegion = null;
+
+                    actionUnit._movePoints--;
+                    actionUnit.transform.position = _destinationRegion.transform.position;
+
+                    _destinationRegion.hasArmy = true;
+                    actionUnit.RemoveClosestsPoints();
+
+                    actionUnit.transform.parent = _destinationRegion.transform;
+
+                    actionUnit.currentProvince = _destinationRegion;
+                    actionUnit.currentProvince.CheckRegionUnits(actionUnit.currentProvince);
+                    actionUnit.UpdateInfo();
+                }
+                else if (!relations.right)
+                {
+
+                }
+            }
+        }
+    }
+
     public void ShowClosestsPoints()
     {
         nearestPoints.Clear();
 
-        foreach (Transform point in regionManager.currentRegionManager.movePoints)
+        if (regionManager.currentRegionManager != null)
         {
-            nearestPoints.Add(point);
-            point.gameObject.AddComponent<SpriteRenderer>();
-
-            if (countryManager.currentCountry == point.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>().currentCountry)
+            foreach (Transform point in regionManager.currentRegionManager.movePoints)
             {
-                point.gameObject.GetComponent<SpriteRenderer>().sprite = army.pointSprite;
+                nearestPoints.Add(point);
+                point.gameObject.AddComponent<SpriteRenderer>();
 
-                point.GetComponent<MovePoint>().regionTo.GetComponent<SpriteRenderer>().color =
-                    new Color(
-                    ReferencesManager.Instance.gameSettings.greenColor.r,
-                    ReferencesManager.Instance.gameSettings.greenColor.g,
-                    ReferencesManager.Instance.gameSettings.greenColor.b, 0.5f);
-            }
-            else
-            {
-                foreach (Relationships.Relation realtion in countryManager.currentCountry.
-                GetComponent<Relationships>().relationship)
+                if (countryManager.currentCountry == point.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>().currentCountry)
                 {
-                    if (realtion.country == point.GetComponent<MovePoint>().
-                        regionTo.GetComponent<RegionManager>().
-                        currentCountry)
+                    point.gameObject.GetComponent<SpriteRenderer>().sprite = army.pointSprite;
+
+                    point.GetComponent<MovePoint>().regionTo.GetComponent<SpriteRenderer>().color =
+                        new Color(
+                        ReferencesManager.Instance.gameSettings.greenColor.r,
+                        ReferencesManager.Instance.gameSettings.greenColor.g,
+                        ReferencesManager.Instance.gameSettings.greenColor.b, 0.5f);
+                }
+                else
+                {
+                    foreach (Relationships.Relation realtion in countryManager.currentCountry.
+                    GetComponent<Relationships>().relationship)
                     {
-                        if (realtion.war)
+                        if (realtion.country == point.GetComponent<MovePoint>().
+                            regionTo.GetComponent<RegionManager>().
+                            currentCountry)
                         {
-                            point.gameObject.GetComponent<SpriteRenderer>().sprite = army.attackSprite;
-                            point.GetComponent<MovePoint>().regionTo.GetComponent<SpriteRenderer>().color =
+                            if (realtion.war)
+                            {
+                                point.gameObject.GetComponent<SpriteRenderer>().sprite = army.attackSprite;
+                                point.GetComponent<MovePoint>().regionTo.GetComponent<SpriteRenderer>().color =
+                                    new Color(
+                                    ReferencesManager.Instance.gameSettings.redColor.r,
+                                    ReferencesManager.Instance.gameSettings.redColor.g,
+                                    ReferencesManager.Instance.gameSettings.redColor.b, 0.5f);
+                            }
+                            else if (realtion.right)
+                            {
+                                point.gameObject.GetComponent<SpriteRenderer>().sprite = army.pointSprite;
+                                point.GetComponent<MovePoint>().regionTo.GetComponent<SpriteRenderer>().color =
+                                    new Color(
+                                    ReferencesManager.Instance.gameSettings.greenColor.r,
+                                    ReferencesManager.Instance.gameSettings.greenColor.g,
+                                    ReferencesManager.Instance.gameSettings.greenColor.b, 0.5f);
+                            }
+                            else if (!realtion.right)
+                            {
+                                point.gameObject.GetComponent<SpriteRenderer>().sprite = army.chatSprite;
+                                point.GetComponent<MovePoint>().regionTo.GetComponent<SpriteRenderer>().color =
+                                    new Color(
+                                    ReferencesManager.Instance.gameSettings.blueColor.r,
+                                    ReferencesManager.Instance.gameSettings.blueColor.g,
+                                    ReferencesManager.Instance.gameSettings.blueColor.b, 0.5f);
+                            }
+                        }
+                    }
+                }
+
+                point.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 99;
+                point.gameObject.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("RegionInfo");
+            }
+
+            foreach (SeaMovePoint seaMovePoint in regionManager.currentRegionManager._seaPoints)
+            {
+                seaMovePoint.gameObject.AddComponent<SpriteRenderer>();
+                seaMovePoint.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 99;
+                seaMovePoint.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = "RegionInfo";
+                seaMovePoint.gameObject.GetComponent<PolygonCollider2D>().enabled = true;
+
+                if (seaMovePoint.regionTransit._division != null)
+                {
+                    if (seaMovePoint.regionTransit._division.currentCountry == this.currentCountry)
+                    {
+                        seaMovePoint.gameObject.GetComponent<SpriteRenderer>().sprite = army.pointSprite;
+
+                        seaMovePoint.regionTransit.GetComponent<SpriteRenderer>().color =
+                            new Color(
+                            ReferencesManager.Instance.gameSettings.greenColor.r,
+                            ReferencesManager.Instance.gameSettings.greenColor.g,
+                            ReferencesManager.Instance.gameSettings.greenColor.b, 0.5f);
+                    }
+                    else
+                    {
+                        Relationships.Relation relations = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(this.currentCountry, seaMovePoint.regionTransit._division.currentCountry);
+
+                        if (relations.war)
+                        {
+                            seaMovePoint.gameObject.GetComponent<SpriteRenderer>().sprite = army.attackSprite;
+                            seaMovePoint.regionTransit.GetComponent<SpriteRenderer>().color =
                                 new Color(
                                 ReferencesManager.Instance.gameSettings.redColor.r,
                                 ReferencesManager.Instance.gameSettings.redColor.g,
                                 ReferencesManager.Instance.gameSettings.redColor.b, 0.5f);
                         }
-                        else if (realtion.right)
+                        else if (relations.right)
                         {
-                            point.gameObject.GetComponent<SpriteRenderer>().sprite = army.pointSprite;
-                            point.GetComponent<MovePoint>().regionTo.GetComponent<SpriteRenderer>().color =
+                            seaMovePoint.gameObject.GetComponent<SpriteRenderer>().sprite = army.pointSprite;
+
+                            seaMovePoint.regionTransit.GetComponent<SpriteRenderer>().color =
                                 new Color(
                                 ReferencesManager.Instance.gameSettings.greenColor.r,
                                 ReferencesManager.Instance.gameSettings.greenColor.g,
                                 ReferencesManager.Instance.gameSettings.greenColor.b, 0.5f);
                         }
-                        else if (!realtion.right)
+                        else if (!relations.right)
                         {
-                            point.gameObject.GetComponent<SpriteRenderer>().sprite = army.chatSprite;
-                            point.GetComponent<MovePoint>().regionTo.GetComponent<SpriteRenderer>().color =
+                            seaMovePoint.gameObject.GetComponent<SpriteRenderer>().sprite = army.chatSprite;
+                            seaMovePoint.regionTransit.GetComponent<SpriteRenderer>().color =
                                 new Color(
                                 ReferencesManager.Instance.gameSettings.blueColor.r,
                                 ReferencesManager.Instance.gameSettings.blueColor.g,
@@ -106,10 +316,147 @@ public class UnitMovement : MonoBehaviour
                         }
                     }
                 }
+                else
+                {
+                    seaMovePoint.gameObject.GetComponent<SpriteRenderer>().sprite = army.pointSprite;
+
+                    seaMovePoint.regionTransit.GetComponent<SpriteRenderer>().color =
+                        new Color(
+                        ReferencesManager.Instance.gameSettings.greenColor.r,
+                        ReferencesManager.Instance.gameSettings.greenColor.g,
+                        ReferencesManager.Instance.gameSettings.greenColor.b, 0.5f);
+                }
+            }
+        }
+
+        if (ReferencesManager.Instance.seaRegionManager._currentSeaRegion != null)
+        {
+            foreach (SeaMovePoint seaMovePoint in ReferencesManager.Instance.seaRegionManager._currentSeaRegion._movePoints)
+            {
+                seaMovePoint.gameObject.AddComponent<SpriteRenderer>();
+                seaMovePoint.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 99;
+                seaMovePoint.gameObject.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("RegionInfo");
+                seaMovePoint.gameObject.GetComponent<PolygonCollider2D>().enabled = true;
+
+                if (seaMovePoint.regionTransit._division != null)
+                {
+                    if (seaMovePoint.regionTransit._division.currentCountry == this.currentCountry)
+                    {
+                        seaMovePoint.gameObject.GetComponent<SpriteRenderer>().sprite = army.pointSprite;
+
+                        seaMovePoint.regionTransit.GetComponent<SpriteRenderer>().color =
+                            new Color(
+                            ReferencesManager.Instance.gameSettings.greenColor.r,
+                            ReferencesManager.Instance.gameSettings.greenColor.g,
+                            ReferencesManager.Instance.gameSettings.greenColor.b, 0.5f);
+                    }
+                    else
+                    {
+                        Relationships.Relation relations = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(this.currentCountry, seaMovePoint.regionTransit._division.currentCountry);
+
+                        if (relations.war)
+                        {
+                            seaMovePoint.gameObject.GetComponent<SpriteRenderer>().sprite = army.attackSprite;
+                            seaMovePoint.regionTransit.GetComponent<SpriteRenderer>().color =
+                                new Color(
+                                ReferencesManager.Instance.gameSettings.redColor.r,
+                                ReferencesManager.Instance.gameSettings.redColor.g,
+                                ReferencesManager.Instance.gameSettings.redColor.b, 0.5f);
+                        }
+                        else if (relations.right)
+                        {
+                            seaMovePoint.gameObject.GetComponent<SpriteRenderer>().sprite = army.pointSprite;
+
+                            seaMovePoint.regionTransit.GetComponent<SpriteRenderer>().color =
+                                new Color(
+                                ReferencesManager.Instance.gameSettings.greenColor.r,
+                                ReferencesManager.Instance.gameSettings.greenColor.g,
+                                ReferencesManager.Instance.gameSettings.greenColor.b, 0.5f);
+                        }
+                        else if (!relations.right)
+                        {
+                            seaMovePoint.gameObject.GetComponent<SpriteRenderer>().sprite = army.chatSprite;
+                            seaMovePoint.regionTransit.GetComponent<SpriteRenderer>().color =
+                                new Color(
+                                ReferencesManager.Instance.gameSettings.blueColor.r,
+                                ReferencesManager.Instance.gameSettings.blueColor.g,
+                                ReferencesManager.Instance.gameSettings.blueColor.b, 0.5f);
+                        }
+                    }
+                }
+                else
+                {
+                    seaMovePoint.gameObject.GetComponent<SpriteRenderer>().sprite = army.pointSprite;
+
+                    seaMovePoint.regionTransit.GetComponent<SpriteRenderer>().color =
+                        new Color(
+                        ReferencesManager.Instance.gameSettings.greenColor.r,
+                        ReferencesManager.Instance.gameSettings.greenColor.g,
+                        ReferencesManager.Instance.gameSettings.greenColor.b, 0.5f);
+                }
             }
 
-            point.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 99;
-            point.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = "RegionInfo";
+            foreach (FromSeaToGround_MovePoint toGroundMovePoint in ReferencesManager.Instance.seaRegionManager._currentSeaRegion._toGroundMovePoints)
+            {
+                toGroundMovePoint.gameObject.AddComponent<SpriteRenderer>();
+                toGroundMovePoint.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 99;
+                toGroundMovePoint.gameObject.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("RegionInfo");
+                toGroundMovePoint.gameObject.GetComponent<PolygonCollider2D>().enabled = true;
+
+                toGroundMovePoint._destinationRegion.CheckRegionUnits(toGroundMovePoint._destinationRegion);
+
+                if (toGroundMovePoint._destinationRegion.currentCountry == this.currentCountry)
+                {
+                    if (!toGroundMovePoint._destinationRegion.GetDivision(toGroundMovePoint._destinationRegion))
+                    {
+                        toGroundMovePoint.gameObject.GetComponent<SpriteRenderer>().sprite = army.pointSprite;
+
+                        toGroundMovePoint._destinationRegion.GetComponent<SpriteRenderer>().color =
+                            new Color(
+                            ReferencesManager.Instance.gameSettings.greenColor.r,
+                            ReferencesManager.Instance.gameSettings.greenColor.g,
+                            ReferencesManager.Instance.gameSettings.greenColor.b, 0.5f);
+                    }
+                    else
+                    {
+                        toGroundMovePoint.gameObject.GetComponent<PolygonCollider2D>().enabled = true;
+                        Destroy(toGroundMovePoint.gameObject.GetComponent<SpriteRenderer>());
+                    }
+                }
+                else
+                {
+                    Relationships.Relation relations = ReferencesManager.Instance.diplomatyUI.FindCountriesRelation(this.currentCountry, toGroundMovePoint._destinationRegion.currentCountry);
+
+                    if (relations.war)
+                    {
+                        toGroundMovePoint.gameObject.GetComponent<SpriteRenderer>().sprite = army.attackSprite;
+                        toGroundMovePoint._destinationRegion.GetComponent<SpriteRenderer>().color =
+                            new Color(
+                            ReferencesManager.Instance.gameSettings.redColor.r,
+                            ReferencesManager.Instance.gameSettings.redColor.g,
+                            ReferencesManager.Instance.gameSettings.redColor.b, 0.5f);
+                    }
+                    else if (relations.right)
+                    {
+                        toGroundMovePoint.gameObject.GetComponent<SpriteRenderer>().sprite = army.pointSprite;
+
+                        toGroundMovePoint._destinationRegion.GetComponent<SpriteRenderer>().color =
+                            new Color(
+                            ReferencesManager.Instance.gameSettings.greenColor.r,
+                            ReferencesManager.Instance.gameSettings.greenColor.g,
+                            ReferencesManager.Instance.gameSettings.greenColor.b, 0.5f);
+                    }
+                    else if (!relations.right)
+                    {
+                        toGroundMovePoint.gameObject.GetComponent<SpriteRenderer>().sprite = army.chatSprite;
+                        toGroundMovePoint._destinationRegion.GetComponent<SpriteRenderer>().color =
+                            new Color(
+                            ReferencesManager.Instance.gameSettings.blueColor.r,
+                            ReferencesManager.Instance.gameSettings.blueColor.g,
+                            ReferencesManager.Instance.gameSettings.blueColor.b, 0.5f);
+                    }
+                }
+            }
         }
     }
 
@@ -117,80 +464,114 @@ public class UnitMovement : MonoBehaviour
     {
         nearestPoints.Clear();
 
-        foreach (Transform point in regionManager.currentRegionManager.movePoints)
+        if (regionManager.currentRegionManager != null)
         {
-            nearestPoints.Add(point);
-            regionManager.currentRegionManager.SelectRegionNoHit(point.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>());
-            Destroy(point.gameObject.GetComponent<SpriteRenderer>());
+            foreach (Transform point in regionManager.currentRegionManager.movePoints)
+            {
+                nearestPoints.Add(point);
+                regionManager.currentRegionManager.SelectRegionNoHit(point.GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>());
+                Destroy(point.gameObject.GetComponent<SpriteRenderer>());
+            }
+        }
+
+        foreach (SeaMovePoint seaPoint in FindObjectsOfType(typeof(SeaMovePoint)).Cast<SeaMovePoint>())
+        {
+            Destroy(seaPoint.gameObject.GetComponent<SpriteRenderer>());
+            seaPoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+        }
+
+        foreach (FromSeaToGround_MovePoint groundPoint in FindObjectsOfType(typeof(FromSeaToGround_MovePoint)).Cast<FromSeaToGround_MovePoint>())
+        {
+            Destroy(groundPoint.gameObject.GetComponent<SpriteRenderer>());
+            groundPoint.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
         }
     }
 
     public bool AIMoveNoHit(RegionManager defenderRegion, UnitMovement division)
     {
-        RegionManager attackerRegion = division.currentProvince;
-        defenderRegion.CheckRegionUnits(defenderRegion);
+        bool result = false;
 
-        if (division.currentCountry.exist && division != null && attackerRegion != null && division._movePoints > 0)
+        if (!division.inSea && defenderRegion != null && division != null)
         {
-            if (defenderRegion.currentCountry == attackerRegion.currentCountry) // Just move
-            { // my country
-                if (!defenderRegion.hasArmy)
-                {
-                    division._movePoints--;
-                    division.firstMove = false;
+            RegionManager attackerRegion = division.currentProvince;
+            defenderRegion.CheckRegionUnits(defenderRegion);
 
-                    MoveUnit(defenderRegion, attackerRegion, division);
-
-                    attackerRegion.hasArmy = false;
-                    defenderRegion.hasArmy = true;
-                }
-
-                return true;
-            }
-            else
+            if (division.currentCountry.exist && division != null && attackerRegion != null && division._movePoints > 0)
             {
-                foreach (Relationships.Relation realtion in attackerRegion.currentCountry.
-                GetComponent<Relationships>().relationship)
-                {
-                    if (realtion.country == defenderRegion.currentCountry)
+                if (defenderRegion.currentCountry == attackerRegion.currentCountry) // Just move
+                { // my country
+                    if (!defenderRegion.hasArmy)
                     {
-                        if (realtion.war) // War
+                        division._movePoints--;
+                        division.firstMove = false;
+
+                        MoveUnit(defenderRegion, attackerRegion, division);
+
+                        attackerRegion.hasArmy = false;
+                        defenderRegion.hasArmy = true;
+                    }
+
+                    result = true;
+                }
+                else
+                {
+                    foreach (Relationships.Relation realtion in
+                        division.currentCountry.relations.relationship)
+                    {
+                        if (realtion.country == defenderRegion.currentCountry)
                         {
-                            division._movePoints--;
-                            division.firstMove = false;
-
-                            Fight(defenderRegion, attackerRegion, division);
-
-                            foreach (UnitHealth unit in division.unitsHealth)
+                            if (realtion.war) // War
                             {
-                                unit.fuel -= 100;
+                                if (division.currentProvince.currentCountry == division.currentCountry ||
+
+                                    ReferencesManager.Instance.diplomatyUI.
+                                    FindCountriesRelation(division.currentProvince.currentCountry,
+                                    division.currentCountry).right)
+                                {
+                                    division._movePoints--;
+                                    division.firstMove = false;
+
+                                    Fight(defenderRegion, attackerRegion, division);
+
+                                    foreach (UnitHealth unit in division.unitsHealth)
+                                    {
+                                        unit.fuel -= 100;
+                                    }
+                                }
                             }
-                        }
-                        else if (realtion.right)
-                        {
-                            defenderRegion.CheckRegionUnits(defenderRegion);
-                            if (!defenderRegion.hasArmy)
+                            else if (realtion.right || division.currentCountry == defenderRegion.currentCountry)
                             {
-                                division._movePoints--;
-                                division.firstMove = false;
+                                defenderRegion.CheckRegionUnits(defenderRegion);
 
-                                MoveUnit(defenderRegion, attackerRegion, division);
+                                if (!defenderRegion.hasArmy)
+                                {
+                                    division._movePoints--;
+                                    division.firstMove = false;
 
-                                attackerRegion.hasArmy = false;
-                                defenderRegion.hasArmy = true;
+                                    MoveUnit(defenderRegion, attackerRegion, division);
+
+                                    attackerRegion.hasArmy = false;
+                                    defenderRegion.hasArmy = true;
+                                }
                             }
-                        }
-                        else if (!realtion.right)
-                        {
-                            //division.currentCountry.GetComponent<CountryAIManager>().SendOffer("Право прохода войск",
-                            //    division.currentCountry, defenderRegion.currentCountry);
+                            else if (!realtion.right)
+                            {
+                                if (division.currentCountry.isPlayer)
+                                {
+                                    ReferencesManager.Instance.diplomatyUI.OpenUINoClick(defenderRegion.currentCountry.country._id);
+                                }
+                                //division.currentCountry.GetComponent<CountryAIManager>().SendOffer("Право прохода войск",
+                                //    division.currentCountry, defenderRegion.currentCountry);
+                            }
                         }
                     }
+                    result = true;
                 }
-                return true;
             }
+            result = false;
         }
-        return false;
+
+        return result;
     }
 
     public void MoveUnit(RegionManager regionTo, RegionManager oldRegion, UnitMovement division)
@@ -890,17 +1271,17 @@ public class UnitMovement : MonoBehaviour
                 defenderUnit.currentCountry.country._id,
                 defenderUnit.currentCountry.moneyNaturalIncome,
                 defenderUnit.currentCountry.foodNaturalIncome,
-                defenderUnit.currentCountry.recrootsIncome);
+                defenderUnit.currentCountry.recruitsIncome);
 
             Multiplayer.Instance.SetCountryIncomeValues(
                 currentCountry.country._id,
                 currentCountry.moneyNaturalIncome, 
                 currentCountry.foodNaturalIncome, 
-                currentCountry.recrootsIncome);
+                currentCountry.recruitsIncome);
         }
     }
 
-    private IEnumerator DestroyDivision_Co()
+    public IEnumerator DestroyDivision_Co()
     {
         this.GetComponent<Animator>().Play("divisionDie");
         currentProvince.hasArmy = false;
@@ -958,30 +1339,37 @@ public class UnitMovement : MonoBehaviour
             }
         }
 
-        try
+        if (!inSea)
         {
-            if ((float)myInfantry / (float)unitsHealth.Count >= 0.55f)
+            try
             {
-                _renderer.sprite = ReferencesManager.Instance.gameSettings.soldierLVL2.icon;
+                if ((float)myInfantry / (float)unitsHealth.Count >= 0.55f)
+                {
+                    _renderer.sprite = ReferencesManager.Instance.gameSettings.soldierLVL2.icon;
+                }
+                else if ((float)myArtilery / (float)unitsHealth.Count >= 0.55f)
+                {
+                    _renderer.sprite = ReferencesManager.Instance.gameSettings.artileryLVL1.icon;
+                }
+                else if ((float)myHeavy / (float)unitsHealth.Count >= 0.55f)
+                {
+                    _renderer.sprite = ReferencesManager.Instance.gameSettings.tankLVL2.icon;
+                }
+                else if ((float)myMotoInfantry / (float)unitsHealth.Count >= 0.55f)
+                {
+                    _renderer.sprite = ReferencesManager.Instance.gameSettings.motoLVL1.icon;
+                }
+                else if ((float)myCavlry / (float)unitsHealth.Count >= 0.55f)
+                {
+                    _renderer.sprite = ReferencesManager.Instance.gameSettings.cavLVL2.icon;
+                }
             }
-            else if ((float)myArtilery / (float)unitsHealth.Count >= 0.55f)
-            {
-                _renderer.sprite = ReferencesManager.Instance.gameSettings.artileryLVL1.icon;
-            }
-            else if ((float)myHeavy / (float)unitsHealth.Count >= 0.55f)
-            {
-                _renderer.sprite = ReferencesManager.Instance.gameSettings.tankLVL2.icon;
-            }
-            else if ((float)myMotoInfantry / (float)unitsHealth.Count >= 0.55f)
-            {
-                _renderer.sprite = ReferencesManager.Instance.gameSettings.motoLVL1.icon;
-            }
-            else if ((float)myCavlry / (float)unitsHealth.Count >= 0.55f)
-            {
-                _renderer.sprite = ReferencesManager.Instance.gameSettings.cavLVL2.icon;
-            }
+            catch (System.Exception) { }
         }
-        catch (System.Exception) { }
+        else
+        {
+            _renderer.sprite = ReferencesManager.Instance.fleetManager._destroyerSprite;
+        }
     }
 
     public void Retreat(UnitMovement division)
@@ -989,102 +1377,150 @@ public class UnitMovement : MonoBehaviour
         //Debug.Log(division.currentCountry);
         //Instantiate(ReferencesManager.Instance.army.encircleAnimation, division.currentProvince.transform);
         //Destroy(division.gameObject);
-        RegionManager regionToRetreat;
-        RegionManager myRegion = division.transform.parent.GetComponent<RegionManager>();
-        MovePoint _point;
 
-        myRegion.CheckRegionUnits(myRegion);
-
-        if (myRegion.hasArmy)
+        if (!division.inSea)
         {
-            List<Transform> nearMyPoints = new List<Transform>();
-            List<RegionManager> nearRegionsWithArmy = new List<RegionManager>();
 
-            for (int i = 0; i < myRegion.movePoints.Count; i++)
+            RegionManager regionToRetreat;
+            RegionManager myRegion = division.transform.parent.GetComponent<RegionManager>();
+            MovePoint _point;
+
+            myRegion.CheckRegionUnits(myRegion);
+
+            if (myRegion.hasArmy)
             {
-                _point = myRegion.movePoints[i].GetComponent<MovePoint>();
-                RegionManager regionTo = _point.regionTo.GetComponent<RegionManager>();
-                regionTo.CheckRegionUnits(regionTo);
+                List<Transform> nearMyPoints = new List<Transform>();
+                List<RegionManager> nearRegionsWithArmy = new List<RegionManager>();
 
-                if (regionTo.currentCountry == division.currentCountry)
+                for (int i = 0; i < myRegion.movePoints.Count; i++)
                 {
-                    if (!regionTo.hasArmy)
-                    {
-                        nearMyPoints.Add(_point.transform);
-                    }
-                    else
-                    {
-                        nearRegionsWithArmy.Add(regionTo);
-                    }
-                }
-            }
+                    _point = myRegion.movePoints[i].GetComponent<MovePoint>();
+                    RegionManager regionTo = _point.regionTo.GetComponent<RegionManager>();
+                    regionTo.CheckRegionUnits(regionTo);
 
-            if (nearMyPoints.Count > 0)
-            {
-                for (int i = 0; i < nearMyPoints.Count; i++) // Есть куда отступать
-                {
-                    regionToRetreat = nearMyPoints[i].GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
-
-                    regionToRetreat.CheckRegionUnits(regionToRetreat);
-
-                    if (!regionToRetreat.hasArmy && regionToRetreat.currentCountry.country._id == division.currentCountry.country._id)
+                    if (regionTo.currentCountry == division.currentCountry)
                     {
-                        if (division._movePoints <= 0)
+                        if (!regionTo.hasArmy)
                         {
-                            division._movePoints++;
+                            nearMyPoints.Add(_point.transform);
                         }
-
-                        if (AIMoveNoHit(regionToRetreat, division))
+                        else
                         {
-                            return;
+                            nearRegionsWithArmy.Add(regionTo);
                         }
                     }
                 }
 
-                foreach (Transform child in division.currentProvince.transform)
+                if (nearMyPoints.Count > 0)
                 {
-                    if (child.gameObject.GetComponent<UnitMovement>())
+                    for (int i = 0; i < nearMyPoints.Count; i++) // Есть куда отступать
                     {
-                        Instantiate(ReferencesManager.Instance.army.encircleAnimation, division.currentProvince.transform);
-                        Destroy(child.gameObject);
-                    }
-                }
+                        regionToRetreat = nearMyPoints[i].GetComponent<MovePoint>().regionTo.GetComponent<RegionManager>();
 
-            }
-            else if (nearRegionsWithArmy.Count > 0 && nearMyPoints.Count < 0)
-            {
-                foreach (var province in nearRegionsWithArmy)
-                {
-                    UnitMovement divisionInOtherReg = province.GetDivision(province);
-                    divisionInOtherReg.Retreat(divisionInOtherReg);
-                    if (!province.hasArmy)
-                    {
-                        if (AIMoveNoHit(province, myRegion.GetDivision(myRegion)))
+                        regionToRetreat.CheckRegionUnits(regionToRetreat);
+
+                        if (!regionToRetreat.hasArmy && regionToRetreat.currentCountry.country._id == division.currentCountry.country._id)
                         {
-                            return;
+                            if (division._movePoints <= 0)
+                            {
+                                division._movePoints++;
+                            }
+
+                            if (AIMoveNoHit(regionToRetreat, division))
+                            {
+                                return;
+                            }
+                        }
+                    }
+
+                }
+                else if (nearRegionsWithArmy.Count > 0 && nearMyPoints.Count < 0)
+                {
+                    foreach (var province in nearRegionsWithArmy)
+                    {
+                        UnitMovement divisionInOtherReg = province.GetDivision(province);
+                        divisionInOtherReg.Retreat(divisionInOtherReg);
+                        if (!province.hasArmy)
+                        {
+                            if (AIMoveNoHit(province, myRegion.GetDivision(myRegion)))
+                            {
+                                return;
+                            }
+                        }
+                    }
+                    Instantiate(ReferencesManager.Instance.army.encircleAnimation, myRegion.transform);
+                    Destroy(myRegion.gameObject);
+                }
+                else /*if (nearMyPoints.Count <= 0)*/ // Нет путей вообще (Фактически котел на 1 провинцию)
+                {
+                    division.currentProvince.CheckRegionUnits(division.currentProvince);
+
+                    foreach (Transform child in division.currentProvince.transform)
+                    {
+                        if (child.gameObject.GetComponent<UnitMovement>())
+                        {
+                            Instantiate(ReferencesManager.Instance.army.encircleAnimation, division.currentProvince.transform);
+                            Destroy(child.gameObject);
                         }
                     }
                 }
-                Instantiate(ReferencesManager.Instance.army.encircleAnimation, myRegion.transform);
-                Destroy(myRegion.gameObject);
             }
-            else /*if (nearMyPoints.Count <= 0)*/ // Нет путей вообще (Фактически котел на 1 провинцию)
+            else
             {
-                division.currentProvince.CheckRegionUnits(division.currentProvince);
-
-                foreach (Transform child in division.currentProvince.transform)
-                {
-                    if (child.gameObject.GetComponent<UnitMovement>())
-                    {
-                        Instantiate(ReferencesManager.Instance.army.encircleAnimation, division.currentProvince.transform);
-                        Destroy(child.gameObject);
-                    }
-                }
+                myRegion.CheckRegionUnits(myRegion);
             }
         }
         else
         {
-            myRegion.CheckRegionUnits(myRegion);
+            List<SeaMovePoint> pointsWithArmy = new();
+            List<SeaMovePoint> pointsFree = new();
+
+            List<FromSeaToGround_MovePoint> groundPointsWithArmy = new();
+            List<FromSeaToGround_MovePoint> groundPointsFree = new();
+
+            foreach (SeaMovePoint seaMovePoint in division._currentSeaRegion._movePoints)
+            {
+                if (seaMovePoint.regionTransit._division != null && seaMovePoint.regionTransit._division.currentCountry == division.currentCountry)
+                {
+                    pointsWithArmy.Add(seaMovePoint);
+                }
+                else if (seaMovePoint.regionTransit._division == null)
+                {
+                    pointsFree.Add(seaMovePoint);
+                }
+            }
+
+            foreach (FromSeaToGround_MovePoint ground_MovePoint in division._currentSeaRegion._toGroundMovePoints)
+            {
+                UnitMovement groundPointArmy = ground_MovePoint._destinationRegion.GetDivision(ground_MovePoint._destinationRegion);
+                if (groundPointArmy != null && groundPointArmy.currentCountry == division.currentCountry)
+                {
+                    groundPointsWithArmy.Add(ground_MovePoint);
+                }
+                else if (groundPointArmy == null)
+                {
+                    groundPointsFree.Add(ground_MovePoint);
+                }
+            }
+
+            if (pointsFree.Count > 0)
+            {
+                division._movePoints = 1;
+
+                if (division._movePoints > 0)
+                {
+                    SeaMove(division, pointsFree[Random.Range(0, pointsFree.Count)].regionTransit);
+                }
+            }
+            else if (pointsFree.Count < 0 && groundPointsFree.Count > 0)
+            {
+                division._movePoints = 1;
+
+                if (division._movePoints > 0)
+                {
+                    FromSeaToGroundMove(division, groundPointsFree[Random.Range(0, groundPointsFree.Count)]._destinationRegion);
+                }
+            }
         }
     }
 
@@ -1207,6 +1643,9 @@ public class UnitMovement : MonoBehaviour
 
         public RegionManager fightRegion;
         public RegionManager attackerRegion;
+
+        public SeaRegion seaFightRegion;
+        public SeaRegion seaAttackerRegion;
 
         public UnitMovement defenderDivision;
         public UnitMovement attackerDivision;
